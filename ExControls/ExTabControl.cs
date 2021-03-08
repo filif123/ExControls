@@ -68,11 +68,11 @@ namespace ExControls
             _defaultStyle = true;
             _borderColor = Color.LightGray;
             _headerForeColor = Color.Black;
-            _headerBackColor = Color.LightGray;
+            _headerBackColor = SystemColors.Control;
             _activeHeaderForeColor = Color.Black;
             _activeHeaderBackColor = Color.White;
-            _highlightBackColor = Color.LightSteelBlue;
-            _highlightForeColor = Color.White;
+            _highlightBackColor = SystemColors.GradientInactiveCaption;
+            _highlightForeColor = Color.Black;
             _borderThickness = 1;
 
             Invalidate();
@@ -95,8 +95,6 @@ namespace ExControls
                 Invalidate();
             }
         }
-
-        
 
         /// <summary>
         ///     Color of the TabControl's border
@@ -141,7 +139,7 @@ namespace ExControls
         /// </summary>
         [Browsable(true)]
         [Category("Appearance")]
-        [DefaultValue(typeof(Color), "LightGray")]
+        [DefaultValue(typeof(SystemColors), "Control")]
         [Description("Background color of the Tab header.")]
         public Color HeaderBackColor
         {
@@ -198,7 +196,7 @@ namespace ExControls
         /// </summary>
         [Browsable(true)]
         [Category("Appearance")]
-        [DefaultValue(typeof(Color), "LightSteelBlue")]
+        [DefaultValue(typeof(SystemColors), "GradientInactiveCaption")]
         [Description("Background color of the hovered Tab header.")]
         public Color HighlightBackColor
         {
@@ -217,7 +215,7 @@ namespace ExControls
         /// </summary>
         [Browsable(true)]
         [Category("Appearance")]
-        [DefaultValue(typeof(Color), "White")]
+        [DefaultValue(typeof(Color), "Black")]
         [Description("Foreground color of the hovered Tab header.")]
         public Color HighlightForeColor
         {
@@ -316,50 +314,74 @@ namespace ExControls
                 return;
 
             e.Graphics.Clear(BackColor);
-            if (TabCount <= 0) return;
+            if (TabCount <= 0 || SelectedTab == null) return;
+
             //Draw a custom background for Transparent TabPages
-            Rectangle r = SelectedTab.Bounds;
-            var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+            Rectangle border = SelectedTab.Bounds;
+            border.Y++;
+            border.Inflate(3, 3);
 
             //Draw a border around TabPage
-            r.Inflate(1, 1);
             const ButtonBorderStyle bs = ButtonBorderStyle.Solid;
-            using var PaintBrush = new SolidBrush(BorderColor);
-            r.Inflate(2, 2);
-            ControlPaint.DrawBorder(e.Graphics, r,
-                PaintBrush.Color, BorderThickness, bs,
-                PaintBrush.Color, BorderThickness, bs,
-                PaintBrush.Color, BorderThickness, bs,
-                PaintBrush.Color, BorderThickness, bs);
+            using var paintBrush = new SolidBrush(BorderColor);
+            ControlPaint.DrawBorder(e.Graphics, border,
+                paintBrush.Color, BorderThickness, bs,
+                paintBrush.Color, BorderThickness, bs,
+                paintBrush.Color, BorderThickness, bs,
+                paintBrush.Color, BorderThickness, bs);
 
             //Draw the Tabs
             for (var index = 0; index < TabCount; index++)
             {
                 TabPage tp = TabPages[index];
-                r = GetTabRect(index);
+                Rectangle page = border;
+                page.Inflate(-1,-1);
+                e.Graphics.FillRectangle(new SolidBrush(tp.BackColor == Color.Transparent ? ActiveHeaderBackColor : tp.BackColor), page);
+
+                Rectangle r = GetTabRect(index);
+                if (Protrudes(ClientRectangle,r))
+                    continue;
+                r.Inflate(1, 1);
+                r.Width--;
+                r.Height--;
+                r.Y++;
                 if (index == SelectedIndex)
+                    continue;
+
+                if (_hoverIndex == index)
                 {
-                    PaintBrush.Color = BorderColor;
-                    e.Graphics.FillRectangle(new SolidBrush(ActiveHeaderBackColor), r);
-                    ControlPaint.DrawBorder(e.Graphics, r,
-                        PaintBrush.Color, 1, bs,
-                        PaintBrush.Color, 1, bs,
-                        PaintBrush.Color, 1, bs,
-                        ActiveHeaderBackColor, BorderThickness * 2, bs);
-                }
-                else if (_hoverIndex == index)
-                {
-                    PaintBrush.Color = BorderColor;
+                    paintBrush.Color = BorderColor;
                     e.Graphics.FillRectangle(new SolidBrush(HighlightBackColor), r);
-                    ControlPaint.DrawBorder(e.Graphics, r, PaintBrush.Color, bs);
+                    ControlPaint.DrawBorder(e.Graphics, r, paintBrush.Color, bs);
                 }
                 else
                 {
-                    PaintBrush.Color = BorderColor;
+                    paintBrush.Color = BorderColor;
                     e.Graphics.FillRectangle(new SolidBrush(HeaderBackColor), r);
-                    ControlPaint.DrawBorder(e.Graphics, r, PaintBrush.Color, bs);
+                    ControlPaint.DrawBorder(e.Graphics, r, paintBrush.Color, bs);
                 }
 
+                Draw(index,r,tp);
+            }
+
+            Rectangle ra = GetTabRect(SelectedIndex);
+            ra.Inflate(1, 0);
+            ra.Width--;
+            ra.Height += 3;
+            ra.Y -= 2;
+            paintBrush.Color = BorderColor;
+            e.Graphics.FillRectangle(new SolidBrush(ActiveHeaderBackColor), ra);
+            ControlPaint.DrawBorder(e.Graphics, ra,
+                paintBrush.Color, 1, bs,
+                paintBrush.Color, 1, bs,
+                paintBrush.Color, 1, bs,
+                paintBrush.Color, 0, bs);
+
+            Draw(SelectedIndex, ra, SelectedTab);
+
+
+            void Draw(int index, Rectangle r, TabPage tp)
+            {
                 //Set up rotation for left and right aligned tabs
                 if (Alignment == TabAlignment.Left || Alignment == TabAlignment.Right)
                 {
@@ -372,6 +394,7 @@ namespace ExControls
                 }
 
                 //Draw the Tab Text
+                var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
                 if (tp.Enabled)
                     TextRenderer.DrawText(e.Graphics, tp.Text, Font, r, (_hoverIndex == index && index != SelectedIndex) ? HighlightForeColor : HeaderForeColor);
                 else
@@ -379,6 +402,11 @@ namespace ExControls
 
                 e.Graphics.ResetTransform();
             }
+        }
+
+        private static bool Protrudes(Rectangle rec1, Rectangle rec2)
+        {
+            return (!rec1.Contains(rec2) && rec1.IntersectsWith(rec2));
         }
 
         /// <inheritdoc />
@@ -429,7 +457,7 @@ namespace ExControls
         {
             if (m.Msg == WM_REFLECT + WM_NOTIFY)
             {
-                var hdr = (NativeMethods.NMHDR) Marshal.PtrToStructure(m.LParam, typeof(NativeMethods.NMHDR));
+                var hdr = (Win32.NMHDR) Marshal.PtrToStructure(m.LParam, typeof(Win32.NMHDR));
                 if (hdr.code == TCN_SELCHANGING)
                 {
                     TabPage tp = TestTab(PointToClient(Cursor.Position));

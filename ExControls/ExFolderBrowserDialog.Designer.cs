@@ -1,7 +1,7 @@
 ﻿
 namespace ExControls
 {
-    partial class ExVScrollBar
+    partial class ExFolderBrowserDialog
     {
         /// <summary>
         /// Vyžaduje se proměnná návrháře.

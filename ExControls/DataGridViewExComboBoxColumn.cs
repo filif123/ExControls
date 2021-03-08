@@ -21,6 +21,7 @@ namespace ExControls
             CellTemplate = new DataGridViewExComboBoxCell();
             DefaultStyle = true;
             DropDownSelectedBackColor = SystemColors.Highlight;
+            DropDownBackColor = Color.White;
 
             StyleNormal = new ExComboBoxStyle();
             StyleHighlight = new ExComboBoxStyle();
@@ -110,6 +111,35 @@ namespace ExControls
                     if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
                     {
                         cell.DropDownSelectedBackColor = value;
+                    }
+                }
+                DataGridView.InvalidateColumn(Index);
+            }
+        }
+
+        /// <summary>
+        ///     Background color of the drop down menu.
+        /// </summary>
+        [Browsable(true)]
+        [Category("Appearance")]
+        [DefaultValue(typeof(Color), "White")]
+        [Description("Background color of the drop down menu.")]
+        public Color DropDownBackColor
+        {
+            get => ExComboBoxCellTemplate.DropDownBackColor;
+            set
+            {
+                if (DropDownBackColor == value)
+                    return;
+                ExComboBoxCellTemplate.DropDownBackColor = value;
+                if (DataGridView == null)
+                    return;
+                DataGridViewRowCollection rows = DataGridView.Rows;
+                for (int i = 1; i < DataGridView.Rows.Count; i++)
+                {
+                    if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
+                    {
+                        cell.DropDownBackColor = value;
                     }
                 }
                 DataGridView.InvalidateColumn(Index);
@@ -231,6 +261,7 @@ namespace ExControls
     public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     {
         private Color _dropDownSelectedBackColor;
+        private Color _dropDownBackColor;
         private bool _defaultStyle;
 
         private bool _drawing;
@@ -242,6 +273,7 @@ namespace ExControls
         {
             DefaultStyle = true;
             DropDownSelectedBackColor = SystemColors.Highlight;
+            DropDownBackColor = Color.White;
 
             StyleNormal = new ExComboBoxStyle();
             StyleHighlight = new ExComboBoxStyle();
@@ -289,6 +321,19 @@ namespace ExControls
         }
 
         /// <summary>
+        ///     Color of the selected row in drop down menu
+        /// </summary>
+        public Color DropDownBackColor
+        {
+            get => _dropDownBackColor;
+            set
+            {
+                _dropDownBackColor = value;
+                DataGridView?.InvalidateCell(ColumnIndex, RowIndex);
+            }
+        }
+
+        /// <summary>
         ///     Normal style of the Control (when is inactive).
         /// </summary>
         public ExComboBoxStyle StyleNormal { get; set; }
@@ -314,6 +359,7 @@ namespace ExControls
             var cell = (DataGridViewExComboBoxCell)base.Clone();
             cell.DefaultStyle = DefaultStyle;
             cell.DropDownSelectedBackColor = DropDownSelectedBackColor;
+            cell.DropDownBackColor = DropDownBackColor;
             cell.StyleNormal = (ExComboBoxStyle)StyleNormal.Clone();
             cell.StyleHighlight = (ExComboBoxStyle)StyleHighlight.Clone();
             cell.StyleSelected = (ExComboBoxStyle)StyleSelected.Clone();
@@ -330,9 +376,9 @@ namespace ExControls
             base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
             if (DataGridView.EditingControl is DataGridViewExComboBoxEditingControl ctl)
             {
-                //ClearEventInvocations(ctl, "DropDown");
                 ctl.DefaultStyle = DefaultStyle;
                 ctl.DropDownSelectedRowBackColor = DropDownSelectedBackColor;
+                ctl.DropDownBackColor = DropDownBackColor;
                 ctl.StyleNormal = StyleNormal;
                 ctl.StyleHighlight = StyleHighlight;
                 ctl.StyleSelected = StyleSelected;
@@ -362,7 +408,7 @@ namespace ExControls
 
             Size texts = TextRenderer.MeasureText(g, formattedValue.ToString(), cellStyle.Font);
             Point textStart = new Point(cellBounds.X + 2, cellBounds.Y + (int)Math.Round(cellBounds.Height / 2d - texts.Height / 2d));
-            Rectangle dropButton = new Rectangle(cellBounds.X + cellBounds.Width - 20, cellBounds.Y, 20, cellBounds.Height);
+            Rectangle dropButton = new Rectangle(cellBounds.X + cellBounds.Width - 23, cellBounds.Y, 20, cellBounds.Height);
 
             Color back = StyleNormal.BackColor ??= Color.White;
             Color fore = StyleNormal.ForeColor ??= Color.Black;
@@ -407,6 +453,7 @@ namespace ExControls
     /// <summary>Represents the hosted combo box control in a <see cref="T:System.Windows.Forms.DataGridViewComboBoxCell" />.</summary>
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.AutoDispatch)]
+    [ToolboxItem(false)]
     public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEditingControl
     {
         private DataGridView dataGridView;

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace ExControls
@@ -13,11 +14,14 @@ namespace ExControls
     public partial class ExComboBox : ComboBox, IExControl
     {
         private Color _dropDownSelectedRowBackColor;
+        private Color _dropDownBackColor;
         private bool _defaultStyle;
 
         private bool _hover;
         private bool _selected;
         private bool _drawing;
+
+        private SolidBrush listbrush;
 
         /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
         [Category("Changed Property")]
@@ -28,6 +32,11 @@ namespace ExControls
         [Category("Changed Property")]
         [Description("Occurs when the DropDownSelectedRowBackColor property changes.")]
         public event EventHandler DropDownSelectedRowBackColorChanged;
+
+        /// <summary>Occurs when the <see cref="DropDownBackColor" /> property changes.</summary>
+        [Category("Changed Property")]
+        [Description("Occurs when the DropDownBackColor property changes.")]
+        public event EventHandler DropDownBackColorChanged;
 
         /// <summary>
         ///     Constructor
@@ -65,15 +74,33 @@ namespace ExControls
             StyleSelected.PropertyChanged += StyleOnPropertyChanged;
 
             _dropDownSelectedRowBackColor = SystemColors.Highlight;
+            _dropDownBackColor = Color.White;
 
             DoubleBuffered = true;
+            listbrush = new SolidBrush(DropDownBackColor);
+
             Invalidate();
         }
 
         private void StyleOnPropertyChanged(object sender, ExPropertyChangedEventArgs e)
         {
-            if (!_drawing) Invalidate();
+            if (!_drawing)
+            {
+                Invalidate();
+            }
         }
+
+        /// <summary>
+        ///     Don't use directly in code.
+        /// </summary>
+        [Browsable(false)]
+        public Color ActualBackColor { get; private set; }
+
+        /// <summary>
+        ///     Don't use directly in code.
+        /// </summary>
+        [Browsable(false)]
+        public Color ActualForeColor { get; private set; }
 
         /// <inheritdoc/>
         [Browsable(true)]
@@ -89,6 +116,7 @@ namespace ExControls
                     return;
                 _defaultStyle = value;
                 DrawMode = value ? DrawMode.Normal : DrawMode.OwnerDrawFixed;
+                FlatStyle = value ? FlatStyle.Standard : FlatStyle.Flat;
                 Invalidate();
                 OnDefaultStyleChanged();
             }
@@ -144,9 +172,29 @@ namespace ExControls
             {
                 if (_dropDownSelectedRowBackColor == value)
                     return;
-                _dropDownSelectedRowBackColor = value; 
+                _dropDownSelectedRowBackColor = value;
                 Invalidate();
                 OnDropDownSelectedRowBackColorChanged();
+            }
+        }
+
+        /// <summary>
+        ///     Background color of the drop down menu.
+        /// </summary>
+        [Browsable(true)]
+        [Category("Appearance")]
+        [DefaultValue(typeof(Color), "White")]
+        [Description("Background color of the drop down menu.")]
+        public Color DropDownBackColor
+        {
+            get => _dropDownBackColor;
+            set
+            {
+                if (_dropDownBackColor == value)
+                    return;
+                _dropDownBackColor = value;
+                Invalidate();
+                OnDropDownBackColorChanged();
             }
         }
 
@@ -164,6 +212,23 @@ namespace ExControls
                 }
 
                 base.DrawMode = value;
+            }
+        }
+
+        /// <summary>
+        ///     Draw mode of ComboBox
+        /// </summary>
+        public new FlatStyle FlatStyle
+        {
+            get => base.FlatStyle;
+            set
+            {
+                if (value != FlatStyle.Standard && value != FlatStyle.System)
+                {
+                    _defaultStyle = false;
+                }
+
+                base.FlatStyle = value;
             }
         }
 
@@ -191,25 +256,68 @@ namespace ExControls
             }
         }
 
+        /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleCreated" /> event.</summary>
+        /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            if (DropDownStyle == ComboBoxStyle.DropDown)
+            {
+                Win32.SetWindowTheme(Handle, "", "");
+            }
+            base.OnHandleCreated(e);
+        }
+
+        /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleDestroyed" /> event.</summary>
+        /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            listbrush.Dispose();
+            base.OnHandleDestroyed(e);
+        }
+
         /// <inheritdoc />
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
 
-            if (m.Msg == 15 && !DefaultStyle)
+            if (!DefaultStyle && DropDownStyle == ComboBoxStyle.DropDown)
             {
-                using Graphics g = Graphics.FromHwnd(m.HWnd);
-                OnPaint(new PaintEventArgs(g, ClientRectangle));
+                switch (m.Msg)
+                {
+                    case Win32.WM_PAINT:
+                    {
+                        using Graphics g = Graphics.FromHwnd(m.HWnd);
+                        OnPaint(new PaintEventArgs(g, ClientRectangle));
+                        break;
+                    }
+                    case Win32.WM_CTLCOLORLISTBOX:
+                    {
+                        listbrush.Color = DropDownBackColor;
+                        m.Result = GetHbrush(listbrush);
+                        break;
+                    }
+                }
             }
         }
 
+        private IntPtr GetHbrush(Brush b)
+        {
+            FieldInfo field = typeof(Brush).GetField("nativeBrush", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (field is not null) 
+                return (IntPtr)field.GetValue(b);
+            return IntPtr.Zero;
+        }
+
+        /// <inheritdoc />
         protected override void OnPaint(PaintEventArgs e)
         {
             _drawing = true;
 
-            Size texts = TextRenderer.MeasureText(e.Graphics, Text, Font);
-            Point textStart = new Point(2, (int) Math.Round(ClientRectangle.Height / 2d - texts.Height / 2d));
-            Rectangle dropButton = new Rectangle(Width - 20, 0, 20, Height);
+            Graphics g = e.Graphics;
+
+            Size texts = TextRenderer.MeasureText(g, Text, Font);
+            var textStart = new Point(2, (int) Math.Round(ClientRectangle.Height / 2d - texts.Height / 2d));
+            var dropButton = new Rectangle(Width - 20, 0, 20, Height);
 
             Color back = StyleNormal.BackColor ??= Color.White; 
             Color fore = StyleNormal.ForeColor ??= Color.Black; 
@@ -250,24 +358,32 @@ namespace ExControls
                 if (StyleHighlight.ButtonRenderFirst.HasValue) bbfirst = StyleHighlight.ButtonRenderFirst.Value;
             }
 
-            e.Graphics.Clear(back);
+            ActualBackColor = back;
+            ActualForeColor = fore;
+
+            if (ActualBackColor != base.BackColor) base.BackColor = ActualBackColor;
+            if (ActualForeColor != base.ForeColor) base.ForeColor = ActualForeColor;
+
+            g.Clear(back);
 
             using var penBorder = new Pen(border);
 
             if (bbfirst)
             {
-                ExButtonsRenderer.DrawDropDownButton(e.Graphics, dropButton, backbut, borbut, arrow);
-                e.Graphics.DrawRectangle(penBorder, 0, 0, Width - 1, Height - 1);
+                ExButtonsRenderer.DrawDropDownButton(g, dropButton, backbut, borbut, arrow);
+                g.DrawRectangle(penBorder, 0, 0, Width - 1, Height - 1);
             }
             else
             {
-                e.Graphics.DrawRectangle(penBorder, 0, 0, Width - 1, Height - 1);
-                ExButtonsRenderer.DrawDropDownButton(e.Graphics, dropButton, backbut, borbut, arrow);
+                g.DrawRectangle(penBorder, 0, 0, Width - 1, Height - 1);
+                ExButtonsRenderer.DrawDropDownButton(g, dropButton, backbut, borbut, arrow);
             }
 
             if (DropDownStyle == ComboBoxStyle.DropDownList)
-                TextRenderer.DrawText(e.Graphics, Text, Font, textStart, fore, back, RightToLeft == RightToLeft.Yes ? TextFormatFlags.Right : TextFormatFlags.Default);
-            
+                TextRenderer.DrawText(g, Text, Font, textStart, fore, back, RightToLeft == RightToLeft.Yes ? TextFormatFlags.Right : TextFormatFlags.Default);
+
+            base.OnPaint(e);
+
             _drawing = false;
         }
 
@@ -278,10 +394,18 @@ namespace ExControls
             
             if (!DefaultStyle)
             {
-                SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+                SetStyle(ControlStyles.DoubleBuffer, true);
                 SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+                SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+                SetStyle(ControlStyles.ResizeRedraw, true);
+                SetStyle(ControlStyles.Opaque, true);
+                if (DropDownStyle == ComboBoxStyle.DropDownList)
+                {
+                    SetStyle(ControlStyles.UserPaint, true);
+                }
             }
         }
+
 
         /// <inheritdoc />
         protected override void OnDrawItem(DrawItemEventArgs e)
@@ -291,15 +415,18 @@ namespace ExControls
                 base.OnDrawItem(e);
                 return;
             }
-            
-            e.DrawBackground();
 
             if (e.Index >= 0)
             {
-                Brush bBrush = ((e.State & DrawItemState.Selected) == DrawItemState.Selected) ? new SolidBrush(DropDownSelectedRowBackColor) : new SolidBrush(StyleNormal.BackColor ?? e.BackColor);
+                using Brush bBrush = ((e.State & DrawItemState.Selected) == DrawItemState.Selected) ? new SolidBrush(DropDownSelectedRowBackColor) : new SolidBrush(DropDownBackColor);
 
                 e.Graphics.FillRectangle(bBrush, e.Bounds);
                 TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(),e.Font,e.Bounds.Location, StyleNormal.ForeColor ?? e.ForeColor);
+            }
+            else
+            {
+                using var back = new SolidBrush(DropDownBackColor);
+                e.Graphics.FillRectangle(back,e.Bounds);
             }
             
             e.DrawFocusRectangle();
@@ -310,9 +437,11 @@ namespace ExControls
         /// <inheritdoc />
         protected override void OnMouseEnter(EventArgs eventargs)
         {
-            base.OnMouseEnter(eventargs);
             if (DefaultStyle)
+            {
+                base.OnMouseEnter(eventargs);
                 return;
+            }
 
             if (!_hover)
             {
@@ -324,9 +453,11 @@ namespace ExControls
         /// <inheritdoc />
         protected override void OnMouseLeave(EventArgs eventargs)
         {
-            base.OnMouseLeave(eventargs);
             if (DefaultStyle)
+            {
+                base.OnMouseLeave(eventargs);
                 return;
+            }
 
             if (_hover && !_selected)
             {
@@ -338,9 +469,11 @@ namespace ExControls
         /// <inheritdoc />
         protected override void OnGotFocus(EventArgs e)
         {
-            base.OnGotFocus(e);
             if (DefaultStyle)
+            {
+                base.OnGotFocus(e);
                 return;
+            }
 
             if (!_selected)
             {
@@ -353,9 +486,11 @@ namespace ExControls
         /// <inheritdoc />
         protected override void OnLostFocus(EventArgs e)
         {
-            base.OnLostFocus(e);
             if (DefaultStyle)
+            {
+                base.OnLostFocus(e);
                 return;
+            }
 
             if (_selected)
             {
@@ -368,9 +503,11 @@ namespace ExControls
         /// <inheritdoc />
         protected override void OnEnter(EventArgs e)
         {
-            base.OnEnter(e);
             if (DefaultStyle)
+            {
+                base.OnEnter(e);
                 return;
+            }
 
             if (!_selected)
             {
@@ -383,9 +520,11 @@ namespace ExControls
         /// <inheritdoc />
         protected override void OnLeave(EventArgs e)
         {
-            base.OnLeave(e);
             if (DefaultStyle)
+            {
+                base.OnLeave(e);
                 return;
+            }
 
             if (_selected)
             {
@@ -406,9 +545,15 @@ namespace ExControls
         {
             DefaultStyleChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        /// <summary>Raises the <see cref="DropDownBackColorChanged" /> event.</summary>
+        protected virtual void OnDropDownBackColorChanged()
+        {
+            DropDownBackColorChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
-    /// <summary>
+        /// <summary>
     ///     Class for definition styles for ExComboBox
     /// </summary>
     public class ExComboBoxStyle : ExStyle
@@ -418,10 +563,12 @@ namespace ExControls
         private Color? _buttonBorderColor;
         private bool? _buttonRenderFirst;
 
+        /// <inheritdoc />
         public ExComboBoxStyle()
         {
         }
 
+        /// <inheritdoc />
         protected ExComboBoxStyle(ExComboBoxStyle copy) : base(copy)
         {
             ArrowColor = copy.ArrowColor;
@@ -433,7 +580,6 @@ namespace ExControls
         /// <summary>
         ///     Color of the arrow which is in this Control as the dropdown button
         /// </summary>
-        [Browsable(true)]
         [Category("Appearance")]
         [NotifyParentProperty(true)]
         [DefaultValue(typeof(Color), "Black")]
@@ -454,7 +600,6 @@ namespace ExControls
         /// <summary>
         ///     Background color of the dropdown button
         /// </summary>
-        [Browsable(true)]
         [Category("Appearance")]
         [NotifyParentProperty(true)]
         [DefaultValue(typeof(Color), "White")]
@@ -475,7 +620,6 @@ namespace ExControls
         /// <summary>
         ///     Border color of the dropdown button
         /// </summary>
-        [Browsable(true)]
         [Category("Appearance")]
         [NotifyParentProperty(true)]
         [DefaultValue(typeof(Color), "DimGray")]
@@ -496,7 +640,6 @@ namespace ExControls
         /// <summary>
         ///     Gets or sets whether DropDown button has to draw first
         /// </summary>
-        [Browsable(true)]
         [DefaultValue(false)]
         [Category("Appearance")]
         [NotifyParentProperty(true)]
@@ -513,6 +656,7 @@ namespace ExControls
             }
         }
 
+        /// <inheritdoc />
         public override object Clone()
         {
             return new ExComboBoxStyle(this);

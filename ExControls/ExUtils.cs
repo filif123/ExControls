@@ -31,7 +31,7 @@ namespace ExControls
         /// <param name="control"></param>
         public static void TurnOffVisualStyles(Control control)
         {
-            NativeMethods.SetWindowTheme(control.Handle, "", "");
+            Win32.SetWindowTheme(control.Handle, "", "");
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace ExControls
         {
             Control focusedControl = null;
             // To get hold of the focused control:
-            IntPtr focusedHandle = NativeMethods.GetFocus();
+            IntPtr focusedHandle = Win32.GetFocus();
             if (focusedHandle != IntPtr.Zero)
                 // Note that if the focused Control is not a .Net control, then this will return null.
                 focusedControl = Control.FromHandle(focusedHandle);

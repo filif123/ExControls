@@ -18,6 +18,7 @@ namespace ExControls
         
         private bool _defaultStyle;
         private bool _hover;
+        private bool _selected;
         private int _defaultButtonsWidth;
         
         private UpDownButtons newButtonUpDown;
@@ -206,9 +207,7 @@ namespace ExControls
             base.OnPaint(e);
 
             if (DefaultStyle)
-            {
                 return;
-            }
 
             DrawInternal(e.Graphics);
         }
@@ -216,26 +215,108 @@ namespace ExControls
         private void DrawInternal(Graphics g)
         {
             g.Clear(BackColor);
-            using var p = new Pen(_hover ? HighlightColor : BorderColor);
+            using var p = new Pen(_hover || _selected ? HighlightColor : BorderColor);
             g.DrawRectangle(p, 0, 0, Width - 1, Height - 1);
         }
 
         /// <inheritdoc />
         protected override void OnMouseEnter(EventArgs eventargs)
         {
-            base.OnMouseEnter(eventargs);
+            if (DefaultStyle)
+            {
+                base.OnMouseEnter(eventargs);
+                return;
+            }
 
-            _hover = true;
-            Invalidate();
+            if (!_hover)
+            {
+                _hover = true;
+                Invalidate();
+            }
         }
 
         /// <inheritdoc />
         protected override void OnMouseLeave(EventArgs eventargs)
         {
-            base.OnMouseLeave(eventargs);
+            if (DefaultStyle)
+            {
+                base.OnMouseLeave(eventargs);
+                return;
+            }
 
-            _hover = false;
-            Invalidate();
+            if (_hover && !_selected)
+            {
+                _hover = false;
+                Invalidate(true);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnGotFocus(EventArgs e)
+        {
+            if (DefaultStyle)
+            {
+                base.OnGotFocus(e);
+                return;
+            }
+
+            if (!_selected)
+            {
+                _hover = true;
+                _selected = true;
+                Invalidate();
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnLostFocus(EventArgs e)
+        {
+            if (DefaultStyle)
+            {
+                base.OnLostFocus(e);
+                return;
+            }
+
+            if (_selected)
+            {
+                _hover = false;
+                _selected = false;
+                Invalidate(true);
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnEnter(EventArgs e)
+        {
+            if (DefaultStyle)
+            {
+                base.OnEnter(e);
+                return;
+            }
+
+            if (!_selected)
+            {
+                _hover = true;
+                _selected = true;
+                Invalidate();
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void OnLeave(EventArgs e)
+        {
+            if (DefaultStyle)
+            {
+                base.OnLeave(e);
+                return;
+            }
+
+            if (_selected)
+            {
+                _hover = false;
+                _selected = false;
+                Invalidate(true);
+            }
         }
 
         /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
@@ -257,7 +338,7 @@ namespace ExControls
 
             internal UpDownButtons(ExNumericUpDown parent)
             {
-                SetStyle(ControlStyles.Opaque, true);
+                //SetStyle(ControlStyles.Opaque, true);
                 SetStyle(ControlStyles.FixedHeight, true);
                 SetStyle(ControlStyles.FixedWidth, true);
                 SetStyle(ControlStyles.Selectable, false);
@@ -365,7 +446,7 @@ namespace ExControls
 
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (NativeMethods.WindowFromPoint(new NativeMethods.POINT(screen.X,screen.Y)) == Handle)
+                    if (Win32.WindowFromPoint(new Win32.POINT(screen.X,screen.Y)) == Handle)
                     {
                         if (!doubleClickFired)
                         {
@@ -397,8 +478,8 @@ namespace ExControls
             {
                 if (child == null || !IsHandleCreated)
                     return e;
-                var pt = new NativeMethods.POINT(e.X, e.Y);
-                NativeMethods.MapWindowPoints(child.Handle, Handle, ref pt, 1);
+                var pt = new Win32.POINT(e.X, e.Y);
+                Win32.MapWindowPoints(child.Handle, Handle, ref pt, 1);
                 return new MouseEventArgs(e.Button, e.Clicks, pt.x, pt.y, e.Delta);
             }
 

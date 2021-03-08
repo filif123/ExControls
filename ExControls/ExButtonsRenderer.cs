@@ -30,7 +30,7 @@ namespace ExControls
             Point[] arrows = { new(arrowX, arrowY), new(arrowX + 7, arrowY), new(arrowX + 3, arrowY + 4) };
             g.FillPolygon(brushArrow, arrows);
 
-            Rectangle dropButton = new Rectangle(rec.X, rec.Y, rec.Width - 1, rec.Height - 1);
+            var dropButton = new Rectangle(rec.X, rec.Y, rec.Width - 1, rec.Height - 1);
             g.DrawRectangle(penBorder, dropButton);
         }
 
@@ -42,7 +42,6 @@ namespace ExControls
         /// <param name="boxSize">Size of box.</param>
         /// <param name="boxOffset">Distance between box and text.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static BoxAndTextRectangle GetBoxAndTextRectangle(IDeviceContext g, ICheckableExControl c, int boxSize, int boxOffset)
         {
             var boxtext = new BoxAndTextRectangle();
@@ -94,8 +93,6 @@ namespace ExControls
                         ? new Rectangle(c.ClientRectangle.Width - boxSize, c.ClientRectangle.Height - boxSize, boxSize, boxSize)
                         : new Rectangle(0, c.ClientRectangle.Height - boxSize, boxSize, boxSize);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(c.CheckAlign));
             }
 
             switch (c.TextAlign)
@@ -157,9 +154,6 @@ namespace ExControls
                         boxtext.TextRectangle = new Rectangle(0, c.ClientRectangle.Height - texts.Height, texts.Width, texts.Height);
                     boxtext.TextRectangle = OffsetText(boxtext.TextRectangle, c, boxSize, boxOffset, false);
                     break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(c.TextAlign));
             }
 
             return boxtext;

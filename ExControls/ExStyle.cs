@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
@@ -7,7 +6,7 @@ using System.Drawing.Design;
 namespace ExControls
 {
     /// <summary>
-    ///     Abstract class for definition styles for Control
+    ///     Class for definition styles for Control
     /// </summary>
     public class ExStyle : IExNotifyPropertyChanged, ICloneable
     {
@@ -15,10 +14,17 @@ namespace ExControls
         private Color? _foreColor;
         private Color? _borderColor;
 
+        /// <summary>
+        ///     Constructor for designer
+        /// </summary>
         public ExStyle()
         {
         }
 
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="copy"></param>
         protected ExStyle(ExStyle copy)
         {
             BackColor = copy.BackColor;
@@ -105,6 +111,10 @@ namespace ExControls
         /// <summary>Occurs when a property value changes.</summary>
         public event EventHandler<ExPropertyChangedEventArgs> PropertyChanged;
 
+        /// <summary>
+        ///     Raises the <see cref="PropertyChanged" /> event.
+        /// </summary>
+        /// <param name="e"></param>
         protected virtual void OnPropertyChanged(ExPropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace ExControls.Test
 {
@@ -15,6 +7,12 @@ namespace ExControls.Test
         public Form1()
         {
             InitializeComponent();
+            exCheckBox1.SetTheme(WindowsTheme.DarkExplorer);
+        }
+
+        private void bbrowser_Click(object sender, System.EventArgs e)
+        {
+            exfbdialog.Show();
         }
     }
 }

@@ -78,7 +78,7 @@ namespace ExControls
         private void InitInternal()
         {
             _defaultStyle = true;
-            _borderColor = Color.Gainsboro;
+            _borderColor = Color.Black;
             _markColor = Color.Black;
             _boxBackColor = Color.White;
             _highlightColor = SystemColors.Highlight;
@@ -130,7 +130,7 @@ namespace ExControls
         /// </summary>
         [Browsable(true)]
         [Category("Appearance")]
-        [DefaultValue(typeof(Color), "Gainsboro")]
+        [DefaultValue(typeof(Color), "Black")]
         [Description("Color of the RadioButton's border.")]
         public Color BorderColor
         {

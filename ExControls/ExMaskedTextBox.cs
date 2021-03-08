@@ -185,19 +185,19 @@ namespace ExControls
         private void PaintInternal(ref Message m)
         {
             //border
-            IntPtr hdc = NativeMethods.GetWindowDC(Handle);
-            IntPtr rgn = NativeMethods.CreateRectRgn(0, 0, Width, Height);
+            IntPtr hdc = Win32.GetWindowDC(Handle);
+            IntPtr rgn = Win32.CreateRectRgn(0, 0, Width, Height);
             Color border = _hover || _selected ? HighlightColor : BorderColor;
             if (!Enabled) border = DisabledBorderColor;
-            IntPtr brush = NativeMethods.CreateSolidBrush((uint)BGRtoInt(border.R, border.G, border.B));
+            IntPtr brush = Win32.CreateSolidBrush((uint)BGRtoInt(border.R, border.G, border.B));
 
-            NativeMethods.CombineRgn(rgn, rgn, NativeMethods.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness), RGN_DIFF);
+            Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness), RGN_DIFF);
 
-            NativeMethods.FillRgn(hdc, rgn, brush);
+            Win32.FillRgn(hdc, rgn, brush);
 
-            NativeMethods.ReleaseDC(Handle, hdc);
-            NativeMethods.DeleteObject(rgn);
-            NativeMethods.DeleteObject(brush);
+            Win32.ReleaseDC(Handle, hdc);
+            Win32.DeleteObject(rgn);
+            Win32.DeleteObject(brush);
 
             m.Result = IntPtr.Zero;
         }

@@ -73,11 +73,11 @@
     <Compile Include="ExDateTimePicker.Designer.cs">
       <DependentUpon>ExDateTimePicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="ExFolderBrowserDialog.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ExForm.Designer.cs">
-      <DependentUpon>ExForm.cs</DependentUpon>
+    <Compile Include="ExFolderBrowserDialog.Designer.cs">
+      <DependentUpon>ExFolderBrowserDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="ExGroupBox.cs">
       <SubType>Component</SubType>
@@ -122,19 +122,8 @@
     <Compile Include="ExTextBox.Designer.cs">
       <DependentUpon>ExTextBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExTitleButton.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ExTitleButton.Designer.cs">
-      <DependentUpon>ExTitleButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ExVScrollBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ExVScrollBar.Designer.cs">
-      <DependentUpon>ExVScrollBar.cs</DependentUpon>
-    </Compile>
     <Compile Include="ExEventArgs.cs" />
+    <Compile Include="ExTools.cs" />
     <Compile Include="IExControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -148,7 +137,7 @@
     <Compile Include="ToolStripExComboBox.Designer.cs">
       <DependentUpon>ToolStripExComboBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Win32.cs" />
     <Compile Include="ExUtils.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
@@ -162,20 +151,18 @@
     <EmbeddedResource Include="ExDateTimePicker.resx">
       <DependentUpon>ExDateTimePicker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExTitleButton.resx">
-      <DependentUpon>ExTitleButton.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ExForm.resx">
-      <DependentUpon>ExForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ExLineSeparator.bmp" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"
+if exist "$(TargetPath)" if not exist "$(TargetPath).locked" move "$(TargetPath)" "$(TargetPath).locked"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
