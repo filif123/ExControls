@@ -40,7 +40,7 @@ namespace ExControls
         [DefaultValue(typeof(Color), "White")]
         [Description("Foreground color of the Control.")]
         [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
-        public virtual Color? BackColor
+        public Color? BackColor
         {
             get => _backColor;
             set
@@ -60,7 +60,7 @@ namespace ExControls
         [DefaultValue(typeof(Color), "Black")]
         [Description("Background color of the Control.")]
         [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
-        public virtual Color? ForeColor
+        public Color? ForeColor
         {
             get => _foreColor;
             set
@@ -81,7 +81,7 @@ namespace ExControls
         [DefaultValue(typeof(Color), "DimGray")]
         [Description("Color of the Controls's border.")]
         [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
-        public virtual Color? BorderColor
+        public Color? BorderColor
         {
             get => _borderColor;
             set
@@ -115,7 +115,7 @@ namespace ExControls
         ///     Raises the <see cref="PropertyChanged" /> event.
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnPropertyChanged(ExPropertyChangedEventArgs e)
+        protected void OnPropertyChanged(ExPropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }

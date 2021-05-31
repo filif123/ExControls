@@ -20,6 +20,7 @@ namespace ExControls
         private bool _hover;
         private bool _selected;
         private bool _drawing;
+        private bool _wasDropDown;
 
         private SolidBrush listbrush;
 
@@ -116,7 +117,6 @@ namespace ExControls
                     return;
                 _defaultStyle = value;
                 DrawMode = value ? DrawMode.Normal : DrawMode.OwnerDrawFixed;
-                FlatStyle = value ? FlatStyle.Standard : FlatStyle.Flat;
                 Invalidate();
                 OnDefaultStyleChanged();
             }
@@ -215,23 +215,6 @@ namespace ExControls
             }
         }
 
-        /// <summary>
-        ///     Draw mode of ComboBox
-        /// </summary>
-        public new FlatStyle FlatStyle
-        {
-            get => base.FlatStyle;
-            set
-            {
-                if (value != FlatStyle.Standard && value != FlatStyle.System)
-                {
-                    _defaultStyle = false;
-                }
-
-                base.FlatStyle = value;
-            }
-        }
-
         /// <inheritdoc />
         [Browsable(false)]
         public override Color BackColor
@@ -256,11 +239,30 @@ namespace ExControls
             }
         }
 
+        public new bool Enabled
+        {
+            get => base.Enabled;
+            set {
+                if (!value && !DefaultStyle && DropDownStyle == ComboBoxStyle.DropDown)
+                {
+                    _wasDropDown = true;
+                    DropDownStyle = ComboBoxStyle.DropDownList;
+                }
+                else if(value && !DefaultStyle && _wasDropDown)
+                {
+                    _wasDropDown = false;
+                    DropDownStyle = ComboBoxStyle.DropDown;
+                }
+
+                base.Enabled = value;
+            }
+        }
+
         /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleCreated" /> event.</summary>
         /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
         protected override void OnHandleCreated(EventArgs e)
         {
-            if (DropDownStyle == ComboBoxStyle.DropDown)
+            if (!DefaultStyle)
             {
                 Win32.SetWindowTheme(Handle, "", "");
             }
@@ -275,24 +277,33 @@ namespace ExControls
             base.OnHandleDestroyed(e);
         }
 
+        /// <summary>Raises the <see cref="E:System.Windows.Forms.ComboBox.SelectedIndexChanged" /> event.</summary>
+        /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
+        protected override void OnSelectedIndexChanged(EventArgs e)
+        {
+            base.OnSelectedIndexChanged(e);
+            Invalidate();
+        }
+
         /// <inheritdoc />
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
 
-            if (!DefaultStyle && DropDownStyle == ComboBoxStyle.DropDown)
+            if (!DefaultStyle)
             {
-                switch (m.Msg)
+                switch ((Win32.WM)m.Msg)
                 {
-                    case Win32.WM_PAINT:
+                    case Win32.WM.PAINT:
                     {
                         using Graphics g = Graphics.FromHwnd(m.HWnd);
                         OnPaint(new PaintEventArgs(g, ClientRectangle));
                         break;
                     }
-                    case Win32.WM_CTLCOLORLISTBOX:
+                    case Win32.WM.CTLCOLORLISTBOX:
                     {
-                        listbrush.Color = DropDownBackColor;
+                        listbrush.Dispose();
+                        listbrush = new SolidBrush(DropDownBackColor);
                         m.Result = GetHbrush(listbrush);
                         break;
                     }
@@ -312,6 +323,12 @@ namespace ExControls
         protected override void OnPaint(PaintEventArgs e)
         {
             _drawing = true;
+
+            if (DefaultStyle)
+            {
+                base.OnPaint(e);
+                return;
+            }
 
             Graphics g = e.Graphics;
 
@@ -399,10 +416,6 @@ namespace ExControls
                 SetStyle(ControlStyles.AllPaintingInWmPaint, true);
                 SetStyle(ControlStyles.ResizeRedraw, true);
                 SetStyle(ControlStyles.Opaque, true);
-                if (DropDownStyle == ComboBoxStyle.DropDownList)
-                {
-                    SetStyle(ControlStyles.UserPaint, true);
-                }
             }
         }
 

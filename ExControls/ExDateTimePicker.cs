@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace ExControls
 {
     /// <summary>
-    ///     Expanded DateTimePicker Control
+    ///     Expanded DateTimePicker Control. WORK IN PROGRESS
     /// </summary>
     [ToolboxBitmap(typeof(DateTimePicker), "DateTimePicker.bmp")]
     public partial class ExDateTimePicker : DateTimePicker, IExControl
@@ -21,6 +22,9 @@ namespace ExControls
 
         private bool _hover;
         private bool _selected;
+
+        //private Win32.DATETIMEPICKERINFO dtpInfo;
+        //private DTPEdit Edit;
 
         /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
         [Category("Changed Property")]
@@ -181,16 +185,70 @@ namespace ExControls
             }
         }
 
-        /*/// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleCreated" /> event.</summary>
+        /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleCreated" /> event.</summary>
         /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            if (!DefaultStyle)
+            /*if (!DefaultStyle)
             {
-                ExUtils.TurnOffVisualStyles(this);
-            }
-        }*/
+                dtpInfo.cbSize = Marshal.SizeOf(dtpInfo);
+                SendMessage(Handle, DTM_GETDATETIMEPICKERINFO, IntPtr.Zero, ref dtpInfo);
+                Edit = new DTPEdit();
+                Edit.AssignHandle(dtpInfo.hwndEdit);
+            }*/
+        }
+
+        /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleDestroyed" /> event.</summary>
+        /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            base.OnHandleDestroyed(e);
+            //Edit.DestroyHandle();
+        }
+
+        [DllImport("user32.dll")]
+        static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, ref Win32.DATETIMEPICKERINFO info);
+        const int DTM_FIRST = 0x1000;
+        const int DTM_GETDATETIMEPICKERINFO = DTM_FIRST + 14;
+
+        /// <summary>Processes Windows messages.</summary>
+        /// <param name="m">The Windows <see cref="T:System.Windows.Forms.Message" /> to process.</param>
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+            if (DefaultStyle)
+                return;
+
+            /*if (m.Msg == Win32.WM_PAINT)
+            {
+                using Graphics g = Graphics.FromHwndInternal(Handle);
+                var clientRect = new Rectangle(0, 0, Width, Height);
+                var buttonWidth = dtpInfo.rcButton.Width;
+                var dropDownRect = new Rectangle(dtpInfo.rcButton.Left, dtpInfo.rcButton.Top, buttonWidth, clientRect.Height);
+                if (RightToLeft == RightToLeft.Yes && RightToLeftLayout)
+                {
+                    dropDownRect.X = clientRect.Width - dropDownRect.Right;
+                    dropDownRect.Width += 1;
+                }
+                var middle = new Point(dropDownRect.Left + dropDownRect.Width / 2, dropDownRect.Top + dropDownRect.Height / 2);
+                var arrow = new Point[]
+                {
+                    new(middle.X - 3, middle.Y - 2),
+                    new(middle.X + 4, middle.Y - 2),
+                    new(middle.X, middle.Y + 2)
+                };
+
+                Color borderAndButtonColor = Enabled ? BorderColor : Color.LightGray;
+                Color arrorColor = BackColor;
+                using (var pen = new Pen(borderAndButtonColor))
+                    g.DrawRectangle(pen, 0, 0,
+                        clientRect.Width - 1, clientRect.Height - 1);
+                using (var brush = new SolidBrush(borderAndButtonColor))
+                    g.FillRectangle(brush, dropDownRect);
+                g.FillPolygon(Brushes.Black, arrow);
+            }*/
+        }
 
         /// <inheritdoc />
         protected override void OnPaint(PaintEventArgs e)
@@ -329,18 +387,25 @@ namespace ExControls
             }
         }
 
-        /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.MouseDown" /> event.</summary>
-        /// <param name="e">A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data. </param>
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-            Control c = ExUtils.GetFocusedControl();
-        }
-
         /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
         protected virtual void OnDefaultStyleChanged()
         {
             DefaultStyleChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        /*private class DTPEdit : NativeWindow
+        {
+            /// <summary>Invokes the default window procedure associated with this window. </summary>
+            /// <param name="m">A <see cref="T:System.Windows.Forms.Message" /> that is associated with the current Windows message. </param>
+            protected override void WndProc(ref Message m)
+            {
+                base.WndProc(ref m);
+
+                if (m.Msg == Win32.)
+                {
+                    
+                }
+            }
+        }*/
     }
 }

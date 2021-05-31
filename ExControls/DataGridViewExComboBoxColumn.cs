@@ -12,7 +12,6 @@ namespace ExControls
     /// </summary>
     public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     {
-
         /// <summary>
         ///     Constructor
         /// </summary>

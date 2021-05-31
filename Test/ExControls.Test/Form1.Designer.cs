@@ -51,6 +51,9 @@ namespace ExControls.Test
             this.bbrowser = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
+            this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
+            this.button1 = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.exComboBox3 = new ExControls.ExComboBox(this.components);
             this.exTabControl1 = new ExControls.ExTabControl(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -71,6 +74,7 @@ namespace ExControls.Test
             this.exComboBox1 = new ExControls.ExComboBox(this.components);
             this.exDateTimePicker1 = new ExControls.ExDateTimePicker();
             this.exfbdialog = new ExControls.ExFolderBrowserDialog(this.components);
+            this.button2 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.exTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -173,6 +177,31 @@ namespace ExControls.Test
             this.progressBar2.Size = new System.Drawing.Size(281, 23);
             this.progressBar2.TabIndex = 14;
             this.progressBar2.Value = 50;
+            // 
+            // hScrollBar1
+            // 
+            this.hScrollBar1.Location = new System.Drawing.Point(357, 349);
+            this.hScrollBar1.Name = "hScrollBar1";
+            this.hScrollBar1.Size = new System.Drawing.Size(291, 54);
+            this.hScrollBar1.TabIndex = 15;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(414, 309);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 16;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(511, 306);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 24);
+            this.comboBox1.TabIndex = 17;
             // 
             // exComboBox3
             // 
@@ -403,7 +432,7 @@ namespace ExControls.Test
             // 
             // exComboBox2
             // 
-            this.exComboBox2.BackColor = System.Drawing.Color.Honeydew;
+            this.exComboBox2.BackColor = System.Drawing.Color.DarkGreen;
             this.exComboBox2.DefaultStyle = false;
             this.exComboBox2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.exComboBox2.DropDownSelectedRowBackColor = System.Drawing.SystemColors.Highlight;
@@ -435,8 +464,8 @@ namespace ExControls.Test
             exComboBoxStyle6.ButtonRenderFirst = null;
             exComboBoxStyle6.ForeColor = null;
             this.exComboBox2.StyleHighlight = exComboBoxStyle6;
-            exComboBoxStyle7.BackColor = System.Drawing.Color.Honeydew;
-            exComboBoxStyle7.ButtonBackColor = System.Drawing.Color.MediumAquamarine;
+            exComboBoxStyle7.BackColor = System.Drawing.Color.DarkGreen;
+            exComboBoxStyle7.ButtonBackColor = System.Drawing.Color.Teal;
             exComboBoxStyle7.ButtonBorderColor = System.Drawing.Color.CornflowerBlue;
             exComboBoxStyle7.ButtonRenderFirst = true;
             this.exComboBox2.StyleNormal = exComboBoxStyle7;
@@ -456,6 +485,7 @@ namespace ExControls.Test
             this.exComboBox1.DefaultStyle = false;
             this.exComboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.exComboBox1.DropDownSelectedRowBackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.exComboBox1.Enabled = false;
             this.exComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exComboBox1.ForeColor = System.Drawing.Color.Black;
             this.exComboBox1.FormattingEnabled = true;
@@ -468,7 +498,7 @@ namespace ExControls.Test
             this.exComboBox1.Name = "exComboBox1";
             this.exComboBox1.Size = new System.Drawing.Size(121, 23);
             exComboBoxStyle9.ArrowColor = null;
-            exComboBoxStyle9.BackColor = null;
+            exComboBoxStyle9.BackColor = System.Drawing.SystemColors.Highlight;
             exComboBoxStyle9.BorderColor = null;
             exComboBoxStyle9.ButtonBackColor = null;
             exComboBoxStyle9.ButtonBorderColor = null;
@@ -501,6 +531,7 @@ namespace ExControls.Test
             // 
             // exDateTimePicker1
             // 
+            this.exDateTimePicker1.BackColor = System.Drawing.Color.Gray;
             this.exDateTimePicker1.DefaultStyle = false;
             this.exDateTimePicker1.DisabledBackColor = System.Drawing.Color.Empty;
             this.exDateTimePicker1.HighlightColor = System.Drawing.SystemColors.Highlight;
@@ -513,11 +544,25 @@ namespace ExControls.Test
             // 
             this.exfbdialog.InitialDirectory = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(662, 45);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 18;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.progressBar2);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.bbrowser);
@@ -575,6 +620,10 @@ namespace ExControls.Test
         private System.Windows.Forms.Button bbrowser;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.HScrollBar hScrollBar1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

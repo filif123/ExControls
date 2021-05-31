@@ -25,7 +25,7 @@ namespace ExControls
         /// <summary>
         ///     New value of changed property
         /// </summary>
-        public object Value { get; set; }
+        public object Value { get; }
 
         /// <summary>
         ///     Name of changed property

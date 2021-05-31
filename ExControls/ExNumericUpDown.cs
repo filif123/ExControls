@@ -338,7 +338,6 @@ namespace ExControls
 
             internal UpDownButtons(ExNumericUpDown parent)
             {
-                //SetStyle(ControlStyles.Opaque, true);
                 SetStyle(ControlStyles.FixedHeight, true);
                 SetStyle(ControlStyles.FixedWidth, true);
                 SetStyle(ControlStyles.Selectable, false);
@@ -480,7 +479,7 @@ namespace ExControls
                     return e;
                 var pt = new Win32.POINT(e.X, e.Y);
                 Win32.MapWindowPoints(child.Handle, Handle, ref pt, 1);
-                return new MouseEventArgs(e.Button, e.Clicks, pt.x, pt.y, e.Delta);
+                return new MouseEventArgs(e.Button, e.Clicks, pt.X, pt.Y, e.Delta);
             }
 
             protected override void OnPaint(PaintEventArgs e)

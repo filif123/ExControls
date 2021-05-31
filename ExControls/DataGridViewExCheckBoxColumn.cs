@@ -188,17 +188,6 @@ namespace ExControls
                 DataGridView.InvalidateColumn(Index);
             }
         }
-
-        public DataGridViewExCheckBoxColumn ParentToChild(DataGridViewCheckBoxColumn parent)
-        {
-            //var child = new DataGridViewDynamicCheckBoxColumn();
-            foreach (PropertyInfo prop in parent.GetType().GetProperties())
-            {
-                GetType().GetProperty(prop.Name)?.SetValue(this, prop.GetValue(prop, null), null);
-            }
-
-            return this;
-        }
     }
 
     /// <summary>
@@ -301,17 +290,6 @@ namespace ExControls
             cell.SquareBackColor = SquareBackColor;
             cell.HighlightColor = HighlightColor;
             return cell;
-        }
-
-        public static DataGridViewExCheckBoxColumn ParentToChild(DataGridViewCheckBoxColumn parent)
-        {
-            var child = new DataGridViewExCheckBoxColumn();
-            foreach (PropertyInfo prop in parent.GetType().GetProperties())
-            {
-                child.GetType().GetProperty(prop.Name)?.SetValue(child, prop.GetValue(prop, null), null);
-            }
-
-            return child;
         }
 
         /// <inheritdoc />
