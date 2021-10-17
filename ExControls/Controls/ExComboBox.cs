@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Design;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ExControls.Controls;
 
@@ -201,6 +202,8 @@ namespace ExControls
             }
         }
 
+        public bool UseDarkScrollBar { get; set; }
+
         /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
         [ExCategory("Changed Property")]
         [Description("Occurs when the BorderColor property changes.")]
@@ -288,6 +291,24 @@ namespace ExControls
                     }
                 }
         }
+
+        protected override void OnDropDown(EventArgs e)
+        {
+            // Install wrapper
+            base.OnDropDown(e);
+
+            if (!UseDarkScrollBar)
+                return;
+
+            // Retrieve handle to dropdown list
+            var info = new Win32.COMBOBOXINFO();
+            info.cbSize = Marshal.SizeOf(info);
+            SendMessageCb(Handle, 0x164, IntPtr.Zero, out info);
+            ExTools.SetTheme(info.hwndList,WindowsTheme.DarkExplorer);
+        }
+
+        [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
+        private static extern IntPtr SendMessageCb(IntPtr hWnd, int msg, IntPtr wp, out Win32.COMBOBOXINFO lp);
 
         private static IntPtr GetHbrush(Brush b)
         {

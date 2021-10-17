@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace ExControls
 {
     /// <summary>
-    ///     Expanded ComboBox Control for ToolStrip
+    ///     Expanded ComboBox Control for ToolStrip.
     /// </summary>
     public class ToolStripExComboBox : ToolStripControlHost
     {
@@ -19,7 +19,7 @@ namespace ExControls
         }
 
         /// <summary>
-        ///     Object ComboBox, type <see cref="ExComboBox" />
+        ///     Object ComboBox, type <see cref="ExComboBox" />.
         /// </summary>
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]

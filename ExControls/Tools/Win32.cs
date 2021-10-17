@@ -272,6 +272,16 @@ namespace ExControls
                 return string.Format(CultureInfo.CurrentCulture, "{{Left={0},Top={1},Right={2},Bottom={3}}}", Left, Top, Right, Bottom);
             }
         }
+        public struct COMBOBOXINFO
+        {
+            public int cbSize;
+            public RECT rcItem;
+            public RECT rcButton;
+            public ComboBoxButtonState buttonState;
+            public IntPtr hwndCombo;
+            public IntPtr hwndEdit;
+            public IntPtr hwndList;
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct MARGINS
@@ -306,6 +316,13 @@ namespace ExControls
         #endregion
 
         #region Enums
+
+        public enum ComboBoxButtonState
+        {
+            STATE_SYSTEM_NONE = 0,
+            STATE_SYSTEM_INVISIBLE = 0x00008000,
+            STATE_SYSTEM_PRESSED = 0x00000008
+        }
 
         [Flags]
         public enum SHGSI : uint

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using static ExControls.Win32.SHGSI;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace ExControls
 {
@@ -18,7 +20,10 @@ namespace ExControls
         /// <param name="selected">Selected style of the icon.</param>
         /// <param name="linkOverlay">Link overlay of the icon.</param>
         /// <param name="useShellIconSize">Use shell size of the icon instead of the system size metrics.</param>
-        public ShellIcon(ShellIconType type, ShellIconSize size = ShellIconSize.Normal, bool selected = false, bool linkOverlay = false,
+        public ShellIcon(ShellIconType type, 
+            ShellIconSize size = ShellIconSize.Normal, 
+            bool selected = false, 
+            bool linkOverlay = false,
             bool useShellIconSize = false)
         {
             Type = type;
@@ -81,7 +86,6 @@ namespace ExControls
         // ReSharper disable once UnusedParameter.Local
 #pragma warning disable IDE0060 // Remove unused parameter
         private void Dispose(bool disposing)
-
         {
             if (!Disposed)
             {
@@ -96,19 +100,13 @@ namespace ExControls
         /// </summary>
         /// <param name="icon"></param>
         /// <returns></returns>
-        public static implicit operator Icon(ShellIcon icon)
-        {
-            return Icon.FromHandle(icon.Handle);
-        }
+        public static implicit operator Icon(ShellIcon icon) => Icon.FromHandle(icon.Handle);
 
         /// <summary>
         ///     Converts <see cref="ShellIcon"/> to <see cref="Bitmap"/> image.
         /// </summary>
         /// <returns></returns>
-        public Bitmap ToBitmap()
-        {
-            return Icon.FromHandle(Handle).ToBitmap();
-        }
+        public Bitmap ToBitmap() => Icon.FromHandle(Handle).ToBitmap();
 
         private static Win32.SHSTOCKICONINFO GetStockIconInfo(Win32.SHGSI flags, ShellIconType type)
         {
@@ -123,28 +121,32 @@ namespace ExControls
 
         private void GetStockIcon()
         {
-            var flags = Win32.SHGSI.SHGSI_ICON | Win32.SHGSI.SHGSI_SYSICONINDEX;
+            var flags = SHGSI_ICON | SHGSI_SYSICONINDEX;
             switch (Size)
             {
                 case ShellIconSize.Normal:
                     break;
                 case ShellIconSize.Large:
-                    flags |= Win32.SHGSI.SHGSI_LARGEICON;
+                    flags |= SHGSI_LARGEICON;
                     break;
                 case ShellIconSize.Small:
-                    flags |= Win32.SHGSI.SHGSI_SMALLICON;
+                    flags |= SHGSI_SMALLICON;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (Selected) flags |= Win32.SHGSI.SHGSI_SELECTED;
+            if (Selected) 
+                flags |= SHGSI_SELECTED;
 
-            if (UseShellIconSize) flags |= Win32.SHGSI.SHGSI_SHELLICONSIZE;
+            if (UseShellIconSize) 
+                flags |= SHGSI_SHELLICONSIZE;
 
-            if (LinkOverlay) flags |= Win32.SHGSI.SHGSI_LINKOVERLAY;
+            if (LinkOverlay) 
+                flags |= SHGSI_LINKOVERLAY;
 
             var sii = GetStockIconInfo(flags, Type);
+
             Handle = sii.hIcon;
             Index = sii.iIcon;
         }
@@ -152,7 +154,8 @@ namespace ExControls
         /// <inheritdoc />
         ~ShellIcon()
         {
-            if (!Disposed) Dispose(false);
+            if (!Disposed) 
+                Dispose(false);
         }
     }
 

@@ -23,77 +23,77 @@ namespace ExControls
     }
 
     /// <summary>
-    ///     Type of category in PropertyGrid
+    ///     Type of category in PropertyGrid.
     /// </summary>
     public enum CategoryType
     {
         /// <summary>
-        ///     Default category
+        ///     Default category.
         /// </summary>
         Default,
 
         /// <summary>
-        ///     Action category
+        ///     Action category.
         /// </summary>
         Action,
 
         /// <summary>
-        ///     Appearance category
+        ///     Appearance category.
         /// </summary>
         Appearance,
 
         /// <summary>
-        ///     Asynchronous category
+        ///     Asynchronous category.
         /// </summary>
         Asynchronous,
 
         /// <summary>
-        ///     Behavior category
+        ///     Behavior category.
         /// </summary>
         Behavior,
 
         /// <summary>
-        ///     Data category
+        ///     Data category.
         /// </summary>
         Data,
 
         /// <summary>
-        ///     Design category
+        ///     Design category.
         /// </summary>
         Design,
 
         /// <summary>
-        ///     DragDrop category
+        ///     DragDrop category.
         /// </summary>
         DragDrop,
 
         /// <summary>
-        ///     Focus category
+        ///     Focus category.
         /// </summary>
         Focus,
 
         /// <summary>
-        ///     Format category
+        ///     Format category.
         /// </summary>
         Format,
 
         /// <summary>
-        ///     Key category
+        ///     Key category.
         /// </summary>
         Key,
 
         /// <summary>
-        /// Layout category
+        /// Layout category.
         /// </summary>
         Layout,
 
         /// <summary>
-        ///  Mousde category
+        ///  Mousde category.
         /// </summary>
         Mouse,
 
         /// <summary>
-        ///     WindowStyle category
+        ///     WindowStyle category.
         /// </summary>
         WindowStyle
     }

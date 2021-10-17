@@ -10,12 +10,9 @@ namespace ExControls
         /// <summary>
         ///     Gets a localized text to specified MessageBox button.
         /// </summary>
-        /// <param name="type">type of MessageBox button</param>
+        /// <param name="type">Type of MessageBox button.</param>
         /// <returns></returns>
-        public static string GetLocalizedString(MessageBoxCmdType type)
-        {
-            return Marshal.PtrToStringAuto(Win32.MB_GetString((int)type));
-        }
+        public static string GetLocalizedString(MessageBoxCmdType type) => Marshal.PtrToStringAuto(Win32.MB_GetString((int)type));
     }
 
     /// <summary>
@@ -24,57 +21,57 @@ namespace ExControls
     public enum MessageBoxCmdType
     {
         /// <summary>
-        ///     OK button
+        ///     OK button.
         /// </summary>
         OK = 0,
 
         /// <summary>
-        ///     Cancel button
+        ///     Cancel button.
         /// </summary>
         Cancel = 1,
 
         /// <summary>
-        ///     Abort button
+        ///     Abort button.
         /// </summary>
         Abort = 2,
 
         /// <summary>
-        ///     Retry button
+        ///     Retry button.
         /// </summary>
         Retry = 3,
 
         /// <summary>
-        ///     Ignore
+        ///     Ignore button.
         /// </summary>
         Ignore = 4,
 
         /// <summary>
-        ///     Yes button
+        ///     Yes button.
         /// </summary>
         Yes = 5,
 
         /// <summary>
-        ///     No button
+        ///     No button.
         /// </summary>
         No = 6,
 
         /// <summary>
-        ///     Close button
+        ///     Close button.
         /// </summary>
         Close = 7,
 
         /// <summary>
-        ///     Help button
+        ///     Help button.
         /// </summary>
         Help = 8,
 
         /// <summary>
-        ///     Try Again button
+        ///     Try Again button.
         /// </summary>
         TryAgain = 9,
 
         /// <summary>
-        ///     Continue button
+        ///     Continue button.
         /// </summary>
         Continue = 10
     }

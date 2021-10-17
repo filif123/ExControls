@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using System.Windows.Forms.Design;
 using ExControls.Controls;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace ExControls
 {

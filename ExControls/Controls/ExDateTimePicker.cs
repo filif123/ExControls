@@ -193,14 +193,27 @@ namespace ExControls
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            /*if (!DefaultStyle)
+            if (!DefaultStyle)
             {
-                dtpInfo.cbSize = Marshal.SizeOf(dtpInfo);
-                SendMessage(Handle, DTM_GETDATETIMEPICKERINFO, IntPtr.Zero, ref dtpInfo);
-                Edit = new DTPEdit();
-                Edit.AssignHandle(dtpInfo.hwndEdit);
-            }*/
+
+                //Edit = new DTPEdit();
+                //Edit.AssignHandle(dtpInfo.hwndEdit);
+            }
         }
+
+        /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.MouseClick" /> event.</summary>
+        /// <param name="e">An <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data. </param>
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
+
+            
+        }
+
+        
+
+        [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, out Win32.DATETIMEPICKERINFO lp);
 
         /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleDestroyed" /> event.</summary>
         /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
@@ -368,6 +381,8 @@ namespace ExControls
                 _selected = true;
                 Invalidate();
             }
+
+            
         }
 
         /// <inheritdoc />
@@ -384,6 +399,7 @@ namespace ExControls
                 Invalidate();
             }
         }
+
 
         /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
         protected virtual void OnDefaultStyleChanged()

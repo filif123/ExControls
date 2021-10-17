@@ -7,7 +7,7 @@ using ExControls.Controls;
 namespace ExControls
 {
     /// <summary>
-    ///     Class for definition styles for Control
+    ///     Class for definition styles for Control.
     /// </summary>
     [DisplayName("(Collection)")]
     public class ExStyle : IExNotifyPropertyChanged, ICloneable
@@ -17,14 +17,14 @@ namespace ExControls
         private Color? _foreColor;
 
         /// <summary>
-        ///     Constructor for designer
+        ///     Constructor for designer.
         /// </summary>
         public ExStyle() : this(StyleType.Normal)
         {
         }
 
         /// <summary>
-        ///     Constructor
+        ///     Constructor.
         /// </summary>
         protected ExStyle(StyleType type)
         {
@@ -32,7 +32,7 @@ namespace ExControls
         }
 
         /// <summary>
-        ///     Constructor
+        ///     Constructor.
         /// </summary>
         /// <param name="copy"></param>
         protected ExStyle(ExStyle copy)
@@ -44,12 +44,12 @@ namespace ExControls
         }
 
         /// <summary>
-        ///     Type of style
+        ///     Type of style.
         /// </summary>
         public StyleType Type { get; }
 
         /// <summary>
-        ///     Foreground color of the Control
+        ///     Foreground color of the Control.
         /// </summary>
         [Browsable(true)]
         [ExCategory(CategoryType.Appearance)]
@@ -69,7 +69,7 @@ namespace ExControls
         }
 
         /// <summary>
-        ///     Background color of the Control
+        ///     Background color of the Control.
         /// </summary>
         [Browsable(true)]
         [ExCategory(CategoryType.Appearance)]
@@ -90,7 +90,7 @@ namespace ExControls
         }
 
         /// <summary>
-        ///     Color of the Controls's border
+        ///     Color of the Controls's border.
         /// </summary>
         [Browsable(true)]
         [ExCategory(CategoryType.Appearance)]
@@ -131,7 +131,7 @@ namespace ExControls
     }
 
     /// <summary>
-    ///     Type of style
+    ///     Type of style.
     /// </summary>
     public enum StyleType
     {

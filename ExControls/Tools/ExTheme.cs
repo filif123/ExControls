@@ -4,7 +4,7 @@ namespace ExControls
 {
     //TODO WORK IN PROGRESS
     /// <summary>
-    ///     Theme for Winforms application and its controls.
+    ///     Theme for WinForms application and its controls.
     /// </summary>
     internal class ExTheme
     {

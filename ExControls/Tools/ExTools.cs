@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -82,19 +84,36 @@ namespace ExControls
             if (control is null)
                 throw new ArgumentNullException(nameof(control));
 
+            SetTheme(control.Handle, theme, customThemeName);
+        }
+
+        /// <summary>
+        ///     Sets theme for the control. Works only on some controls.
+        /// </summary>
+        /// <param name="handle">editing control handle</param>
+        /// <param name="theme">theme that will be used</param>
+        /// <param name="customThemeName">
+        ///     used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" /> and
+        ///     specifify theme name
+        /// </param>
+        public static void SetTheme(IntPtr handle, WindowsTheme theme, string customThemeName = "")
+        {
+            if (handle == IntPtr.Zero)
+                throw new ArgumentNullException(nameof(handle));
+
             switch (theme)
             {
                 case WindowsTheme.None:
-                    Win32.SetWindowTheme(control.Handle, "", "");
+                    Win32.SetWindowTheme(handle, "", "");
                     break;
                 case WindowsTheme.Explorer:
-                    Win32.SetWindowTheme(control.Handle, "Explorer", null);
+                    Win32.SetWindowTheme(handle, "Explorer", null);
                     break;
                 case WindowsTheme.DarkExplorer:
-                    Win32.SetWindowTheme(control.Handle, "DarkMode_Explorer", null);
+                    Win32.SetWindowTheme(handle, "DarkMode_Explorer", null);
                     break;
                 case WindowsTheme.Other:
-                    Win32.SetWindowTheme(control.Handle, customThemeName, null);
+                    Win32.SetWindowTheme(handle, customThemeName, null);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
@@ -128,13 +147,31 @@ namespace ExControls
             }
         }
 
+        /// <summary>
+        ///     Converts collection to <see cref="ExBindingList{TSource}"/>.
+        /// </summary>
+        /// <typeparam name="TSource">Type of item in collection.</typeparam>
+        /// <param name="source">The collection.</param>
+        /// <returns>list of the type <see cref="ExBindingList{TSource}"/>.</returns>
+        /// <exception cref="ArgumentNullException">when <paramref name="source"/> is <see langword="null"/>.</exception>
+        public static ExBindingList<TSource> ToExBindingList<TSource>(this ICollection<TSource> source)
+        {
+            return source != null ? new ExBindingList<TSource>(source.ToList()) : throw new ArgumentNullException(nameof(source));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="process"></param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
         public static int SendMessage(this Process process, uint msg, IntPtr wParam, IntPtr lParam)
         {
             if (process is null || process.HasExited)
-            {
                 return -1;
-            }
-
+            
             return Win32.SendMessage(process.MainWindowHandle, msg, wParam, lParam);
         }
 

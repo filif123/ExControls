@@ -12,7 +12,6 @@ namespace ExControls
     /// <typeparam name="T"></typeparam>
     public class ExBindingList<T> : BindingList<T>
     {
-        private readonly List<T> _baseList;
         private bool _isSorted;
         private ListSortDirection _sortDirection = ListSortDirection.Ascending;
         private PropertyDescriptor _sortProperty;
@@ -31,11 +30,8 @@ namespace ExControls
         ///     An <see cref="T:System.Collections.Generic.IList`1" /> of items to be contained in the
         ///     <see cref="T:System.ComponentModel.BindingList`1" />.
         /// </param>
-        public ExBindingList(List<T> list) : base(list)
+        public ExBindingList(IList<T> list) : base(list)
         {
-            _baseList = list;
-            if (_baseList == null)
-                throw new ArgumentNullException(nameof(list));
         }
 
         /// <summary>
@@ -56,7 +52,7 @@ namespace ExControls
         /// <summary>
         ///     Gets or sets whether collection is sortable.
         /// </summary>
-        public bool Sortable { get; set; } = false;
+        public bool Sortable { get; set; } = true;
 
         /// <summary>
         ///     Gets or sets whether to trigger an event when sorting items in a collection.
@@ -92,7 +88,8 @@ namespace ExControls
             _sortProperty = prop;
             _sortDirection = direction;
 
-            _baseList.Sort(Compare);
+            if(Items is List<T> list)
+                list.Sort(Compare);
 
             _isSorted = true;
 
@@ -152,11 +149,11 @@ namespace ExControls
             RaiseListChangedEvents = false;
             var newItemsCount = 0;
 
-            if (items is ICollection<T> collection)
+            if (items is ICollection<T> collection && Items is List<T> list)
             {
                 var requiredCapacity = Count + collection.Count;
-                if (requiredCapacity > _baseList.Capacity)
-                    _baseList.Capacity = requiredCapacity;
+                if (requiredCapacity > list.Capacity)
+                    list.Capacity = requiredCapacity;
             }
 
             foreach (var item in items)
