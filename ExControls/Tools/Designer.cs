@@ -12,7 +12,10 @@ namespace ExControls
 
         public override DesignerActionListCollection ActionLists
         {
-            get { return actionList ??= new DesignerActionListCollection(new DesignerActionList[] { new ExControlDesignerActionList(this) }); }
+            get
+            {
+                return actionList ??= new DesignerActionListCollection(new DesignerActionList[] { new ExControlDesignerActionList(this) });
+            }
         }
     }
 
