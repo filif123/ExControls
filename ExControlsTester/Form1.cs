@@ -48,5 +48,20 @@ namespace ExControls.Test
                 renderer.DrawBackground(e.Graphics, e.ClipRectangle);
             }**/
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exVerticalMenu1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exTreeView2_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            
+        }
     }
 }

@@ -32,26 +32,32 @@ namespace ExControls.Test
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            ExControls.ExComboBoxStyle exComboBoxStyle25 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle26 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle27 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle28 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle29 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle30 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle31 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle32 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle33 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle34 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle35 = new ExControls.ExComboBoxStyle();
-            ExControls.ExComboBoxStyle exComboBoxStyle36 = new ExControls.ExComboBoxStyle();
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Jano");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Uzel2");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Jozef", new System.Windows.Forms.TreeNode[] {
+            treeNode2});
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("fgdfgd");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("RadimUzel");
+            ExControls.ExComboBoxStyle exComboBoxStyle1 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle2 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle3 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle4 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle5 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle6 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle7 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle8 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle9 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle10 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle11 = new ExControls.ExComboBoxStyle();
+            ExControls.ExComboBoxStyle exComboBoxStyle12 = new ExControls.ExComboBoxStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.exTableLayoutPanel1 = new ExControls.ExTableLayoutPanel();
-            this.button3 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.tabPage9 = new System.Windows.Forms.TabPage();
             this.tabPage10 = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
             this.bbrowser = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
@@ -59,6 +65,11 @@ namespace ExControls.Test
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.exTreeView2 = new ExControls.Controls.ExTreeView();
+            this.exVerticalMenu1 = new ExControls.Controls.ExVerticalMenu();
+            this.exTreeView1 = new ExControls.Controls.ExTreeView();
+            this.exCheckedListBox1 = new ExControls.ExCheckedListBox();
             this.propertyGrid1 = new ExControls.Controls.ExPropertyGrid();
             this.exRichTextBox1 = new ExControls.ExRichTextBox();
             this.exComboBox3 = new ExControls.ExComboBox();
@@ -81,10 +92,10 @@ namespace ExControls.Test
             this.exComboBox1 = new ExControls.ExComboBox();
             this.exDateTimePicker1 = new ExControls.ExDateTimePicker();
             this.exfbdialog = new ExControls.ExFolderBrowserDialog(this.components);
-            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.tabPage11 = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.exTableLayoutPanel1.SuspendLayout();
+            this.exVerticalMenu1.SuspendLayout();
             this.exTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.exNumericUpDown1)).BeginInit();
@@ -123,7 +134,6 @@ namespace ExControls.Test
             this.exTableLayoutPanel1.ColumnCount = 2;
             this.exTableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.exTableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.exTableLayoutPanel1.Controls.Add(this.button3, 0, 0);
             this.exTableLayoutPanel1.Location = new System.Drawing.Point(51, 12);
             this.exTableLayoutPanel1.Name = "exTableLayoutPanel1";
             this.exTableLayoutPanel1.RowCount = 2;
@@ -131,15 +141,6 @@ namespace ExControls.Test
             this.exTableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.exTableLayoutPanel1.Size = new System.Drawing.Size(200, 100);
             this.exTableLayoutPanel1.TabIndex = 0;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(3, 3);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
@@ -181,6 +182,15 @@ namespace ExControls.Test
             this.tabPage10.Text = "tabPage10";
             this.tabPage10.UseVisualStyleBackColor = true;
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(547, 481);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(76, 36);
+            this.button3.TabIndex = 0;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
             // bbrowser
             // 
             this.bbrowser.BackColor = System.Drawing.SystemColors.ButtonShadow;
@@ -221,9 +231,13 @@ namespace ExControls.Test
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(436, 406);
+            this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Location = new System.Drawing.Point(466, 481);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(75, 36);
             this.button1.TabIndex = 16;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
@@ -239,7 +253,7 @@ namespace ExControls.Test
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(202, 261);
+            this.button2.Location = new System.Drawing.Point(218, 261);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 18;
@@ -247,16 +261,81 @@ namespace ExControls.Test
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // toolStripTextBox1
+            // 
+            this.toolStripTextBox1.BackColor = System.Drawing.SystemColors.Highlight;
+            this.toolStripTextBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripTextBox1.Name = "toolStripTextBox1";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 31);
+            // 
+            // exTreeView2
+            // 
+            this.exTreeView2.Location = new System.Drawing.Point(297, 154);
+            this.exTreeView2.Name = "exTreeView2";
+            treeNode1.Name = "Uzel0";
+            treeNode1.Text = "Jano";
+            treeNode2.Name = "Uzel2";
+            treeNode2.Text = "Uzel2";
+            treeNode3.Name = "Uzel1";
+            treeNode3.Text = "Jozef";
+            this.exTreeView2.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode3});
+            this.exTreeView2.Size = new System.Drawing.Size(149, 182);
+            this.exTreeView2.TabIndex = 26;
+            this.exTreeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.exTreeView2_AfterSelect);
+            // 
+            // exVerticalMenu1
+            // 
+            this.exVerticalMenu1.Controls.Add(this.exTreeView2);
+            this.exVerticalMenu1.Location = new System.Drawing.Point(625, 74);
+            this.exVerticalMenu1.Name = "exVerticalMenu1";
+            this.exVerticalMenu1.SelectedPage = null;
+            this.exVerticalMenu1.Size = new System.Drawing.Size(677, 443);
+            this.exVerticalMenu1.TabIndex = 25;
+            this.exVerticalMenu1.Load += new System.EventHandler(this.exVerticalMenu1_Load);
+            // 
+            // exTreeView1
+            // 
+            this.exTreeView1.Location = new System.Drawing.Point(681, 420);
+            this.exTreeView1.Name = "exTreeView1";
+            treeNode4.Name = "";
+            treeNode4.Text = "fgdfgd";
+            treeNode5.Name = "ooooo";
+            treeNode5.Text = "RadimUzel";
+            this.exTreeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode4,
+            treeNode5});
+            this.exTreeView1.Size = new System.Drawing.Size(121, 97);
+            this.exTreeView1.TabIndex = 24;
+            // 
+            // exCheckedListBox1
+            // 
+            this.exCheckedListBox1.DefaultStyle = false;
+            this.exCheckedListBox1.FormattingEnabled = true;
+            this.exCheckedListBox1.HighlightColor = System.Drawing.SystemColors.Highlight;
+            this.exCheckedListBox1.Items.AddRange(new object[] {
+            "gfdgds",
+            "sdcfsdfsd",
+            "vcfdscvfsdfsd",
+            " 8"});
+            this.exCheckedListBox1.Location = new System.Drawing.Point(152, 415);
+            this.exCheckedListBox1.Name = "exCheckedListBox1";
+            this.exCheckedListBox1.Size = new System.Drawing.Size(120, 89);
+            this.exCheckedListBox1.SquareBackColor = System.Drawing.Color.White;
+            this.exCheckedListBox1.TabIndex = 22;
+            // 
             // propertyGrid1
             // 
             this.propertyGrid1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.propertyGrid1.DisabledItemForeColor = System.Drawing.Color.DimGray;
             this.propertyGrid1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.propertyGrid1.HelpBackColor = System.Drawing.SystemColors.ControlDark;
             this.propertyGrid1.Location = new System.Drawing.Point(632, 12);
             this.propertyGrid1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.SelectedObject = this.propertyGrid1;
-            this.propertyGrid1.Size = new System.Drawing.Size(249, 263);
+            this.propertyGrid1.SelectedObject = this.exTreeView1;
+            this.propertyGrid1.Size = new System.Drawing.Size(343, 395);
             this.propertyGrid1.TabIndex = 21;
             // 
             // exRichTextBox1
@@ -269,7 +348,7 @@ namespace ExControls.Test
             this.exRichTextBox1.DisabledBorderColor = System.Drawing.SystemColors.InactiveBorder;
             this.exRichTextBox1.DisabledForeColor = System.Drawing.SystemColors.GrayText;
             this.exRichTextBox1.HighlightColor = System.Drawing.SystemColors.Highlight;
-            this.exRichTextBox1.Location = new System.Drawing.Point(662, 281);
+            this.exRichTextBox1.Location = new System.Drawing.Point(12, 395);
             this.exRichTextBox1.Name = "exRichTextBox1";
             this.exRichTextBox1.ReadOnly = true;
             this.exRichTextBox1.Size = new System.Drawing.Size(100, 96);
@@ -288,35 +367,35 @@ namespace ExControls.Test
             this.exComboBox3.Location = new System.Drawing.Point(12, 261);
             this.exComboBox3.Name = "exComboBox3";
             this.exComboBox3.Size = new System.Drawing.Size(121, 23);
-            exComboBoxStyle25.ArrowColor = null;
-            exComboBoxStyle25.BackColor = null;
-            exComboBoxStyle25.BorderColor = null;
-            exComboBoxStyle25.ButtonBackColor = null;
-            exComboBoxStyle25.ButtonBorderColor = null;
-            exComboBoxStyle25.ButtonRenderFirst = null;
-            exComboBoxStyle25.ForeColor = null;
-            this.exComboBox3.StyleDisabled = exComboBoxStyle25;
-            exComboBoxStyle26.ArrowColor = null;
-            exComboBoxStyle26.BackColor = null;
-            exComboBoxStyle26.BorderColor = null;
-            exComboBoxStyle26.ButtonBackColor = null;
-            exComboBoxStyle26.ButtonBorderColor = null;
-            exComboBoxStyle26.ButtonRenderFirst = null;
-            exComboBoxStyle26.ForeColor = null;
-            this.exComboBox3.StyleHighlight = exComboBoxStyle26;
-            exComboBoxStyle27.BackColor = System.Drawing.Color.DarkSalmon;
-            exComboBoxStyle27.ButtonBackColor = System.Drawing.Color.Coral;
-            exComboBoxStyle27.ButtonBorderColor = System.Drawing.Color.DarkOrange;
-            exComboBoxStyle27.ButtonRenderFirst = true;
-            this.exComboBox3.StyleNormal = exComboBoxStyle27;
-            exComboBoxStyle28.ArrowColor = null;
-            exComboBoxStyle28.BackColor = null;
-            exComboBoxStyle28.BorderColor = null;
-            exComboBoxStyle28.ButtonBackColor = null;
-            exComboBoxStyle28.ButtonBorderColor = null;
-            exComboBoxStyle28.ButtonRenderFirst = null;
-            exComboBoxStyle28.ForeColor = null;
-            this.exComboBox3.StyleSelected = exComboBoxStyle28;
+            exComboBoxStyle1.ArrowColor = null;
+            exComboBoxStyle1.BackColor = null;
+            exComboBoxStyle1.BorderColor = null;
+            exComboBoxStyle1.ButtonBackColor = null;
+            exComboBoxStyle1.ButtonBorderColor = null;
+            exComboBoxStyle1.ButtonRenderFirst = null;
+            exComboBoxStyle1.ForeColor = null;
+            this.exComboBox3.StyleDisabled = exComboBoxStyle1;
+            exComboBoxStyle2.ArrowColor = null;
+            exComboBoxStyle2.BackColor = null;
+            exComboBoxStyle2.BorderColor = null;
+            exComboBoxStyle2.ButtonBackColor = null;
+            exComboBoxStyle2.ButtonBorderColor = null;
+            exComboBoxStyle2.ButtonRenderFirst = null;
+            exComboBoxStyle2.ForeColor = null;
+            this.exComboBox3.StyleHighlight = exComboBoxStyle2;
+            exComboBoxStyle3.BackColor = System.Drawing.Color.DarkSalmon;
+            exComboBoxStyle3.ButtonBackColor = System.Drawing.Color.Coral;
+            exComboBoxStyle3.ButtonBorderColor = System.Drawing.Color.DarkOrange;
+            exComboBoxStyle3.ButtonRenderFirst = true;
+            this.exComboBox3.StyleNormal = exComboBoxStyle3;
+            exComboBoxStyle4.ArrowColor = null;
+            exComboBoxStyle4.BackColor = null;
+            exComboBoxStyle4.BorderColor = null;
+            exComboBoxStyle4.ButtonBackColor = null;
+            exComboBoxStyle4.ButtonBorderColor = null;
+            exComboBoxStyle4.ButtonRenderFirst = null;
+            exComboBoxStyle4.ForeColor = null;
+            this.exComboBox3.StyleSelected = exComboBoxStyle4;
             this.exComboBox3.TabIndex = 11;
             this.exComboBox3.UseDarkScrollBar = false;
             // 
@@ -430,7 +509,7 @@ namespace ExControls.Test
             this.exRadioButton2.AutoSize = true;
             this.exRadioButton2.DefaultStyle = false;
             this.exRadioButton2.HighlightColor = System.Drawing.SystemColors.Highlight;
-            this.exRadioButton2.Location = new System.Drawing.Point(148, 176);
+            this.exRadioButton2.Location = new System.Drawing.Point(299, 421);
             this.exRadioButton2.Name = "exRadioButton2";
             this.exRadioButton2.Size = new System.Drawing.Size(123, 20);
             this.exRadioButton2.TabIndex = 7;
@@ -439,14 +518,14 @@ namespace ExControls.Test
             // 
             // exRadioButton1
             // 
-            this.exRadioButton1.AutoSize = true;
             this.exRadioButton1.Checked = true;
             this.exRadioButton1.DefaultStyle = false;
+            this.exRadioButton1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.exRadioButton1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.exRadioButton1.HighlightColor = System.Drawing.SystemColors.Highlight;
-            this.exRadioButton1.Location = new System.Drawing.Point(12, 176);
+            this.exRadioButton1.Location = new System.Drawing.Point(152, 281);
             this.exRadioButton1.Name = "exRadioButton1";
-            this.exRadioButton1.Size = new System.Drawing.Size(123, 20);
+            this.exRadioButton1.Size = new System.Drawing.Size(145, 45);
             this.exRadioButton1.TabIndex = 6;
             this.exRadioButton1.TabStop = true;
             this.exRadioButton1.Text = "exRadioButton1";
@@ -457,7 +536,8 @@ namespace ExControls.Test
             this.exCheckBox1.AutoSize = true;
             this.exCheckBox1.BoxBackColor = System.Drawing.Color.White;
             this.exCheckBox1.Checked = true;
-            this.exCheckBox1.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            this.exCheckBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.exCheckBox1.DefaultStyle = false;
             this.exCheckBox1.HighlightColor = System.Drawing.SystemColors.Highlight;
             this.exCheckBox1.Location = new System.Drawing.Point(12, 148);
             this.exCheckBox1.Name = "exCheckBox1";
@@ -484,7 +564,7 @@ namespace ExControls.Test
             // 
             // exLineSeparator1
             // 
-            this.exLineSeparator1.Location = new System.Drawing.Point(12, 406);
+            this.exLineSeparator1.Location = new System.Drawing.Point(12, 523);
             this.exLineSeparator1.Name = "exLineSeparator1";
             this.exLineSeparator1.Size = new System.Drawing.Size(776, 13);
             this.exLineSeparator1.TabIndex = 0;
@@ -522,35 +602,35 @@ namespace ExControls.Test
             this.exComboBox2.Location = new System.Drawing.Point(144, 20);
             this.exComboBox2.Name = "exComboBox2";
             this.exComboBox2.Size = new System.Drawing.Size(121, 23);
-            exComboBoxStyle29.ArrowColor = null;
-            exComboBoxStyle29.BackColor = null;
-            exComboBoxStyle29.BorderColor = null;
-            exComboBoxStyle29.ButtonBackColor = null;
-            exComboBoxStyle29.ButtonBorderColor = null;
-            exComboBoxStyle29.ButtonRenderFirst = null;
-            exComboBoxStyle29.ForeColor = null;
-            this.exComboBox2.StyleDisabled = exComboBoxStyle29;
-            exComboBoxStyle30.ArrowColor = null;
-            exComboBoxStyle30.BackColor = null;
-            exComboBoxStyle30.BorderColor = null;
-            exComboBoxStyle30.ButtonBackColor = null;
-            exComboBoxStyle30.ButtonBorderColor = null;
-            exComboBoxStyle30.ButtonRenderFirst = null;
-            exComboBoxStyle30.ForeColor = null;
-            this.exComboBox2.StyleHighlight = exComboBoxStyle30;
-            exComboBoxStyle31.BackColor = System.Drawing.Color.DarkGreen;
-            exComboBoxStyle31.ButtonBackColor = System.Drawing.Color.Teal;
-            exComboBoxStyle31.ButtonBorderColor = System.Drawing.Color.CornflowerBlue;
-            exComboBoxStyle31.ButtonRenderFirst = true;
-            this.exComboBox2.StyleNormal = exComboBoxStyle31;
-            exComboBoxStyle32.ArrowColor = null;
-            exComboBoxStyle32.BackColor = null;
-            exComboBoxStyle32.BorderColor = null;
-            exComboBoxStyle32.ButtonBackColor = System.Drawing.SystemColors.ActiveCaption;
-            exComboBoxStyle32.ButtonBorderColor = null;
-            exComboBoxStyle32.ButtonRenderFirst = null;
-            exComboBoxStyle32.ForeColor = null;
-            this.exComboBox2.StyleSelected = exComboBoxStyle32;
+            exComboBoxStyle5.ArrowColor = null;
+            exComboBoxStyle5.BackColor = null;
+            exComboBoxStyle5.BorderColor = null;
+            exComboBoxStyle5.ButtonBackColor = null;
+            exComboBoxStyle5.ButtonBorderColor = null;
+            exComboBoxStyle5.ButtonRenderFirst = null;
+            exComboBoxStyle5.ForeColor = null;
+            this.exComboBox2.StyleDisabled = exComboBoxStyle5;
+            exComboBoxStyle6.ArrowColor = null;
+            exComboBoxStyle6.BackColor = null;
+            exComboBoxStyle6.BorderColor = null;
+            exComboBoxStyle6.ButtonBackColor = null;
+            exComboBoxStyle6.ButtonBorderColor = null;
+            exComboBoxStyle6.ButtonRenderFirst = null;
+            exComboBoxStyle6.ForeColor = null;
+            this.exComboBox2.StyleHighlight = exComboBoxStyle6;
+            exComboBoxStyle7.BackColor = System.Drawing.Color.DarkGreen;
+            exComboBoxStyle7.ButtonBackColor = System.Drawing.Color.Teal;
+            exComboBoxStyle7.ButtonBorderColor = System.Drawing.Color.CornflowerBlue;
+            exComboBoxStyle7.ButtonRenderFirst = true;
+            this.exComboBox2.StyleNormal = exComboBoxStyle7;
+            exComboBoxStyle8.ArrowColor = null;
+            exComboBoxStyle8.BackColor = null;
+            exComboBoxStyle8.BorderColor = null;
+            exComboBoxStyle8.ButtonBackColor = System.Drawing.SystemColors.ActiveCaption;
+            exComboBoxStyle8.ButtonBorderColor = null;
+            exComboBoxStyle8.ButtonRenderFirst = null;
+            exComboBoxStyle8.ForeColor = null;
+            this.exComboBox2.StyleSelected = exComboBoxStyle8;
             this.exComboBox2.TabIndex = 10;
             this.exComboBox2.UseDarkScrollBar = false;
             // 
@@ -572,35 +652,35 @@ namespace ExControls.Test
             this.exComboBox1.Location = new System.Drawing.Point(6, 21);
             this.exComboBox1.Name = "exComboBox1";
             this.exComboBox1.Size = new System.Drawing.Size(121, 23);
-            exComboBoxStyle33.ArrowColor = null;
-            exComboBoxStyle33.BackColor = System.Drawing.SystemColors.Highlight;
-            exComboBoxStyle33.BorderColor = null;
-            exComboBoxStyle33.ButtonBackColor = null;
-            exComboBoxStyle33.ButtonBorderColor = null;
-            exComboBoxStyle33.ButtonRenderFirst = null;
-            exComboBoxStyle33.ForeColor = null;
-            this.exComboBox1.StyleDisabled = exComboBoxStyle33;
-            exComboBoxStyle34.ArrowColor = null;
-            exComboBoxStyle34.BackColor = null;
-            exComboBoxStyle34.BorderColor = null;
-            exComboBoxStyle34.ButtonBackColor = null;
-            exComboBoxStyle34.ButtonBorderColor = null;
-            exComboBoxStyle34.ButtonRenderFirst = null;
-            exComboBoxStyle34.ForeColor = null;
-            this.exComboBox1.StyleHighlight = exComboBoxStyle34;
-            exComboBoxStyle35.BackColor = System.Drawing.Color.MistyRose;
-            exComboBoxStyle35.ButtonBackColor = System.Drawing.Color.MistyRose;
-            exComboBoxStyle35.ButtonBorderColor = System.Drawing.Color.Firebrick;
-            exComboBoxStyle35.ButtonRenderFirst = true;
-            this.exComboBox1.StyleNormal = exComboBoxStyle35;
-            exComboBoxStyle36.ArrowColor = null;
-            exComboBoxStyle36.BackColor = null;
-            exComboBoxStyle36.BorderColor = null;
-            exComboBoxStyle36.ButtonBackColor = null;
-            exComboBoxStyle36.ButtonBorderColor = null;
-            exComboBoxStyle36.ButtonRenderFirst = null;
-            exComboBoxStyle36.ForeColor = null;
-            this.exComboBox1.StyleSelected = exComboBoxStyle36;
+            exComboBoxStyle9.ArrowColor = null;
+            exComboBoxStyle9.BackColor = System.Drawing.SystemColors.Highlight;
+            exComboBoxStyle9.BorderColor = null;
+            exComboBoxStyle9.ButtonBackColor = null;
+            exComboBoxStyle9.ButtonBorderColor = null;
+            exComboBoxStyle9.ButtonRenderFirst = null;
+            exComboBoxStyle9.ForeColor = null;
+            this.exComboBox1.StyleDisabled = exComboBoxStyle9;
+            exComboBoxStyle10.ArrowColor = null;
+            exComboBoxStyle10.BackColor = null;
+            exComboBoxStyle10.BorderColor = null;
+            exComboBoxStyle10.ButtonBackColor = null;
+            exComboBoxStyle10.ButtonBorderColor = null;
+            exComboBoxStyle10.ButtonRenderFirst = null;
+            exComboBoxStyle10.ForeColor = null;
+            this.exComboBox1.StyleHighlight = exComboBoxStyle10;
+            exComboBoxStyle11.BackColor = System.Drawing.Color.MistyRose;
+            exComboBoxStyle11.ButtonBackColor = System.Drawing.Color.MistyRose;
+            exComboBoxStyle11.ButtonBorderColor = System.Drawing.Color.Firebrick;
+            exComboBoxStyle11.ButtonRenderFirst = true;
+            this.exComboBox1.StyleNormal = exComboBoxStyle11;
+            exComboBoxStyle12.ArrowColor = null;
+            exComboBoxStyle12.BackColor = null;
+            exComboBoxStyle12.BorderColor = null;
+            exComboBoxStyle12.ButtonBackColor = null;
+            exComboBoxStyle12.ButtonBorderColor = null;
+            exComboBoxStyle12.ButtonRenderFirst = null;
+            exComboBoxStyle12.ForeColor = null;
+            this.exComboBox1.StyleSelected = exComboBoxStyle12;
             this.exComboBox1.TabIndex = 0;
             this.exComboBox1.Text = "blablah";
             this.exComboBox1.UseDarkScrollBar = false;
@@ -620,17 +700,25 @@ namespace ExControls.Test
             // 
             this.exfbdialog.InitialDirectory = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE";
             // 
-            // toolStripTextBox1
+            // tabPage11
             // 
-            this.toolStripTextBox1.BackColor = System.Drawing.SystemColors.Highlight;
-            this.toolStripTextBox1.Name = "toolStripTextBox1";
-            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 31);
+            this.tabPage11.Location = new System.Drawing.Point(0, 0);
+            this.tabPage11.Name = "tabPage11";
+            this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage11.Size = new System.Drawing.Size(200, 100);
+            this.tabPage11.TabIndex = 1;
+            this.tabPage11.Text = "tabPage11";
+            this.tabPage11.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(893, 450);
+            this.ClientSize = new System.Drawing.Size(1372, 595);
+            this.Controls.Add(this.exVerticalMenu1);
+            this.Controls.Add(this.exTreeView1);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.exCheckedListBox1);
             this.Controls.Add(this.propertyGrid1);
             this.Controls.Add(this.exRichTextBox1);
             this.Controls.Add(this.button2);
@@ -653,9 +741,10 @@ namespace ExControls.Test
             this.Controls.Add(this.exGroupBox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
-            this.exTableLayoutPanel1.ResumeLayout(false);
+            this.exVerticalMenu1.ResumeLayout(false);
             this.exTabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.exNumericUpDown1)).EndInit();
@@ -705,6 +794,11 @@ namespace ExControls.Test
         private System.Windows.Forms.Button button3;
         private ExPropertyGrid propertyGrid1;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
+        private ExCheckedListBox exCheckedListBox1;
+        private ExTreeView exTreeView1;
+        private ExVerticalMenu exVerticalMenu1;
+        private ExTreeView exTreeView2;
+        private System.Windows.Forms.TabPage tabPage11;
     }
 }
 

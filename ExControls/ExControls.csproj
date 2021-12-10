@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\ExControls.xml</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -46,12 +48,31 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ExButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\ExPropertyGrid.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\ExTableLayoutPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\ExTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ExVerticalMenu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExVerticalMenu.Designer.cs">
+      <DependentUpon>ExVerticalMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Designers\FSelectPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Designers\FSelectPage.Designer.cs">
+      <DependentUpon>FSelectPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalUsings.cs" />
     <Compile Include="Tools\EquatableCollection.cs" />
     <Compile Include="Tools\Designer.cs" />
     <Compile Include="Components\DataGridViewExCheckBoxColumn.cs" />
@@ -131,6 +152,12 @@
     <EmbeddedResource Include="Components\ExMessageBoxForm.resx">
       <DependentUpon>ExMessageBoxForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExVerticalMenu.resx">
+      <DependentUpon>ExVerticalMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Designers\FSelectPage.resx">
+      <DependentUpon>FSelectPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -139,7 +166,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\ExLineSeparator.bmp" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Properties\DataSources\System.Windows.Forms.Panel.datasource" />
+    <None Include="Properties\DataSources\System.Windows.Forms.TreeNode.datasource" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if exist "$(TargetPath).locked" del "$(TargetPath).locked"
