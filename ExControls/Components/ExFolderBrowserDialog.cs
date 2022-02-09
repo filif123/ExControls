@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+// ReSharper disable UnusedMethodReturnValue.Global
+// ReSharper disable InconsistentNaming
 
 namespace ExControls;
 
@@ -111,8 +113,8 @@ public partial class ExFolderBrowserDialog : Component
     private static class VistaDialog
     {
         private const string c_foldersFilter = "Folders|\n";
-
         private const BindingFlags c_flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
         private static readonly Assembly s_windowsFormsAssembly = typeof(FileDialog).Assembly;
 
         private static readonly Type s_iFileDialogType = s_windowsFormsAssembly.GetType("System.Windows.Forms.FileDialogNative+IFileDialog");
@@ -153,10 +155,8 @@ public partial class ExFolderBrowserDialog : Component
 
             var iFileDialog = s_createVistaDialogMethodInfo.Invoke(openFileDialog, new object[] { });
             s_onBeforeVistaDialogMethodInfo.Invoke(openFileDialog, new[] { iFileDialog });
-            s_setOptionsMethodInfo.Invoke(iFileDialog,
-                new object[] { (uint)s_getOptionsMethodInfo.Invoke(openFileDialog, new object[] { }) | s_fosPickFoldersBitFlag });
-            var adviseParametersWithOutputConnectionToken =
-                new[] { s_vistaDialogEventsConstructorInfo.Invoke(new object[] { openFileDialog }), 0U };
+            s_setOptionsMethodInfo.Invoke(iFileDialog, new object[] { (uint)s_getOptionsMethodInfo.Invoke(openFileDialog, new object[] { }) | s_fosPickFoldersBitFlag });
+            var adviseParametersWithOutputConnectionToken = new[] { s_vistaDialogEventsConstructorInfo.Invoke(new object[] { openFileDialog }), 0U };
             s_adviseMethodInfo.Invoke(iFileDialog, adviseParametersWithOutputConnectionToken);
 
             try

@@ -1,4 +1,8 @@
 ﻿using ExControls.Controls;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 
 namespace ExControls;
 
@@ -41,7 +45,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "DimGray")]
-    [Description("Color of the CheckBox's text and box when the Control is disabled.")]
+    [ExDescription("Color of the CheckBox's text and box when the Control is disabled.")]
     public Color DisabledForeColor
     {
         get => _disabledForeColor;
@@ -61,7 +65,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the CheckBox's border.")]
+    [ExDescription("Color of the CheckBox's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -81,7 +85,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the CheckBox's mark.")]
+    [ExDescription("Color of the CheckBox's mark.")]
     public Color MarkColor
     {
         get => _markColor;
@@ -101,7 +105,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Background color of CheckBox's square.")]
+    [ExDescription("Background color of CheckBox's square.")]
     public Color BoxBackColor
     {
         get => _boxBackColor;
@@ -121,7 +125,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color of the border and mark of CheckBox when mouse is over the Control.")]
+    [ExDescription("Color of the border and mark of CheckBox when mouse is over the Control.")]
     public Color HighlightColor
     {
         get => _highlightColor;
@@ -137,14 +141,14 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
 
     /// <summary>Occurs when the <see cref="DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the DefaultStyle property changes.")]
+    [ExDescription("Occurs when the DefaultStyle property changes.")]
     public event EventHandler DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;
@@ -160,27 +164,27 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
 
     /// <summary>Occurs when the <see cref="DisabledForeColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the DisabledForeColor property changes.")]
+    [ExDescription("Occurs when the DisabledForeColor property changes.")]
     public event EventHandler DisabledForeColorChanged;
 
     /// <summary>Occurs when the <see cref="BorderColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler BorderColorChanged;
 
     /// <summary>Occurs when the <see cref="MarkColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the MarkColor property changes.")]
+    [ExDescription("Occurs when the MarkColor property changes.")]
     public event EventHandler MarkColorChanged;
 
     /// <summary>Occurs when the <see cref="BoxBackColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BoxBackColor property changes.")]
+    [ExDescription("Occurs when the BoxBackColor property changes.")]
     public event EventHandler BoxBackColorChanged;
 
     /// <summary>Occurs when the <see cref="HighlightColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the HighlightColor property changes.")]
+    [ExDescription("Occurs when the HighlightColor property changes.")]
     public event EventHandler HighlightColorChanged;
 
     /// <inheritdoc />

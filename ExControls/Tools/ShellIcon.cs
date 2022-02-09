@@ -1,6 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using static ExControls.Win32.SHGSI;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable InconsistentNaming
 
 namespace ExControls;
 

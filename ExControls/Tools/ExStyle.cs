@@ -1,5 +1,8 @@
 ﻿using System.Drawing.Design;
 using ExControls.Controls;
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace ExControls;
 

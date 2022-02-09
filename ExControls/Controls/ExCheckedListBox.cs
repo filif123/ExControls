@@ -1,4 +1,7 @@
 ﻿using ExControls.Controls;
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace ExControls;
 
@@ -40,7 +43,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the CheckBox's border.")]
+    [ExDescription("Color of the CheckBox's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -57,7 +60,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the CheckBox's mark.")]
+    [ExDescription("Color of the CheckBox's mark.")]
     public Color MarkColor
     {
         get => _markColor;
@@ -74,7 +77,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Background color of CheckBox's square.")]
+    [ExDescription("Background color of CheckBox's square.")]
     public Color SquareBackColor
     {
         get => _squareBackColor;
@@ -91,7 +94,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color of the border and mark of CheckBox when mouse is over the Control.")]
+    [ExDescription("Color of the border and mark of CheckBox when mouse is over the Control.")]
     public Color HighlightColor
     {
         get => _highlightColor;
@@ -108,7 +111,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "DimGray")]
-    [Description("Foreground color of text if Control is disabled.")]
+    [ExDescription("Foreground color of text if Control is disabled.")]
     public Color DisabledForeColor
     {
         get => _disabledForeColor;
@@ -125,7 +128,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Gray")]
-    [Description("Background color of focused row in ListBox.")]
+    [ExDescription("Background color of focused row in ListBox.")]
     public Color FocusedBackColor
     {
         get => _focusedBackColor;
@@ -138,14 +141,14 @@ public class ExCheckedListBox : CheckedListBox, IExControl
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;

@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.Win32;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMethodReturnValue.Global
+// ReSharper disable InconsistentNaming
 
 namespace ExControls;
 

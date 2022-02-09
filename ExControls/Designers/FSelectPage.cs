@@ -4,22 +4,21 @@ namespace ExControls.Designers;
 
 public partial class FSelectPage : Form
 {
-    private readonly Dictionary<TreeNode, MenuPanel> pages;
+    private readonly ExVerticalTabControl tabControl;
 
-    public FSelectPage(Dictionary<TreeNode, MenuPanel> pages)
+    public FSelectPage(ExVerticalTabControl tabControl)
     {
         InitializeComponent();
-        this.pages = pages;
-        lbPages.DataSource = pages.Keys.ToList();
+        this.tabControl = tabControl;
+        lbPages.DataSource = tabControl.TabPages;
+        lbPages.SelectedItem = tabControl.SelectedTab;
     }
-
-    public MenuPanel SelectedPage { get; set; }
 
     private void bOK_Click(object sender, EventArgs e)
     {
-        if (pages.Count != 0 && lbPages.SelectedItem is TreeNode node && pages.TryGetValue(node, out var sp))
+        if (tabControl.TabPages.Count != 0)
         {
-            SelectedPage = sp;
+            tabControl.SelectedTab = lbPages.SelectedItem as ExVerticalTabPage;
         }
             
         DialogResult = DialogResult.OK;

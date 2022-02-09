@@ -1,4 +1,7 @@
 ﻿using ExControls.Controls;
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace ExControls;
 
@@ -40,7 +43,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "DimGray")]
-    [Description("Color of the TextBox's border.")]
+    [ExDescription("Color of the TextBox's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -59,7 +62,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "InactiveBorder")]
-    [Description("Color of the TextBox's border when it is disabled.")]
+    [ExDescription("Color of the TextBox's border when it is disabled.")]
     public Color DisabledBorderColor
     {
         get => _disabledBorderColor;
@@ -78,7 +81,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color of the border of TextBox when mouse is over the Control.")]
+    [ExDescription("Color of the border of TextBox when mouse is over the Control.")]
     public Color HighlightColor
     {
         get => _highlightColor;
@@ -97,7 +100,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(1)]
-    [Description("Width of the TabControl's border.")]
+    [ExDescription("Width of the TabControl's border.")]
     public int BorderThickness
     {
         get => _borderThickness;
@@ -112,14 +115,14 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;
@@ -182,6 +185,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
         m.Result = IntPtr.Zero;
     }
 
+    // ReSharper disable once InconsistentNaming
     private static int BGRtoInt(int r, int g, int b)
     {
         return (r << 0) | (g << 8) | (b << 16);

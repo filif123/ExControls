@@ -2,6 +2,8 @@
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 namespace ExControls;
 
 /// <summary>
@@ -55,7 +57,7 @@ public class ExBindingList<T> : BindingList<T>
     /// <summary>
     ///     Gets or sets whether to trigger an event when sorting items in a collection.
     /// </summary>
-    public bool FireEventOnSort { get; set; } = false;
+    public bool FireEventOnSort { get; set; }
 
     /// <summary>
     ///     Gets the property descriptor that is used for sorting the list if sorting is implemented in a derived class;

@@ -1,4 +1,7 @@
 ﻿using ExControls.Controls;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace ExControls;
 
@@ -56,7 +59,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the TextBox's border.")]
+    [ExDescription("Color of the TextBox's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -75,7 +78,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "InactiveBorder")]
-    [Description("Color of the TextBox's border when it is disabled.")]
+    [ExDescription("Color of the TextBox's border when it is disabled.")]
     public Color DisabledBorderColor
     {
         get => _disabledBorderColor;
@@ -94,7 +97,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Control")]
-    [Description("Background color of the TextBox's when it is disabled.")]
+    [ExDescription("Background color of the TextBox's when it is disabled.")]
     public Color DisabledBackColor
     {
         get => _disabledBackColor;
@@ -113,7 +116,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "GrayText")]
-    [Description("Foreground color of the TextBox's when it is disabled.")]
+    [ExDescription("Foreground color of the TextBox's when it is disabled.")]
     public Color DisabledForeColor
     {
         get => _disabledForeColor;
@@ -132,7 +135,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color of the border of TextBox when mouse is over the Control.")]
+    [ExDescription("Color of the border of TextBox when mouse is over the Control.")]
     public Color HighlightColor
     {
         get => _highlightColor;
@@ -151,7 +154,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(1)]
-    [Description("Width of the TextBox's border.")]
+    [ExDescription("Width of the TextBox's border.")]
     public int BorderThickness
     {
         get => _borderThickness;
@@ -171,7 +174,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;

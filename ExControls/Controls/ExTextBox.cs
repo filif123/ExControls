@@ -1,6 +1,11 @@
 ﻿using System.ComponentModel.Design;
 using System.Windows.Forms.Design;
 using ExControls.Controls;
+using ExControls.Designers;
+
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace ExControls;
 
@@ -49,7 +54,7 @@ public class ExTextBox : TextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the TextBox's border.")]
+    [ExDescription("Color of the TextBox's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -68,7 +73,7 @@ public class ExTextBox : TextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "InactiveBorder")]
-    [Description("Color of the TextBox's border when it is disabled.")]
+    [ExDescription("Color of the TextBox's border when it is disabled.")]
     public Color DisabledBorderColor
     {
         get => _disabledBorderColor;
@@ -87,7 +92,7 @@ public class ExTextBox : TextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Control")]
-    [Description("Background color of the TextBox's when it is disabled.")]
+    [ExDescription("Background color of the TextBox's when it is disabled.")]
     public Color DisabledBackColor
     {
         get => _disabledBackColor;
@@ -106,7 +111,7 @@ public class ExTextBox : TextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "GrayText")]
-    [Description("Foreground color of the TextBox's when it is disabled.")]
+    [ExDescription("Foreground color of the TextBox's when it is disabled.")]
     public Color DisabledForeColor
     {
         get => _disabledForeColor;
@@ -125,7 +130,7 @@ public class ExTextBox : TextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color of the border of TextBox when mouse is over the Control.")]
+    [ExDescription("Color of the border of TextBox when mouse is over the Control.")]
     public Color HighlightColor
     {
         get => _highlightColor;
@@ -144,7 +149,7 @@ public class ExTextBox : TextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(1)]
-    [Description("Width of the TextBox's border.")]
+    [ExDescription("Width of the TextBox's border.")]
     public int BorderThickness
     {
         get => _borderThickness;
@@ -162,7 +167,7 @@ public class ExTextBox : TextBox, IExControl
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("Hint text for TextBox.")]
+    [ExDescription("Hint text for TextBox.")]
     public string HintText
     {
         get => _hintText;
@@ -180,7 +185,7 @@ public class ExTextBox : TextBox, IExControl
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("TextBox hint foreground color.")]
+    [ExDescription("TextBox hint foreground color.")]
     [DefaultValue(typeof(SystemColors), "GrayText")]
     public Color HintForeColor
     {
@@ -196,14 +201,14 @@ public class ExTextBox : TextBox, IExControl
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;
@@ -262,30 +267,30 @@ public class ExTextBox : TextBox, IExControl
     {
         DrawHint(e.Graphics);
 
-        if (!DefaultStyle)
+        if (DefaultStyle) 
+            return;
+
+        if (!Enabled)
         {
-            if (!Enabled)
-            {
-                e.Graphics.FillRectangle(new SolidBrush(DisabledBackColor), ClientRectangle);
-                TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, DisabledForeColor, DisabledBackColor, ConvertAligment());
-            }
-
-            //border
-            var hdc = Win32.GetWindowDC(Handle);
-            var rgn = Win32.CreateRectRgn(0, 0, Width, Height);
-            var border = _hover || _selected ? HighlightColor : BorderColor;
-            if (!Enabled) border = DisabledBorderColor;
-            var brush = Win32.CreateSolidBrush((uint)BGRtoInt(border.R, border.G, border.B));
-
-            Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness),
-                RGN_DIFF);
-
-            Win32.FillRgn(hdc, rgn, brush);
-
-            Win32.ReleaseDC(Handle, hdc);
-            Win32.DeleteObject(rgn);
-            Win32.DeleteObject(brush);
+            e.Graphics.FillRectangle(new SolidBrush(DisabledBackColor), ClientRectangle);
+            TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, DisabledForeColor, DisabledBackColor, ConvertAligment());
         }
+
+        //border
+        var hdc = Win32.GetWindowDC(Handle);
+        var rgn = Win32.CreateRectRgn(0, 0, Width, Height);
+        var border = _hover || _selected ? HighlightColor : BorderColor;
+        if (!Enabled) border = DisabledBorderColor;
+        var brush = Win32.CreateSolidBrush((uint)BGRtoInt(border.R, border.G, border.B));
+
+        Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness),
+            RGN_DIFF);
+
+        Win32.FillRgn(hdc, rgn, brush);
+
+        Win32.ReleaseDC(Handle, hdc);
+        Win32.DeleteObject(rgn);
+        Win32.DeleteObject(brush);
     }
 
     /// <summary>
@@ -309,6 +314,7 @@ public class ExTextBox : TextBox, IExControl
         };
     }
 
+    // ReSharper disable once InconsistentNaming
     private static int BGRtoInt(int r, int g, int b)
     {
         return (r << 0) | (g << 8) | (b << 16);
@@ -433,7 +439,7 @@ internal class ExTextBoxDesigner : ExControlDesigner
     }
 }
 
-internal class ExTextBoxDesignerActionList : ExControlDesignerActionList
+internal class ExTextBoxDesignerActionList : ExControlDesigner.ExControlDesignerActionList
 {
     public ExTextBoxDesignerActionList(ControlDesigner designer) : base(designer)
     {

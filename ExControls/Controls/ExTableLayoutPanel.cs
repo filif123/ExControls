@@ -1,4 +1,7 @@
 ﻿using ExControls.Controls;
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace ExControls;
 
@@ -28,7 +31,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Empty")]
-    [Description("Color of the TableLayoutPanel's border.")]
+    [ExDescription("Color of the TableLayoutPanel's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -48,7 +51,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(1)]
-    [Description("Thickness of the TableLayoutPanel's border.")]
+    [ExDescription("Thickness of the TableLayoutPanel's border.")]
     public int BorderThickness
     {
         get => _borderThickness;
@@ -69,7 +72,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;

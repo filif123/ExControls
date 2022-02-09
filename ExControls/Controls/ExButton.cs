@@ -1,4 +1,7 @@
 ﻿using ExControls.Controls;
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace ExControls;
 
@@ -27,7 +30,7 @@ public class ExButton : Button, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;
@@ -64,7 +67,7 @@ public class ExButton : Button, IExControl
     [Obsolete]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonFlatAppearance")]
+    [ExDescription("ButtonFlatAppearance")]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public new FlatButtonAppearance FlatAppearance => base.FlatAppearance;
 
@@ -73,7 +76,7 @@ public class ExButton : Button, IExControl
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonFlatAppearance")]
+    [ExDescription("ButtonFlatAppearance")]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public ExFlatButtonAppearance ExFlatAppearance
     {
@@ -86,7 +89,7 @@ public class ExButton : Button, IExControl
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler DefaultStyleChanged;
 
     /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
@@ -212,7 +215,7 @@ public class ExFlatButtonAppearance
     [Browsable(true)]
     [NotifyParentProperty(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonBorderSizeDescr")]
+    [ExDescription("ButtonBorderSizeDescr")]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DefaultValue(1)]
     public int BorderSize
@@ -227,7 +230,7 @@ public class ExFlatButtonAppearance
     [Browsable(true)]
     [NotifyParentProperty(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonBorderColorDescr")]
+    [ExDescription("ButtonBorderColorDescr")]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DefaultValue(typeof(Color), "")]
     public Color BorderColor
@@ -252,7 +255,7 @@ public class ExFlatButtonAppearance
     [Browsable(true)]
     [NotifyParentProperty(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonCheckedBackColorDescr")]
+    [ExDescription("ButtonCheckedBackColorDescr")]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DefaultValue(typeof(Color), "")]
     public Color CheckedBackColor
@@ -267,7 +270,7 @@ public class ExFlatButtonAppearance
     [Browsable(true)]
     [NotifyParentProperty(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonMouseDownBackColorDescr")]
+    [ExDescription("ButtonMouseDownBackColorDescr")]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DefaultValue(typeof(Color), "")]
     public Color MouseDownBackColor
@@ -282,7 +285,7 @@ public class ExFlatButtonAppearance
     [Browsable(true)]
     [NotifyParentProperty(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonMouseOverBackColorDescr")]
+    [ExDescription("ButtonMouseOverBackColorDescr")]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DefaultValue(typeof(Color), "")]
     public Color MouseOverBackColor
@@ -297,7 +300,7 @@ public class ExFlatButtonAppearance
     [Browsable(true)]
     [NotifyParentProperty(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonMouseDownBackColorDescr")]
+    [ExDescription("ButtonMouseDownBackColorDescr")]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DefaultValue(typeof(Color), "")]
     public Color MouseDownBorderColor
@@ -318,7 +321,7 @@ public class ExFlatButtonAppearance
     [Browsable(true)]
     [NotifyParentProperty(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonMouseOverBackColorDescr")]
+    [ExDescription("ButtonMouseOverBackColorDescr")]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DefaultValue(typeof(Color), "")]
     public Color MouseOverBorderColor
@@ -339,7 +342,7 @@ public class ExFlatButtonAppearance
     [Browsable(true)]
     [NotifyParentProperty(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("ButtonMouseOverBackColorDescr")]
+    [ExDescription("ButtonMouseOverBackColorDescr")]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DefaultValue(typeof(Color), "")]
     public Color FocusBorderColor

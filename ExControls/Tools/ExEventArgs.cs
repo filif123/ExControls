@@ -1,4 +1,6 @@
-﻿namespace ExControls;
+﻿// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace ExControls;
 
 /// <inheritdoc />
 public class LinePenEventArgs : EventArgs

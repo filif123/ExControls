@@ -1,7 +1,11 @@
 ﻿using System.Runtime.InteropServices;
 using ExControls.Controls;
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedMember.Global
 
 namespace ExControls;
+
+//------------------- WORK IN PROGRESS -------------------
 
 /// <summary>
 ///     Expanded DateTimePicker Control. WORK IN PROGRESS
@@ -75,7 +79,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color of the border of ComboBox when mouse is over the Control.")]
+    [ExDescription("Color of the border of ComboBox when mouse is over the Control.")]
     public Color HighlightColor
     {
         get => _highlightColor;
@@ -94,7 +98,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "DimGray")]
-    [Description("Color of the ComboBox's border.")]
+    [ExDescription("Color of the ComboBox's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -113,7 +117,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Control")]
-    [Description("Background color of the TextBox's when it is disabled.")]
+    [ExDescription("Background color of the TextBox's when it is disabled.")]
     public Color DisabledBackColor
     {
         get => _disabledBackColor;
@@ -132,7 +136,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the arrow which is in this Control in the Drop down button.")]
+    [ExDescription("Color of the arrow which is in this Control in the Drop down button.")]
     public Color ArrowColor
     {
         get => _arrowColor;
@@ -150,13 +154,14 @@ public class ExDateTimePicker : DateTimePicker, IExControl
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the DefaultStyle property changes.")]
     public event EventHandler DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;
@@ -206,7 +211,6 @@ public class ExDateTimePicker : DateTimePicker, IExControl
             
     }
 
-        
 
     [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
     private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, out Win32.DATETIMEPICKERINFO lp);

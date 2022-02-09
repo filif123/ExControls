@@ -1,4 +1,6 @@
 ﻿using System.Drawing.Design;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable EventNeverSubscribedTo.Global
 
 namespace ExControls;
 

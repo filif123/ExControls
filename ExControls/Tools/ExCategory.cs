@@ -1,4 +1,9 @@
-﻿namespace ExControls;
+﻿using System.Globalization;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
+namespace ExControls;
 
 /// <inheritdoc />
 public class ExCategoryAttribute : CategoryAttribute
@@ -9,7 +14,7 @@ public class ExCategoryAttribute : CategoryAttribute
     public CategoryType Type { get; }
 
     /// <inheritdoc />
-    public ExCategoryAttribute(CategoryType type) : this(type.ToString())
+    public ExCategoryAttribute(CategoryType type) : this(CategoryToString(type))
     {
         Type = type;
     }
@@ -17,6 +22,16 @@ public class ExCategoryAttribute : CategoryAttribute
     /// <inheritdoc />
     public ExCategoryAttribute(string categoryName) : base(categoryName)
     {
+    }
+
+    /// <summary>
+    /// Converts category type to resource string.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    internal static string CategoryToString(CategoryType type)
+    {
+        return SystemResources.GetString<Form>("Cat" + type, CultureInfo.CurrentCulture);
     }
 }
 

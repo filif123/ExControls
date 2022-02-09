@@ -1,4 +1,6 @@
 ﻿using ExControls.Controls;
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable UnusedMember.Global
 
 namespace ExControls;
 
@@ -42,7 +44,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         _highlightColor = SystemColors.Highlight;
         _selectedButtonColor = SystemColors.Highlight;
 
-        DoubleBuffered = true;
+        base.DoubleBuffered = true;
 
         Invalidate(true);
     }
@@ -53,7 +55,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color of the Control's border when mouse is over the Control.")]
+    [ExDescription("Color of the Control's border when mouse is over the Control.")]
     public Color HighlightColor
     {
         get => _highlightColor;
@@ -70,7 +72,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the arrows which is in this Control in the Up and Down buttons.")]
+    [ExDescription("Color of the arrows which is in this Control in the Up and Down buttons.")]
     public Color ArrowsColor
     {
         get => _arrowsColor;
@@ -87,7 +89,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Gainsboro")]
-    [Description("Color of the Control's border.")]
+    [ExDescription("Color of the Control's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -104,7 +106,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color the Up and Down buttons when they are selected.")]
+    [ExDescription("Color the Up and Down buttons when they are selected.")]
     public Color SelectedButtonColor
     {
         get => _selectedButtonColor;
@@ -133,14 +135,14 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;
@@ -320,13 +322,13 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         DefaultStyleChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    internal class UpDownButtons : Control
+    private sealed class UpDownButtons : Control
     {
         private readonly ExNumericUpDown parent;
-        private ButtonID captured;
+        private ButtonId captured;
         private bool doubleClickFired;
-        private ButtonID mouseOver;
-        private ButtonID pushed;
+        private ButtonId mouseOver;
+        private ButtonId pushed;
         private Timer timer;
         private int timerInterval;
         private UpDownEventHandler upDownEventHandler;
@@ -357,12 +359,12 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             var num = Size.Height / 2;
             if (e.Y < num)
             {
-                pushed = captured = ButtonID.Up;
+                pushed = captured = ButtonId.Up;
                 Invalidate();
             }
             else
             {
-                pushed = captured = ButtonID.Down;
+                pushed = captured = ButtonId.Down;
                 Invalidate();
             }
 
@@ -373,8 +375,8 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
         private void EndButtonPress()
         {
-            pushed = ButtonID.None;
-            captured = ButtonID.None;
+            pushed = ButtonId.None;
+            captured = ButtonId.None;
             StopTimer();
             Capture = false;
             Invalidate();
@@ -396,7 +398,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             {
                 var clientRectangle = ClientRectangle;
                 clientRectangle.Height /= 2;
-                if (captured == ButtonID.Down)
+                if (captured == ButtonId.Down)
                     clientRectangle.Y += clientRectangle.Height;
                 if (clientRectangle.Contains(e.X, e.Y))
                 {
@@ -407,10 +409,10 @@ public class ExNumericUpDown : NumericUpDown, IExControl
                         Invalidate();
                     }
                 }
-                else if (pushed != ButtonID.None)
+                else if (pushed != ButtonId.None)
                 {
                     StopTimer();
-                    pushed = ButtonID.None;
+                    pushed = ButtonId.None;
                     Invalidate();
                 }
             }
@@ -421,17 +423,17 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             clientRectangle2.Y += clientRectangle2.Height / 2;
             if (clientRectangle1.Contains(e.X, e.Y))
             {
-                if (mouseOver != ButtonID.Up)
+                if (mouseOver != ButtonId.Up)
                 {
-                    mouseOver = ButtonID.Up;
+                    mouseOver = ButtonId.Up;
                     Invalidate();
                 }
             }
             else if (clientRectangle2.Contains(e.X, e.Y))
             {
-                if (mouseOver != ButtonID.Down)
+                if (mouseOver != ButtonId.Down)
                 {
-                    mouseOver = ButtonID.Down;
+                    mouseOver = ButtonId.Down;
                     Invalidate();
                 }
             }
@@ -471,9 +473,9 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (mouseOver != ButtonID.None)
+            if (mouseOver != ButtonId.None)
             {
-                mouseOver = ButtonID.None;
+                mouseOver = ButtonId.None;
                 Invalidate();
                 parent.OnMouseLeave(e);
             }
@@ -498,10 +500,10 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         {
             g.Clear(parent.BackColor);
 
-            if (pushed != ButtonID.None)
+            if (pushed != ButtonId.None)
             {
                 using var selected = new SolidBrush(parent.SelectedButtonColor);
-                if (pushed == ButtonID.Up)
+                if (pushed == ButtonId.Up)
                     g.FillRectangle(selected, 0, 0, Width, Height / 2);
                 else
                     g.FillRectangle(selected, 0, Height / 2, Width - 1, Height / 2);
@@ -514,15 +516,15 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
             switch (mouseOver)
             {
-                case ButtonID.Up:
+                case ButtonId.Up:
                     g.DrawRectangle(pHo, 0, 0, Width - 1, Height / 2 - 1);
                     g.DrawRectangle(pUn, 0, Height / 2, Width - 1, Height / 2 - 1);
                     break;
-                case ButtonID.Down:
+                case ButtonId.Down:
                     g.DrawRectangle(pUn, 0, 0, Width - 1, Height / 2 - 1);
                     g.DrawRectangle(pHo, 0, Height / 2, Width - 1, Height / 2 - 1);
                     break;
-                case ButtonID.None:
+                case ButtonId.None:
                     g.DrawRectangle(pUn, 0, 0, Width - 1, Height / 2 - 1);
                     g.DrawRectangle(pUn, 0, Height / 2, Width - 1, Height / 2 - 1);
                     break;
@@ -547,12 +549,12 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             g.FillPolygon(brush, arrowDown);
         }
 
-        protected virtual void OnUpDown(UpDownEventArgs upevent)
+        private void OnUpDown(UpDownEventArgs upevent)
         {
             upDownEventHandler?.Invoke(this, upevent);
         }
 
-        protected void StartTimer()
+        private void StartTimer()
         {
             if (timer == null)
             {
@@ -565,7 +567,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             timer.Start();
         }
 
-        protected void StopTimer()
+        private void StopTimer()
         {
             if (timer != null)
             {
@@ -595,7 +597,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         }
     }
 
-    internal enum ButtonID
+    private enum ButtonId
     {
         None,
         Up,

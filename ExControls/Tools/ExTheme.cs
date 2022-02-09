@@ -1,4 +1,9 @@
-﻿namespace ExControls;
+﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable VirtualMemberNeverOverridden.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable UnusedType.Global
+namespace ExControls;
 
 //TODO WORK IN PROGRESS
 /// <summary>

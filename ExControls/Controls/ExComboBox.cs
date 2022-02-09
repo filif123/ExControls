@@ -2,6 +2,10 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using ExControls.Controls;
+// ReSharper disable UnusedMember.Global
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace ExControls;
 
@@ -43,7 +47,7 @@ public class ExComboBox : ComboBox, IExControl
         _dropDownSelectedRowBackColor = SystemColors.Highlight;
         _dropDownBackColor = Color.White;
 
-        DoubleBuffered = true;
+        base.DoubleBuffered = true;
         listbrush = new SolidBrush(DropDownBackColor);
         ResumeLayout();
         Invalidate();
@@ -66,7 +70,7 @@ public class ExComboBox : ComboBox, IExControl
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("Normal style of the Control (when is inactive).")]
+    [ExDescription("Normal style of the Control (when is inactive).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public ExComboBoxStyle StyleNormal { get; set; }
 
@@ -75,7 +79,7 @@ public class ExComboBox : ComboBox, IExControl
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("Highlight style of the Control (when mouse is over control).")]
+    [ExDescription("Highlight style of the Control (when mouse is over control).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public ExComboBoxStyle StyleHighlight { get; set; }
 
@@ -84,7 +88,7 @@ public class ExComboBox : ComboBox, IExControl
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("Selected style of the Control (when control is selected).")]
+    [ExDescription("Selected style of the Control (when control is selected).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public ExComboBoxStyle StyleSelected { get; set; }
 
@@ -93,7 +97,7 @@ public class ExComboBox : ComboBox, IExControl
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
-    [Description("Disabled style of the Control (when control is not Enabled).")]
+    [ExDescription("Disabled style of the Control (when control is not Enabled).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public ExComboBoxStyle StyleDisabled { get; set; }
 
@@ -103,7 +107,7 @@ public class ExComboBox : ComboBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
-    [Description("Color of the selected row in drop down menu.")]
+    [ExDescription("Color of the selected row in drop down menu.")]
     public Color DropDownSelectedRowBackColor
     {
         get => _dropDownSelectedRowBackColor;
@@ -123,7 +127,7 @@ public class ExComboBox : ComboBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "White")]
-    [Description("Background color of the drop down menu.")]
+    [ExDescription("Background color of the drop down menu.")]
     public Color DropDownBackColor
     {
         get => _dropDownBackColor;
@@ -198,11 +202,14 @@ public class ExComboBox : ComboBox, IExControl
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public bool UseDarkScrollBar { get; set; }
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler DefaultStyleChanged;
 
 
@@ -210,7 +217,7 @@ public class ExComboBox : ComboBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;
@@ -227,12 +234,12 @@ public class ExComboBox : ComboBox, IExControl
 
     /// <summary>Occurs when the <see cref="DropDownSelectedRowBackColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the DropDownSelectedRowBackColor property changes.")]
+    [ExDescription("Occurs when the DropDownSelectedRowBackColor property changes.")]
     public event EventHandler DropDownSelectedRowBackColorChanged;
 
     /// <summary>Occurs when the <see cref="DropDownBackColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the DropDownBackColor property changes.")]
+    [ExDescription("Occurs when the DropDownBackColor property changes.")]
     public event EventHandler DropDownBackColorChanged;
 
     private void StyleOnPropertyChanged(object sender, ExPropertyChangedEventArgs e)
@@ -288,6 +295,7 @@ public class ExComboBox : ComboBox, IExControl
             }
     }
 
+    /// <inheritdoc />
     protected override void OnDropDown(EventArgs e)
     {
         // Install wrapper
@@ -599,7 +607,7 @@ public class ExComboBoxStyle : ExStyle
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Color of the arrow which is in this Control as the dropdown button.")]
+    [ExDescription("Color of the arrow which is in this Control as the dropdown button.")]
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
     public Color? ArrowColor
     {
@@ -619,7 +627,7 @@ public class ExComboBoxStyle : ExStyle
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
     [DefaultValue(typeof(Color), "White")]
-    [Description("Background color of the dropdown button.")]
+    [ExDescription("Background color of the dropdown button.")]
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
     public Color? ButtonBackColor
     {
@@ -639,7 +647,7 @@ public class ExComboBoxStyle : ExStyle
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
     [DefaultValue(typeof(Color), "DimGray")]
-    [Description("Border color of the dropdown button.")]
+    [ExDescription("Border color of the dropdown button.")]
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
     public Color? ButtonBorderColor
     {
@@ -659,7 +667,7 @@ public class ExComboBoxStyle : ExStyle
     [DefaultValue(false)]
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
-    [Description("Gets or sets whether DropDown button has to be rendered first.")]
+    [ExDescription("Gets or sets whether DropDown button has to be rendered first.")]
     public bool? ButtonRenderFirst
     {
         get => _buttonRenderFirst;

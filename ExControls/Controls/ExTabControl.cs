@@ -1,5 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using ExControls.Controls;
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable EventNeverSubscribedTo.Global
 
 namespace ExControls;
 
@@ -50,7 +55,7 @@ public class ExTabControl : TabControl, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "LightGray")]
-    [Description("Color of the TabControl's border.")]
+    [ExDescription("Color of the TabControl's border.")]
     public Color BorderColor
     {
         get => _borderColor;
@@ -69,7 +74,7 @@ public class ExTabControl : TabControl, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Foreground color of the Tab header.")]
+    [ExDescription("Foreground color of the Tab header.")]
     public Color HeaderForeColor
     {
         get => _headerForeColor;
@@ -88,7 +93,7 @@ public class ExTabControl : TabControl, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Control")]
-    [Description("Background color of the Tab header.")]
+    [ExDescription("Background color of the Tab header.")]
     public Color HeaderBackColor
     {
         get => _headerBackColor;
@@ -107,7 +112,7 @@ public class ExTabControl : TabControl, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "White")]
-    [Description("Background color of the active Tab header.")]
+    [ExDescription("Background color of the active Tab header.")]
     public Color ActiveHeaderBackColor
     {
         get => _activeHeaderBackColor;
@@ -126,7 +131,7 @@ public class ExTabControl : TabControl, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Foreground color of the active Tab header.")]
+    [ExDescription("Foreground color of the active Tab header.")]
     public Color ActiveHeaderForeColor
     {
         get => _activeHeaderForeColor;
@@ -145,7 +150,7 @@ public class ExTabControl : TabControl, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "GradientInactiveCaption")]
-    [Description("Background color of the hovered Tab header.")]
+    [ExDescription("Background color of the hovered Tab header.")]
     public Color HighlightBackColor
     {
         get => _highlightBackColor;
@@ -164,7 +169,7 @@ public class ExTabControl : TabControl, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
-    [Description("Foreground color of the hovered Tab header.")]
+    [ExDescription("Foreground color of the hovered Tab header.")]
     public Color HighlightForeColor
     {
         get => _highlightForeColor;
@@ -183,7 +188,7 @@ public class ExTabControl : TabControl, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(1)]
-    [Description("Width of the TabControl's border.")]
+    [ExDescription("Width of the TabControl's border.")]
     public int BorderThickness
     {
         get => _borderThickness;
@@ -200,7 +205,7 @@ public class ExTabControl : TabControl, IExControl
     ///     The background color used to display text and graphics in a control
     /// </summary>
     [Browsable(true)]
-    [Description("The background color used to display text and graphics in a control.")]
+    [ExDescription("The background color used to display text and graphics in a control.")]
     public override Color BackColor
     {
         get
@@ -221,14 +226,14 @@ public class ExTabControl : TabControl, IExControl
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the BorderColor property changes.")]
+    [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
-    [Description("Default style of the Control.")]
+    [ExDescription("Default style of the Control.")]
     public bool DefaultStyle
     {
         get => _defaultStyle;
@@ -245,7 +250,7 @@ public class ExTabControl : TabControl, IExControl
     /// <summary>
     ///     Occurs as a tab is being changed
     /// </summary>
-    [Description("Occurs as a tab is being changed.")]
+    [ExDescription("Occurs as a tab is being changed.")]
     public event EventHandler<TabPageChangeEventArgs> SelectedIndexChanging;
 
     /// <inheritdoc />
@@ -362,11 +367,11 @@ public class ExTabControl : TabControl, IExControl
             //Set up rotation for left and right aligned tabs
             if (Alignment is TabAlignment.Left or TabAlignment.Right)
             {
-                float RotateAngle = 90;
-                if (Alignment == TabAlignment.Left) RotateAngle = 270;
+                float rotateAngle = 90;
+                if (Alignment == TabAlignment.Left) rotateAngle = 270;
                 var cp = new PointF(r.Left + (r.Width >> 1), r.Top + (r.Height >> 1));
                 e.Graphics.TranslateTransform(cp.X, cp.Y);
-                e.Graphics.RotateTransform(RotateAngle);
+                e.Graphics.RotateTransform(rotateAngle);
                 r = new Rectangle(-(r.Height >> 1), -(r.Width >> 1), r.Height, r.Width);
             }
 

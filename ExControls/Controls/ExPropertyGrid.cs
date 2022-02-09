@@ -1,4 +1,6 @@
-﻿namespace ExControls.Controls;
+﻿// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
+namespace ExControls;
 
 /// <summary>
 /// 

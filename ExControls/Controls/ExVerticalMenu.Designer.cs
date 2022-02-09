@@ -35,7 +35,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ComboBoxFind = new ExControls.ExComboBox();
-            this.TreeMenu = new ExControls.Controls.ExTreeView();
+            this.TreeMenu = new ExControls.ExTreeView();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.RootPanel = new System.Windows.Forms.Panel();
             this.LabelPath = new System.Windows.Forms.Label();
@@ -133,8 +133,8 @@
             this.TreeMenu.ShowRootLines = false;
             this.TreeMenu.Size = new System.Drawing.Size(211, 391);
             this.TreeMenu.TabIndex = 1;
-            this.TreeMenu.TreeNodeAdded += new System.EventHandler<ExControls.Controls.ExTreeViewNodeAddedEventArgs>(this.TreeMenu_TreeNodeAdded);
-            this.TreeMenu.TreeNodeRemoved += new System.EventHandler<ExControls.Controls.ExTreeViewNodeRemovedEventArgs>(this.TreeMenu_TreeNodeRemoved);
+            this.TreeMenu.TreeNodeAdded += new System.EventHandler<ExControls.ExTreeViewNodeAddedEventArgs>(this.TreeMenu_TreeNodeAdded);
+            this.TreeMenu.TreeNodeRemoved += new System.EventHandler<ExControls.ExTreeViewNodeRemovedEventArgs>(this.TreeMenu_TreeNodeRemoved);
             this.TreeMenu.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeMenu_AfterSelect);
             // 
             // tableLayoutPanel2
@@ -176,7 +176,7 @@
             // 
             // ToolBar
             // 
-            this.ToolBar.BackColor = System.Drawing.SystemColors.Control;
+            this.ToolBar.BackColor = System.Drawing.Color.Transparent;
             this.ToolBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ToolBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.ToolBar.ImageScalingSize = new System.Drawing.Size(20, 20);

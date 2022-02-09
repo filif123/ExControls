@@ -1,4 +1,8 @@
 ﻿using System.Drawing.Drawing2D;
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 
 namespace ExControls;
 
@@ -35,7 +39,7 @@ public class ExLineSeparator : Control
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(1)]
-    [Description("Thickness of the LineSeparator's line.")]
+    [ExDescription("Thickness of the LineSeparator's line.")]
     public int LineThickness
     {
         get => _lineThickness;
@@ -55,7 +59,7 @@ public class ExLineSeparator : Control
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(LineOrientation), "Horizontal")]
-    [Description("Orientation of the LineSeparator's line.")]
+    [ExDescription("Orientation of the LineSeparator's line.")]
     public LineOrientation LineOrientation
     {
         get => _lineOrientation;
@@ -75,7 +79,7 @@ public class ExLineSeparator : Control
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(DashStyle), "Solid")]
-    [Description("Style of the LineSeparator's line.")]
+    [ExDescription("Style of the LineSeparator's line.")]
     public DashStyle LineStyle
     {
         get => _lineStyle;
@@ -95,7 +99,7 @@ public class ExLineSeparator : Control
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "LightGray")]
-    [Description("Color of the LineSeparator's line.")]
+    [ExDescription("Color of the LineSeparator's line.")]
     public Color LineColor
     {
         get => _lineColor;
@@ -115,17 +119,17 @@ public class ExLineSeparator : Control
 
     /// <summary>Occurs when the <see cref="LineColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the LineColor property changes.")]
+    [ExDescription("Occurs when the LineColor property changes.")]
     public event EventHandler LineColorChanged;
 
     /// <summary>Occurs when the <see cref="LineThickness" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the LineThickness property changes.")]
+    [ExDescription("Occurs when the LineThickness property changes.")]
     public event EventHandler LineThicknessChanged;
 
     /// <summary>Occurs when the <see cref="LineOrientation" /> property changes.</summary>
     [ExCategory("Changed Property")]
-    [Description("Occurs when the LineOrientation property changes.")]
+    [ExDescription("Occurs when the LineOrientation property changes.")]
     public event EventHandler LineOrientationChanged;
 
     /// <summary>Occurs when the <see cref="LineStyle" /> property changes.</summary>
@@ -195,17 +199,17 @@ public class ExLineSeparator : Control
 }
 
 /// <summary>
-///     Orientation of the LineSeparator
+///     Orientation of the LineSeparator.
 /// </summary>
 public enum LineOrientation
 {
     /// <summary>
-    ///     Horizontal orientation
+    ///     Horizontal orientation.
     /// </summary>
     Horizontal,
 
     /// <summary>
-    ///     Vertical orientation
+    ///     Vertical orientation.
     /// </summary>
     Vertical
 }
