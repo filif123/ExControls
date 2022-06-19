@@ -88,12 +88,11 @@ public sealed class ShellIcon : IDisposable
 #pragma warning disable IDE0060 // Remove unused parameter
     private void Dispose(bool disposing)
     {
-        if (!Disposed)
-        {
-            Win32.DestroyIcon(Handle);
-            Disposed = true;
-            Handle = IntPtr.Zero;
-        }
+        if (Disposed) return;
+
+        Win32.DestroyIcon(Handle);
+        Disposed = true;
+        Handle = IntPtr.Zero;
     }
 #pragma warning restore IDE0060 // Remove unused parameter
 

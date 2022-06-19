@@ -1,5 +1,7 @@
 ﻿using System.Drawing.Drawing2D;
 using ExControls.Controls;
+using ExControls.Designers;
+
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -11,6 +13,7 @@ namespace ExControls;
 ///     Expanded GroupBox Control
 /// </summary>
 [ToolboxBitmap(typeof(GroupBox), "GroupBox.bmp")]
+[Designer(typeof(ExGroupBoxDesigner))]
 public class ExGroupBox : GroupBox, IExControl
 {
     private Color _borderColor;

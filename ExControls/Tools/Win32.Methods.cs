@@ -30,6 +30,12 @@ internal static partial class Win32
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
 
+    [DllImport(USER32, EntryPoint="GetWindowLong")]
+    private static extern IntPtr GetWindowLongPtr32(IntPtr hWnd, int nIndex);
+
+    [DllImport(USER32, EntryPoint="GetWindowLongPtr")]
+    private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
+
     /// <summary>
     ///     Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD) value at the specified offset into the extra window memory.
     /// </summary>
@@ -39,8 +45,14 @@ internal static partial class Win32
     /// If the function succeeds, the return value is the requested value.
     /// If the function fails, the return value is zero. To get extended error information, call GetLastError.
     /// If SetWindowLong has not been called previously, GetWindowLong returns zero for values in the extra window or class memory.</returns>
-    [DllImport(USER32, EntryPoint="GetWindowLong")]
-    public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
+    // This static method is required because Win32 does not support
+    // GetWindowLongPtr directly
+    public static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex)
+    {
+        if (IntPtr.Size == 8)
+            return GetWindowLongPtr64(hWnd, nIndex);
+        return GetWindowLongPtr32(hWnd, nIndex);
+    }
 
     [DllImport(USER32)]
     public static extern int SetWindowLong(IntPtr hWnd, int nIndex, uint dwNewLong);
@@ -216,4 +228,6 @@ internal static partial class Win32
         int i = (short)(n & 0xFFFF);
         return i;
     }
+
+    public static int ToInt(this WM msg) => (int) msg;
 }

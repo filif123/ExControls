@@ -11,11 +11,11 @@ namespace ExControls;
 /// </summary>
 internal class ExTheme
 {
-    private ExStyle styleNormal;
-    private ExStyle styleHover;
-    private ExStyle styleSelected;
-    private ExStyle styleDisabled;
-    private ExStyle styleReadOnly;
+    private ExStyleOld styleNormal;
+    private ExStyleOld styleHover;
+    private ExStyleOld styleSelected;
+    private ExStyleOld styleDisabled;
+    private ExStyleOld styleReadOnly;
 
     private bool defaultStyle;
 
@@ -38,7 +38,7 @@ internal class ExTheme
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyle StyleNormal
+    public ExStyleOld StyleNormal
     {
         get => styleNormal;
         set
@@ -53,7 +53,7 @@ internal class ExTheme
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyle StyleHover
+    public ExStyleOld StyleHover
     {
         get => styleHover;
         set
@@ -68,7 +68,7 @@ internal class ExTheme
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyle StyleSelected
+    public ExStyleOld StyleSelected
     {
         get => styleSelected;
         set
@@ -83,7 +83,7 @@ internal class ExTheme
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyle StyleDisabled
+    public ExStyleOld StyleDisabled
     {
         get => styleDisabled;
         set
@@ -98,7 +98,7 @@ internal class ExTheme
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyle StyleReadOnly
+    public ExStyleOld StyleReadOnly
     {
         get => styleReadOnly;
         set

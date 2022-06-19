@@ -20,5 +20,4 @@ internal static partial class Win32
     public const int GWL_EXSTYLE = -20;
     public const int GWL_USERDATA = -21;
     public const int GWL_ID = -12;
-
 }

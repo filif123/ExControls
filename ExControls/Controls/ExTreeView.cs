@@ -12,12 +12,12 @@ namespace ExControls;
 /// </summary>
 [Designer(typeof(ExTreeViewDesigner))]
 [ToolboxBitmap(typeof(TreeView), "TreeView.bmp")]
+[DefaultProperty(nameof(Nodes))]
+[DefaultEvent(nameof(AfterSelect))]
 public class ExTreeView : TreeView
 {
-    /// <summary>
-    /// 
-    /// </summary>
     private readonly ExTreeNodeCollection _nodes;
+    private ExTreeViewStyle _style;
 
     /// <summary>
     ///
@@ -25,6 +25,39 @@ public class ExTreeView : TreeView
     public ExTreeView()
     {
         _nodes = new ExTreeNodeCollection(base.Nodes);
+    }
+    /// <summary>
+    /// Style of PlusMinus sign.
+    /// </summary>
+    [ExDescription("Style of PlusMinus sign.")]
+    [ExCategory(CategoryType.Appearance)]
+    [DefaultValue(ExTreeViewStyle.Default)]
+    public ExTreeViewStyle Style
+    {
+        get => _style;
+        set
+        {
+            if (_style == value)
+                return;
+            _style = value;
+            switch (value)
+            {
+                case ExTreeViewStyle.Default:
+                    this.SetTheme(WindowsTheme.Other, null);
+                    break;
+                case ExTreeViewStyle.Light:
+                    this.SetTheme(WindowsTheme.Explorer);
+                    break;
+                case ExTreeViewStyle.Dark:
+                    this.SetTheme(WindowsTheme.DarkExplorer);
+                    break;
+                case ExTreeViewStyle.Old:
+                    this.SetTheme(WindowsTheme.None);
+                    break;
+                default:
+                    return;
+            }
+        }
     }
 
     /// <summary>
@@ -54,6 +87,32 @@ public class ExTreeView : TreeView
     [ExDescription("TreeViewNodesDescr")]
     [MergableProperty(false)]
     public new virtual ExTreeNodeCollection Nodes => _nodes;
+}
+
+/// <summary>
+/// Style of TreeView.
+/// </summary>
+public enum ExTreeViewStyle
+{
+    /// <summary>
+    /// Default style.
+    /// </summary>
+    Default,
+
+    /// <summary>
+    /// Win10 light theme.
+    /// </summary>
+    Light,
+
+    /// <summary>
+    /// Win10 dark theme.
+    /// </summary>
+    Dark,
+
+    /// <summary>
+    /// Old style.
+    /// </summary>
+    Old
 }
 
 /// <summary>

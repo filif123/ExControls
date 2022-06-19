@@ -488,6 +488,9 @@ public partial class ExForm
             OnFormWindowStateChanged();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     protected virtual void OnFormWindowStateChanged()
     {
         Padding = WindowState == FormWindowState.Maximized ? new Padding(6,6,0,0) : new Padding(1);

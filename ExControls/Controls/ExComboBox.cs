@@ -25,6 +25,7 @@ public class ExComboBox : ComboBox, IExControl
     private bool _wasDropDown;
 
     private SolidBrush listbrush;
+    private ComboBoxEdit _editControl;
 
     /// <summary>
     ///     Constructor
@@ -54,7 +55,7 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <summary>
-    ///     Don't use directly in code.
+    ///     Don't use directly in the code.
     /// </summary>
     [Browsable(false)]
     public Color ActualBackColor { get; private set; }
@@ -72,6 +73,8 @@ public class ExComboBox : ComboBox, IExControl
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Normal style of the Control (when is inactive).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    [DisplayName("StyleNormal")]
     public ExComboBoxStyle StyleNormal { get; set; }
 
     /// <summary>
@@ -81,6 +84,8 @@ public class ExComboBox : ComboBox, IExControl
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Highlight style of the Control (when mouse is over control).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    [DisplayName("StyleHighlight")]
     public ExComboBoxStyle StyleHighlight { get; set; }
 
     /// <summary>
@@ -90,6 +95,8 @@ public class ExComboBox : ComboBox, IExControl
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Selected style of the Control (when control is selected).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    [DisplayName("StyleSelected")]
     public ExComboBoxStyle StyleSelected { get; set; }
 
     /// <summary>
@@ -99,6 +106,8 @@ public class ExComboBox : ComboBox, IExControl
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Disabled style of the Control (when control is not Enabled).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    [DisplayName("StyleDisabled")]
     public ExComboBoxStyle StyleDisabled { get; set; }
 
     /// <summary>
@@ -252,6 +261,9 @@ public class ExComboBox : ComboBox, IExControl
     protected override void OnHandleCreated(EventArgs e)
     {
         if (!DefaultStyle) Win32.SetWindowTheme(Handle, "", "");
+        var info = GetComboboxinfo();
+        _editControl = new ComboBoxEdit(this);
+        _editControl.AssignHandle(info.hwndEdit);
         base.OnHandleCreated(e);
     }
 
@@ -260,6 +272,7 @@ public class ExComboBox : ComboBox, IExControl
     protected override void OnHandleDestroyed(EventArgs e)
     {
         listbrush.Dispose();
+        _editControl.ReleaseHandle();
         base.OnHandleDestroyed(e);
     }
 
@@ -295,6 +308,14 @@ public class ExComboBox : ComboBox, IExControl
             }
     }
 
+    private Win32.COMBOBOXINFO GetComboboxinfo()
+    {
+        var info = new Win32.COMBOBOXINFO();
+        info.cbSize = Marshal.SizeOf(info);
+        SendMessageCb(Handle, 0x164, IntPtr.Zero, out info);
+        return info;
+    }
+
     /// <inheritdoc />
     protected override void OnDropDown(EventArgs e)
     {
@@ -305,9 +326,7 @@ public class ExComboBox : ComboBox, IExControl
             return;
 
         // Retrieve handle to dropdown list
-        var info = new Win32.COMBOBOXINFO();
-        info.cbSize = Marshal.SizeOf(info);
-        SendMessageCb(Handle, 0x164, IntPtr.Zero, out info);
+        var info = GetComboboxinfo();
         ExTools.SetTheme(info.hwndList,WindowsTheme.DarkExplorer);
     }
 
@@ -325,18 +344,18 @@ public class ExComboBox : ComboBox, IExControl
     /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)
     {
-        _drawing = true;
-
         if (DefaultStyle)
         {
             base.OnPaint(e);
             return;
         }
 
+        _drawing = true;
+
         var g = e.Graphics;
 
-        var texts = TextRenderer.MeasureText(g, Text, Font);
-        var textStart = new Point(2, (int)Math.Round(ClientRectangle.Height / 2d - texts.Height / 2d));
+        var size = TextRenderer.MeasureText(g, Text, Font);
+        var textStart = new Point(2, (int)Math.Round(ClientRectangle.Height / 2d - size.Height / 2d));
         var dropButton = new Rectangle(Width - 20, 0, 20, Height);
 
         var back = StyleNormal.BackColor ??= Color.White;
@@ -570,12 +589,40 @@ public class ExComboBox : ComboBox, IExControl
     {
         DropDownBackColorChanged?.Invoke(this, EventArgs.Empty);
     }
+
+    private class ComboBoxEdit : NativeWindow
+    {
+        private readonly ExComboBox parent;
+
+        public ComboBoxEdit(ExComboBox parent)
+        {
+            this.parent = parent;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+            if (parent.DefaultStyle || m.Msg != (int) Win32.WM.PAINT) 
+                return;
+            if (parent.Enabled || parent.DropDownStyle != ComboBoxStyle.DropDown) 
+                return;
+
+            var g = Graphics.FromHwnd(Handle);
+            var backColor = parent.StyleDisabled.BackColor ?? SystemColors.Control;
+            var foreColor = parent.StyleDisabled.ForeColor ?? SystemColors.GrayText;
+            Win32.GetWindowRect(new HandleRef(this, Handle), out var rec);
+            var recc = new Rectangle(0, 0, rec.Width, rec.Height);
+            g.Clear(backColor);
+            TextRenderer.DrawText(g, parent.Text, parent.Font, recc, foreColor, backColor, ExTextBox.ConvertAligment(HorizontalAlignment.Left));
+            m.Result = IntPtr.Zero;
+        }
+    }
 }
 
 /// <summary>
 ///     Class for definition styles for ExComboBox
 /// </summary>
-public class ExComboBoxStyle : ExStyle
+public class ExComboBoxStyle : ExStyleOld
 {
     private Color? _arrowColor;
     private Color? _buttonBackColor;
@@ -681,8 +728,5 @@ public class ExComboBoxStyle : ExStyle
     }
 
     /// <inheritdoc />
-    public override object Clone()
-    {
-        return new ExComboBoxStyle(this);
-    }
+    public override object Clone() => new ExComboBoxStyle(this);
 }

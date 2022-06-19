@@ -2,6 +2,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Local
+
 namespace ExControls;
 
 internal static partial class Win32
@@ -13,33 +14,33 @@ internal static partial class Win32
         ByteAlignClient = 0x1000,
 
         /// <summary>Redraws the entire window if a movement or size adjustment changes the height of the client area.</summary>
-        CS_VREDRAW         = 0x0001,
+        CS_VREDRAW = 0x0001,
 
         /// <summary>Redraws the entire window if a movement or size adjustment changes the width of the client area.</summary>
-        CS_HREDRAW         = 0x0002,
+        CS_HREDRAW = 0x0002,
 
         /// <summary>Sends a double-click message to the window procedure when the user double-clicks the mouse while the cursor is within a window belonging to the class.</summary>
-        CS_DBLCLKS         = 0x0008,
+        CS_DBLCLKS = 0x0008,
 
         /// <summary>Allocates a unique device context for each window in the class.</summary>
-        CS_OWNDC           = 0x0020,
+        CS_OWNDC = 0x0020,
 
         /// <summary>
         /// Allocates one device context to be shared by all windows in the class.
         /// Because window classes are process specific, it is possible for multiple threads of an application to create a window of the same class.
         /// It is also possible for the threads to attempt to use the device context simultaneously. When this happens, the system allows only one thread to successfully finish its drawing operation.
         /// </summary>
-        CS_CLASSDC         = 0x0040,
+        CS_CLASSDC = 0x0040,
 
         /// <summary>
         /// Sets the clipping rectangle of the child window to that of the parent window so that the child can draw on the parent.
         /// A window with the CS_PARENTDC style bit receives a regular device context from the system's cache of device contexts.
         /// It does not give the child the parent's device context or device context settings. Specifying CS_PARENTDC enhances an application's performance.
         /// </summary>
-        CS_PARENTDC        = 0x0080,
+        CS_PARENTDC = 0x0080,
 
         /// <summary>Disables Close on the window menu.</summary>
-        CS_NOCLOSE         = 0x0200,
+        CS_NOCLOSE = 0x0200,
 
         /// <summary>
         /// Saves, as a bitmap, the portion of the screen image obscured by a window of this class.
@@ -48,21 +49,21 @@ internal static partial class Win32
         /// This style is useful for small windows (for example, menus or dialog boxes) that are displayed briefly and then removed before other screen activity takes place.
         /// This style increases the time required to display the window, because the system must first allocate memory to store the bitmap.
         /// </summary>
-        CS_SAVEBITS        = 0x0800,
+        CS_SAVEBITS = 0x0800,
         CS_BYTEALIGNCLIENT = 0x1000,
 
         /// <summary>Aligns the window on a byte boundary (in the x direction). This style affects the width of the window and its horizontal placement on the display.</summary>
         CS_BYTEALIGNWINDOW = 0x2000,
 
         /// <summary>Indicates that the window class is an application global class. For more information, see the "Application Global Classes" section of About Window Classes.</summary>
-        CS_GLOBALCLASS     = 0x4000,
-        CS_IME             = 0x00010000,
+        CS_GLOBALCLASS = 0x4000,
+        CS_IME = 0x00010000,
 
         /// <summary>
         /// Enables the drop shadow effect on a window. The effect is turned on and off through SPI_SETDROPSHADOW.
         /// Typically, this is enabled for small, short-lived windows such as menus to emphasize their Z order relationship to other windows.
         /// </summary>
-        CS_DROPSHADOW      = 0x00020000
+        CS_DROPSHADOW = 0x00020000
     }
 
     public enum ShowWindowCommands
@@ -71,6 +72,7 @@ internal static partial class Win32
         /// Hides the window and activates another window.
         /// </summary>
         Hide = 0,
+
         /// <summary>
         /// Activates and displays a window. If the window is minimized or
         /// maximized, the system restores it to its original size and position.
@@ -78,57 +80,68 @@ internal static partial class Win32
         /// for the first time.
         /// </summary>
         Normal = 1,
+
         /// <summary>
         /// Activates the window and displays it as a minimized window.
         /// </summary>
         ShowMinimized = 2,
+
         /// <summary>
         /// Maximizes the specified window.
         /// </summary>
         Maximize = 3, // is this the right value?
+
         /// <summary>
         /// Activates the window and displays it as a maximized window.
         /// </summary>      
         ShowMaximized = 3,
+
         /// <summary>
         /// Displays a window in its most recent size and position. This value
         /// is similar to <see cref="Normal"/>, except
         /// the window is not activated.
         /// </summary>
         ShowNoActivate = 4,
+
         /// <summary>
         /// Activates the window and displays it in its current size and position.
         /// </summary>
         Show = 5,
+
         /// <summary>
         /// Minimizes the specified window and activates the next top-level
         /// window in the Z order.
         /// </summary>
         Minimize = 6,
+
         /// <summary>
         /// Displays the window as a minimized window. This value is similar to
         /// <see cref="ShowMinimized"/>, except the
         /// window is not activated.
         /// </summary>
         ShowMinNoActive = 7,
+
         /// <summary>
         /// Displays the window in its current size and position. This value is
         /// similar to <see cref="Show"/>, except the
         /// window is not activated.
         /// </summary>
         ShowNA = 8,
+
         /// <summary>
         /// Activates and displays the window. If the window is minimized or
         /// maximized, the system restores it to its original size and position.
         /// An application should specify this flag when restoring a minimized window.
         /// </summary>
         Restore = 9,
+
         /// <summary>
         /// Sets the show state based on the SW_* value specified in the
         /// STARTUPINFO structure passed to the CreateProcess function by the
         /// program that started the application.
         /// </summary>
         ShowDefault = 10,
+
         /// <summary>
         ///  <b>Windows 2000/XP:</b> Minimizes a window, even if the thread
         /// that owns the window is not responding. This flag should only be
@@ -564,7 +577,7 @@ internal static partial class Win32
         /// <summary>
         /// In a Maximize button.
         /// </summary>
-        HTZOOM = HTMAXBUTTON,
+        HTZOOM = HTMAXBUTTON
     }
 
     [Flags]
@@ -650,11 +663,6 @@ internal static partial class Win32
         /// <summary>Displays the window.</summary>
         /// <remarks>SWP_SHOWWINDOW</remarks>
         ShowWindow = 0x0040
-    }
-
-    public static int ToInt(this WM msg)
-    {
-        return (int)msg;
     }
 
     /// <summary>

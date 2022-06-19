@@ -26,6 +26,9 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     private bool _hover;
     private bool _selected;
 
+    //private Win32.DATETIMEPICKERINFO dtpInfo;
+    //private DTPEdit Edit;
+
     /// <inheritdoc />
     public ExDateTimePicker()
     {
@@ -148,9 +151,6 @@ public class ExDateTimePicker : DateTimePicker, IExControl
             Invalidate();
         }
     }
-
-    //private Win32.DATETIMEPICKERINFO dtpInfo;
-    //private DTPEdit Edit;
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]

@@ -20,6 +20,8 @@ public class ExFormDesigner : DocumentDesigner
         }*/
         EnableDesignMode(form.CustomPanel, "CustomPanel");
         //EnableDesignMode(form.PanelRoot,"Panel");
+        var dropDown = new ToolStripDropDown();
+        //dropDown.Close(Too);
     }
 
     /*protected override Control GetParentForComponent(IComponent component)

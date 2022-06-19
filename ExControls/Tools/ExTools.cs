@@ -21,10 +21,7 @@ public static class ExTools
     /// <param name="form">form where dark mode is applying</param>
     /// <param name="enabled">whether to turn dark mode on or off</param>
     /// <returns>whether dark mode has been successfully activated/deactivated</returns>
-    public static bool SetImmersiveDarkMode(this Form form, bool enabled)
-    {
-        return SetImmersiveDarkMode(form.Handle, enabled);
-    }
+    public static bool SetImmersiveDarkMode(this Form form, bool enabled) => SetImmersiveDarkMode(form.Handle, enabled);
 
     /// <summary>
     ///     Changes background color of window's caption (immersive dark mode). <br></br>
@@ -76,7 +73,7 @@ public static class ExTools
     /// <param name="theme">theme that will be used</param>
     /// <param name="customThemeName">
     ///     used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" /> and
-    ///     specifify theme name
+    ///     specifify theme name.
     /// </param>
     public static void SetTheme(this Control control, WindowsTheme theme, string customThemeName = "")
     {
@@ -159,7 +156,7 @@ public static class ExTools
     }
 
     /// <summary>
-    /// 
+    /// Sends a message to the specified process.
     /// </summary>
     /// <param name="process"></param>
     /// <param name="msg"></param>
@@ -175,14 +172,11 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Method to call interop for system beep
+    ///     Method to call interop for system beep.
     /// </summary>
     /// <remarks>Calls Windows to make computer beep</remarks>
     /// <param name="type">The kind of beep you would like to hear</param>
-    public static void Beep(BeepType type)
-    {
-        Win32.MessageBeep((uint)type);
-    }
+    public static void Beep(BeepType type) => Win32.MessageBeep((uint)type);
 }
 
 /// <summary>
@@ -194,43 +188,43 @@ public static class ExTools
 public enum BeepType : uint
 {
     /// <summary>
-    ///     A simple windows beep
+    ///     A simple windows beep.
     /// </summary>
     SimpleBeep = 0xFFFFFFFF,
 
     /// <summary>
-    ///     A standard windows OK beep
+    ///     A standard windows OK beep.
     /// </summary>
     OK = 0x00,
 
     /// <summary>
-    ///     A standard windows Question beep
+    ///     A standard windows Question beep.
     /// </summary>
     Question = 0x20,
 
     /// <summary>
-    ///     A standard windows Exclamation beep
+    ///     A standard windows Exclamation beep.
     /// </summary>
     Exclamation = 0x30,
 
     /// <summary>
-    ///     A standard windows Asterisk beep
+    ///     A standard windows Asterisk beep.
     /// </summary>
     Asterisk = 0x40
 }
 
 /// <summary>
-///     Specify theme for Windows controls
+///     Specify theme for Windows controls.
 /// </summary>
 public enum WindowsTheme
 {
     /// <summary>
-    ///     No style will be used
+    ///     No style will be used.
     /// </summary>
     None,
 
     /// <summary>
-    ///     Style of Windows Explorer in current Windows version
+    ///     Style of Windows Explorer in current Windows version.
     /// </summary>
     Explorer,
 

@@ -1,4 +1,6 @@
 ﻿using ExControls.Controls;
+using ExControls.Designers;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable EventNeverSubscribedTo.Global
@@ -10,10 +12,11 @@ namespace ExControls;
 ///     Expanded CheckBox Control
 /// </summary>
 [ToolboxBitmap(typeof(CheckBox), "CheckBox.bmp")]
+[Designer(typeof(ExCheckBoxDesigner))]
 public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
 {
-    private const int BOX_SIZE = 16;
-    private const int BOX_OFFSET = 3;
+    private const int BoxSize = 16;
+    private const int BoxOffset = 3;
 
     private Color _borderColor;
     private Color _boxBackColor;
@@ -221,7 +224,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
         using var penBorder = new Pen(border);
 
         //Positons and Size preparing
-        var rects = ExButtonRenderer.GetBoxAndTextRectangle(e.Graphics, this, BOX_SIZE, BOX_OFFSET);
+        var rects = ExButtonRenderer.GetBoxAndTextRectangle(e.Graphics, this, BoxSize, BoxOffset);
         var boxRec = rects.BoxRectangle;
         var textRec = rects.TextRectangle;
         var rectBorder = new Rectangle(boxRec.Location, new Size(boxRec.Width - 1, boxRec.Height - 1));

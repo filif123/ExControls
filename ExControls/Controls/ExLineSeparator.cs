@@ -1,4 +1,6 @@
 ﻿using System.Drawing.Drawing2D;
+using ExControls.Designers;
+
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -9,7 +11,8 @@ namespace ExControls;
 /// <summary>
 ///     LineSeparator Control
 /// </summary>
-[ToolboxBitmap(typeof(ExLineSeparator), "ExLineSeparator.bmp")]
+[ToolboxBitmap(typeof(ExLineSeparator), "Controls\\ExLineSeparator.bmp")]
+[Designer(typeof(ExLineSeparatorDesigner))]
 public class ExLineSeparator : Control
 {
     private Color _lineColor;
@@ -68,6 +71,7 @@ public class ExLineSeparator : Control
             if (value == _lineOrientation)
                 return;
             _lineOrientation = value;
+            Size = new Size(Size.Height, Size.Width);
             Invalidate();
             OnLineOrientationChanged();
         }

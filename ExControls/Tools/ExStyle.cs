@@ -1,162 +1,134 @@
-﻿using System.Drawing.Design;
-using ExControls.Controls;
-// ReSharper disable MemberCanBeProtected.Global
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMember.Global
+﻿namespace ExControls;
 
-namespace ExControls;
+//TODO: WIP --------------
 
 /// <summary>
-///     Class for definition styles for Control.
+/// Defines style of control. This class is abstract.
 /// </summary>
-[DisplayName("(Collection)")]
-public class ExStyle : IExNotifyPropertyChanged, ICloneable
+public abstract class ExStyle
 {
-    private Color? _backColor;
-    private Color? _borderColor;
-    private Color? _foreColor;
+    private Color _backColor;
+    private Color _foreColor;
+    private Color _borderColor;
 
     /// <summary>
-    ///     Constructor for designer.
+    /// Gets or sets background color of the control.
     /// </summary>
-    public ExStyle() : this(StyleType.Normal)
+    public Color BackColor
     {
+        get => _backColor == Color.Empty && Parent is not null ? Parent._backColor : _backColor;
+        set => _backColor = value;
     }
 
     /// <summary>
-    ///     Constructor.
+    /// Gets or sets foreground color of the control.
     /// </summary>
-    protected ExStyle(StyleType type)
+    public Color ForeColor
     {
-        Type = type;
+        get => _foreColor == Color.Empty && Parent is not null ? Parent._foreColor : _foreColor;
+        set => _foreColor = value;
     }
 
     /// <summary>
-    ///     Constructor.
+    /// Gets or sets border color of the control.
     /// </summary>
-    /// <param name="copy"></param>
-    protected ExStyle(ExStyle copy)
+    public Color BorderColor
     {
-        Type = copy.Type;
-        BackColor = copy.BackColor;
-        ForeColor = copy.ForeColor;
-        BorderColor = copy.BorderColor;
+        get => _borderColor == Color.Empty && Parent is not null ? Parent._borderColor : _borderColor;
+        set => _borderColor = value;
     }
 
     /// <summary>
-    ///     Type of style.
+    /// Gets a parent style.
     /// </summary>
-    public StyleType Type { get; }
+    public ExStyle Parent { get; internal set; }
 
     /// <summary>
-    ///     Foreground color of the Control.
+    /// 
     /// </summary>
-    [Browsable(true)]
-    [ExCategory(CategoryType.Appearance)]
-    [DefaultValue(typeof(Color), "White")]
-    [Description("Foreground color of the Control.")]
-    [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
-    public Color? BackColor
+    public ExStyle()
     {
-        get => _backColor;
-        set
-        {
-            if (_backColor == value)
-                return;
-            _backColor = value;
-            OnPropertyChanged(new ExPropertyChangedEventArgs(nameof(BackColor), value));
-        }
+        _backColor = Color.Empty;
+        _foreColor = Color.Empty;
+        _borderColor = Color.Empty;
     }
 
     /// <summary>
-    ///     Background color of the Control.
+    /// Copy constructor.
     /// </summary>
-    [Browsable(true)]
-    [ExCategory(CategoryType.Appearance)]
-    [DefaultValue(typeof(Color), "Black")]
-    [Description("Background color of the Control.")]
-    [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
-    public Color? ForeColor
+    /// <param name="original"></param>
+    protected ExStyle(ExStyle original)
     {
-        get => _foreColor;
-        set
-        {
-            if (_foreColor == value)
-                return;
-
-            _foreColor = value;
-            OnPropertyChanged(new ExPropertyChangedEventArgs(nameof(ForeColor), value));
-        }
-    }
-
-    /// <summary>
-    ///     Color of the Controls's border.
-    /// </summary>
-    [Browsable(true)]
-    [ExCategory(CategoryType.Appearance)]
-    [DefaultValue(typeof(Color), "DimGray")]
-    [Description("Color of the Controls's border.")]
-    [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
-    public Color? BorderColor
-    {
-        get => _borderColor;
-        set
-        {
-            if (_borderColor == value)
-                return;
-
-            _borderColor = value;
-            OnPropertyChanged(new ExPropertyChangedEventArgs(nameof(BorderColor), BorderColor));
-        }
-    }
-
-    /// <summary>Creates a new object that is a copy of the current instance.</summary>
-    /// <returns>A new object that is a copy of this instance.</returns>
-    public virtual object Clone()
-    {
-        return new ExStyle(this);
-    }
-
-    /// <summary>Occurs when a property value changes.</summary>
-    public event EventHandler<ExPropertyChangedEventArgs> PropertyChanged;
-
-    /// <summary>
-    ///     Raises the <see cref="PropertyChanged" /> event.
-    /// </summary>
-    /// <param name="e"></param>
-    protected void OnPropertyChanged(ExPropertyChangedEventArgs e)
-    {
-        PropertyChanged?.Invoke(this, e);
+        Parent = original.Parent;
+        BackColor = original._backColor;
+        ForeColor = original._foreColor;
+        BorderColor = original._borderColor;
     }
 }
 
 /// <summary>
-///     Type of style.
+/// 
 /// </summary>
-public enum StyleType
+/// <typeparam name="TS"></typeparam>
+public class ExStyleManager<TS> where TS : ExStyle, new() 
 {
     /// <summary>
-    ///     Normal style of the control.
+    /// 
     /// </summary>
-    Normal,
+    public TS StyleNormal { get; }
 
     /// <summary>
-    ///     Hover style of the control.
+    /// 
     /// </summary>
-    Hover,
+    public TS StyleDisabled { get; }
 
     /// <summary>
-    ///     Selected style of the control.
+    /// 
     /// </summary>
-    Selected,
+    public TS StyleSelected { get; }
 
     /// <summary>
-    ///     Disabled style of the control.
+    /// 
     /// </summary>
-    Disabled,
+    public TS StyleHover { get; }
 
     /// <summary>
-    ///     ReadOnly style of the control.
+    /// 
     /// </summary>
-    ReadOnly
+    public TS StyleReadOnly { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public ExStyleManager()
+    {
+        StyleNormal = new TS { Parent = null };
+        StyleDisabled = new TS { Parent = StyleNormal };
+        StyleSelected = new TS { Parent = StyleNormal };
+        StyleHover = new TS { Parent = StyleNormal };
+        StyleReadOnly = new TS { Parent = StyleNormal };
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public interface IStylable<T> where T : ExStyle, new()
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public ExStyleManager<T> StyleManager { get; }
+}
+
+/// <summary>
+/// 
+/// </summary>
+public interface ISupportsDefaultStyle
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool DefaultStyle { get; set; }
 }

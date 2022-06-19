@@ -30,10 +30,7 @@ internal static partial class Win32
         public uint idFrom;
         public int code;
 
-        public override string ToString()
-        {
-            return $"Hwnd: {HWND}, ControlID: {idFrom}, Code: {code}";
-        }
+        public override string ToString() => $"Hwnd: {HWND}, ControlID: {idFrom}, Code: {code}";
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -48,15 +45,9 @@ internal static partial class Win32
             Y = y;
         }
 
-        public static implicit operator System.Windows.Point(POINT point)
-        {
-            return new System.Windows.Point(point.X, point.Y);
-        }
+        public static implicit operator Point(POINT point) => new(point.X, point.Y);
 
-        public static implicit operator POINT(System.Windows.Point point)
-        {
-            return new POINT((int) point.X, (int) point.Y);
-        }
+        public static implicit operator POINT(Point point) => new((int) point.X, (int) point.Y);
     }
 
     [StructLayout(LayoutKind.Sequential)]

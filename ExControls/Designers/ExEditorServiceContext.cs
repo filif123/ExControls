@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel.Design;
+using System.Drawing.Design;
 using System.Windows.Forms.Design;
 
 namespace ExControls.Designers;
@@ -8,17 +9,29 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
 {
     private readonly ComponentDesigner _designer;
     private IComponentChangeService _componentChangeSvc;
+    private readonly PropertyDescriptor _targetProperty;
+
+    internal ExEditorServiceContext(ComponentDesigner designer)
+    {
+        _designer = designer;
+    }
 
     internal ExEditorServiceContext(ComponentDesigner designer, PropertyDescriptor prop)
     {
         _designer = designer;
-        PropertyDescriptor = prop;
-        if (prop != null)
+        _targetProperty = prop;
+        if (prop != null) 
             return;
         prop = TypeDescriptor.GetDefaultProperty(designer.Component);
-        if (prop == null || !typeof(ICollection).IsAssignableFrom(prop.PropertyType))
-            return;
-        PropertyDescriptor = prop;
+        if (prop != null && typeof(ICollection).IsAssignableFrom(prop.PropertyType))
+        {
+            _targetProperty = prop;
+        }
+    }
+
+    internal ExEditorServiceContext(ComponentDesigner designer, PropertyDescriptor prop, string newVerbText) : this(designer, prop)
+    {
+        _designer.Verbs.Add(new DesignerVerb(newVerbText, OnEditItems));
     }
 
     /// <summary>Gets the service object of the specified type.</summary>
@@ -40,7 +53,7 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
     {
         try
         {
-            ChangeService.OnComponentChanging(_designer.Component, PropertyDescriptor);
+            ChangeService.OnComponentChanging(_designer.Component, _targetProperty);
         }
         catch (CheckoutException ex)
         {
@@ -54,7 +67,7 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
     /// <summary>Raises the <see cref="E:System.ComponentModel.Design.IComponentChangeService.ComponentChanged" /> event.</summary>
     void ITypeDescriptorContext.OnComponentChanged()
     {
-        ChangeService.OnComponentChanged(_designer.Component, PropertyDescriptor, null, null);
+        ChangeService.OnComponentChanged(_designer.Component, _targetProperty, null, null);
     }
 
     /// <summary>Gets the container representing this <see cref="T:System.ComponentModel.TypeDescriptor" /> request.</summary>
@@ -67,7 +80,7 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
 
     /// <summary>Gets the <see cref="T:System.ComponentModel.PropertyDescriptor" /> that is associated with the given context item.</summary>
     /// <returns>The <see cref="T:System.ComponentModel.PropertyDescriptor" /> that describes the given context item; otherwise, <see langword="null" /> if there is no <see cref="T:System.ComponentModel.PropertyDescriptor" /> responsible for the call.</returns>
-    public PropertyDescriptor PropertyDescriptor { get; }
+    PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor => _targetProperty;
 
     private IComponentChangeService ChangeService =>
         _componentChangeSvc ??= (IComponentChangeService)((IServiceProvider)this).GetService(typeof(IComponentChangeService));
@@ -90,5 +103,40 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
     {
         var service = (IUIService)((IServiceProvider)this).GetService(typeof(IUIService));
         return service?.ShowDialog(dialog) ?? dialog.ShowDialog(_designer.Component as IWin32Window);
+    }
+
+    public static object EditValue(ComponentDesigner designer, object objectToChange, string propName)
+    {
+        var propertyDescriptor = TypeDescriptor.GetProperties(objectToChange)[propName];
+        var editorServiceContext = new ExEditorServiceContext(designer, propertyDescriptor);
+        var uitypeEditor = propertyDescriptor.GetEditor(typeof(UITypeEditor)) as UITypeEditor;
+        var value = propertyDescriptor.GetValue(objectToChange);
+        if (uitypeEditor == null) 
+            return null;
+
+        var obj = uitypeEditor.EditValue(editorServiceContext, editorServiceContext, value);
+        if (obj != value)
+        {
+            try
+            {
+                propertyDescriptor.SetValue(objectToChange, obj);
+            }
+            catch (CheckoutException)
+            {
+            }
+        }
+        return obj;
+
+    }
+
+    private void OnEditItems(object sender, EventArgs e)
+    {
+        var value = _targetProperty.GetValue(_designer.Component);
+        if (value == null)
+        {
+            return;
+        }
+        var collectionEditor = TypeDescriptor.GetEditor(value, typeof(UITypeEditor)) as CollectionEditor;
+        collectionEditor?.EditValue(this, this, value);
     }
 }

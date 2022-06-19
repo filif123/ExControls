@@ -1,4 +1,6 @@
 ﻿using System.Drawing.Design;
+using System.Windows.Forms.Design;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable EventNeverSubscribedTo.Global
 
@@ -7,12 +9,14 @@ namespace ExControls;
 /// <summary>
 ///     Expanded ComboBox Control for ToolStrip.
 /// </summary>
-public class ToolStripExComboBox : ToolStripControlHost
+[ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.ToolStrip | ToolStripItemDesignerAvailability.MenuStrip | ToolStripItemDesignerAvailability.ContextMenuStrip)]
+[DefaultProperty("Items")]
+public class ExToolStripComboBox : ToolStripControlHost
 {
     /// <summary>
     ///     Constructor
     /// </summary>
-    public ToolStripExComboBox() : base(new ExComboBox())
+    public ExToolStripComboBox() : base(new ExComboBox())
     {
     }
 

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
-using ExControls.Controls;
 
 namespace ExControls.Test
 {
@@ -25,7 +23,22 @@ namespace ExControls.Test
 
         }
 
-        private void exVerticalTabControl1_Load(object sender, EventArgs e)
+        private void ExOptionsPanel2_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+        {
+
+        }
+
+        private void ExPropertyGrid1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ExCheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ExColorSelector1_Load(object sender, EventArgs e)
         {
 
         }

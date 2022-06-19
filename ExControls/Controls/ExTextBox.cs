@@ -14,6 +14,8 @@ namespace ExControls;
 /// </summary>
 [ToolboxBitmap(typeof(TextBox), "TextBox.bmp")]
 [Designer(typeof(ExTextBoxDesigner))]
+[DefaultProperty(nameof(Text))]
+[DefaultEvent(nameof(TextChanged))]
 public class ExTextBox : TextBox, IExControl
 {
     private const int RGN_DIFF = 0x4;
@@ -253,8 +255,7 @@ public class ExTextBox : TextBox, IExControl
         {
             using var args = new PaintEventArgs(Graphics.FromHwnd(Handle), ClientRectangle);
             OnPaint(args);
-            if (!DefaultStyle)
-                m.Result = IntPtr.Zero;
+            m.Result = IntPtr.Zero;
             return;
         }
 
@@ -273,7 +274,7 @@ public class ExTextBox : TextBox, IExControl
         if (!Enabled)
         {
             e.Graphics.FillRectangle(new SolidBrush(DisabledBackColor), ClientRectangle);
-            TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, DisabledForeColor, DisabledBackColor, ConvertAligment());
+            TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, DisabledForeColor, DisabledBackColor, ConvertAligment(TextAlign));
         }
 
         //border
@@ -283,8 +284,7 @@ public class ExTextBox : TextBox, IExControl
         if (!Enabled) border = DisabledBorderColor;
         var brush = Win32.CreateSolidBrush((uint)BGRtoInt(border.R, border.G, border.B));
 
-        Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness),
-            RGN_DIFF);
+        Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness), RGN_DIFF);
 
         Win32.FillRgn(hdc, rgn, brush);
 
@@ -300,13 +300,12 @@ public class ExTextBox : TextBox, IExControl
     protected virtual void DrawHint(Graphics g)
     {
         if (!Focused && string.IsNullOrEmpty(Text) && !string.IsNullOrEmpty(HintText))
-            TextRenderer.DrawText(g, HintText, Font, ClientRectangle, HintForeColor, BackColor, ConvertAligment());
+            TextRenderer.DrawText(g, HintText, Font, ClientRectangle, HintForeColor, BackColor, ConvertAligment(TextAlign));
     }
 
-    internal TextFormatFlags ConvertAligment()
+    internal static TextFormatFlags ConvertAligment(HorizontalAlignment alignment)
     {
-        var a = TextAlign;
-        return a switch
+        return alignment switch
         {
             HorizontalAlignment.Center => TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
             HorizontalAlignment.Right => TextFormatFlags.VerticalCenter | TextFormatFlags.Right,
@@ -415,81 +414,3 @@ public class ExTextBox : TextBox, IExControl
     }
 }
 
-internal class ExTextBoxDesigner : ExControlDesigner
-{
-    private DesignerActionListCollection actionList;
-
-    public override DesignerActionListCollection ActionLists
-    {
-        get { return actionList ??= new DesignerActionListCollection(new DesignerActionList[] { new ExTextBoxDesignerActionList(this) }); }
-    }
-
-    /// <summary>Gets the selection rules that indicate the movement capabilities of a component.</summary>
-    /// <returns>A bitwise combination of <see cref="T:System.Windows.Forms.Design.SelectionRules" /> values.</returns>
-    public override SelectionRules SelectionRules
-    {
-        get
-        {
-            if (Control is not ExTextBox control) throw new InvalidOperationException();
-
-            if (control.Multiline) return SelectionRules.AllSizeable | SelectionRules.Moveable; // | base.SelectionRules;
-
-            return /*base.SelectionRules |*/ SelectionRules.LeftSizeable | SelectionRules.RightSizeable | SelectionRules.Moveable;
-        }
-    }
-}
-
-internal class ExTextBoxDesignerActionList : ExControlDesigner.ExControlDesignerActionList
-{
-    public ExTextBoxDesignerActionList(ControlDesigner designer) : base(designer)
-    {
-        Control = (ExTextBox)designer.Control;
-    }
-
-    protected new ExTextBox Control { get; }
-
-    public bool Enabled
-    {
-        get => Control.Enabled;
-        set => TypeDescriptor.GetProperties(Component)["Enabled"].SetValue(Component, value);
-    }
-
-    public bool ReadOnly
-    {
-        get => Control.ReadOnly;
-        set => TypeDescriptor.GetProperties(Component)["ReadOnly"].SetValue(Component, value);
-    }
-
-    public bool Multiline
-    {
-        get => Control.Multiline;
-        set => TypeDescriptor.GetProperties(Component)["Multiline"].SetValue(Component, value);
-    }
-
-    public char PasswordChar
-    {
-        get => Control.PasswordChar;
-        set => TypeDescriptor.GetProperties(Component)["PasswordChar"].SetValue(Component, value);
-    }
-
-    /*public void EditItems()
-    {
-        var editorServiceContext = typeof(ControlDesigner).Assembly.GetTypes()
-            .Where(x => x.Name == "EditorServiceContext").FirstOrDefault();
-        var editValue = editorServiceContext.GetMethod("EditValue",
-            System.Reflection.BindingFlags.Static |
-            System.Reflection.BindingFlags.Public);
-        editValue.Invoke(null, new object[] { designer, Component, "Items" });
-    }*/
-
-    public override DesignerActionItemCollection GetSortedActionItems()
-    {
-        var items = base.GetSortedActionItems();
-        //new DesignerActionMethodItem(this, "EditItems", "Edit Items",  true),
-        items.Add(new DesignerActionPropertyItem("PasswordChar", "PasswordChar", "Behavior"));
-        items.Add(new DesignerActionPropertyItem("Enabled", "Enabled", "Appearance"));
-        items.Add(new DesignerActionPropertyItem("ReadOnly", "ReadOnly", "Appearance"));
-        items.Add(new DesignerActionPropertyItem("Multiline", "Multiline", "Appearance"));
-        return items;
-    }
-}

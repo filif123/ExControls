@@ -10,6 +10,11 @@ public class ExDescriptionAttribute : DescriptionAttribute
     {
     }
 
+    /// <inheritdoc />
+    public ExDescriptionAttribute(string description, bool useExact) : base(useExact ? description : KeyToString(description))
+    {
+    }
+
     /// <summary>
     /// Converts key of description to resource string.
     /// </summary>

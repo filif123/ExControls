@@ -51,7 +51,43 @@
     <Compile Include="Controls\ExButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Designers\ExVerticalTabPageCollectionEditor.cs" />
+    <Compile Include="Controls\ExColorSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExColorSelector.Designer.cs">
+      <DependentUpon>ExColorSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Designers\DesignerScrollableControlBase.cs" />
+    <Compile Include="Designers\ExColorSelectorDesigner.cs" />
+    <Compile Include="Designers\ExPropertyGridDesigner.cs" />
+    <Compile Include="Designers\ExTextBoxDesigner.cs" />
+    <Compile Include="Controls\OptionsNode.cs" />
+    <Compile Include="Controls\ExOptionsPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\OptionsPanelContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ExOptionsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ExOptionsView.designer.cs">
+      <DependentUpon>ExOptionsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RestrictivePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Converters\OptionsNodeConverter.cs" />
+    <Compile Include="Designers\DesignerActionListBase.cs" />
+    <Compile Include="Designers\DesignerControlBase.cs" />
+    <Compile Include="Designers\DesignerParentControlBase.cs" />
+    <Compile Include="Designers\ExCheckBoxDesigner.cs" />
+    <Compile Include="Designers\ExGroupBoxDesigner.cs" />
+    <Compile Include="Designers\ExLineSeparatorDesigner.cs" />
+    <Compile Include="Designers\ExOptionsPanelDesigner.cs" />
+    <Compile Include="Designers\ExOptionsViewDesigner.cs" />
+    <Compile Include="Designers\NoBorderRenderer.cs" />
+    <Compile Include="Designers\RestrictivePanelDesigner.cs" />
     <Compile Include="Designers\TitleBarDesigner.cs" />
     <Compile Include="Designers\ExFormDesigner.cs" />
     <Compile Include="Designers\ExEditorServiceContext.cs" />
@@ -72,42 +108,17 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Designers\ExTreeViewDesigner.cs" />
-    <Compile Include="Controls\ExVerticalMenu.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ExVerticalMenu.Designer.cs">
-      <DependentUpon>ExVerticalMenu.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExVerticalTabControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ExVerticalTabControl.Designer.cs">
-      <DependentUpon>ExVerticalTabControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ExVerticalTabPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\TitleBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\TitleBar.Designer.cs">
       <DependentUpon>TitleBar.cs</DependentUpon>
     </Compile>
-    <Compile Include="Designers\ExVerticalTabPageConverter.cs" />
-    <Compile Include="Designers\TreeViewActionList.cs" />
-    <Compile Include="Collections\VerticalTabPagesCollection.cs" />
-    <Compile Include="Designers\ExVerticalTabControlDesigner.cs" />
-    <Compile Include="Designers\ExVerticalTabPageDesigner.cs" />
-    <Compile Include="Designers\FSelectPage.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Designers\FSelectPage.Designer.cs">
-      <DependentUpon>FSelectPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Designers\PanelDesigner.cs" />
+    <Compile Include="Editors\OptionsNodeEditor.cs" />
+    <Compile Include="Editors\OptionsPanelCollectionEditor.cs" />
     <Compile Include="GlobalUsings.cs" />
+    <Compile Include="Providers\UndoRedoProvider.cs" />
     <Compile Include="Tools\EquatableCollection.cs" />
-    <Compile Include="Designers\ExControlDesigner.cs" />
     <Compile Include="Components\DataGridViewExCheckBoxColumn.cs" />
     <Compile Include="Components\DataGridViewExComboBoxColumn.cs" />
     <Compile Include="Tools\ExBindingList.cs" />
@@ -158,6 +169,7 @@
     <Compile Include="Tools\ExCategory.cs" />
     <Compile Include="Tools\ExDescription.cs" />
     <Compile Include="Tools\ExStyle.cs" />
+    <Compile Include="Tools\ExStyleOld.cs" />
     <Compile Include="Controls\ExTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -176,7 +188,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools\ShellIcon.cs" />
-    <Compile Include="Controls\ToolStripExComboBox.cs">
+    <Compile Include="Controls\ExToolStripComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Tools\SystemResources.cs" />
@@ -190,20 +202,17 @@
     <EmbeddedResource Include="Components\ExMessageBoxForm.resx">
       <DependentUpon>ExMessageBoxForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ExColorSelector.resx">
+      <DependentUpon>ExColorSelector.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ExForm.resx">
       <DependentUpon>ExForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExVerticalMenu.resx">
-      <DependentUpon>ExVerticalMenu.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ExVerticalTabControl.resx">
-      <DependentUpon>ExVerticalTabControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\ExOptionsView.resx">
+      <DependentUpon>ExOptionsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TitleBar.resx">
       <DependentUpon>TitleBar.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Designers\FSelectPage.resx">
-      <DependentUpon>FSelectPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -220,6 +229,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\qm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Controls\ExOptionsView.bmp" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

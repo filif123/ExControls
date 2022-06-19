@@ -12,11 +12,15 @@ namespace ExControls;
 ///     Expanded TabControl Control
 /// </summary>
 [ToolboxBitmap(typeof(TabControl), "TabControl.bmp")]
+[DefaultProperty(nameof(TabPages))]
 public class ExTabControl : TabControl, IExControl
 {
+    // ReSharper disable InconsistentNaming
     private const int TCN_FIRST = -550;
     private const int TCN_SELCHANGING = TCN_FIRST - 2;
     private const int WM_REFLECT = (int)(Win32.WM.USER + 0x1C00);
+    // ReSharper restore InconsistentNaming
+
     private Color _activeHeaderBackColor;
     private Color _activeHeaderForeColor;
 
@@ -50,7 +54,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Color of the TabControl's border
+    ///     Color of the TabControl's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -69,7 +73,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the Tab header
+    ///     Foreground color of the Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -88,7 +92,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Background color of the Tab header
+    ///     Background color of the Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -107,7 +111,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the active Tab header
+    ///     Foreground color of the active Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -126,7 +130,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the active Tab header
+    ///     Foreground color of the active Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -145,7 +149,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Background color of the hovered Tab header
+    ///     Background color of the hovered Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -164,7 +168,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the hovered Tab header
+    ///     Foreground color of the hovered Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -183,7 +187,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Width of the TabControl's border
+    ///     Width of the TabControl's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -202,7 +206,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     The background color used to display text and graphics in a control
+    ///     The background color used to display text and graphics in a control.
     /// </summary>
     [Browsable(true)]
     [ExDescription("The background color used to display text and graphics in a control.")]
