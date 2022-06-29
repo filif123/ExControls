@@ -65,8 +65,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     [ExCategory(CategoryType.Appearance)]
     public bool SearchBoxVisible
     {
-        get => cbSearch.Visible;
-        set => cbSearch.Visible = value;
+        get => tbSearch.Visible;
+        set => tbSearch.Visible = value;
     }
 
     /// <summary>
@@ -140,6 +140,14 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
             AddNode(panel);
     }
 
+    /// <inheritdoc />
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        if (Panels.Count != 0) 
+            TreeView.SelectedNode = ((ExOptionsPanel) Panels[0]).Node;
+    }
+
     /// <summary>
     /// When the selected panel changes, display it.
     /// </summary>
@@ -166,6 +174,9 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
 
         if (changed && Created)
             SelectedPanelChanged?.Invoke(this, EventArgs.Empty);
+
+        if (SelectedPanel is not null) 
+            TreeView.SelectedNode = SelectedPanel.Node;
     }
 
     // Change the selected panel when a node is selected
@@ -194,8 +205,6 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
 
         // During design mode we remove the node for this panel to the treeview.
         RemoveNode(e.Control);
-
-        // TODO: Also remove child panels
     }
 
     private void AddNode(ExOptionsPanel panel)
@@ -224,6 +233,33 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
         var panel = Panels.Cast<ExOptionsPanel>().FirstOrDefault(p => p.Name == name);
         if (panel != null)
             SelectedPanel = panel;
+    }
+
+    private void TbSearch_TextChanged(object sender, EventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(tbSearch.Text))
+        {
+            TreeView.Nodes.SetVisibilityForAll(true);
+            return;
+        }
+
+        //hide all nodes
+        TreeView.Nodes.SetVisibilityForAll(false);
+        
+        //search for the text of every control in the panel
+        var first = true;
+        foreach (Control control in Panels)
+        {
+            if (control is not ExOptionsPanel panel || !panel.Search(tbSearch.Text)) 
+                continue;
+
+            TreeView.Nodes.SetVisibility(panel.Node, true);
+            if (first)
+            {
+                first = false;
+                SelectedPanel = panel;
+            }
+        }
     }
 
     /// <inheritdoc />

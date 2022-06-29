@@ -57,6 +57,9 @@
     <Compile Include="Controls\ExColorSelector.Designer.cs">
       <DependentUpon>ExColorSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ExDropDownButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Designers\DesignerScrollableControlBase.cs" />
     <Compile Include="Designers\ExColorSelectorDesigner.cs" />
     <Compile Include="Designers\ExPropertyGridDesigner.cs" />

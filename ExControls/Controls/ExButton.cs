@@ -66,8 +66,6 @@ public class ExButton : Button, IExControl
     [Browsable(false)]
     [Obsolete]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [ExCategory(CategoryType.Appearance)]
-    [ExDescription("ButtonFlatAppearance")]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public new FlatButtonAppearance FlatAppearance => base.FlatAppearance;
 

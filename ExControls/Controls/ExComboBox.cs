@@ -261,7 +261,7 @@ public class ExComboBox : ComboBox, IExControl
     protected override void OnHandleCreated(EventArgs e)
     {
         if (!DefaultStyle) Win32.SetWindowTheme(Handle, "", "");
-        var info = GetComboboxinfo();
+        var info = GetComboboxInfo();
         _editControl = new ComboBoxEdit(this);
         _editControl.AssignHandle(info.hwndEdit);
         base.OnHandleCreated(e);
@@ -308,7 +308,7 @@ public class ExComboBox : ComboBox, IExControl
             }
     }
 
-    private Win32.COMBOBOXINFO GetComboboxinfo()
+    private Win32.COMBOBOXINFO GetComboboxInfo()
     {
         var info = new Win32.COMBOBOXINFO();
         info.cbSize = Marshal.SizeOf(info);
@@ -326,7 +326,7 @@ public class ExComboBox : ComboBox, IExControl
             return;
 
         // Retrieve handle to dropdown list
-        var info = GetComboboxinfo();
+        var info = GetComboboxInfo();
         ExTools.SetTheme(info.hwndList,WindowsTheme.DarkExplorer);
     }
 

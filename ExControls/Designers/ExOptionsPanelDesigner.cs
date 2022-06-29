@@ -9,7 +9,7 @@ namespace ExControls.Designers;
 /// <summary>
 /// Provides a ParentControlDesigner for the ExOptionsPanel to enhance design-time experience.
 /// </summary>
-internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExOptionsPanel>
+internal sealed class ExOptionsPanelDesigner : DesignerParentControlBase<ExOptionsPanel>
 {
     private readonly string[] _invisibleProperties;
     private DesignerActionListCollection _actionLists;
@@ -48,16 +48,6 @@ internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExO
 
         // Draw a border
         OnPaintBorder(pe);
-
-        /*// Draw name in designer
-        using var b = new SolidBrush(Color.Gray);
-        var sf = StringFormat.GenericDefault;
-        sf.LineAlignment = StringAlignment.Far;
-        sf.Alignment = StringAlignment.Far;
-        var font = new Font(Host.Font.FontFamily, 14f);
-        var rect = Host.ClientRectangle;
-        rect.Inflate(-5, -5);
-        pe.Graphics.DrawString(Host.Name, font, b, rect, sf);*/
     }
 
     // Paint dashed border around control during design-time, copied from the PanelDesigner
@@ -93,7 +83,7 @@ internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExO
 
             set
             {
-                SetProperty("ParentNode", value);
+                SetProperty(nameof(ParentNode), value);
                 DesignerActionService.Refresh(Host);
             }
         }
@@ -126,8 +116,8 @@ internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExO
         {
             var items = new DesignerActionItemCollection
             {
-                new DesignerActionMethodItem(this, nameof(SelectParent), "Select Parent", string.Empty, "Selects the parent ExOptionsPanel or ExOptionsView.", true),
-                new DesignerActionPropertyItem(nameof(ParentNode), "Parent node:", string.Empty, "Gets or sets the parent node.")
+                new DesignerActionMethodItem(this, nameof(SelectParent), "Select Parent", "", "Selects the parent ExOptionsPanel or ExOptionsView.", true),
+                new DesignerActionPropertyItem(nameof(ParentNode), "Parent node:", "", "Gets or sets the parent node.")
             };
             return items;
         }

@@ -111,6 +111,9 @@ public static class ExTools
             case WindowsTheme.Other:
                 Win32.SetWindowTheme(handle, customThemeName, null);
                 break;
+            case WindowsTheme.Default:
+                Win32.SetWindowTheme(handle, null, null);
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
         }
@@ -236,7 +239,12 @@ public enum WindowsTheme
     /// <summary>
     ///     Other style will be used.
     /// </summary>
-    Other
+    Other,
+
+    /// <summary>
+    ///     Default style will be used.
+    /// </summary>
+    Default
 }
 
 /// <summary>

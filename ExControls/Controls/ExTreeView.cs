@@ -43,7 +43,7 @@ public class ExTreeView : TreeView
             switch (value)
             {
                 case ExTreeViewStyle.Default:
-                    this.SetTheme(WindowsTheme.Other, null);
+                    this.SetTheme(WindowsTheme.Default);
                     break;
                 case ExTreeViewStyle.Light:
                     this.SetTheme(WindowsTheme.Explorer);

@@ -26,8 +26,6 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
     {
         // Handle mouseclicks on the TreeView
         Host.TreeView.MouseDown += OnTreeViewClicked;
-        if (Host.Panels.Count != 0) 
-            Host.labelPanelName.Text = ((ExOptionsPanel) Host.Panels[0]).Node.FullPath;
     }
 
     /// <inheritdoc />

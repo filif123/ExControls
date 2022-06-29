@@ -35,7 +35,7 @@ public class ExOptionsPanel : Panel
     {
         // Just in case the Owner has not been set, let's try to find it ourselves
         get => _owner ??= FindOwner();
-        internal set => _owner = value;
+        private set => _owner = value;
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public class ExOptionsPanel : Panel
     internal static object CreatePanel(ExOptionsView owner, IDesignerHost designerHost)
     {
         // Use the IDesignerHost to create the panel component so that it is editable (and selectable) during design-time
-        var panel = (ExOptionsPanel)designerHost.CreateComponent(typeof(ExOptionsPanel));
+        var panel = (ExOptionsPanel) designerHost.CreateComponent(typeof(ExOptionsPanel));
 
         // Also set some properties
         panel.Owner = owner;
@@ -138,4 +138,34 @@ public class ExOptionsPanel : Panel
     private bool ShouldSerializeParentNode() => true;
 
     #endregion
+
+    /// <summary>
+    ///     Detects if there is a control in the panel with the specified text.
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    public bool Search(string text)
+    {
+        if (NodeText.Contains(text))
+            return true;
+        
+        foreach (Control ctrl in Controls)
+        {
+            if (Search(text, ctrl))
+                return true;
+        }
+        return false;
+    }
+
+    private static bool Search(string text, Control control)
+    {
+        if (control.Text.Contains(text))
+            return true;
+        foreach (Control ctrl in control.Controls)
+        {
+            if (Search(text, ctrl))
+                return true;
+        }
+        return false;
+    }
 }
