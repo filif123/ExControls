@@ -7,9 +7,9 @@ namespace ExControls.Providers;
 /// <summary>
 ///     Provides undo-redo capability.
 /// </summary>
-public class UndoRedoManager
+public class UndoRedoManager : Component
 {
-    private readonly Stack<(ICommand cmd, IUndoHandler handler)> _undoStack, _redoStack;
+    private readonly Stack<(IUndoRedoCommand cmd, IUndoHandler handler)> _undoStack, _redoStack;
 
     /// <summary>
     /// 
@@ -17,33 +17,76 @@ public class UndoRedoManager
     public event EventHandler<UndoRedoStateEventArgs> UndoRedoStateChanged;
 
     /// <summary>
-    ///     Constructor which initializes the manager.
+    /// 
     /// </summary>
-    public UndoRedoManager()
-    {
-        _undoStack = new Stack<(ICommand, IUndoHandler)>();
-        _redoStack = new Stack<(ICommand, IUndoHandler)>();
-        ManagerEnabled = false;
-    }
+    public event EventHandler<UndoRedoAddedCommandEventArgs> CommandAdded;
 
     /// <summary>
     ///     Enables or disables manager to add commands to stacks. Dafault is false.
     /// </summary>
+    [DefaultValue(false)]
     public bool ManagerEnabled { get; set; }
+
+    /// <summary>
+    ///     Represents last saved undo command in history.
+    /// </summary>
+    protected IUndoRedoCommand SavedStateCommand { get; set; }
+
+    /// <summary>
+    ///     Check if there is something to undo. Use this method to decide
+    /// whether your application's "Undo" menu item should be enabled
+    /// or disabled.
+    /// </summary>
+    [Browsable(false)]
+    public bool CanUndo => _undoStack.Count > 0;
+
+    /// <summary>
+    ///     Check if there is something to redo. Use this method to decide
+    /// whether your application's "Redo" menu item should be enabled
+    /// or disabled.
+    /// </summary>
+    [Browsable(false)]
+    public bool CanRedo => _redoStack.Count > 0;
+
+    /// <summary>
+    ///     Get the next (or newest) undo command. This is like a "Peek"
+    /// method. It does not remove the command from the undo list.
+    /// </summary>
+    [Browsable(false)]
+    public IUndoRedoCommand NextUndoCommand => _undoStack.Peek().cmd;
+
+    /// <summary>
+    ///     Get the next redo command. This is like a "Peek"
+    /// method. It does not remove the command from the redo stack.
+    /// </summary>
+    [Browsable(false)]
+    public IUndoRedoCommand NextRedoCommand => _redoStack.Peek().cmd;
+
+    /// <summary>
+    ///     Constructor which initializes the manager.
+    /// </summary>
+    public UndoRedoManager()
+    {
+        _undoStack = new Stack<(IUndoRedoCommand, IUndoHandler)>();
+        _redoStack = new Stack<(IUndoRedoCommand, IUndoHandler)>();
+        ManagerEnabled = false;
+    }
 
     /// <summary>
     ///     Register a new undo command. Use this method after your
     /// application has performed an operation/command that is
     /// undoable.
     /// </summary>
-    public void AddCommand(ICommand cmd)
+    public void AddCommand(IUndoRedoCommand cmd)
     {
         if (!ManagerEnabled)
             return;
         if (cmd is null)
             throw new ArgumentNullException(nameof(cmd));
+
         _undoStack.Push((cmd, null));
         if (CanRedo) _redoStack.Clear();
+        OnCommandAdded(new UndoRedoAddedCommandEventArgs(cmd, null));
     }
 
     /// <summary>
@@ -51,14 +94,17 @@ public class UndoRedoManager
     /// The undo handler is used to perform the actual undo or redo
     /// operation later when requested.
     /// </summary>
-    public void AddCommand(ICommand cmd, IUndoHandler handler)
+    public void AddCommand(IUndoRedoCommand cmd, IUndoHandler handler)
     {
         if (!ManagerEnabled)
             return;
         if (cmd is null)
             throw new ArgumentNullException(nameof(cmd));
+
         _undoStack.Push((cmd, handler));
-        if (CanRedo) _redoStack.Clear();
+        if (CanRedo) 
+            _redoStack.Clear();
+        OnCommandAdded(new UndoRedoAddedCommandEventArgs(cmd, handler));
     }
 
     /// <summary>
@@ -75,26 +121,28 @@ public class UndoRedoManager
     }
 
     /// <summary>
-    ///     Check if there is something to undo. Use this method to decide
-    /// whether your application's "Undo" menu item should be enabled
-    /// or disabled.
+    ///     Sets current state as saved.
     /// </summary>
-    public bool CanUndo => _undoStack.Count > 0;
+    public void SetSavedState() => SavedStateCommand = _undoStack.Count == 0 ? null : NextUndoCommand;
 
     /// <summary>
-    ///     Check if there is something to redo. Use this method to decide
-    /// whether your application's "Redo" menu item should be enabled
-    /// or disabled.
+    ///     Returns whether the manager is in saved state.
     /// </summary>
-    public bool CanRedo => _redoStack.Count > 0;
+    /// <returns></returns>
+    public bool IsInSavedState() => ReferenceEquals(_undoStack.Count == 0 ? null : NextUndoCommand, SavedStateCommand);
 
     /// <summary>
-    ///     Perform the undo operation. If an undo handler was specified, it
-    /// will be used to perform the actual operation. Otherwise, the
-    /// command instance is asked to perform the undo.
+    ///     Perform the undo operation.
+    /// If an undo handler was specified, it will be used to perform the actual operation.
+    /// Otherwise, the command instance is asked to perform the undo.
     /// </summary>
     public void Undo()
     {
+        if (!ManagerEnabled)
+            throw new InvalidOperationException("Manager is disabled");
+        if (!CanUndo)
+            throw new InvalidOperationException("Cannot undo because undo stack is empty");
+
         var cmd = _undoStack.Pop();
 
         if (cmd.handler != null)
@@ -107,12 +155,37 @@ public class UndoRedoManager
     }
 
     /// <summary>
-    ///     Perform the redo operation. If an undo handler was specified, it
-    /// will be used to perform the actual operation. Otherwise, the
-    /// command instance is asked to perform the redo.
+    ///     Perform the undo operation.
+    /// If an undo handler was specified, it will be used to perform the actual operation.
+    /// Otherwise, the command instance is asked to perform the undo.
+    /// </summary>
+    public void Undo(IUndoRedoCommand finalCmd)
+    {
+        if (!ManagerEnabled)
+            throw new InvalidOperationException("Manager is disabled");
+        if (!CanUndo)
+            throw new InvalidOperationException("Cannot undo because undo stack is empty");
+        if (_undoStack.All(x => x.cmd != finalCmd)) //if finalCmd is not in undo stack
+            throw new ArgumentException("Argument finalCmd is not in undo stack.");
+
+        while (NextUndoCommand != finalCmd)
+        {
+            Undo();
+        }
+    }
+
+    /// <summary>
+    ///     Perform the redo operation.
+    /// If an undo handler was specified, it will be used to perform the actual operation.
+    /// Otherwise, the command instance is asked to perform the redo.
     /// </summary>
     public void Redo()
     {
+        if (!ManagerEnabled)
+            throw new InvalidOperationException("Manager is disabled");
+        if (!CanRedo)
+            throw new InvalidOperationException("Cannot redo because redo stack is empty");
+
         var cmd = _redoStack.Pop();
 
         if (cmd.handler != null)
@@ -125,13 +198,33 @@ public class UndoRedoManager
     }
 
     /// <summary>
+    ///     Perform the redo operation.
+    /// If an undo handler was specified, it will be used to perform the actual operation.
+    /// Otherwise, the command instance is asked to perform the redo.
+    /// </summary>
+    public void Redo(IUndoRedoCommand finalCmd)
+    {
+        if (!ManagerEnabled)
+            throw new InvalidOperationException("Manager is disabled");
+        if (!CanRedo)
+            throw new InvalidOperationException("Cannot redo because redo stack is empty");
+        if (_redoStack.All(x => x.cmd != finalCmd)) //if finalCmd is not in redo stack
+            throw new ArgumentException("Argument finalCmd is not in redo stack.");
+
+        while (NextRedoCommand != finalCmd)
+        {
+            Redo();
+        }
+    }
+
+    /// <summary>
     ///     Get the text value of the next undo command. Use this method
     /// to update the Text property of your "Undo" menu item if
     /// desired. For example, the text value for a command might be
     /// "Draw Circle". This allows you to change your menu item Text
     /// property to "Undo Draw Circle".
     /// </summary>
-    public string GetUndoText() => _undoStack.Count != 0 ? _undoStack.Peek().cmd.CommandName : null;
+    public string GetUndoText() => CanUndo ? NextUndoCommand.CommandName : null;
 
     /// <summary>
     ///     Get the text value of the next redo command. Use this method
@@ -139,98 +232,35 @@ public class UndoRedoManager
     /// For example, the text value for a command might be "Draw Line".
     /// This allows you to change your menu item text to "Redo Draw Line".
     /// </summary>
-    public string GetRedoText() => _redoStack.Count != 0 ? _redoStack.Peek().cmd.CommandName : null;
+    public string GetRedoText() => CanRedo ? NextRedoCommand.CommandName : null;
 
     /// <summary>
-    ///     Get the next (or newest) undo command. This is like a "Peek"
-    /// method. It does not remove the command from the undo list.
+    /// 
     /// </summary>
-    public ICommand GetNextUndoCommand() => _undoStack.Peek().cmd;
+    /// <returns></returns>
+    public IEnumerable<IUndoRedoCommand> GetUndoHistory()
+    {
+        return _undoStack.Select(x => x.cmd);
+    }
 
     /// <summary>
-    ///     Get the next redo command. This is like a "Peek"
-    /// method. It does not remove the command from the redo stack.
+    /// 
     /// </summary>
-    public ICommand GetNextRedoCommand() => _redoStack.Peek().cmd;
+    /// <returns></returns>
+    public IEnumerable<IUndoRedoCommand> GetRedoHistory()
+    {
+        return _redoStack.Select(x => x.cmd);
+    }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="e"></param>
     protected virtual void OnUndoRedoStateChanged(UndoRedoStateEventArgs e) => UndoRedoStateChanged?.Invoke(this, e);
-}
-
-/// <summary>
-/// 
-/// </summary>
-public class UndoRedoStateEventArgs : EventArgs
-{
-    /// <inheritdoc />
-    public UndoRedoStateEventArgs(UndoRedoState newState)
-    {
-        NewState = newState;
-    }
 
     /// <summary>
-    ///     New state of manager.
+    /// 
     /// </summary>
-    public UndoRedoState NewState { get; }
-} 
-
-/// <summary>
-///     State of the undo-redo manager.
-/// </summary>
-public enum UndoRedoState
-{
-    /// <summary>
-    ///     Undo method was invoked.
-    /// </summary>
-    Undo,
-
-    /// <summary>
-    ///     Redo method was invoked.
-    /// </summary>
-    Redo,
-
-    /// <summary>
-    ///     Manager was cleared.
-    /// </summary>
-    Clear
-}
-
-/// <summary>
-///     Provides an interface for all commands to use in the UndoRedoProvider.
-/// </summary>
-public interface ICommand
-{
-    /// <summary>
-    ///     Gets a name of this command.
-    /// </summary>
-    public string CommandName { get; }
-
-    /// <summary>
-    ///     Executes the previous command if exists.
-    /// </summary>
-    void Undo();
-
-    /// <summary>
-    ///     Executes the next command if exists.
-    /// </summary>
-    void Redo();
-}
-
-/// <summary>
-///     Provides an interface for handlers of undo-redo commands.
-/// </summary>
-public interface IUndoHandler
-{
-    /// <summary>
-    ///     Executes the previous command if exists.
-    /// </summary>
-    void Undo(ICommand cmd);
-
-    /// <summary>
-    ///     Executes the next command if exists.
-    /// </summary>
-    void Redo(ICommand cmd);
+    /// <param name="e"></param>
+    protected virtual void OnCommandAdded(UndoRedoAddedCommandEventArgs e) => CommandAdded?.Invoke(this, e);
 }

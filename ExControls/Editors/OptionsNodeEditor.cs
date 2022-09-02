@@ -12,27 +12,21 @@ public class OptionsNodeEditor : UITypeEditor
     private IWindowsFormsEditorService _editorService;
 
     /// <inheritdoc />
-    public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
-    {
-        // Tell the property grid we want to show a dropdown.
-        return UITypeEditorEditStyle.DropDown;
-    }
+    // Tell the property grid we want to show a dropdown.
+    public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) => UITypeEditorEditStyle.DropDown;
 
     /// <inheritdoc />
     public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
     {
         if (provider != null)
-            _editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+            _editorService = (IWindowsFormsEditorService) provider.GetService(typeof(IWindowsFormsEditorService));
 
         if (_editorService == null)
             return value ?? base.EditValue(context, provider, null);
 
         // Create the list of other nodes and show it in the dropdown
         var list = CreateNodesList(context);
-        list.SelectedIndexChanged += (_, _) =>
-        {
-            _editorService.CloseDropDown();
-        };
+        list.SelectedIndexChanged += (_, _) => _editorService.CloseDropDown();
         _editorService.DropDownControl(list);
 
         // Return the selected node when done
@@ -82,7 +76,7 @@ public class OptionsNodeEditor : UITypeEditor
         // In this case, the context.Instance property is the ExOptionsPanel we are editing, easy!
         // 2. The property is being edited from the ActionList / Smart Tag panel
         // In this case, the context.Instance property is the OptionsPanelActionList class instead.
-        // Not as easy but not hard either: we just cast it to the OptionsPanelActionList class and use its Host property, done!
+        // Not as easy but not hard either: we just cast it to the OptionsPanelActionList class and use its ControlHost property, done!
 
 
         // Simply try option 1 first:

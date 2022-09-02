@@ -9,6 +9,7 @@ namespace ExControls;
 public class OptionsNode : TreeNode
 {
     private ExOptionsPanel _panel;
+
     /// <summary>
     /// Gets the ExOptionsPanel corresponding to this node.
     /// </summary>

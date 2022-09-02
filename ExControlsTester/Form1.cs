@@ -3,24 +3,19 @@ using System.Drawing;
 
 namespace ExControls.Test
 {
-    public partial class Form1 : ExForm
+    public partial class Form1 : ExFormTest
     {
         public Form1()
         {
             InitializeComponent();
-            //pictureBox1.Image = new ShellIcon(ShellIconType.Info).ToBitmap();
-            ExMessageBox.Style.DefaultStyle = false;
-            ExMessageBox.Style.BackColor = Color.Black;
-            ExMessageBox.Style.UseDarkTitleBar = true;
-            ExMessageBox.Style.FooterBackColor = Color.Black; //Color.FromArgb(38, 38, 38);
-            ExMessageBox.Style.ForeColor = Color.White;
-            ExMessageBox.Style.ButtonBorderColor = Color.White;
-            ExMessageBox.Style.ButtonForeColor = Color.White;
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            //this.SetFormStyle(FormStyle.Mica);
+            this.SetTitlebarAndBorderColor(Color.Blue, Color.White, Color.Blue);
+            //this.SetFormCorners(FormCornersType.Rectangular);
         }
 
         private void ExOptionsPanel2_Paint(object sender, System.Windows.Forms.PaintEventArgs e)

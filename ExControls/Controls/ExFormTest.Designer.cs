@@ -1,6 +1,6 @@
 ﻿namespace ExControls
 {
-    partial class ExForm : Form
+    partial class ExFormTest : Form
     {
         /// <summary>
         /// Required designer variable.
@@ -54,15 +54,15 @@
             this.TitleBar.Size = new System.Drawing.Size(841, 30);
             this.TitleBar.TabIndex = 0;
             // 
-            // ExForm
+            // ExFormTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 381);
             this.Controls.Add(this.TitleBar);
-            this.Name = "ExForm";
+            this.Name = "ExFormTest";
             this.Padding = new System.Windows.Forms.Padding(1);
-            this.Text = "ExForm";
+            this.Text = "ExFormTest";
             this.ResumeLayout(false);
 
         }

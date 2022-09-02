@@ -10,8 +10,8 @@ namespace ExControls;
 [ToolboxBitmap(typeof(NumericUpDown), "NumericUpDown.bmp")]
 public class ExNumericUpDown : NumericUpDown, IExControl
 {
-    private readonly UpDownButtons newButtonUpDown;
-    private readonly Control originalButtonUpDown;
+    private readonly UpDownButtons _newButtonUpDown;
+    private readonly Control _originalButtonUpDown;
     private Color _arrowsColor;
     private Color _borderColor;
 
@@ -26,17 +26,17 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     /// </summary>
     public ExNumericUpDown()
     {
-        originalButtonUpDown = Controls[0];
-        newButtonUpDown = new UpDownButtons(this);
+        _originalButtonUpDown = Controls[0];
+        _newButtonUpDown = new UpDownButtons(this);
         var textBox = Controls[1];
         textBox.MouseEnter += TextBox_MouseEnter;
         textBox.MouseLeave += TextBox_MouseLeave;
 
         var defaultButtonsWidth = LogicalToDeviceUnits(16);
-        newButtonUpDown.TabStop = false;
-        newButtonUpDown.Size = new Size(defaultButtonsWidth, PreferredHeight);
-        newButtonUpDown.UpDown += OnUpDown;
-        newButtonUpDown.Dock = DockStyle.Right;
+        _newButtonUpDown.TabStop = false;
+        _newButtonUpDown.Size = new Size(defaultButtonsWidth, PreferredHeight);
+        _newButtonUpDown.UpDown += OnUpDown;
+        _newButtonUpDown.Dock = DockStyle.Right;
 
         _defaultStyle = true;
         _borderColor = Color.Gainsboro;
@@ -128,7 +128,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
                 return;
 
             base.BackColor = value;
-            newButtonUpDown.BackColor = value;
+            _newButtonUpDown.BackColor = value;
             Invalidate(true);
         }
     }
@@ -152,13 +152,13 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
             if (value)
             {
-                Controls.Remove(newButtonUpDown);
-                Controls.Add(originalButtonUpDown);
+                Controls.Remove(_newButtonUpDown);
+                Controls.Add(_originalButtonUpDown);
             }
             else
             {
-                Controls.Remove(originalButtonUpDown);
-                Controls.Add(newButtonUpDown);
+                Controls.Remove(_originalButtonUpDown);
+                Controls.Add(_newButtonUpDown);
                 BorderStyle = BorderStyle.FixedSingle;
             }
 
@@ -324,59 +324,53 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
     private sealed class UpDownButtons : Control
     {
-        private readonly ExNumericUpDown parent;
-        private ButtonId captured;
-        private bool doubleClickFired;
-        private ButtonId mouseOver;
-        private ButtonId pushed;
-        private Timer timer;
-        private int timerInterval;
-        private UpDownEventHandler upDownEventHandler;
+        private readonly ExNumericUpDown _parent;
+        private ButtonId _captured;
+        private bool _doubleClickFired;
+        private ButtonId _mouseOver;
+        private ButtonId _pushed;
+        private Timer _timer;
+        private int _timerInterval;
+        private UpDownEventHandler _upDownEventHandler;
 
         internal UpDownButtons(ExNumericUpDown parent)
         {
             SetStyle(ControlStyles.FixedHeight, true);
             SetStyle(ControlStyles.FixedWidth, true);
             SetStyle(ControlStyles.Selectable, false);
-            this.parent = parent;
+            DoubleBuffered = true;
+            _parent = parent;
         }
 
         public event UpDownEventHandler UpDown
         {
-            add => upDownEventHandler += value;
-            remove => upDownEventHandler -= value;
+            add => _upDownEventHandler += value;
+            remove => _upDownEventHandler -= value;
         }
-
-        /*/// <summary>Raises the <see cref="E:System.Windows.Forms.Control.BackColorChanged" /> event when the <see cref="P:System.Windows.Forms.Control.BackColor" /> property value of the control's container changes.</summary>
-        /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
-        protected override void OnParentBackColorChanged(EventArgs e)
-        {
-            BackColor = parent.BackColor; //TODO not working
-        }*/
 
         private void BeginButtonPress(MouseEventArgs e)
         {
             var num = Size.Height / 2;
             if (e.Y < num)
             {
-                pushed = captured = ButtonId.Up;
+                _pushed = _captured = ButtonId.Up;
                 Invalidate();
             }
             else
             {
-                pushed = captured = ButtonId.Down;
+                _pushed = _captured = ButtonId.Down;
                 Invalidate();
             }
 
             Capture = true;
-            OnUpDown(new UpDownEventArgs((int)pushed));
+            OnUpDown(new UpDownEventArgs((int)_pushed));
             StartTimer();
         }
 
         private void EndButtonPress()
         {
-            pushed = ButtonId.None;
-            captured = ButtonId.None;
+            _pushed = ButtonId.None;
+            _captured = ButtonId.None;
             StopTimer();
             Capture = false;
             Invalidate();
@@ -388,8 +382,8 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             if (e.Button == MouseButtons.Left)
                 BeginButtonPress(e);
             if (e.Clicks == 2 && e.Button == MouseButtons.Left)
-                doubleClickFired = true;
-            parent.OnMouseDown(TranslateMouseEvent(this, e));
+                _doubleClickFired = true;
+            _parent.OnMouseDown(TranslateMouseEvent(this, e));
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -398,21 +392,21 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             {
                 var clientRectangle = ClientRectangle;
                 clientRectangle.Height /= 2;
-                if (captured == ButtonId.Down)
+                if (_captured == ButtonId.Down)
                     clientRectangle.Y += clientRectangle.Height;
                 if (clientRectangle.Contains(e.X, e.Y))
                 {
-                    if (pushed != captured)
+                    if (_pushed != _captured)
                     {
                         StartTimer();
-                        pushed = captured;
+                        _pushed = _captured;
                         Invalidate();
                     }
                 }
-                else if (pushed != ButtonId.None)
+                else if (_pushed != ButtonId.None)
                 {
                     StopTimer();
-                    pushed = ButtonId.None;
+                    _pushed = ButtonId.None;
                     Invalidate();
                 }
             }
@@ -423,22 +417,22 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             clientRectangle2.Y += clientRectangle2.Height / 2;
             if (clientRectangle1.Contains(e.X, e.Y))
             {
-                if (mouseOver != ButtonId.Up)
+                if (_mouseOver != ButtonId.Up)
                 {
-                    mouseOver = ButtonId.Up;
+                    _mouseOver = ButtonId.Up;
                     Invalidate();
                 }
             }
             else if (clientRectangle2.Contains(e.X, e.Y))
             {
-                if (mouseOver != ButtonId.Down)
+                if (_mouseOver != ButtonId.Down)
                 {
-                    mouseOver = ButtonId.Down;
+                    _mouseOver = ButtonId.Down;
                     Invalidate();
                 }
             }
 
-            parent.OnMouseMove(TranslateMouseEvent(this, e));
+            _parent.OnMouseMove(TranslateMouseEvent(this, e));
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
@@ -453,31 +447,31 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             {
                 if (Win32.WindowFromPoint(new Win32.POINT(screen.X, screen.Y)) == Handle)
                 {
-                    if (!doubleClickFired)
+                    if (!_doubleClickFired)
                     {
-                        parent.OnClick(e1);
+                        _parent.OnClick(e1);
                     }
                     else
                     {
-                        doubleClickFired = false;
-                        parent.OnDoubleClick(e1);
-                        parent.OnMouseDoubleClick(e1);
+                        _doubleClickFired = false;
+                        _parent.OnDoubleClick(e1);
+                        _parent.OnMouseDoubleClick(e1);
                     }
                 }
 
-                doubleClickFired = false;
+                _doubleClickFired = false;
             }
 
-            parent.OnMouseUp(e1);
+            _parent.OnMouseUp(e1);
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (mouseOver != ButtonId.None)
+            if (_mouseOver != ButtonId.None)
             {
-                mouseOver = ButtonId.None;
+                _mouseOver = ButtonId.None;
                 Invalidate();
-                parent.OnMouseLeave(e);
+                _parent.OnMouseLeave(e);
             }
         }
 
@@ -498,49 +492,49 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
         private void DrawInternal(Graphics g)
         {
-            g.Clear(parent.BackColor);
+            g.Clear(_parent.BackColor);
 
-            if (pushed != ButtonId.None)
+            if (_pushed != ButtonId.None)
             {
-                using var selected = new SolidBrush(parent.SelectedButtonColor);
-                if (pushed == ButtonId.Up)
+                using var selected = new SolidBrush(_parent.SelectedButtonColor);
+                if (_pushed == ButtonId.Up)
                     g.FillRectangle(selected, 0, 0, Width, Height / 2);
                 else
                     g.FillRectangle(selected, 0, Height / 2, Width - 1, Height / 2);
             }
 
-            using var sbUnhovered = new SolidBrush(parent.BorderColor);
-            using var sbHovered = new SolidBrush(parent.HighlightColor);
+            using var sbUnhovered = new SolidBrush(_parent.BorderColor);
+            using var sbHovered = new SolidBrush(_parent.HighlightColor);
             using var pUn = new Pen(sbUnhovered);
             using var pHo = new Pen(sbHovered);
 
-            switch (mouseOver)
+            switch (_mouseOver)
             {
                 case ButtonId.Up:
-                    g.DrawRectangle(pHo, 0, 0, Width - 1, Height / 2 - 1);
                     g.DrawRectangle(pUn, 0, Height / 2, Width - 1, Height / 2 - 1);
+                    g.DrawRectangle(pHo, 0, 0, Width - 1, Height / 2);
                     break;
                 case ButtonId.Down:
-                    g.DrawRectangle(pUn, 0, 0, Width - 1, Height / 2 - 1);
+                    g.DrawRectangle(pUn, 0, 0, Width - 1, Height / 2);
                     g.DrawRectangle(pHo, 0, Height / 2, Width - 1, Height / 2 - 1);
                     break;
                 case ButtonId.None:
-                    g.DrawRectangle(pUn, 0, 0, Width - 1, Height / 2 - 1);
+                    g.DrawRectangle(pUn, 0, 0, Width - 1, Height / 2);
                     g.DrawRectangle(pUn, 0, Height / 2, Width - 1, Height / 2 - 1);
                     break;
             }
 
-            if (parent._hover)
+            if (_parent._hover)
             {
                 g.DrawRectangle(pHo, 0, 0, Width - 1, Height - 1);
-                g.DrawLine(pUn, 0, 1, 0, Height - 2);
+                //g.DrawLine(pUn, 0, 1, 0, Height - 2);
             }
 
             var arrowX = ClientRectangle.Width - 12;
             var arrowYu = ClientRectangle.Height / 2 - 4;
             var arrowYd = ClientRectangle.Height / 2 + 4;
 
-            Brush brush = parent.Enabled ? new SolidBrush(parent.ArrowsColor) : new SolidBrush(Color.DimGray);
+            Brush brush = _parent.Enabled ? new SolidBrush(_parent.ArrowsColor) : new SolidBrush(Color.DimGray);
 
             Point[] arrowUp = { new(arrowX, arrowYu), new(arrowX + 6, arrowYu), new(arrowX + 3, arrowYu - 4) };
             Point[] arrowDown = { new(arrowX + 1, arrowYd), new(arrowX + 6, arrowYd), new(arrowX + 3, arrowYd + 3) };
@@ -551,29 +545,29 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
         private void OnUpDown(UpDownEventArgs upevent)
         {
-            upDownEventHandler?.Invoke(this, upevent);
+            _upDownEventHandler?.Invoke(this, upevent);
         }
 
         private void StartTimer()
         {
-            if (timer == null)
+            if (_timer == null)
             {
-                timer = new Timer();
-                timer.Tick += TimerHandler;
+                _timer = new Timer();
+                _timer.Tick += TimerHandler;
             }
 
-            timerInterval = 500;
-            timer.Interval = timerInterval;
-            timer.Start();
+            _timerInterval = 500;
+            _timer.Interval = _timerInterval;
+            _timer.Start();
         }
 
         private void StopTimer()
         {
-            if (timer != null)
+            if (_timer != null)
             {
-                timer.Stop();
-                timer.Dispose();
-                timer = null;
+                _timer.Stop();
+                _timer.Dispose();
+                _timer = null;
             }
         }
 
@@ -585,14 +579,14 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             }
             else
             {
-                OnUpDown(new UpDownEventArgs((int)pushed));
-                if (timer == null)
+                OnUpDown(new UpDownEventArgs((int)_pushed));
+                if (_timer == null)
                     return;
-                timerInterval *= 7;
-                timerInterval /= 10;
-                if (timerInterval < 1)
-                    timerInterval = 1;
-                timer.Interval = timerInterval;
+                _timerInterval *= 7;
+                _timerInterval /= 10;
+                if (_timerInterval < 1)
+                    _timerInterval = 1;
+                _timer.Interval = _timerInterval;
             }
         }
     }

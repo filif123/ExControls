@@ -1,4 +1,8 @@
-﻿using System.Windows.Forms.Design;
+﻿#if NETFRAMEWORK
+using System.Windows.Forms.Design;
+#else
+using Microsoft.DotNet.DesignTools.Designers;
+#endif
 
 namespace ExControls.Designers;
 
@@ -7,13 +11,13 @@ namespace ExControls.Designers;
 /// </summary>
 public class ExFormDesigner : DocumentDesigner
 {
-    private ExForm FormControl => Control as ExForm;
+    private ExFormTest FormControl => Control as ExFormTest;
 
     /// <inheritdoc />
     public override void Initialize(IComponent component)
     {
         base.Initialize(component);
-        var form = (ExForm) component;
+        var form = (ExFormTest) component;
         /*if (GetService(typeof(INestedContainer)) is INestedContainer service)
         {
             service.Remove(_bar);

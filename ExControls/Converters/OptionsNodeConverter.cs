@@ -9,10 +9,8 @@ namespace ExControls.Converters;
 public class OptionsNodeConverter : TypeConverter
 {
     /// <inheritdoc />
-    public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-    {
-        return ReferenceEquals(destinationType, typeof(InstanceDescriptor)) || base.CanConvertTo(context, destinationType);
-    }
+    public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType) 
+        => ReferenceEquals(destinationType, typeof(InstanceDescriptor)) || base.CanConvertTo(context, destinationType);
 
     /// <inheritdoc />
     public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
@@ -24,7 +22,7 @@ public class OptionsNodeConverter : TypeConverter
             // Get the parameterless constructor of the OptionsNode type
             var constructorInfo = type.GetConstructor(Type.EmptyTypes);
 
-            // Return a new InstanceDescriptor for it (this creates the "New OptionsNode()" code in InitializeComponent.)
+            // Return a new InstanceDescriptor for it (this creates the "new OptionsNode()" code in InitializeComponent).
             return new InstanceDescriptor(constructorInfo, null, false);
         }
 

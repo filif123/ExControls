@@ -9,7 +9,7 @@ namespace ExControls;
 /// <summary>
 ///     Theme for WinForms application and its controls.
 /// </summary>
-internal class ExTheme
+internal class ExThemeOld
 {
     private ExStyleOld styleNormal;
     private ExStyleOld styleHover;
@@ -193,7 +193,7 @@ internal class ExTheme
 /// <summary>
 /// 
 /// </summary>
-internal class ExAppTheme : ExTheme
+internal class ExAppThemeOld : ExThemeOld
 {
     private bool darkTitleBar;
 
@@ -229,7 +229,7 @@ internal class ExAppTheme : ExTheme
 /// <summary>
 /// 
 /// </summary>
-internal class ExScrollableControlTheme : ExTheme
+internal class ExScrollableControlTheme : ExThemeOld
 {
     private bool darkScrollBars;
 
@@ -265,12 +265,12 @@ internal class ExScrollableControlTheme : ExTheme
 /// <summary>
 /// 
 /// </summary>
-internal static class ExApplication
+internal static class ExApplicationOld
 {
-    private static ExAppTheme _theme;
+    private static ExAppThemeOld _theme;
 
     /// <summary>
     /// 
     /// </summary>
-    public static ExAppTheme Theme => _theme ??= new ExAppTheme();
+    public static ExAppThemeOld Theme => _theme ??= new ExAppThemeOld();
 }

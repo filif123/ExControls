@@ -18,6 +18,6 @@ internal class ExPropertyGridDesigner : DesignerControlBase<ExPropertyGrid>
     public override void Initialize(IComponent component)
     {
         base.Initialize(component);
-        EnableDesignMode(Host.InnerToolStrip, "InnerToolStrip");
+        EnableDesignMode(ControlHost.InnerToolStrip, "InnerToolStrip");
     }
 }

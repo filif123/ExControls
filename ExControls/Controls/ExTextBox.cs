@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.Design;
-using System.Windows.Forms.Design;
-using ExControls.Controls;
+﻿using ExControls.Controls;
 using ExControls.Designers;
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global

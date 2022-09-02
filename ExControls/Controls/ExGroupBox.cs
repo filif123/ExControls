@@ -14,7 +14,7 @@ namespace ExControls;
 /// </summary>
 [ToolboxBitmap(typeof(GroupBox), "GroupBox.bmp")]
 [Designer(typeof(ExGroupBoxDesigner))]
-public class ExGroupBox : GroupBox, IExControl
+public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
 {
     private Color _borderColor;
     private DashStyle _borderStyle;

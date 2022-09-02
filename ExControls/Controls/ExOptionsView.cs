@@ -19,6 +19,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
 {
     private ExOptionsPanel _selectedPanel;
     private readonly ExOptionsPanel _onSelectedPanelChangedOldSelection = null;
+    private Color _linkToChildrenForeColor;
 
     /// <summary>
     /// 
@@ -40,10 +41,11 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
         PanelContainer.ControlRemoved += OnPanelRemoved;
 
         toolStripMenu.Renderer = new NoBorderRenderer();
+        base.DoubleBuffered = true;
     }
 
     /// <summary>
-    /// Gets the TreeView on this ExOptionsView.
+    ///     Gets the TreeView on this ExOptionsView.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -51,7 +53,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     public ExOptionsTreeView TreeView => treeView;
 
     /// <summary>
-    /// Gets the ToolStrip on this ExOptionsView.
+    ///     Gets the ToolStrip on this ExOptionsView.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -59,7 +61,14 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     public ToolStrip ToolStripMenu => toolStripMenu;
 
     /// <summary>
-    /// Gets or sets visibility of the SearchBox.
+    ///     Gets the SearchBox on this ExOptionsView.
+    /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
+    public ExTextBox SearchBox => tbSearch;
+
+    /// <summary>
+    ///     Gets or sets visibility of the SearchBox.
     /// </summary>
     [DefaultValue(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -67,6 +76,46 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     {
         get => tbSearch.Visible;
         set => tbSearch.Visible = value;
+    }
+
+    /// <summary>
+    ///     Gets or sets foreground color of generated links for children.
+    /// </summary>
+    [DefaultValue(typeof(Color), "Blue")]
+    [ExCategory(CategoryType.Appearance)]
+    public Color LinkToChildrenForeColor
+    {
+        get => _linkToChildrenForeColor;
+        set
+        {
+            if (_linkToChildrenForeColor == value)
+                return;
+            _linkToChildrenForeColor = value;
+            foreach (var panel in Panels.Cast<ExOptionsPanel>().Where(p => p.GenerateLinksToChildren))
+                panel.GenerateLinks();
+        }
+    }
+
+    /// <summary>
+    ///     Gets or sets foreground color of node name label.
+    /// </summary>
+    [DefaultValue(typeof(Color), "Black")]
+    [ExCategory(CategoryType.Appearance)]
+    public Color HeaderNodeNameForeColor
+    {
+        get => labelPanelName.ForeColor;
+        set => labelPanelName.ForeColor = value;
+    }
+
+    /// <summary>
+    ///     Gets or sets background color of node name label.
+    /// </summary>
+    [DefaultValue(typeof(SystemColors), "Control")]
+    [ExCategory(CategoryType.Appearance)]
+    public Color HeaderNodeNameBackColor
+    {
+        get => labelPanelName.BackColor;
+        set => labelPanelName.BackColor = value;
     }
 
     /// <summary>
@@ -124,6 +173,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     /// <inheritdoc />
     public void BeginInit()
     {
+        //noop
     }
 
     /// <inheritdoc />
@@ -135,7 +185,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
         // During run-time, after InitializeComponent method is done, we add the nodes for each panel to the TreeView.
         // The nodes are added during design-time when the panels are added to the control, but the order in which this
         // happens in the InitializeComponent makes this impossible during run-time. Panels are added before their nodes are set.
-        TreeView.Nodes.Clear();
+        TreeView.Nodes.Clear(true);
+        
         foreach (ExOptionsPanel panel in Panels)
             AddNode(panel);
     }
@@ -146,6 +197,17 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
         base.OnLoad(e);
         if (Panels.Count != 0) 
             TreeView.SelectedNode = ((ExOptionsPanel) Panels[0]).Node;
+
+        foreach (ExOptionsPanel panel in Panels)
+            if (panel.GenerateLinksToChildren)
+                panel.GenerateLinks();
+    }
+
+    /// <inheritdoc />
+    protected override void OnSizeChanged(EventArgs e)
+    {
+        base.OnSizeChanged(e);
+        Refresh();
     }
 
     /// <summary>
@@ -240,6 +302,11 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
         if (string.IsNullOrWhiteSpace(tbSearch.Text))
         {
             TreeView.Nodes.SetVisibilityForAll(true);
+            foreach (Control control in Panels)
+            {
+                if (control is ExOptionsPanel p) 
+                    p.Search(tbSearch.Text);
+            }
             return;
         }
 

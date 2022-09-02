@@ -1,19 +1,21 @@
 ﻿using System.ComponentModel.Design;
+#if NETFRAMEWORK
+
+#else
+using Microsoft.DotNet.DesignTools.Designers.Actions;
+#endif
 
 namespace ExControls.Designers;
 
 internal class ExColorSelectorDesigner : DesignerControlBase<ExColorSelector>
 {
     private DesignerActionListCollection _actionLists;
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExColorSelectorActionList(Host, this)};
+    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExColorSelectorActionList(ControlHost)};
 
-    private class ExColorSelectorActionList : DesignerActionListBase<ExColorSelector>
+    private sealed class ExColorSelectorActionList : DesignerActionListBase<ExColorSelector>
     {
-        private readonly ExColorSelectorDesigner _designer;
-
-        public ExColorSelectorActionList(ExColorSelector host, ExColorSelectorDesigner designer) : base(host)
+        public ExColorSelectorActionList(ExColorSelector host) : base(host)
         {
-            _designer = designer;
         }
 
         public Color SelectedColor
@@ -62,7 +64,7 @@ internal class ExColorSelectorDesigner : DesignerControlBase<ExColorSelector>
             items.Add(new DesignerActionHeaderItem("Basic"));
             items.Add(new DesignerActionHeaderItem("Appearance"));
             items.Add(new DesignerActionPropertyItem(nameof(SelectedColor), "Selected color:", "Basic"));
-            items.Add(new DesignerActionPropertyItem(nameof(BorderStyle), "Border color:", "Appearance"));
+            items.Add(new DesignerActionPropertyItem(nameof(BorderStyle), "Border style:", "Appearance"));
             if (BorderStyle != BorderStyle.None)
             {
                 items.Add(new DesignerActionPropertyItem(nameof(BorderColor), "Border color:", "Appearance"));

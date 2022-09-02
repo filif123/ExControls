@@ -161,10 +161,10 @@ public class ExLineSeparator : Control
         switch (LineOrientation)
         {
             case LineOrientation.Horizontal:
-                g.DrawLine(pen, new Point(0, 0), new Point(Width, 0));
+                g.DrawLine(pen, new Point(0, Height/2), new Point(Width, Height / 2));
                 break;
             case LineOrientation.Vertical:
-                g.DrawLine(pen, new Point(0, 0), new Point(0, Height));
+                g.DrawLine(pen, new Point(Width/2, 0), new Point(Width/2, Height));
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

@@ -22,7 +22,7 @@ public sealed class ExMessageBox
     /// <summary>
     ///     Initializes a new instance of the ExMessageBox class.
     /// </summary>
-    public ExMessageBox() : this((IWin32Window)null)
+    public ExMessageBox() : this((IWin32Window) null)
     {
         Form = new ExMessageBoxForm(Style);
         Form.HelpRequested += Form_HelpRequested;
@@ -41,7 +41,7 @@ public sealed class ExMessageBox
     ///     Initializes a new instance of the ExMessageBox class with text.
     /// </summary>
     /// <param name="text">text in MessageBox's message</param>
-    public ExMessageBox([Localizable(true)] string text) : this((IWin32Window)null)
+    public ExMessageBox([Localizable(true)] string text) : this((IWin32Window) null)
     {
         Text = text;
     }
@@ -51,7 +51,7 @@ public sealed class ExMessageBox
     /// </summary>
     /// <param name="text">text in MessageBox's message</param>
     /// <param name="caption">caption of the MessageBox</param>
-    public ExMessageBox([Localizable(true)] string text, [Localizable(true)] string caption) : this((IWin32Window)null)
+    public ExMessageBox([Localizable(true)] string text, [Localizable(true)] string caption) : this((IWin32Window) null)
     {
         Text = text;
         Caption = caption;
@@ -127,7 +127,7 @@ public sealed class ExMessageBox
     /// <summary>
     ///     Gets form of this MessageBox
     /// </summary>
-    public Form Form { get; }
+    public ExMessageBoxForm Form { get; }
 
     /// <summary>
     ///     Gets owner of this MessageBox.
@@ -140,8 +140,8 @@ public sealed class ExMessageBox
     [Localizable(true)]
     public string Text
     {
-        get => ((ExMessageBoxForm)Form).lText.Text;
-        set => ((ExMessageBoxForm)Form).lText.Text = value;
+        get => Form.lText.Text;
+        set => Form.lText.Text = value;
     }
 
     /// <summary>
@@ -163,7 +163,7 @@ public sealed class ExMessageBox
         set
         {
             _buttons = value;
-            RemapButtons((ExMessageBoxForm)Form, Buttons, DefaultButton);
+            RemapButtons(Form, Buttons, DefaultButton);
         }
     }
 
@@ -176,7 +176,7 @@ public sealed class ExMessageBox
         set
         {
             _icon = value;
-            ChangeIcon((ExMessageBoxForm)Form, _icon);
+            ChangeIcon(Form, _icon);
         }
     }
 
@@ -189,7 +189,7 @@ public sealed class ExMessageBox
         set
         {
             _defaultButton = value;
-            RemapButtons((ExMessageBoxForm)Form, _buttons, _defaultButton);
+            RemapButtons(Form, _buttons, _defaultButton);
         }
     }
 
@@ -202,17 +202,17 @@ public sealed class ExMessageBox
         set
         {
             _options = value;
-            ChangeOptions((ExMessageBoxForm)Form, _options);
+            ChangeOptions(Form, _options);
         }
     }
 
     /// <summary>
-    ///     Gets or sets visibility of Help buuton in MessageBox.
+    ///     Gets or sets visibility of Help button in MessageBox.
     /// </summary>
     public bool ShowHelp
     {
-        get => ((ExMessageBoxForm)Form).bHelp.Visible;
-        set => ((ExMessageBoxForm)Form).bHelp.Visible = value;
+        get => Form.bHelp.Visible;
+        set => Form.bHelp.Visible = value;
     }
 
     /// <summary>
@@ -220,8 +220,8 @@ public sealed class ExMessageBox
     /// </summary>
     public int Countdown
     {
-        get => ((ExMessageBoxForm)Form).Countdown;
-        set => ((ExMessageBoxForm)Form).Countdown = value;
+        get => Form.Countdown;
+        set => Form.Countdown = value;
     }
 
     /// <summary>
@@ -237,17 +237,14 @@ public sealed class ExMessageBox
     /// <exception cref="ArgumentException">when Form is null</exception>
     public DialogResult Show()
     {
-        if (Form == null) throw new ArgumentException(@"Form must not be null", nameof(Form));
+        if (Form == null) 
+            throw new ArgumentException(@"Form must not be null", nameof(Form));
 
-        var form = (ExMessageBoxForm)Form;
-        SetButtonsText(form);
-        return form.ShowDialog(Owner);
+        SetButtonsText(Form);
+        return Form.ShowDialog(Owner);
     }
 
-    private void Form_HelpRequested(object sender, HelpEventArgs hlpevent)
-    {
-        OnHelpRequested(hlpevent);
-    }
+    private void Form_HelpRequested(object sender, HelpEventArgs hlpevent) => OnHelpRequested(hlpevent);
 
     private static void RemapButtons(ExMessageBoxForm form, MessageBoxButtons buttons, MessageBoxDefaultButton defaultButton)
     {
@@ -321,7 +318,8 @@ public sealed class ExMessageBox
 
     private static void ChangeIcon(ExMessageBoxForm form, MessageBoxIcon icon)
     {
-        if (form.picIcon.Image != null) form._shellIcon.Dispose();
+        if (form.picIcon.Image != null) 
+            form.ShellIcon.Dispose();
 
         switch (icon)
         {
@@ -329,34 +327,34 @@ public sealed class ExMessageBox
                 form.picIcon.Size = Size.Empty;
                 break;
             case MessageBoxIcon.Error:
-                form._shellIcon = new ShellIcon(ShellIconType.Error);
+                form.ShellIcon = new ShellIcon(ShellIconType.Error);
                 break;
             case MessageBoxIcon.Question:
-                form._shellIcon = new ShellIcon(ShellIconType.Help);
+                form.ShellIcon = new ShellIcon(ShellIconType.Help);
                 break;
             case MessageBoxIcon.Warning:
-                form._shellIcon = new ShellIcon(ShellIconType.Warning);
+                form.ShellIcon = new ShellIcon(ShellIconType.Warning);
                 break;
             case MessageBoxIcon.Information:
-                form._shellIcon = new ShellIcon(ShellIconType.Info);
+                form.ShellIcon = new ShellIcon(ShellIconType.Info);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(icon), icon, null);
         }
 
-        if (icon != MessageBoxIcon.None) form.picIcon.Image = form._shellIcon.ToBitmap();
+        if (icon != MessageBoxIcon.None) 
+            form.picIcon.Image = form.ShellIcon.ToBitmap();
     }
 
     private static void ChangeOptions(ExMessageBoxForm form, MessageBoxOptions options)
     {
-        if ((options & MessageBoxOptions.RightAlign) == MessageBoxOptions.RightAlign) form.lText.TextAlign = ContentAlignment.MiddleRight;
-
-        if ((options & MessageBoxOptions.RtlReading) == MessageBoxOptions.RtlReading) form.RightToLeft = RightToLeft.Yes;
-
-        if ((options & MessageBoxOptions.DefaultDesktopOnly) == MessageBoxOptions.DefaultDesktopOnly)
+        if (options.HasFlag(MessageBoxOptions.RightAlign)) 
+            form.lText.TextAlign = ContentAlignment.MiddleRight;
+        if (options.HasFlag(MessageBoxOptions.RtlReading)) 
+            form.RightToLeft = RightToLeft.Yes;
+        if (options.HasFlag(MessageBoxOptions.DefaultDesktopOnly))
             throw new NotSupportedException(nameof(MessageBoxOptions.DefaultDesktopOnly) + "is not supported.");
-
-        if ((options & MessageBoxOptions.ServiceNotification) == MessageBoxOptions.ServiceNotification)
+        if (options.HasFlag(MessageBoxOptions.ServiceNotification))
             throw new NotSupportedException(nameof(MessageBoxOptions.ServiceNotification) + "is not supported.");
     }
 
@@ -417,7 +415,7 @@ public sealed class ExMessageBox
             Text = string.IsNullOrEmpty(caption) ? icon == MessageBoxIcon.None ? "Message" : icon.ToString() : caption,
             lText = { Text = text },
             bHelp = { Visible = true },
-            _helpInfo = info,
+            HelpInfo = info,
             Countdown = countdown
         };
 
@@ -802,14 +800,11 @@ public sealed class ExMessageBox
     ///     Raises the <see cref="HelpRequested" /> event.
     /// </summary>
     /// <param name="hlpevent"></param>
-    private void OnHelpRequested(HelpEventArgs hlpevent)
-    {
-        HelpRequested?.Invoke(this, hlpevent);
-    }
+    private void OnHelpRequested(HelpEventArgs hlpevent) => HelpRequested?.Invoke(this, hlpevent);
 }
 
 /// <summary>
-///     Specifies style of ExmessageBox
+///     Specifies style of ExMessageBox.
 /// </summary>
 public class ExMessageBoxStyle
 {
@@ -931,8 +926,5 @@ internal class HelpInfo
 
     public object Param { get; }
 
-    public override string ToString()
-    {
-        return "{HelpFilePath=" + HelpFilePath + ", keyword =" + Keyword + ", navigator=" + Navigator + "}";
-    }
+    public override string ToString() => "{HelpFilePath=" + HelpFilePath + ", keyword =" + Keyword + ", navigator=" + Navigator + "}";
 }

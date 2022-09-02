@@ -55,7 +55,9 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "White")]
     [Description("Foreground color of the Control.")]
+#if NETFRAMEWORK
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
     public Color? BackColor
     {
         get => _backColor;
@@ -75,7 +77,9 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
     [Description("Background color of the Control.")]
+#if NETFRAMEWORK
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
     public Color? ForeColor
     {
         get => _foreColor;
@@ -96,7 +100,9 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "DimGray")]
     [Description("Color of the Controls's border.")]
+#if NETFRAMEWORK
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
     public Color? BorderColor
     {
         get => _borderColor;

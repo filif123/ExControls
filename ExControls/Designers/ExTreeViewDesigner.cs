@@ -2,6 +2,10 @@
 using System.Diagnostics;
 using System.Drawing.Design;
 
+#if !NETFRAMEWORK
+using Microsoft.DotNet.DesignTools.Designers.Actions;
+#endif
+
 namespace ExControls.Designers;
 
 /// <summary>
@@ -11,7 +15,7 @@ namespace ExControls.Designers;
 /// </summary>
 internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 {
-    private Win32.TVHITTESTINFO tvhit;
+    private Win32.TVHITTESTINFO _tvhit;
     private DesignerActionListCollection _actionLists;
 
     // ReSharper disable InconsistentNaming
@@ -23,7 +27,31 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
     private const int TVHT_ONITEMSTATEICON = 0x0040;
     // ReSharper restore InconsistentNaming
 
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExTreeViewActionList(Host, this) };
+    public ExTreeViewDesigner()
+    {
+        AutoResizeHandles = true;
+    }
+
+#if NETFRAMEWORK
+    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExTreeViewActionList(ControlHost, this) };
+#else
+    public override DesignerActionListCollection ActionLists
+    {
+        get
+        {
+            DesignerActionListCollection result;
+            if ((result = _actionLists) == null)
+            {
+                result = InterlockedOperations.Initialize(ref _actionLists, new DesignerActionListCollection
+                {
+                    new ExTreeViewActionList(ControlHost, this)
+                });
+            }
+            return result;
+        }
+    }
+#endif
+
 
     /// <summary>
     ///     Allows your component to support a design time user interface. A TabStrip
@@ -36,51 +64,84 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
     protected override unsafe bool GetHitTest(Point point)
     {
         point = Control.PointToClient(point);
-        tvhit.pt.X = point.X;
-        tvhit.pt.Y = point.Y;
-        fixed (Win32.TVHITTESTINFO* ptr = &tvhit)
+        _tvhit.pt.X = point.X;
+        _tvhit.pt.Y = point.Y;
+        fixed (Win32.TVHITTESTINFO* ptr = &_tvhit)
         {
             Win32.SendMessage(Control.Handle, TVM_HITTEST, IntPtr.Zero, new IntPtr(ptr));
         }
 
-        return (tvhit.flags & TVHT_ONITEMBUTTON) == TVHT_ONITEMBUTTON || (tvhit.flags & TVHT_ONITEM) == TVHT_ONITEM;
+        return (_tvhit.flags & TVHT_ONITEMBUTTON) == TVHT_ONITEMBUTTON || (_tvhit.flags & TVHT_ONITEM) == TVHT_ONITEM;
     }
 
     public override void Initialize(IComponent component)
     {
         base.Initialize(component);
-        Debug.Assert(Host != null, "TreeView is null in ExTreeViewDesigner");
-        if (Host == null) return;
+        Debug.Assert(ControlHost != null, "TreeView is null in ExTreeViewDesigner");
+        if (ControlHost == null) return;
 
-        Host.AfterExpand += TreeViewInvalidate;
-        Host.AfterCollapse += TreeViewInvalidate;
-        Host.AfterSelect += TreeViewInvalidate;
+        ControlHost.AfterExpand += TreeViewInvalidate;
+        ControlHost.AfterCollapse += TreeViewInvalidate;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && ControlHost != null)
+        {
+            ControlHost.AfterExpand -= TreeViewInvalidate;
+            ControlHost.AfterCollapse -= TreeViewInvalidate;
+        }
+        base.Dispose(disposing);
     }
 
     private void TreeViewInvalidate(object sender, TreeViewEventArgs e)
     {
-        Host?.Invalidate();
+        ControlHost?.Invalidate();
     }
 
     /// <inheritdoc />
     protected override void WndProc(ref Message m)
     {
         base.WndProc(ref m);
-        if (m.Msg == (int)Win32.WM.LBUTTONDOWN)
+        if (m.Msg != (int)Win32.WM.LBUTTONDOWN) 
+            return;
+
+        var lParam = m.LParam.ToInt32();
+        var hitPoint = new Point(lParam & 0xffff, lParam >> 0x10);
+
+        if (Control.FromHandle(m.HWnd) is not ExTreeView tw) 
+            return;
+
+        var node = tw.GetNodeAt(hitPoint);
+        if (node is not null)
+            tw.SelectedNode = node;
+        tw.Invalidate();
+    }
+
+#if NETCOREAPP3_0_OR_GREATER
+
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        Control.Cursor = Cursors.Default;
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        var nodeAt = ControlHost.GetNodeAt(e.X, e.Y);
+        if (nodeAt != null)
         {
-            var lParam = m.LParam.ToInt32();
-            var hitPoint = new Point(lParam & 0xffff, lParam >> 0x10);
-            if (Control.FromHandle(m.HWnd) is ExTreeView tw)
+            if (nodeAt.IsExpanded)
             {
-                var node = tw.GetNodeAt(hitPoint);
-                if (node is not null)
-                    tw.SelectedNode = node;
-                tw.Invalidate();
+                nodeAt.Collapse();
+                return;
             }
+            nodeAt.Expand();
         }
     }
 
-    private class ExTreeViewActionList : DesignerActionListBase<ExTreeView>
+#endif
+
+    private sealed class ExTreeViewActionList : DesignerActionListBase<ExTreeView>
     {
         private readonly ExTreeViewDesigner _designer;
 
@@ -91,6 +152,7 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 
         public void InvokeNodesDialog()
         {
+#if NETFRAMEWORK
             var property = TypeDescriptor.GetProperties(Component)["Nodes"];
             var editorServiceContext = new ExEditorServiceContext(_designer, property);
             var editor = property.GetEditor(typeof(UITypeEditor)) as UITypeEditor;
@@ -106,13 +168,17 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
             }
             catch (CheckoutException)
             {
+                //ignored
             }
+#else
+            _designer.InvokePropertyEditor("Nodes");
+#endif
         }
 
         public ImageList ImageList
         {
-            get => ((TreeView)Component).ImageList;
-            set => TypeDescriptor.GetProperties(Component)["ImageList"].SetValue(Component, value);
+            get => ((TreeView)Component)?.ImageList;
+            set => TypeDescriptor.GetProperties(Component)["ImageList"]?.SetValue(Component, value);
         }
 
         public override DesignerActionItemCollection GetSortedActionItems()

@@ -24,7 +24,7 @@ public class ExComboBox : ComboBox, IExControl
     private bool _selected;
     private bool _wasDropDown;
 
-    private SolidBrush listbrush;
+    private SolidBrush _listbrush;
     private ComboBoxEdit _editControl;
 
     /// <summary>
@@ -49,7 +49,7 @@ public class ExComboBox : ComboBox, IExControl
         _dropDownBackColor = Color.White;
 
         base.DoubleBuffered = true;
-        listbrush = new SolidBrush(DropDownBackColor);
+        _listbrush = new SolidBrush(DropDownBackColor);
         ResumeLayout();
         Invalidate();
     }
@@ -75,6 +75,7 @@ public class ExComboBox : ComboBox, IExControl
     [TypeConverter(typeof(ExpandableObjectConverter))]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [DisplayName("StyleNormal")]
+    [DefaultValue(null)]
     public ExComboBoxStyle StyleNormal { get; set; }
 
     /// <summary>
@@ -86,6 +87,7 @@ public class ExComboBox : ComboBox, IExControl
     [TypeConverter(typeof(ExpandableObjectConverter))]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [DisplayName("StyleHighlight")]
+    [DefaultValue(null)]
     public ExComboBoxStyle StyleHighlight { get; set; }
 
     /// <summary>
@@ -97,6 +99,7 @@ public class ExComboBox : ComboBox, IExControl
     [TypeConverter(typeof(ExpandableObjectConverter))]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [DisplayName("StyleSelected")]
+    [DefaultValue(null)]
     public ExComboBoxStyle StyleSelected { get; set; }
 
     /// <summary>
@@ -108,6 +111,7 @@ public class ExComboBox : ComboBox, IExControl
     [TypeConverter(typeof(ExpandableObjectConverter))]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [DisplayName("StyleDisabled")]
+    [DefaultValue(null)]
     public ExComboBoxStyle StyleDisabled { get; set; }
 
     /// <summary>
@@ -271,7 +275,7 @@ public class ExComboBox : ComboBox, IExControl
     /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
     protected override void OnHandleDestroyed(EventArgs e)
     {
-        listbrush.Dispose();
+        _listbrush.Dispose();
         _editControl.ReleaseHandle();
         base.OnHandleDestroyed(e);
     }
@@ -300,9 +304,9 @@ public class ExComboBox : ComboBox, IExControl
                 }
                 case Win32.WM.CTLCOLORLISTBOX:
                 {
-                    listbrush.Dispose();
-                    listbrush = new SolidBrush(DropDownBackColor);
-                    m.Result = GetHbrush(listbrush);
+                    _listbrush.Dispose();
+                    _listbrush = new SolidBrush(DropDownBackColor);
+                    m.Result = GetHbrush(_listbrush);
                     break;
                 }
             }
@@ -312,7 +316,7 @@ public class ExComboBox : ComboBox, IExControl
     {
         var info = new Win32.COMBOBOXINFO();
         info.cbSize = Marshal.SizeOf(info);
-        SendMessageCb(Handle, 0x164, IntPtr.Zero, out info);
+        SendMessageCombo(Handle, 0x164, IntPtr.Zero, out info);
         return info;
     }
 
@@ -327,17 +331,17 @@ public class ExComboBox : ComboBox, IExControl
 
         // Retrieve handle to dropdown list
         var info = GetComboboxInfo();
-        ExTools.SetTheme(info.hwndList,WindowsTheme.DarkExplorer);
+        ExTools.SetTheme(info.hwndList, WindowsTheme.DarkExplorer);
     }
 
     [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
-    private static extern IntPtr SendMessageCb(IntPtr hWnd, int msg, IntPtr wp, out Win32.COMBOBOXINFO lp);
+    private static extern IntPtr SendMessageCombo(IntPtr hWnd, int msg, IntPtr wp, out Win32.COMBOBOXINFO lp);
 
     private static IntPtr GetHbrush(Brush b)
     {
         var field = typeof(Brush).GetField("nativeBrush", BindingFlags.NonPublic | BindingFlags.Instance);
         if (field is not null)
-            return (IntPtr)field.GetValue(b);
+            return (IntPtr) field.GetValue(b)!;
         return IntPtr.Zero;
     }
 
@@ -459,7 +463,7 @@ public class ExComboBox : ComboBox, IExControl
                 : new SolidBrush(DropDownBackColor);
 
             e.Graphics.FillRectangle(bBrush, e.Bounds);
-            TextRenderer.DrawText(e.Graphics, Items[e.Index].ToString(), e.Font, e.Bounds.Location, StyleNormal.ForeColor ?? e.ForeColor);
+            TextRenderer.DrawText(e.Graphics, GetItemText(Items[e.Index]), e.Font, e.Bounds.Location, StyleNormal.ForeColor ?? e.ForeColor);
         }
         else
         {
@@ -590,30 +594,30 @@ public class ExComboBox : ComboBox, IExControl
         DropDownBackColorChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private class ComboBoxEdit : NativeWindow
+    private sealed class ComboBoxEdit : NativeWindow
     {
-        private readonly ExComboBox parent;
+        private readonly ExComboBox _parent;
 
         public ComboBoxEdit(ExComboBox parent)
         {
-            this.parent = parent;
+            _parent = parent;
         }
 
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            if (parent.DefaultStyle || m.Msg != (int) Win32.WM.PAINT) 
+            if (_parent.DefaultStyle || m.Msg != (int) Win32.WM.PAINT) 
                 return;
-            if (parent.Enabled || parent.DropDownStyle != ComboBoxStyle.DropDown) 
+            if (_parent.Enabled || _parent.DropDownStyle != ComboBoxStyle.DropDown) 
                 return;
 
             var g = Graphics.FromHwnd(Handle);
-            var backColor = parent.StyleDisabled.BackColor ?? SystemColors.Control;
-            var foreColor = parent.StyleDisabled.ForeColor ?? SystemColors.GrayText;
+            var backColor = _parent.StyleDisabled.BackColor ?? SystemColors.Control;
+            var foreColor = _parent.StyleDisabled.ForeColor ?? SystemColors.GrayText;
             Win32.GetWindowRect(new HandleRef(this, Handle), out var rec);
             var recc = new Rectangle(0, 0, rec.Width, rec.Height);
             g.Clear(backColor);
-            TextRenderer.DrawText(g, parent.Text, parent.Font, recc, foreColor, backColor, ExTextBox.ConvertAligment(HorizontalAlignment.Left));
+            TextRenderer.DrawText(g, _parent.Text, _parent.Font, recc, foreColor, backColor, ExTextBox.ConvertAligment(HorizontalAlignment.Left));
             m.Result = IntPtr.Zero;
         }
     }
@@ -655,7 +659,9 @@ public class ExComboBoxStyle : ExStyleOld
     [NotifyParentProperty(true)]
     [DefaultValue(typeof(Color), "Black")]
     [ExDescription("Color of the arrow which is in this Control as the dropdown button.")]
+#if NETFRAMEWORK
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
     public Color? ArrowColor
     {
         get => _arrowColor;
@@ -675,7 +681,9 @@ public class ExComboBoxStyle : ExStyleOld
     [NotifyParentProperty(true)]
     [DefaultValue(typeof(Color), "White")]
     [ExDescription("Background color of the dropdown button.")]
+#if NETFRAMEWORK
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
     public Color? ButtonBackColor
     {
         get => _buttonBackColor;
@@ -695,7 +703,9 @@ public class ExComboBoxStyle : ExStyleOld
     [NotifyParentProperty(true)]
     [DefaultValue(typeof(Color), "DimGray")]
     [ExDescription("Border color of the dropdown button.")]
+#if NETFRAMEWORK
     [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
     public Color? ButtonBorderColor
     {
         get => _buttonBorderColor;

@@ -1,5 +1,11 @@
 ﻿using System.Windows.Forms.Design;
+
+#if NETFRAMEWORK
 using System.Windows.Forms.Design.Behavior;
+#else
+using Microsoft.DotNet.DesignTools.Designers;
+using Microsoft.DotNet.DesignTools.Designers.Behaviors;
+#endif
 
 namespace ExControls.Designers;
 

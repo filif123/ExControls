@@ -54,10 +54,19 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -85,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExControls\ExControls.csproj">
-      <Project>{E2064A91-6132-498F-9F22-8C3E7C5941BC}</Project>
+      <Project>{e2064a91-6132-498f-9f22-8c3e7c5941bc}</Project>
       <Name>ExControls</Name>
     </ProjectReference>
   </ItemGroup>

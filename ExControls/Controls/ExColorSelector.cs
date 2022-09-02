@@ -8,6 +8,7 @@ namespace ExControls;
 /// </summary>
 [Designer(typeof(ExColorSelectorDesigner))]
 [DefaultProperty(nameof(SelectedColor))]
+[DefaultEvent(nameof(SelectedColorChanged))]
 public partial class ExColorSelector : UserControl
 {
     private Color _selectedColor;
@@ -26,9 +27,10 @@ public partial class ExColorSelector : UserControl
     public ExColorSelector()
     {
         InitializeComponent();
+        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
         _borderWidth = 1;
         _borderColor = Color.Black;
-        _selectedColor = Color.Black;
+        _selectedColor = Color.Transparent;
         _borderStyle = BorderStyle.FixedSingle;
         Invalidate();
     }
@@ -37,7 +39,7 @@ public partial class ExColorSelector : UserControl
     /// Gets or sets selected color.
     /// </summary>
     [ExDescription("Gets or sets selected color.", true)]
-    [DefaultValue(typeof(Color), "Black")]
+    [DefaultValue(typeof(Color), "Transparent")]
     public Color SelectedColor
     {
         get => _selectedColor;
@@ -112,6 +114,7 @@ public partial class ExColorSelector : UserControl
 
     private void ExColorSelector_Click(object sender, EventArgs e)
     {
+        colorDialog.Color = SelectedColor;
         var result = colorDialog.ShowDialog();
         if (result == DialogResult.OK) 
             SelectedColor = colorDialog.Color;
@@ -119,7 +122,9 @@ public partial class ExColorSelector : UserControl
 
     private void ExColorSelector_Paint(object sender, PaintEventArgs e)
     {
-        e.Graphics.Clear(SelectedColor);
+        if (_selectedColor != Color.Empty && _selectedColor != Color.Transparent)
+            e.Graphics.Clear(_selectedColor);
+
         if (BorderStyle == BorderStyle.None)
             return;
 

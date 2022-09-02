@@ -1,4 +1,8 @@
 ﻿using System.ComponentModel.Design;
+#if !NETFRAMEWORK
+using Microsoft.DotNet.DesignTools.Designers.Actions;
+#endif
+
 
 namespace ExControls.Designers;
 
@@ -25,6 +29,8 @@ internal abstract class DesignerActionListBase<T> : DesignerActionList where T :
         // because it does not circumvent the design-time services such as undo and property grid refreshing
 
         var prop = TypeDescriptor.GetProperties(Host)[propertyName];
-        prop.SetValue(Host, value);
+        prop?.SetValue(Host, value);
     }
 }
+
+//#endif

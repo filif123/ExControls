@@ -10,7 +10,9 @@ namespace ExControls.Collections;
 /// <summary>
 /// 
 /// </summary>
-[Editor("System.Windows.Forms.Design.TreeNodeCollectionEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
+
+//, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a
+[Editor("System.Windows.Forms.Design.TreeNodeCollectionEditor", typeof(UITypeEditor))]
 public class ExTreeNodeCollection : IList
 {
     private readonly List<TreeNode> _nodes;
@@ -274,6 +276,32 @@ public class ExTreeNodeCollection : IList
         OnTreeNodeRemoved(new ExTreeViewNodeRemovedEventArgs(null, 0, count));
     }
 
+    /// <summary>Removes all tree nodes from the collection.</summary>
+    public virtual void Clear(bool recursive)
+    {
+        if (!recursive)
+        {
+            Clear();
+            return;
+        }
+
+        foreach (var node in _nodes) 
+            ClearInternal(node);
+
+        var count = _nodes.Count;
+        _nodes.Clear();
+        _visibleNodes.Clear();
+        OnTreeNodeRemoved(new ExTreeViewNodeRemovedEventArgs(null, 0, count));
+    }
+
+    private void ClearInternal(TreeNode node)
+    {
+        foreach (TreeNode n in node.Nodes) 
+            ClearInternal(n);
+
+        node.Nodes.Clear();
+    }
+
     /// <summary>Removes a tree node from the tree node collection at a specified index.</summary>
     /// <param name="index">The index of the <see cref="T:System.Windows.Forms.TreeNode" /> to remove.</param>
     public virtual void RemoveAt(int index)
@@ -291,13 +319,29 @@ public class ExTreeNodeCollection : IList
     /// <param name="visible">whether node should be visible</param>
     public void SetVisibility(TreeNode node, bool visible)
     {
-        if (GetVisibility(node) == visible)
+        if (node == null || GetVisibility(node) == visible) 
             return;
-        
+
         var index = _nodes.IndexOf(node);
         if (index == -1)
-            return;
-        
+        {
+            for (var i = 0; i < _nodes.Count; i++)
+            {
+                if (ContainsInternal(node, _nodes[i].Nodes))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index == -1)
+                return;
+
+            if (GetVisibility(_nodes[index]) == visible) 
+                return;
+            node = _nodes[index];
+        }
+
         if (visible)
         {
             if (index >= _visibleNodes.Count)
@@ -306,9 +350,7 @@ public class ExTreeNodeCollection : IList
                 _visibleNodes.Insert(index, node);
         }
         else
-        {
             _visibleNodes.Remove(node);
-        }
     }
 
     /// <summary>
@@ -333,6 +375,8 @@ public class ExTreeNodeCollection : IList
                 _visibleNodes.Add(node);
             else
                 _visibleNodes.Insert(index, node);
+
+            SetVisibility(node.Parent, true);
         }
         else
         {
@@ -346,9 +390,9 @@ public class ExTreeNodeCollection : IList
     /// <param name="key">key of treenode</param>
     /// <param name="visible">whether node should be visible</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public void SetVisibility(string key, bool visible)
+    public void SetVisibility(string key, bool visible)         //BUG setting visibility does not work for inner nodes
     {
-        if (GetVisibility(key) == visible)
+        if (key == null || GetVisibility(key) == visible)
             return;
         
         var node = _nodes.FirstOrDefault(n => n.Name.Equals(key,StringComparison.OrdinalIgnoreCase));
@@ -362,6 +406,8 @@ public class ExTreeNodeCollection : IList
                 _visibleNodes.Add(node);
             else
                 _visibleNodes.Insert(index, node);
+
+            SetVisibility(node.Parent, true);
         }
         else
         {
@@ -405,10 +451,47 @@ public class ExTreeNodeCollection : IList
         if (visible)
         {
             _visibleNodes.Clear();
-            _visibleNodes.AddRange(_nodes.Cast<TreeNode>().ToArray());
+            _visibleNodes.AddRange(_nodes.ToArray());
         }
         else
             _visibleNodes.Clear();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="subNodes"></param>
+    /// <returns></returns>
+    public bool Contains(TreeNode node, bool subNodes)
+    {
+        if (!subNodes)
+            return _nodes.Contains(node);
+
+        return ContainsInternal(node, _nodes);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="subNodes"></param>
+    /// <returns></returns>
+    public bool ContainsVisible(TreeNode node, bool subNodes)
+    {
+        if (!subNodes)
+            return _visibleNodes.Contains(node);
+
+        return ContainsInternal(node, _visibleNodes);
+    }
+
+    private bool ContainsInternal(TreeNode node, IEnumerable col)
+    {
+        foreach (TreeNode subnode in col)
+            if (subnode == node || ContainsInternal(node, subnode.Nodes))
+                return true;
+
+        return false;
     }
 
     /// <summary>

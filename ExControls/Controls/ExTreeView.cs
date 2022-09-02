@@ -150,7 +150,7 @@ public class ExTreeViewNodeAddedEventArgs : EventArgs
 }
 
 /// <summary>
-/// 
+///     Occurs when the <see cref="TreeNode"/> was removed frm <see cref="TreeNodeCollection"/>.
 /// </summary>
 public class ExTreeViewNodeRemovedEventArgs : EventArgs
 {

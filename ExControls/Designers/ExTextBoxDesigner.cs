@@ -1,5 +1,10 @@
-﻿using System.ComponentModel.Design;
+﻿#if NETFRAMEWORK
+using System.ComponentModel.Design;
 using System.Windows.Forms.Design;
+#else
+using Microsoft.DotNet.DesignTools.Designers;
+using Microsoft.DotNet.DesignTools.Designers.Actions;
+#endif
 
 namespace ExControls.Designers;
 
@@ -7,7 +12,7 @@ internal class ExTextBoxDesigner : DesignerControlBase<ExTextBox>
 {
     private DesignerActionListCollection _actionLists;
 
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExTextBoxDesignerActionList(Host, this)};
+    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExTextBoxDesignerActionList(ControlHost)};
 
     /// <summary>Gets the selection rules that indicate the movement capabilities of a component.</summary>
     /// <returns>A bitwise combination of <see cref="T:System.Windows.Forms.Design.SelectionRules" /> values.</returns>
@@ -23,9 +28,9 @@ internal class ExTextBoxDesigner : DesignerControlBase<ExTextBox>
         }
     }
 
-    private class ExTextBoxDesignerActionList : DesignerActionListBase<ExTextBox>
+    private sealed class ExTextBoxDesignerActionList : DesignerActionListBase<ExTextBox>
     {
-        public ExTextBoxDesignerActionList(ExTextBox host, ExTextBoxDesigner designer) : base(host)
+        public ExTextBoxDesignerActionList(ExTextBox host) : base(host)
         {
         }
 
@@ -91,14 +96,16 @@ internal class ExTextBoxDesigner : DesignerControlBase<ExTextBox>
 
         public override DesignerActionItemCollection GetSortedActionItems()
         {
-            var items = new DesignerActionItemCollection();
-            items.Add(new DesignerActionHeaderItem("Appearance"));
-            items.Add(new DesignerActionHeaderItem("Behavior"));
-            items.Add(new DesignerActionPropertyItem(nameof(PasswordChar), "Password char:", "Behavior"));
-            items.Add(new DesignerActionPropertyItem(nameof(Enabled), "Enabled", "Appearance"));
-            items.Add(new DesignerActionPropertyItem(nameof(ReadOnly), "Read only", "Appearance"));
-            items.Add(new DesignerActionPropertyItem(nameof(Multiline), "Multiline", "Appearance"));
-            items.Add(new DesignerActionPropertyItem(nameof(DefaultStyle), "Default style", "Appearance"));
+            var items = new DesignerActionItemCollection
+            {
+                new DesignerActionHeaderItem("Appearance"),
+                new DesignerActionHeaderItem("Behavior"),
+                new DesignerActionPropertyItem(nameof(PasswordChar), "Password char:", "Behavior"),
+                new DesignerActionPropertyItem(nameof(Enabled), "Enabled", "Appearance"),
+                new DesignerActionPropertyItem(nameof(ReadOnly), "Read only", "Appearance"),
+                new DesignerActionPropertyItem(nameof(Multiline), "Multiline", "Appearance"),
+                new DesignerActionPropertyItem(nameof(DefaultStyle), "Default style", "Appearance")
+            };
             return items;
         }
     }

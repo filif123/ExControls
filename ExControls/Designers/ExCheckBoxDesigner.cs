@@ -1,19 +1,22 @@
 ﻿using System.ComponentModel.Design;
+#if NETFRAMEWORK
+using System.ComponentModel.Design;
+#else
+using Microsoft.DotNet.DesignTools.Designers.Actions;
+#endif
 
 namespace ExControls.Designers;
 
 internal class ExCheckBoxDesigner : DesignerControlBase<ExCheckBox>
 {
     private DesignerActionListCollection _actionLists;
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExCheckBoxActionList(Host, this)};
+    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExCheckBoxActionList(ControlHost)};
 
-    private class ExCheckBoxActionList : DesignerActionListBase<ExCheckBox>
+    private sealed class ExCheckBoxActionList : DesignerActionListBase<ExCheckBox>
     {
-        private readonly ExCheckBoxDesigner _designer;
 
-        public ExCheckBoxActionList(ExCheckBox host, ExCheckBoxDesigner designer) : base(host)
+        public ExCheckBoxActionList(ExCheckBox host) : base(host)
         {
-            _designer = designer;
         }
 
         public string Text

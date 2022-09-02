@@ -92,6 +92,14 @@ internal static partial class Win32
     [DllImport(USER32, EntryPoint = "SendMessageA")]
     public static extern int SendMessage(IntPtr hwnd, uint wMsg, IntPtr wParam, IntPtr lParam);
 
+    public static unsafe nint SendMessage<T>(IntPtr hWnd, uint Msg, nint wParam, ref T lParam) where T : unmanaged
+    {
+        fixed (void* l = &lParam)
+        {
+            return SendMessage(hWnd, Msg, wParam, (nint)l);
+        }
+    }
+
     public static void SendMessage(IntPtr handle, WM wMsg, IntPtr wParam, IntPtr lParam) => SendMessage(handle, (uint)wMsg, wParam, lParam);
 
     [DllImport(USER32, CharSet = CharSet.Unicode)]
@@ -182,6 +190,9 @@ internal static partial class Win32
 
     [DllImport(DWMAPI)]
     public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+    [DllImport(DWMAPI)]
+    public static extern int DwmGetWindowAttribute(IntPtr hwnd, int attr, out int attrValue, int attrSize);
 
     [DllImport(DWMAPI, PreserveSig = true)]
     public static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);

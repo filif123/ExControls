@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 // Obecné informace o sestavení se řídí přes následující 
 // sadu atributů. Změnou hodnot těchto atributů se upraví informace
@@ -12,6 +13,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+#if !NETFRAMEWORK
+[assembly: SupportedOSPlatform("windows")]
+#endif
 
 // Nastavení ComVisible na false způsobí neviditelnost typů v tomto sestavení
 // pro komponenty modelu COM. Pokud potřebujete přístup k typu v tomto sestavení

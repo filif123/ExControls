@@ -1,5 +1,9 @@
 ﻿using System.ComponentModel.Design;
+#if NETFRAMEWORK
 using System.Windows.Forms.Design;
+#else
+using Microsoft.DotNet.DesignTools.Designers;
+#endif
 
 namespace ExControls.Designers;
 
@@ -9,7 +13,6 @@ namespace ExControls.Designers;
 /// <typeparam name="T">The Control to design.</typeparam>
 internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner where T : Control
 {
-    private ISelectionService _selectionService;
     private T _host;
     private IDesignerHost _designerHost;
 
@@ -21,7 +24,7 @@ internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner wher
     /// <summary>
     /// Returns the Control this designer is designing as type T.
     /// </summary>
-    protected T Host
+    protected T ControlHost
     {
         get
         {
@@ -33,6 +36,10 @@ internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner wher
         }
     }
 
+//#if NETFRAMEWORK
+
+    private ISelectionService _selectionService;
+
     /// <summary>
     /// Creates and returns the ISelectionService used to select components in the designer.
     /// </summary>
@@ -40,6 +47,7 @@ internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner wher
     /// <returns></returns>
     /// <remarks></remarks>
     public ISelectionService SelectionService => _selectionService ??= (ISelectionService)GetService(typeof(ISelectionService));
+//#endif
 
     /// <summary>
     /// Creates and returns the IDesignerHost service.
@@ -52,6 +60,6 @@ internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner wher
 
     protected void SelectHost()
     {
-        SelectionService.SetSelectedComponents(new Component[] { Host });
+        SelectionService.SetSelectedComponents(new Component[] { ControlHost });
     }
 }

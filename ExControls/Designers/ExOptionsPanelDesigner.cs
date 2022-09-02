@@ -1,15 +1,21 @@
 ﻿using System.Collections;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
-using System.Windows.Forms.Design;
 using ExControls.Editors;
+
+#if NETFRAMEWORK
+using System.Windows.Forms.Design;
+#else
+using Microsoft.DotNet.DesignTools.Designers;
+using Microsoft.DotNet.DesignTools.Designers.Actions;
+#endif
 
 namespace ExControls.Designers;
 
 /// <summary>
 /// Provides a ParentControlDesigner for the ExOptionsPanel to enhance design-time experience.
 /// </summary>
-internal sealed class ExOptionsPanelDesigner : DesignerParentControlBase<ExOptionsPanel>
+internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExOptionsPanel>
 {
     private readonly string[] _invisibleProperties;
     private DesignerActionListCollection _actionLists;
@@ -26,7 +32,7 @@ internal sealed class ExOptionsPanelDesigner : DesignerParentControlBase<ExOptio
     // We don't want to allow moving or resizing the panel
     public override SelectionRules SelectionRules => SelectionRules.Locked;
 
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new OptionsPanelActionList(Host) };
+    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new OptionsPanelActionList(ControlHost) };
 
     // Copied from the PanelDesigner class
     private Pen BorderPen
@@ -34,7 +40,7 @@ internal sealed class ExOptionsPanelDesigner : DesignerParentControlBase<ExOptio
         get
         {
             // Get a slightly lighter or darker color than the backcolor, depending on the brightness
-            var color = Host.BackColor.GetBrightness() < 0.5d ? ControlPaint.Light(Host.BackColor) : ControlPaint.Dark(Host.BackColor);
+            var color = ControlHost.BackColor.GetBrightness() < 0.5d ? ControlPaint.Light(ControlHost.BackColor) : ControlPaint.Dark(ControlHost.BackColor);
 
             var p = new Pen(color);
             p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
@@ -53,10 +59,10 @@ internal sealed class ExOptionsPanelDesigner : DesignerParentControlBase<ExOptio
     // Paint dashed border around control during design-time, copied from the PanelDesigner
     private void OnPaintBorder(PaintEventArgs pe)
     {
-        if (Host is not { Visible: true })
+        if (ControlHost is not { Visible: true })
             return;
         using var p = BorderPen;
-        var rect = Host.ClientRectangle;
+        var rect = ControlHost.ClientRectangle;
         rect.Inflate(-2, -2);
         pe.Graphics.DrawRectangle(p, rect);
     }

@@ -143,7 +143,7 @@ internal partial class TitleBar : UserControl
         else
             foreColor = ButtonForeColor;
 
-        var form = Form as ExForm;
+        var form = Form as ExFormTest;
         e.Graphics.Clear(backColor);
         //e.Graphics.PageUnit = GraphicsUnit.Point;
         using var pen = new Pen(foreColor, 1);

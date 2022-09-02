@@ -2,20 +2,30 @@
 
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
+// ReSharper disable MemberCanBePrivate.Global
 namespace ExControls;
 
-internal partial class ExMessageBoxForm : Form
+/// <summary>
+/// 
+/// </summary>
+public partial class ExMessageBoxForm : Form
 {
     private const int WS_EX_LEFT = 0x00000000;
     private const int WS_EX_LEFTSCROLLBAR = 0x00004000;
     private const int WS_EX_LAYOUTRTL = 0x00400000;
     private const int WS_EX_NOINHERITLAYOUT = 0x00100000;
+
     private int _countdown;
-    internal HelpInfo _helpInfo;
+    private int _remains;
 
-    internal ShellIcon _shellIcon;
-    private int remains;
+    internal HelpInfo HelpInfo;
+    internal ShellIcon ShellIcon;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="style"></param>
+    /// <param name="icon"></param>
     public ExMessageBoxForm(ExMessageBoxStyle style, MessageBoxIcon icon = MessageBoxIcon.None)
     {
         InitializeComponent();
@@ -32,7 +42,7 @@ internal partial class ExMessageBoxForm : Form
         if (Style.FooterBackColor.HasValue)
             flowLPFooter.BackColor = Style.FooterBackColor.Value;
         if (Style.ButtonsFont != null)
-            Font = Style.ButtonsFont;
+            base.Font = Style.ButtonsFont;
         if (Style.LabelFont != null)
             lText.Font = Style.LabelFont;
 
@@ -58,10 +68,29 @@ internal partial class ExMessageBoxForm : Form
         if (Style.UseDarkTitleBar.HasValue && Style.UseDarkTitleBar.Value) this.SetImmersiveDarkMode(true);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public ExMessageBoxStyle Style { get; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public MessageBoxIcon MessageIcon { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public MessageBoxButtons Buttons { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public MessageBoxDefaultButton DefaultButton { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public int Countdown
     {
         get => _countdown;
@@ -71,13 +100,13 @@ internal partial class ExMessageBoxForm : Form
             if (value <= 0)
             {
                 timerCountDown.Enabled = false;
-                remains = -1;
+                _remains = -1;
             }
             else
             {
                 timerCountDown.Enabled = true;
                 timerCountDown.Interval = 1000;
-                remains = _countdown;
+                _remains = _countdown;
             }
         }
     }
@@ -97,44 +126,19 @@ internal partial class ExMessageBoxForm : Form
         }
     }
 
-    public MessageBoxButtons Buttons { get; set; }
+    private void bYes_Click(object sender, EventArgs e) => DialogResult = DialogResult.Yes;
 
-    public MessageBoxDefaultButton DefaultButton { get; set; }
+    private void bNo_Click(object sender, EventArgs e) => DialogResult = DialogResult.No;
 
-    private void bYes_Click(object sender, EventArgs e)
-    {
-        DialogResult = DialogResult.Yes;
-    }
+    private void bOK_Click(object sender, EventArgs e) => DialogResult = DialogResult.OK;
 
-    private void bNo_Click(object sender, EventArgs e)
-    {
-        DialogResult = DialogResult.No;
-    }
+    private void bCancel_Click(object sender, EventArgs e) => DialogResult = DialogResult.Cancel;
 
-    private void bOK_Click(object sender, EventArgs e)
-    {
-        DialogResult = DialogResult.OK;
-    }
+    private void bAbort_Click(object sender, EventArgs e) => DialogResult = DialogResult.Abort;
 
-    private void bCancel_Click(object sender, EventArgs e)
-    {
-        DialogResult = DialogResult.Cancel;
-    }
+    private void bRetry_Click(object sender, EventArgs e) => DialogResult = DialogResult.Retry;
 
-    private void bAbort_Click(object sender, EventArgs e)
-    {
-        DialogResult = DialogResult.Abort;
-    }
-
-    private void bRetry_Click(object sender, EventArgs e)
-    {
-        DialogResult = DialogResult.Retry;
-    }
-
-    private void bIgnore_Click(object sender, EventArgs e)
-    {
-        DialogResult = DialogResult.Ignore;
-    }
+    private void bIgnore_Click(object sender, EventArgs e) => DialogResult = DialogResult.Ignore;
 
     private void bHelp_Click(object sender, EventArgs e)
     {
@@ -175,25 +179,25 @@ internal partial class ExMessageBoxForm : Form
     {
         base.OnHelpRequested(hevent);
 
-        if (hevent.Handled || _helpInfo == null)
+        if (hevent.Handled || HelpInfo == null)
             return;
 
-        switch (_helpInfo.Option)
+        switch (HelpInfo.Option)
         {
             case HelpInfo.HLP_FILE:
-                Help.ShowHelp(this, _helpInfo.HelpFilePath);
+                Help.ShowHelp(this, HelpInfo.HelpFilePath);
                 break;
             case HelpInfo.HLP_KEYWORD:
-                Help.ShowHelp(this, _helpInfo.HelpFilePath, _helpInfo.Keyword);
+                Help.ShowHelp(this, HelpInfo.HelpFilePath, HelpInfo.Keyword);
                 break;
             case HelpInfo.HLP_NAVIGATOR:
-                Help.ShowHelp(this, _helpInfo.HelpFilePath, _helpInfo.Navigator);
+                Help.ShowHelp(this, HelpInfo.HelpFilePath, HelpInfo.Navigator);
                 break;
             case HelpInfo.HLP_OBJECT:
-                Help.ShowHelp(this, _helpInfo.HelpFilePath, _helpInfo.Navigator, _helpInfo.Param);
+                Help.ShowHelp(this, HelpInfo.HelpFilePath, HelpInfo.Navigator, HelpInfo.Param);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(_helpInfo));
+                throw new ArgumentOutOfRangeException(nameof(HelpInfo));
         }
     }
 
@@ -202,16 +206,16 @@ internal partial class ExMessageBoxForm : Form
         switch (Buttons)
         {
             case MessageBoxButtons.OK:
-                bOK.Text = remains == -1 ? ExMessageBox.ButtonOKText : $@"{ExMessageBox.ButtonOKText} ({remains})";
+                bOK.Text = _remains == -1 ? ExMessageBox.ButtonOKText : $@"{ExMessageBox.ButtonOKText} ({_remains})";
                 break;
             case MessageBoxButtons.OKCancel:
                 switch (DefaultButton)
                 {
                     case MessageBoxDefaultButton.Button1:
-                        bOK.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonOKText : $@"{ExMessageBox.ButtonOKText} ({remains})";
+                        bOK.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonOKText : $@"{ExMessageBox.ButtonOKText} ({_remains})";
                         break;
                     case MessageBoxDefaultButton.Button2:
-                        bCancel.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonCancelText : $@"{ExMessageBox.ButtonCancelText} ({remains})";
+                        bCancel.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonCancelText : $@"{ExMessageBox.ButtonCancelText} ({_remains})";
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -222,13 +226,13 @@ internal partial class ExMessageBoxForm : Form
                 switch (DefaultButton)
                 {
                     case MessageBoxDefaultButton.Button1:
-                        bAbort.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonAbortText : $@"{ExMessageBox.ButtonAbortText} ({remains})";
+                        bAbort.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonAbortText : $@"{ExMessageBox.ButtonAbortText} ({_remains})";
                         break;
                     case MessageBoxDefaultButton.Button2:
-                        bRetry.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonRetryText : $@"{ExMessageBox.ButtonRetryText} ({remains})";
+                        bRetry.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonRetryText : $@"{ExMessageBox.ButtonRetryText} ({_remains})";
                         break;
                     case MessageBoxDefaultButton.Button3:
-                        bIgnore.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonIgnoreText : $@"{ExMessageBox.ButtonIgnoreText} ({remains})";
+                        bIgnore.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonIgnoreText : $@"{ExMessageBox.ButtonIgnoreText} ({_remains})";
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -239,13 +243,13 @@ internal partial class ExMessageBoxForm : Form
                 switch (DefaultButton)
                 {
                     case MessageBoxDefaultButton.Button1:
-                        bYes.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonYesText : $@"{ExMessageBox.ButtonYesText} ({remains})";
+                        bYes.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonYesText : $@"{ExMessageBox.ButtonYesText} ({_remains})";
                         break;
                     case MessageBoxDefaultButton.Button2:
-                        bNo.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonNoText : $@"{ExMessageBox.ButtonNoText} ({remains})";
+                        bNo.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonNoText : $@"{ExMessageBox.ButtonNoText} ({_remains})";
                         break;
                     case MessageBoxDefaultButton.Button3:
-                        bCancel.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonCancelText : $@"{ExMessageBox.ButtonCancelText} ({remains})";
+                        bCancel.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonCancelText : $@"{ExMessageBox.ButtonCancelText} ({_remains})";
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -256,10 +260,10 @@ internal partial class ExMessageBoxForm : Form
                 switch (DefaultButton)
                 {
                     case MessageBoxDefaultButton.Button1:
-                        bYes.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonYesText : $@"{ExMessageBox.ButtonYesText} ({remains})";
+                        bYes.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonYesText : $@"{ExMessageBox.ButtonYesText} ({_remains})";
                         break;
                     case MessageBoxDefaultButton.Button2:
-                        bNo.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonNoText : $@"{ExMessageBox.ButtonNoText} ({remains})";
+                        bNo.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonNoText : $@"{ExMessageBox.ButtonNoText} ({_remains})";
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -270,10 +274,10 @@ internal partial class ExMessageBoxForm : Form
                 switch (DefaultButton)
                 {
                     case MessageBoxDefaultButton.Button1:
-                        bRetry.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonRetryText : $@"{ExMessageBox.ButtonRetryText} ({remains})";
+                        bRetry.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonRetryText : $@"{ExMessageBox.ButtonRetryText} ({_remains})";
                         break;
                     case MessageBoxDefaultButton.Button2:
-                        bCancel.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonCancelText : $@"{ExMessageBox.ButtonCancelText} ({remains})";
+                        bCancel.Text = !timerCountDown.Enabled ? ExMessageBox.ButtonCancelText : $@"{ExMessageBox.ButtonCancelText} ({_remains})";
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -287,9 +291,9 @@ internal partial class ExMessageBoxForm : Form
 
     private void timerCountDown_Tick(object sender, EventArgs e)
     {
-        remains--;
+        _remains--;
         ChangeTimerState();
-        if (remains <= 0) Close();
+        if (_remains <= 0) Close();
     }
 
     private void ExMessageBoxForm_FormClosed(object sender, FormClosedEventArgs e)

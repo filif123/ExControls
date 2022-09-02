@@ -1,20 +1,20 @@
-﻿using System.ComponentModel.Design;
-using System.Drawing.Design;
-
+﻿#if NETFRAMEWORK
+using System.ComponentModel.Design;
+#else
+using Microsoft.DotNet.DesignTools.Designers.Actions;
+#endif
 namespace ExControls.Designers;
 
 internal class ExGroupBoxDesigner : DesignerParentControlBase<ExGroupBox>
 {
     private DesignerActionListCollection _actionLists;
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExGroupBoxActionList(Host, this)};
+    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExGroupBoxActionList(ControlHost) };
 
-    private class ExGroupBoxActionList : DesignerActionListBase<ExGroupBox>
+    private sealed class ExGroupBoxActionList : DesignerActionListBase<ExGroupBox>
     {
-        private readonly ExGroupBoxDesigner _designer;
 
-        public ExGroupBoxActionList(ExGroupBox host, ExGroupBoxDesigner designer) : base(host)
+        public ExGroupBoxActionList(ExGroupBox host) : base(host)
         {
-            _designer = designer;
         }
 
         public string Text

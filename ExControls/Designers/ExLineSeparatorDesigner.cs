@@ -1,12 +1,17 @@
-﻿using System.ComponentModel.Design;
+﻿
 using System.Drawing.Drawing2D;
+#if NETFRAMEWORK
+using System.ComponentModel.Design;
+#else
+using Microsoft.DotNet.DesignTools.Designers.Actions;
+#endif
 
 namespace ExControls.Designers;
 
 internal class ExLineSeparatorDesigner : DesignerControlBase<ExLineSeparator>
 {
     private DesignerActionListCollection _actionLists;
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExLineSeparatorActionList(Host, this)};
+    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExLineSeparatorActionList(ControlHost, this)};
 
     private class ExLineSeparatorActionList : DesignerActionListBase<ExLineSeparator>
     {

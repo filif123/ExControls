@@ -3,6 +3,13 @@ using System.ComponentModel.Design;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
 
+#if NETFRAMEWORK
+
+#else
+using Microsoft.DotNet.DesignTools.Designers;
+using Microsoft.DotNet.DesignTools.Editors;
+#endif
+
 namespace ExControls.Designers;
 
 internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEditorService
@@ -88,12 +95,14 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
     /// <summary>Closes any previously opened drop down control area.</summary>
     public void CloseDropDown()
     {
+        //Not used
     }
 
     /// <summary>Displays the specified control in a drop down area below a value field of the property grid that provides this service.</summary>
     /// <param name="control">The drop down list <see cref="T:System.Windows.Forms.Control" /> to open.</param>
     public void DropDownControl(Control control)
     {
+        //Not used
     }
 
     /// <summary>Shows the specified <see cref="T:System.Windows.Forms.Form" />.</summary>
@@ -107,25 +116,35 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
 
     public static object EditValue(ComponentDesigner designer, object objectToChange, string propName)
     {
-        var propertyDescriptor = TypeDescriptor.GetProperties(objectToChange)[propName];
-        var editorServiceContext = new ExEditorServiceContext(designer, propertyDescriptor);
-        var uitypeEditor = propertyDescriptor.GetEditor(typeof(UITypeEditor)) as UITypeEditor;
-        var value = propertyDescriptor.GetValue(objectToChange);
-        if (uitypeEditor == null) 
+        // Get PropertyDescriptor
+        var descriptor = TypeDescriptor.GetProperties(objectToChange)[propName];
+
+        // Create a Context
+        var context = new ExEditorServiceContext(designer, descriptor);
+
+        // Get Editor
+        var editor = descriptor?.GetEditor(typeof(UITypeEditor)) as UITypeEditor;
+        //MessageBox.Show(editor?.ToString());
+        if (editor == null)
             return null;
 
-        var obj = uitypeEditor.EditValue(editorServiceContext, editorServiceContext, value);
-        if (obj != value)
+        // Get value to edit
+        var value = descriptor.GetValue(objectToChange);
+        
+        // Edit value
+        var newValue = editor.EditValue(context, context, value);
+        if (newValue != value)
         {
             try
             {
-                propertyDescriptor.SetValue(objectToChange, obj);
+                descriptor.SetValue(objectToChange, newValue);
             }
             catch (CheckoutException)
             {
+                //ignored
             }
         }
-        return obj;
+        return newValue;
 
     }
 
@@ -133,10 +152,10 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
     {
         var value = _targetProperty.GetValue(_designer.Component);
         if (value == null)
-        {
             return;
-        }
-        var collectionEditor = TypeDescriptor.GetEditor(value, typeof(UITypeEditor)) as CollectionEditor;
+#if NETFRAMEWORK //TODO
+        var collectionEditor = TypeDescriptor.GetEditor(value, typeof(UITypeEditor)) as /*System.Design.*/CollectionEditor;
         collectionEditor?.EditValue(this, this, value);
+#endif
     }
 }
