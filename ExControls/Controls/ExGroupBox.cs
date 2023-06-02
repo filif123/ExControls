@@ -10,16 +10,17 @@ using ExControls.Designers;
 namespace ExControls;
 
 /// <summary>
-///     Expanded GroupBox Control
+///     Expanded GroupBox Control.
 /// </summary>
 [ToolboxBitmap(typeof(GroupBox), "GroupBox.bmp")]
 [Designer(typeof(ExGroupBoxDesigner))]
-public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
+public class ExGroupBox : GroupBox, IExControl
 {
     private Color _borderColor;
     private DashStyle _borderStyle;
     private int _borderThickness;
     private bool _defaultStyle;
+    private Color _disabledForeColor;
 
     /// <summary>
     ///     Constructor
@@ -29,11 +30,12 @@ public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
         _defaultStyle = true;
         _borderThickness = 1;
         _borderColor = Color.LightGray;
+        _disabledForeColor = SystemColors.GrayText;
         Invalidate();
     }
 
     /// <summary>
-    ///     Width of the GroupBox's border
+    ///     Width of the GroupBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -53,7 +55,7 @@ public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
     }
 
     /// <summary>
-    ///     Color of the GroupBox's border
+    ///     Color of the GroupBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -73,7 +75,27 @@ public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
     }
 
     /// <summary>
-    ///     Style of the GroupBox's border
+    ///     Color of the GroupBox's text when the control is disabled.
+    /// </summary>
+    [Browsable(true)]
+    [ExCategory(CategoryType.Appearance)]
+    [DefaultValue(typeof(SystemColors), "GrayText")]
+    [ExDescription("Color of the GroupBox's text when the control is disabled.")]
+    public Color DisabledForeColor
+    {
+        get => _disabledForeColor;
+        set
+        {
+            if (_disabledForeColor == value)
+                return;
+            _disabledForeColor = value;
+            Invalidate();
+            OnDisabledForeColorChanged();
+        }
+    }
+
+    /// <summary>
+    ///     Style of the GroupBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -119,6 +141,11 @@ public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
     [ExDescription("Occurs when the BorderColor property changes.")]
     public event EventHandler BorderColorChanged;
 
+    /// <summary>Occurs when the <see cref="DisabledForeColor" /> property changes.</summary>
+    [ExCategory("Changed Property")]
+    [ExDescription("Occurs when the DisabledForeColor property changes.")]
+    public event EventHandler DisabledForeColorChanged;
+
     /// <summary>Occurs when the <see cref="BorderThickness" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderThickness property changes.")]
@@ -143,7 +170,6 @@ public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
             return;
         }
 
-        using Brush textBrush = new SolidBrush(ForeColor);
         using Brush borderBrush = new SolidBrush(BorderColor);
         using var borderPen = new Pen(borderBrush, BorderThickness) { DashStyle = BorderStyle };
         SizeF strSize = TextRenderer.MeasureText(e.Graphics, Text, Font);
@@ -156,7 +182,7 @@ public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
         e.Graphics.Clear(BackColor);
 
         // Draw text
-        TextRenderer.DrawText(e.Graphics, Text, Font, new Point(Padding.Left, 0), ForeColor);
+        TextRenderer.DrawText(e.Graphics, Text, Font, new Point(Padding.Left, 0), Enabled ? ForeColor : DisabledForeColor);
 
         // Drawing Border
         //Left
@@ -199,5 +225,11 @@ public class ExGroupBox : GroupBox, IExControl, ISupportsDefaultStyle
     protected virtual void OnLineDrawing(LinePenEventArgs e)
     {
         LineDrawing?.Invoke(this, e);
+    }
+
+    /// <summary>Raises the <see cref="DisabledForeColor" /> event.</summary>
+    protected virtual void OnDisabledForeColorChanged()
+    {
+        DisabledForeColorChanged?.Invoke(this, EventArgs.Empty);
     }
 }

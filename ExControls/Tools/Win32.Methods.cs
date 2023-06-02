@@ -227,7 +227,6 @@ internal static partial class Win32
     [DllImport(SHELL32, SetLastError = false)]
     public static extern int SHGetStockIconInfo(ShellIconType type, SHGSI uFlags, ref SHSTOCKICONINFO psii);
 
-
     public static int SignedHIWORD(int n)
     {
         int i = (short)((n >> 16) & 0xffff);
@@ -241,4 +240,9 @@ internal static partial class Win32
     }
 
     public static int ToInt(this WM msg) => (int) msg;
+
+    public static uint RGBtoInt(Color color)
+    {
+        return (uint)((color.R << 0) | (color.G << 8) | (color.B << 16));
+    }
 }

@@ -1,9 +1,8 @@
-﻿
-
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-
+﻿// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+
 namespace ExControls;
 
 /// <summary>
@@ -88,8 +87,18 @@ public class ExBindingList<T> : BindingList<T>
         _sortProperty = prop;
         _sortDirection = direction;
 
-        if(Items is List<T> list)
-            list.Sort(Compare);
+        switch (Items)
+        {
+            case List<T> list:
+                list.Sort(Compare);
+                break;
+            case T[] array:
+                Array.Sort(array, Compare);
+                break;
+            case { } ilist:
+                ilist.Sort(Compare);
+                break;
+        }
 
         _isSorted = true;
 
@@ -124,12 +133,15 @@ public class ExBindingList<T> : BindingList<T>
     /// <param name="left">left item</param>
     /// <param name="right">right item</param>
     /// <returns></returns>
-    protected int OnComparison(object left, object right)
+    protected virtual int OnComparison(object left, object right)
     {
-        if (long.TryParse(left.ToString(), out var ln) && long.TryParse(right.ToString(), out var rn)) return ln.CompareTo(rn);
+        if (long.TryParse(left.ToString(), out var ln) && long.TryParse(right.ToString(), out var rn)) 
+            return ln.CompareTo(rn);
+        if (left is IComparable comparable) 
+            return comparable.CompareTo(right);
+        if (left.Equals(right)) 
+            return 0; //both are the same
 
-        if (left is IComparable comparable) return comparable.CompareTo(right);
-        if (left.Equals(right)) return 0; //both are the same
         //not comparable, compare ToString
         return string.Compare(left.ToString(), right.ToString(), StringComparison.CurrentCulture);
     }
@@ -162,6 +174,7 @@ public class ExBindingList<T> : BindingList<T>
         }
 
         RaiseListChangedEvents = raise;
-        if (raise && newItemsCount != 0) OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
+        if (raise && newItemsCount != 0) 
+            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, newIndex));
     }
 }

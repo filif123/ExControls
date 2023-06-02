@@ -4,6 +4,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
 
 namespace ExControls;
 
@@ -125,7 +126,7 @@ public sealed class ExMessageBox
     public static ExMessageBoxStyle Style { get; set; }
 
     /// <summary>
-    ///     Gets form of this MessageBox
+    ///     Gets form of this MessageBox.
     /// </summary>
     public ExMessageBoxForm Form { get; }
 
@@ -381,9 +382,15 @@ public sealed class ExMessageBox
         bool showHelp,
         int countdown)
     {
+        string title;
+        if (string.IsNullOrEmpty(caption))
+            title = icon == MessageBoxIcon.None ? "Message" : icon.ToString();
+        else
+            title = caption;
+
         var form = new ExMessageBoxForm(Style, icon)
         {
-            Text = string.IsNullOrEmpty(caption) ? icon == MessageBoxIcon.None ? "Message" : icon.ToString() : caption,
+            Text = title,
             lText = { Text = text },
             bHelp = { Visible = showHelp },
             Countdown = countdown
@@ -410,9 +417,15 @@ public sealed class ExMessageBox
         HelpInfo info,
         int countdown)
     {
+        string title;
+        if (string.IsNullOrEmpty(caption))
+            title = icon == MessageBoxIcon.None ? "Message" : icon.ToString();
+        else
+            title = caption;
+
         var form = new ExMessageBoxForm(Style, icon)
         {
-            Text = string.IsNullOrEmpty(caption) ? icon == MessageBoxIcon.None ? "Message" : icon.ToString() : caption,
+            Text = title,
             lText = { Text = text },
             bHelp = { Visible = true },
             HelpInfo = info,
@@ -429,11 +442,9 @@ public sealed class ExMessageBox
         return result;
     }
 
-    /// <devdoc>
-    ///     <para>
+    /// <summary>
     ///         Displays a message box with specified text, caption, and style with Help Button.
-    ///     </para>
-    /// </devdoc>
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -448,11 +459,9 @@ public sealed class ExMessageBox
     }
 
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, style and Help file Path .
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, style and Help file Path .
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -468,11 +477,9 @@ public sealed class ExMessageBox
     }
 
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, style and Help file Path for a IWin32Window.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, style and Help file Path for a IWin32Window.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -489,11 +496,9 @@ public sealed class ExMessageBox
     }
 
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, style, Help file Path and keyword.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, style, Help file Path and keyword.
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -510,11 +515,9 @@ public sealed class ExMessageBox
     }
 
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, style, Help file Path and keyword for a IWin32Window.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, style, Help file Path and keyword for a IWin32Window.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -532,11 +535,9 @@ public sealed class ExMessageBox
     }
 
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, style, Help file Path and HelpNavigator.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, style, Help file Path and HelpNavigator.
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -552,11 +553,9 @@ public sealed class ExMessageBox
         return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, style, Help file Path and HelpNavigator for IWin32Window.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, style, Help file Path and HelpNavigator for IWin32Window.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -573,11 +572,9 @@ public sealed class ExMessageBox
         return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, style, Help file Path ,HelpNavigator and object.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, style, Help file Path ,HelpNavigator and object.
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -595,12 +592,9 @@ public sealed class ExMessageBox
     }
 
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, style, Help file Path ,HelpNavigator and object for a
-    ///         IWin32Window.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, style, Help file Path ,HelpNavigator and object for a IWin32Window.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -618,11 +612,9 @@ public sealed class ExMessageBox
         return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, and style.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, and style.
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -635,11 +627,9 @@ public sealed class ExMessageBox
         return ShowCore(null, text, caption, buttons, icon, defaultButton, options, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, and style.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, and style.
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -651,11 +641,9 @@ public sealed class ExMessageBox
         return ShowCore(null, text, caption, buttons, icon, defaultButton, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, and style.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, and style.
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -666,11 +654,9 @@ public sealed class ExMessageBox
         return ShowCore(null, text, caption, buttons, icon, MessageBoxDefaultButton.Button1, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, and style.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, and style.
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -680,11 +666,9 @@ public sealed class ExMessageBox
         return ShowCore(null, text, caption, buttons, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text and caption.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text and caption.
+    /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
@@ -693,21 +677,17 @@ public sealed class ExMessageBox
         return ShowCore(null, text, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text.
+    /// </summary>
     public static DialogResult Show([Localizable(true)] string text, int countdown = -1)
     {
         return ShowCore(null, text, "", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, and style.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, and style.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -721,11 +701,9 @@ public sealed class ExMessageBox
         return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, and style.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, and style.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -738,11 +716,9 @@ public sealed class ExMessageBox
         return ShowCore(owner, text, caption, buttons, icon, defaultButton, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, and style.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, and style.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -754,11 +730,9 @@ public sealed class ExMessageBox
         return ShowCore(owner, text, caption, buttons, icon, MessageBoxDefaultButton.Button1, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text, caption, and style.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text, caption, and style.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -769,11 +743,9 @@ public sealed class ExMessageBox
         return ShowCore(owner, text, caption, buttons, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text and caption.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text and caption.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -783,11 +755,9 @@ public sealed class ExMessageBox
         return ShowCore(owner, text, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0, false, countdown);
     }
 
-    /// <devdoc>
-    ///     <para>
-    ///         Displays a message box with specified text.
-    ///     </para>
-    /// </devdoc>
+    /// <summary>
+    ///     Displays a message box with specified text.
+    /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
         [Localizable(true)] string text,
@@ -809,23 +779,22 @@ public sealed class ExMessageBox
 public class ExMessageBoxStyle
 {
     /// <summary>
-    ///     Gets or sets the Font of label in MessageBox
+    ///     Gets or sets the Font of label in MessageBox.
     /// </summary>
     public Font LabelFont { get; set; }
 
     /// <summary>
-    ///     Gets or sets the Font of buttons in MessageBox
+    ///     Gets or sets the Font of buttons in MessageBox.
     /// </summary>
     public Font ButtonsFont { get; set; }
 
     /// <summary>
-    ///     Gets or sets whether default style of components in MessageBox is used
+    ///     Gets or sets whether default style of components in MessageBox is used.
     /// </summary>
     public bool? DefaultStyle { get; set; }
 
     /// <summary>
-    ///     Gets or sets whether MessageBox's caption should be dark or with default color (dark caption works only in Windows
-    ///     10).
+    ///     Gets or sets whether MessageBox's caption should be dark or with default color (dark caption works only in Windows 10).
     /// </summary>
     public bool? UseDarkTitleBar { get; set; }
 

@@ -15,20 +15,42 @@ public static class ExTools
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
     private const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
-
     private const int DWMWA_TEXT_COLOR = 34;
     private const int DWMWA_CAPTION_COLOR = 35;
     private const int DWMWA_BORDER_COLOR = 36;
-
     private const int DWMWA_VISIBLE_FRAME_BORDER_THICKNESS = 37;
-
+    private const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
     private const int DWMWA_MICA_EFFECT = 1029;
-    private const int DWMWA_SYSTEMBACKDROP_TYPE = 1029;
 
     /// <summary>
     ///  Gets 
     /// </summary>
     public static bool IsWin11Build22000 { get; } = IsWindows10OrGreater(22000);
+
+    /// <summary>
+    ///     Gets whether apps in system using light or dark mode. Works only in Windows 10+ (In previous versions always returns true).
+    /// </summary>
+    public static bool AppsUseLightMode { get; } = GetThemeInfo(false);
+
+    /// <summary>
+    ///     Gets whether system using light or dark mode. Works only in Windows 10+ (In previous versions always returns true).
+    /// </summary>
+    public static bool SystemUseLightMode { get; } = GetThemeInfo(true);
+
+    private static bool GetThemeInfo(bool system)
+    {
+        try
+        {
+            var res = (int) Registry.GetValue(
+                "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", 
+                system ? "SystemUseLightTheme" : "AppsUseLightTheme", 1);
+            return res == 1;
+        }
+        catch
+        {
+            return true;
+        }
+    }
 
     private static bool IsWindows10OrGreater(int build = -1)
     {
@@ -373,6 +395,11 @@ public enum WindowsTheme
     None,
 
     /// <summary>
+    ///     Default style will be used.
+    /// </summary>
+    Default,
+
+    /// <summary>
     ///     Style of Windows Explorer in current Windows version.
     /// </summary>
     Explorer,
@@ -385,12 +412,7 @@ public enum WindowsTheme
     /// <summary>
     ///     Other style will be used.
     /// </summary>
-    Other,
-
-    /// <summary>
-    ///     Default style will be used.
-    /// </summary>
-    Default
+    Other
 }
 
 /// <summary>

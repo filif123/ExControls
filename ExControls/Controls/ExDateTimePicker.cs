@@ -26,8 +26,8 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     private bool _hover;
     private bool _selected;
 
-    //private Win32.DATETIMEPICKERINFO dtpInfo;
-    //private DTPEdit Edit;
+    private Win32.DATETIMEPICKERINFO _dtpInfo;
+    private DateTimePickerEdit _edit;
 
     /// <inheritdoc />
     public ExDateTimePicker()
@@ -54,7 +54,6 @@ public class ExDateTimePicker : DateTimePicker, IExControl
             if (_backColor == value)
                 return;
             _backColor = value;
-            base.BackColor = value;
             Invalidate();
         }
     }
@@ -71,13 +70,12 @@ public class ExDateTimePicker : DateTimePicker, IExControl
             if (_foreColor == value)
                 return;
             _foreColor = value;
-            base.ForeColor = value;
             Invalidate();
         }
     }
 
     /// <summary>
-    ///     Color of the border of ComboBox when mouse is over the Control
+    ///     Color of the border of ComboBox when mouse is over the Control.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -96,7 +94,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     }
 
     /// <summary>
-    ///     Color of the ComboBox's border
+    ///     Color of the ComboBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -115,7 +113,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     }
 
     /// <summary>
-    ///     Background color of the TextBox's when it is disabled
+    ///     Background color of the TextBox's when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -134,7 +132,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     }
 
     /// <summary>
-    ///     Color of the arrow which is in this Control in the Drop down button
+    ///     Color of the arrow which is in this Control in the Drop down button.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -171,7 +169,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
                 return;
             _defaultStyle = value;
 
-            //RecreateHandle();
+            this.SetTheme(value ? WindowsTheme.Default : WindowsTheme.None);
             Invalidate();
         }
     }
@@ -182,10 +180,10 @@ public class ExDateTimePicker : DateTimePicker, IExControl
         base.OnCreateControl();
         if (!DefaultStyle)
         {
-            SetStyle(ControlStyles.UserPaint, true);
+            //SetStyle(ControlStyles.Opaque, true);
             SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            //SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            //SetStyle(ControlStyles.AllPaintingInWmPaint, true);
         }
     }
 
@@ -193,78 +191,59 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
     protected override void OnHandleCreated(EventArgs e)
     {
+        this.SetTheme(_defaultStyle ? WindowsTheme.Default : WindowsTheme.None);
         base.OnHandleCreated(e);
-        if (!DefaultStyle)
-        {
-
-            //Edit = new DTPEdit();
-            //Edit.AssignHandle(dtpInfo.hwndEdit);
-        }
     }
-
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.MouseClick" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data. </param>
-    protected override void OnMouseClick(MouseEventArgs e)
-    {
-        base.OnMouseClick(e);
-
-            
-    }
-
-
-    [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
-    private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, out Win32.DATETIMEPICKERINFO lp);
 
     /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleDestroyed" /> event.</summary>
     /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
     protected override void OnHandleDestroyed(EventArgs e)
     {
         base.OnHandleDestroyed(e);
-        //Edit.DestroyHandle();
+        _edit?.ReleaseHandle();
+        _edit = null;
+    }
+
+    [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
+    private static extern IntPtr SendMessagePicker(IntPtr hWnd, int msg, IntPtr wp, out Win32.DATETIMEPICKERINFO lp);
+
+    private Win32.DATETIMEPICKERINFO GetDatePickerInfo()
+    {
+        var info = new Win32.DATETIMEPICKERINFO();
+        info.cbSize = Marshal.SizeOf(info);
+        SendMessagePicker(Handle, DTM_GETDATETIMEPICKERINFO, IntPtr.Zero, out info);
+        return info;
     }
 
     /// <summary>Processes Windows messages.</summary>
     /// <param name="m">The Windows <see cref="T:System.Windows.Forms.Message" /> to process.</param>
     protected override void WndProc(ref Message m)
     {
-        base.WndProc(ref m);
-        if (DefaultStyle)
-            return;
-
-        /*if (m.Msg == Win32.WM_PAINT)
+        
+        //if (m.GetMsg() == Win32.WM.NCPAINT && !DefaultStyle)
         {
-            using Graphics g = Graphics.FromHwndInternal(Handle);
-            var clientRect = new Rectangle(0, 0, Width, Height);
-            var buttonWidth = dtpInfo.rcButton.Width;
-            var dropDownRect = new Rectangle(dtpInfo.rcButton.Left, dtpInfo.rcButton.Top, buttonWidth, clientRect.Height);
-            if (RightToLeft == RightToLeft.Yes && RightToLeftLayout)
-            {
-                dropDownRect.X = clientRect.Width - dropDownRect.Right;
-                dropDownRect.Width += 1;
-            }
-            var middle = new Point(dropDownRect.Left + dropDownRect.Width / 2, dropDownRect.Top + dropDownRect.Height / 2);
-            var arrow = new Point[]
-            {
-                new(middle.X - 3, middle.Y - 2),
-                new(middle.X + 4, middle.Y - 2),
-                new(middle.X, middle.Y + 2)
-            };
+            //using var g = Graphics.FromHwnd(Handle);
+            //using var g = Graphics.FromHwnd(Handle);
+            //.Clear(BackColor);
+            //return;
+        }
 
-            Color borderAndButtonColor = Enabled ? BorderColor : Color.LightGray;
-            Color arrorColor = BackColor;
-            using (var pen = new Pen(borderAndButtonColor))
-                g.DrawRectangle(pen, 0, 0,
-                    clientRect.Width - 1, clientRect.Height - 1);
-            using (var brush = new SolidBrush(borderAndButtonColor))
-                g.FillRectangle(brush, dropDownRect);
-            g.FillPolygon(Brushes.Black, arrow);
-        }*/
+        
+
+        base.WndProc(ref m);
+        if (!DefaultStyle && m.Msg == (int)Win32.WM.NCPAINT)
+        {
+            using var args = new PaintEventArgs(Graphics.FromHwnd(Handle), ClientRectangle);
+            OnPaint(args);
+            //m.Result = IntPtr.Zero;
+            //return;
+        }
     }
 
     /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)
     {
-        base.OnPaint(e);
+        //base.OnPaint(e);
 
         if (DefaultStyle)
             return;
@@ -276,7 +255,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
         if (Format == DateTimePickerFormat.Custom) sText = $"{Value:CustomFormat}";
         else sText = Checked ? base.Text : "";
 
-        TextRenderer.DrawText(e.Graphics, sText, Font, new Point(0, 2), ForeColor);
+        //TextRenderer.DrawText(e.Graphics, sText, Font, new Point(0, 2), ForeColor);
 
         if (_hover)
         {
@@ -381,8 +360,6 @@ public class ExDateTimePicker : DateTimePicker, IExControl
             _selected = true;
             Invalidate();
         }
-
-            
     }
 
     /// <inheritdoc />
@@ -400,25 +377,32 @@ public class ExDateTimePicker : DateTimePicker, IExControl
         }
     }
 
-
     /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
     protected virtual void OnDefaultStyleChanged()
     {
         DefaultStyleChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    /*private class DTPEdit : NativeWindow
+    private sealed class DateTimePickerEdit : NativeWindow
     {
+        private ExDateTimePicker _picker;
+
+        public DateTimePickerEdit(ExDateTimePicker picker)
+        {
+            _picker = picker;
+        }
+
         /// <summary>Invokes the default window procedure associated with this window. </summary>
         /// <param name="m">A <see cref="T:System.Windows.Forms.Message" /> that is associated with the current Windows message. </param>
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-
-            if (m.Msg == Win32.)
+            
+            if (m.GetMsg() == Win32.WM.PAINT)
             {
-                
+                using Graphics g = Graphics.FromHwnd(m.HWnd);
+                g.Clear(_picker.BackColor);
             }
         }
-    }*/
+    }
 }

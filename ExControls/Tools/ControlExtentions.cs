@@ -1,4 +1,6 @@
-﻿namespace ExControls;
+﻿using System.Reflection;
+
+namespace ExControls;
 
 /// <summary>
 /// 
@@ -22,5 +24,18 @@ public static class ControlExtentions
         cb.DataSource = dictionary.ToList();
         cb.DisplayMember = "Value";
         cb.ValueMember = "Key";
+    }
+
+    internal static Win32.WM GetMsg(this Message msg)
+    {
+        return (Win32.WM)msg.Msg;
+    }
+
+    internal static IntPtr GetHbrush(this Brush b)
+    {
+        var field = typeof(Brush).GetField("nativeBrush", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (field is not null)
+            return (IntPtr) field.GetValue(b)!;
+        return IntPtr.Zero;
     }
 }

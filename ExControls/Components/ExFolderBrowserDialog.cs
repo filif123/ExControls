@@ -1,96 +1,160 @@
-﻿using System.Reflection;
-// ReSharper disable UnusedMethodReturnValue.Global
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable UnusedMethodReturnValue.Global
+// ReSharper disable UnusedMember.Global
+
+using System.Drawing.Design;
+using System.Reflection;
+using System.Security.Permissions;
 
 namespace ExControls;
 
+//source: https://stackoverflow.com/questions/4136477/trying-to-open-a-file-dialog-using-the-new-ifiledialog-and-ifileopendialog-inter
+#if NETFRAMEWORK
+
 /// <summary>
-///     Present the Windows Vista-style open file dialog to select a folder. Fall back for older Windows Versions <br></br>
-///     Source: (edited)<br></br>
-///     https://stackoverflow.com/questions/4136477/trying-to-open-a-file-dialog-using-the-new-ifiledialog-and-ifileopendialog-inter
+///  Represents a common dialog box that allows the user to specify options for
+///  selecting a folder. This class cannot be inherited.
 /// </summary>
+[DefaultEvent(nameof(HelpRequest))]
+[DefaultProperty(nameof(SelectedPath))]
+[Designer("System.Windows.Forms.Design.FolderBrowserDialogDesigner, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
 [ToolboxBitmap(typeof(FolderBrowserDialog), "FolderBrowserDialog.bmp")]
-public partial class ExFolderBrowserDialog : Component
+public sealed class ExFolderBrowserDialog : CommonDialog
 {
-    private const string DEFAULT_TITLE = "Select a folder";
-
     private string _initialDirectory;
-    private string _title;
+    private string _description;
+    private Environment.SpecialFolder _rootFolder;
+    private string _selectedPath;
+    private bool _selectedPathNeedsCheck;
+
+    /// <summary>Initializes a new instance of the <see cref="ExFolderBrowserDialog" /> class.</summary>
+    public ExFolderBrowserDialog() => Reset();
 
     /// <summary>
-    ///     Constructor
-    /// </summary>
-    public ExFolderBrowserDialog()
-    {
-        InitializeComponent();
-    }
-
-    /// <summary>
-    ///     Constructor
-    /// </summary>
-    /// <param name="container"></param>
-    public ExFolderBrowserDialog(IContainer container)
-    {
-        container.Add(this);
-
-        InitializeComponent();
-    }
-
-    /// <summary>
-    ///     Pociatocny priecinok
+    ///  Gets or sets the initial directory displayed by the folder browser dialog.
     /// </summary>
     public string InitialDirectory
     {
-        get => string.IsNullOrEmpty(_initialDirectory) ? Environment.CurrentDirectory : _initialDirectory;
-        set => _initialDirectory = value;
+        get => _initialDirectory;
+        set => _initialDirectory = value ?? "";
     }
 
     /// <summary>
-    ///     Text zobrazujuci sa na zahlavi okna
-    /// </summary>
-    [DefaultValue(DEFAULT_TITLE)]
-    public string Title
-    {
-        get => _title ?? DEFAULT_TITLE;
-        set => _title = value;
-    }
-
-    /// <summary>
-    ///     Gets a path to file
+    /// Occurs when the user clicks the Help button on a common dialog box.
     /// </summary>
     [Browsable(false)]
-    public string FileName { get; private set; } = "";
-
-    /// <summary>
-    ///     Show folder browser dialog.
-    /// </summary>
-    /// <returns></returns>
-    public bool Show()
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new event EventHandler HelpRequest
     {
-        return Show(IntPtr.Zero);
+        add => base.HelpRequest += value;
+        remove => base.HelpRequest -= value;
     }
 
     /// <summary>
-    ///     Show folder browser dialog with specific owner.
+    ///  Gets or sets a description to show above the folders. Here you can provide
+    ///  instructions for selecting a folder.
     /// </summary>
-    /// <param name="hWndOwner">Handle of the control or window to be the parent of the file dialog</param>
-    /// <returns><see langword="true" /> if the user clicks OK</returns>
-    public bool Show(IntPtr hWndOwner)
+    [Browsable(true)]
+    [DefaultValue("")]
+    [Localizable(true)]
+    [ExCategory(CategoryType.Appearance)]
+    public string Description
+    {
+        get => _description;
+        set => _description = value ?? "";
+    }
+
+    /// <summary>
+    ///  Determines if the 'New Folder' button should be exposed.
+    ///  This property has no effect if the Vista style dialog is used; in that case, the New Folder button is always shown.
+    /// </summary>
+    [Browsable(true)]
+    [DefaultValue(true)]
+    [Localizable(false)]
+    [ExCategory(CategoryType.Appearance)]
+    public bool ShowNewFolderButton { get; set; }
+
+    /// <summary>
+    ///  Gets/sets the root node of the directory tree.
+    /// </summary>
+    [Browsable(true)]
+    [DefaultValue(Environment.SpecialFolder.Desktop)]
+    [Localizable(false)]
+    [ExCategory(CategoryType.Appearance)]
+    [TypeConverter("System.Windows.Forms.SpecialFolderEnumConverter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")]
+    public Environment.SpecialFolder RootFolder
+    {
+        get => _rootFolder;
+        set
+        {
+            if (!Enum.IsDefined(typeof(Environment.SpecialFolder), value))
+            {
+                throw new InvalidEnumArgumentException(nameof(value), (int)value, typeof(Environment.SpecialFolder));
+            }
+
+            _rootFolder = value;
+        }
+    }
+
+    /// <summary>
+    ///  Gets the directory path of the folder the user picked.
+    ///  Sets the directory path of the initial folder shown in the dialog box.
+    /// </summary>
+    [Browsable(true)]
+    [DefaultValue("")]
+    [Editor("System.Windows.Forms.Design.SelectedPathEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", typeof(UITypeEditor))]
+    [Localizable(true)]
+    [ExCategory(CategoryType.Behavior)]
+    public string SelectedPath
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_selectedPath) || !_selectedPathNeedsCheck)
+                return _selectedPath;
+            new FileIOPermission(FileIOPermissionAccess.PathDiscovery, _selectedPath).Demand();
+            return _selectedPath;
+        }
+        set
+        {
+            _selectedPath = value ?? string.Empty;
+            _selectedPathNeedsCheck = false;
+        }
+    }
+
+    /// <summary>
+    /// Resets properties to their default values.
+    /// </summary>
+    public override void Reset()
+    {
+        _description = "";
+        _initialDirectory = Environment.CurrentDirectory;
+        _selectedPath = "";
+        _rootFolder = Environment.SpecialFolder.Desktop;
+        _selectedPathNeedsCheck = false;
+    }
+
+    /// <summary>When overridden in a derived class, specifies a common dialog box.</summary>
+    /// <param name="hwndOwner">A value that represents the window handle of the owner window for the common dialog box.</param>
+    /// <returns>
+    /// <see langword="true" /> if the dialog box was successfully run; otherwise, <see langword="false" />.</returns>
+    protected override bool RunDialog(IntPtr hwndOwner)
     {
         var version = Environment.OSVersion.Version.Major >= 6;
-        var result = version ? VistaDialog.Show(hWndOwner, InitialDirectory, Title) : ShowXpDialog(hWndOwner, InitialDirectory, Title);
+        var result = version
+            ? VistaDialog.Show(hwndOwner, InitialDirectory, Description)
+            : ShowXpDialog(hwndOwner, InitialDirectory, Description, ShowNewFolderButton, RootFolder);
 
-        FileName = result.FileName;
+        SelectedPath = result.FileName;
         return result.Result;
     }
 
-    private static ShowDialogResult ShowXpDialog(IntPtr ownerHandle, string initialDirectory, string title)
+    private static ShowDialogResult ShowXpDialog(IntPtr ownerHandle, string initialDirectory, string title, bool showNewFolderBtn, Environment.SpecialFolder rootFolder)
     {
         var folderBrowserDialog = new FolderBrowserDialog
         {
             Description = title,
             SelectedPath = initialDirectory,
-            ShowNewFolderButton = false
+            ShowNewFolderButton = showNewFolderBtn,
+            RootFolder = rootFolder
         };
 
         var dialogResult = new ShowDialogResult();
@@ -112,33 +176,27 @@ public partial class ExFolderBrowserDialog : Component
 
     private static class VistaDialog
     {
-        private const string c_foldersFilter = "Folders|\n";
-        private const BindingFlags c_flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        private const string FOLDERS_FILTER = "Folders|\n";
+        private const BindingFlags FLAGS = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-        private static readonly Assembly s_windowsFormsAssembly = typeof(FileDialog).Assembly;
+        private static readonly Assembly WindowsFormsAssembly = typeof(FileDialog).Assembly;
+        private static readonly Type FileDialogType = WindowsFormsAssembly.GetType("System.Windows.Forms.FileDialogNative+IFileDialog");
+        private static readonly MethodInfo CreateVistaDialogMethodInfo = typeof(OpenFileDialog).GetMethod("CreateVistaDialog", FLAGS);
+        private static readonly MethodInfo OnBeforeVistaDialogMethodInfo = typeof(OpenFileDialog).GetMethod("OnBeforeVistaDialog", FLAGS);
+        private static readonly MethodInfo GetOptionsMethodInfo = typeof(FileDialog).GetMethod("GetOptions", FLAGS);
+        private static readonly MethodInfo SetOptionsMethodInfo = FileDialogType.GetMethod("SetOptions", FLAGS);
+        private static readonly MethodInfo AdviseMethodInfo = FileDialogType.GetMethod("Advise");
+        private static readonly MethodInfo UnadviseMethodInfo = FileDialogType.GetMethod("Unadvise");
+        private static readonly MethodInfo ShowMethodInfo = FileDialogType.GetMethod("Show");
 
-        private static readonly Type s_iFileDialogType = s_windowsFormsAssembly.GetType("System.Windows.Forms.FileDialogNative+IFileDialog");
-
-        private static readonly MethodInfo s_createVistaDialogMethodInfo = typeof(OpenFileDialog).GetMethod("CreateVistaDialog", c_flags);
-
-        private static readonly MethodInfo s_onBeforeVistaDialogMethodInfo = typeof(OpenFileDialog).GetMethod("OnBeforeVistaDialog", c_flags);
-
-        private static readonly MethodInfo s_getOptionsMethodInfo = typeof(FileDialog).GetMethod("GetOptions", c_flags);
-
-        private static readonly MethodInfo s_setOptionsMethodInfo = s_iFileDialogType.GetMethod("SetOptions", c_flags);
-
-        private static readonly uint s_fosPickFoldersBitFlag = (uint)s_windowsFormsAssembly
+        private static readonly uint FosPickFoldersBitFlag = (uint)WindowsFormsAssembly
             .GetType("System.Windows.Forms.FileDialogNative+FOS")
             .GetField("FOS_PICKFOLDERS")
             .GetValue(null);
 
-        private static readonly ConstructorInfo s_vistaDialogEventsConstructorInfo = s_windowsFormsAssembly
+        private static readonly ConstructorInfo VistaDialogEventsConstructorInfo = WindowsFormsAssembly
             .GetType("System.Windows.Forms.FileDialog+VistaDialogEvents")
-            .GetConstructor(c_flags, null, new[] { typeof(FileDialog) }, null);
-
-        private static readonly MethodInfo s_adviseMethodInfo = s_iFileDialogType.GetMethod("Advise");
-        private static readonly MethodInfo s_unAdviseMethodInfo = s_iFileDialogType.GetMethod("Unadvise");
-        private static readonly MethodInfo s_showMethodInfo = s_iFileDialogType.GetMethod("Show");
+            .GetConstructor(FLAGS, null, new[] { typeof(FileDialog) }, null);
 
         public static ShowDialogResult Show(IntPtr ownerHandle, string initialDirectory, string title)
         {
@@ -147,21 +205,24 @@ public partial class ExFolderBrowserDialog : Component
                 AddExtension = false,
                 CheckFileExists = false,
                 DereferenceLinks = true,
-                Filter = c_foldersFilter,
+                Filter = FOLDERS_FILTER,
                 InitialDirectory = initialDirectory,
                 Multiselect = false,
-                Title = title
+                Title = title,
             };
 
-            var iFileDialog = s_createVistaDialogMethodInfo.Invoke(openFileDialog, new object[] { });
-            s_onBeforeVistaDialogMethodInfo.Invoke(openFileDialog, new[] { iFileDialog });
-            s_setOptionsMethodInfo.Invoke(iFileDialog, new object[] { (uint)s_getOptionsMethodInfo.Invoke(openFileDialog, new object[] { }) | s_fosPickFoldersBitFlag });
-            var adviseParametersWithOutputConnectionToken = new[] { s_vistaDialogEventsConstructorInfo.Invoke(new object[] { openFileDialog }), 0U };
-            s_adviseMethodInfo.Invoke(iFileDialog, adviseParametersWithOutputConnectionToken);
+            var options = (uint)GetOptionsMethodInfo.Invoke(openFileDialog, new object[] { });
+            var fileDialog = CreateVistaDialogMethodInfo.Invoke(openFileDialog, new object[] { });
+
+            OnBeforeVistaDialogMethodInfo.Invoke(openFileDialog, new[] { fileDialog });
+            SetOptionsMethodInfo.Invoke(fileDialog, new object[] { options | FosPickFoldersBitFlag });
+
+            var adviseParametersWithOutputConnectionToken = new[] { VistaDialogEventsConstructorInfo.Invoke(new object[] { openFileDialog }), 0U };
+            AdviseMethodInfo.Invoke(fileDialog, adviseParametersWithOutputConnectionToken);
 
             try
             {
-                var retVal = (int)s_showMethodInfo.Invoke(iFileDialog, new object[] { ownerHandle });
+                var retVal = (int)ShowMethodInfo.Invoke(fileDialog, new object[] { ownerHandle });
                 return new ShowDialogResult
                 {
                     Result = retVal == 0,
@@ -170,13 +231,13 @@ public partial class ExFolderBrowserDialog : Component
             }
             finally
             {
-                s_unAdviseMethodInfo.Invoke(iFileDialog, new[] { adviseParametersWithOutputConnectionToken[1] });
+                UnadviseMethodInfo.Invoke(fileDialog, new[] { adviseParametersWithOutputConnectionToken[1] });
             }
         }
     }
 
     // Wrap an IWin32Window around an IntPtr
-    private class WindowWrapper : IWin32Window
+    private sealed class WindowWrapper : IWin32Window
     {
         public WindowWrapper(IntPtr handle)
         {
@@ -186,3 +247,4 @@ public partial class ExFolderBrowserDialog : Component
         public IntPtr Handle { get; }
     }
 }
+#endif

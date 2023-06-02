@@ -44,9 +44,11 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     public ExPropertyGrid()
     {
         _innerToolStrip = Controls.OfType<ToolStrip>().FirstOrDefault();
-        if (_innerToolStrip is not null) return;
-        var type = Type.GetType("System.Windows.Forms.PropertyGridToolStrip");
-        _innerToolStrip = Controls.OfType<Control>().FirstOrDefault(c => c.GetType() == type) as ToolStrip;
+        if (_innerToolStrip is null)
+        {
+            var type = Type.GetType("System.Windows.Forms.PropertyGridToolStrip");
+            _innerToolStrip = Controls.OfType<Control>().FirstOrDefault(c => c.GetType() == type) as ToolStrip;
+        }
     }
 
     /// <summary>

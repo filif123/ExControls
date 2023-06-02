@@ -1,4 +1,5 @@
-﻿namespace ExControls;
+﻿// ReSharper disable VirtualMemberNeverOverridden.Global
+namespace ExControls;
 
 /// <summary>
 /// A Panel to which only controls of type T can be added.
@@ -22,7 +23,7 @@ public class RestrictivePanel<T> : Panel where T : Control
     {
         if (e.Control is not T control)
         {
-            throw new Exception(
+            throw new InvalidOperationException(
                 $"Cannot add control of type '{e.Control.GetType().Name}' to this RestrictivePanel as it accepts only controls of type '{typeof(T).Name}'!");
         }
 

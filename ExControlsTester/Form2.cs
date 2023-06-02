@@ -19,5 +19,10 @@ namespace ExControls.Test
         {
             TitleBarBackColor = Color.Aquamarine;
         }
+
+        private void ExDateTimePicker1_MouseCaptureChanged(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

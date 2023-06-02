@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace ExControls.Test
 {
-    public partial class Form1 : ExFormTest
+    public partial class Form1 : ExForm
     {
         public Form1()
         {

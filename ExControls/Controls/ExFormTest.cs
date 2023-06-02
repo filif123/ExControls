@@ -15,7 +15,7 @@ namespace ExControls;
 /// </summary>
 [Obsolete("Do not use in production")]
 [Designer(typeof(ExFormDesigner))]
-public partial class ExFormTest
+internal partial class ExFormTest
 {
     private bool _customMenu;
     private bool _maximizing;

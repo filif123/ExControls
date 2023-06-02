@@ -1,12 +1,12 @@
 ﻿namespace ExControls;
 
 /// <summary>
-///     Expanded CheckBox Column for DataGridView
+///     Expanded CheckBox Column for DataGridView.
 /// </summary>
 public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
 {
     /// <summary>
-    ///     Constructor
+    ///     Creates new instance of 
     /// </summary>
     public DataGridViewExCheckBoxColumn()
     {
@@ -38,7 +38,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     ///     Default style of the Control
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
     [Description("Default style of the Control.")]
     public bool DefaultStyle
@@ -63,7 +63,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     ///     Color of the CheckBox's border
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
     [Description("Color of the CheckBox's border.")]
     public Color BorderColor
@@ -88,7 +88,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     ///     Color of the CheckBox's mark
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
     [Description("Color of the CheckBox's mark.")]
     public Color MarkColor
@@ -113,7 +113,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     ///     Background color of CheckBox's square
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
     [Description("Background color of CheckBox's square.")]
     public Color SquareBackColor
@@ -138,7 +138,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     ///     Color of the border and mark of CheckBox when mouse is over the Control
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "0, 120, 215")]
     [Description("Color of the border and mark of CheckBox when mouse is over the Control.")]
     public Color HighlightColor
@@ -165,7 +165,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
 /// </summary>
 public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
 {
-    private static bool _hover;
+    private bool _hover;
     private Color _borderColor;
 
     private bool _defaultStyle;
@@ -294,12 +294,22 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
         using var background = new SolidBrush(SquareBackColor);
         g.FillRectangle(background, rect);
 
-        var colorMark = _hover ? HighlightColor : state != DataGridViewElementStates.ReadOnly ? MarkColor : Color.DimGray;
-        var colorBorder = _hover ? HighlightColor : state != DataGridViewElementStates.ReadOnly ? BorderColor : Color.DimGray;
+        Color colorMark;
+        if (_hover)
+            colorMark = HighlightColor;
+        else
+            colorMark = state != DataGridViewElementStates.ReadOnly ? MarkColor : Color.DimGray;
+
+        Color colorBorder;
+        if (_hover)
+            colorBorder = HighlightColor;
+        else
+            colorBorder = state != DataGridViewElementStates.ReadOnly ? BorderColor : Color.DimGray;
 
         var bs = ButtonState.Normal;
 
-        if (formattedValue is bool val) bs = val == false ? ButtonState.Normal : ButtonState.Checked;
+        if (formattedValue is bool val) 
+            bs = !val ? ButtonState.Normal : ButtonState.Checked;
 
         //mark
         if (bs == ButtonState.Checked)

@@ -40,9 +40,7 @@
 		<Compile Update="Controls\ExCheckedListBox.cs" />
 		<Compile Update="Controls\ExComboBox.cs" />
 		<Compile Update="Controls\ExDateTimePicker.cs" />
-		<Compile Update="Components\ExFolderBrowserDialog.cs">
-			<SubType>Component</SubType>
-		</Compile>
+		<Compile Update="Components\ExFolderBrowserDialog.cs" />
 		<Compile Update="Controls\ExGroupBox.cs" />
 		<Compile Update="Controls\ExLineSeparator.cs" />
 		<Compile Update="Controls\ExMaskedTextBox.cs" />

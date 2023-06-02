@@ -1,4 +1,8 @@
-﻿namespace ExControls.Providers;
+﻿// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable UnusedMember.Global
+namespace ExControls.Providers;
 
 /// <summary>
 ///     Provides backward-forward capability.
@@ -216,14 +220,14 @@ public class BackwardForwardProvider : Component
     /// to update the Text property of your "Back" menu item if
     /// desired. For example, the text value for a command might be "Draw Circle".
     /// </summary>
-    public string GetBackwardText() => CanBackward ? NextBackwardCommand.CommandName : null;
+    public string GetBackwardText() => CanBackward ? NextBackwardCommand.CommandName : "";
 
     /// <summary>
     ///     Get the text value of the next forward command. Use this method
     /// to update the Text property of your "Forward" menu item if desired.
     /// For example, the text value for a command might be "Draw Line".
     /// </summary>
-    public string GetForwardText() => CanForward ? NextForwardCommand.CommandName : null;
+    public string GetForwardText() => CanForward ? NextForwardCommand.CommandName : "";
 
     /// <summary>
     /// 

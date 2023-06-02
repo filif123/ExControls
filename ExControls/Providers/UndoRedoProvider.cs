@@ -2,6 +2,7 @@
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 namespace ExControls.Providers;
 
 /// <summary>
@@ -49,15 +50,15 @@ public class UndoRedoManager : Component
     public bool CanRedo => _redoStack.Count > 0;
 
     /// <summary>
-    ///     Get the next (or newest) undo command. This is like a "Peek"
-    /// method. It does not remove the command from the undo list.
+    ///     Get the next (or newest) undo command. This is like a "Peek" method.
+    /// It does not remove the command from the undo list.
     /// </summary>
     [Browsable(false)]
     public IUndoRedoCommand NextUndoCommand => _undoStack.Peek().cmd;
 
     /// <summary>
-    ///     Get the next redo command. This is like a "Peek"
-    /// method. It does not remove the command from the redo stack.
+    ///     Get the next redo command. This is like a "Peek" method.
+    /// It does not remove the command from the redo stack.
     /// </summary>
     [Browsable(false)]
     public IUndoRedoCommand NextRedoCommand => _redoStack.Peek().cmd;
@@ -224,7 +225,7 @@ public class UndoRedoManager : Component
     /// "Draw Circle". This allows you to change your menu item Text
     /// property to "Undo Draw Circle".
     /// </summary>
-    public string GetUndoText() => CanUndo ? NextUndoCommand.CommandName : null;
+    public string GetUndoText() => CanUndo ? NextUndoCommand.CommandName : "";
 
     /// <summary>
     ///     Get the text value of the next redo command. Use this method
@@ -232,25 +233,19 @@ public class UndoRedoManager : Component
     /// For example, the text value for a command might be "Draw Line".
     /// This allows you to change your menu item text to "Redo Draw Line".
     /// </summary>
-    public string GetRedoText() => CanRedo ? NextRedoCommand.CommandName : null;
+    public string GetRedoText() => CanRedo ? NextRedoCommand.CommandName : "";
 
     /// <summary>
-    /// 
+    ///     Gets current history of undo commands.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<IUndoRedoCommand> GetUndoHistory()
-    {
-        return _undoStack.Select(x => x.cmd);
-    }
+    public IEnumerable<IUndoRedoCommand> GetUndoHistory() => _undoStack.Select(x => x.cmd);
 
     /// <summary>
-    /// 
+    ///     Gets current history of redo commands.
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<IUndoRedoCommand> GetRedoHistory()
-    {
-        return _redoStack.Select(x => x.cmd);
-    }
+    public IEnumerable<IUndoRedoCommand> GetRedoHistory() => _redoStack.Select(x => x.cmd);
 
     /// <summary>
     /// 

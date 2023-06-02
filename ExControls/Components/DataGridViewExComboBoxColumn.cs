@@ -55,7 +55,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     ///     Default style of the Control
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
     [Description("Default style of the Control.")]
     public bool DefaultStyle
@@ -80,7 +80,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     ///     Color of the selected row in drop down menu
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
     [Description("Color of the selected row in drop down menu.")]
     public Color DropDownSelectedBackColor
@@ -105,7 +105,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     ///     Background color of the drop down menu.
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "White")]
     [Description("Background color of the drop down menu.")]
     public Color DropDownBackColor
@@ -130,7 +130,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     ///     Normal style of the Control (when is inactive).
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [Description("Normal style of the Control (when is inactive).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public ExComboBoxStyle StyleNormal
@@ -153,7 +153,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     ///     Highlight style of the Control (when mouse is over control).
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [Description("Highlight style of the Control (when mouse is over control).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public ExComboBoxStyle StyleHighlight
@@ -176,7 +176,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     ///     Selected style of the Control (when control is selected).
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [Description("Selected style of the Control (when control is selected).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public ExComboBoxStyle StyleSelected
@@ -199,7 +199,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     ///     Disabled style of the Control (when control is not Enabled).
     /// </summary>
     [Browsable(true)]
-    [ExCategory("Appearance")]
+    [ExCategory(CategoryType.Appearance)]
     [Description("Disabled style of the Control (when control is not Enabled).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public ExComboBoxStyle StyleDisabled
@@ -424,8 +424,8 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
 [ToolboxItem(false)]
 public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEditingControl
 {
-    private DataGridView dataGridView;
-    private bool valueChanged;
+    private DataGridView _dataGridView;
+    private bool _valueChanged;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="T:System.Windows.Forms.DataGridViewComboBoxEditingControl" />
@@ -444,8 +444,8 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
     /// </returns>
     public virtual DataGridView EditingControlDataGridView
     {
-        get => dataGridView;
-        set => dataGridView = value;
+        get => _dataGridView;
+        set => _dataGridView = value;
     }
 
     /// <summary>Gets or sets the formatted representation of the current value of the control.</summary>
@@ -474,8 +474,8 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
     /// </returns>
     public virtual bool EditingControlValueChanged
     {
-        get => valueChanged;
-        set => valueChanged = value;
+        get => _valueChanged;
+        set => _valueChanged = value;
     }
 
     /// <summary>Gets the cursor used during editing.</summary>
@@ -506,7 +506,7 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
         {
             var color = Color.FromArgb(byte.MaxValue, dataGridViewCellStyle.BackColor);
             BackColor = color;
-            dataGridView.EditingPanel.BackColor = color;
+            _dataGridView.EditingPanel.BackColor = color;
         }
         else
         {
@@ -568,8 +568,8 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
 
     private void NotifyDataGridViewOfValueChange()
     {
-        valueChanged = true;
-        dataGridView.NotifyCurrentCellDirty(true);
+        _valueChanged = true;
+        _dataGridView.NotifyCurrentCellDirty(true);
     }
 
     /// <summary>Raises the <see cref="E:System.Windows.Forms.ComboBox.SelectedIndexChanged" /> event.</summary>

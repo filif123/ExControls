@@ -1,5 +1,4 @@
 ﻿using System.Drawing.Design;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using ExControls.Controls;
 // ReSharper disable UnusedMember.Global
@@ -264,7 +263,7 @@ public class ExComboBox : ComboBox, IExControl
     /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
     protected override void OnHandleCreated(EventArgs e)
     {
-        if (!DefaultStyle) Win32.SetWindowTheme(Handle, "", "");
+        this.SetTheme(_defaultStyle ? WindowsTheme.Default : WindowsTheme.None);
         var info = GetComboboxInfo();
         _editControl = new ComboBoxEdit(this);
         _editControl.AssignHandle(info.hwndEdit);
@@ -293,23 +292,25 @@ public class ExComboBox : ComboBox, IExControl
     {
         base.WndProc(ref m);
 
-        if (!DefaultStyle)
-            switch ((Win32.WM)m.Msg)
+        if (DefaultStyle) 
+            return;
+
+        switch (m.GetMsg())
+        {
+            case Win32.WM.PAINT:
             {
-                case Win32.WM.PAINT:
-                {
-                    using var g = Graphics.FromHwnd(m.HWnd);
-                    OnPaint(new PaintEventArgs(g, ClientRectangle));
-                    break;
-                }
-                case Win32.WM.CTLCOLORLISTBOX:
-                {
-                    _listbrush.Dispose();
-                    _listbrush = new SolidBrush(DropDownBackColor);
-                    m.Result = GetHbrush(_listbrush);
-                    break;
-                }
+                using var g = Graphics.FromHwnd(m.HWnd);
+                OnPaint(new PaintEventArgs(g, ClientRectangle));
+                break;
             }
+            case Win32.WM.CTLCOLORLISTBOX:
+            {
+                _listbrush.Dispose();
+                _listbrush = new SolidBrush(DropDownBackColor);
+                m.Result = _listbrush.GetHbrush();
+                break;
+            }
+        }
     }
 
     private Win32.COMBOBOXINFO GetComboboxInfo()
@@ -336,14 +337,6 @@ public class ExComboBox : ComboBox, IExControl
 
     [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
     private static extern IntPtr SendMessageCombo(IntPtr hWnd, int msg, IntPtr wp, out Win32.COMBOBOXINFO lp);
-
-    private static IntPtr GetHbrush(Brush b)
-    {
-        var field = typeof(Brush).GetField("nativeBrush", BindingFlags.NonPublic | BindingFlags.Instance);
-        if (field is not null)
-            return (IntPtr) field.GetValue(b)!;
-        return IntPtr.Zero;
-    }
 
     /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)

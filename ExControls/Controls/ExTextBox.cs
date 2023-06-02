@@ -49,7 +49,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border
+    ///     Color of the TextBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -68,7 +68,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border when it is disabled
+    ///     Color of the TextBox's border when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -87,7 +87,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Background color of the TextBox's when it is disabled
+    ///     Background color of the TextBox's when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -106,7 +106,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the TextBox's when it is disabled
+    ///     Foreground color of the TextBox's when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -125,7 +125,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the border of TextBox when mouse is over the Control
+    ///     Color of the border of TextBox when mouse is over the Control.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -144,7 +144,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Width of the TextBox's border
+    ///     Width of the TextBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -163,7 +163,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Hint text for TextBox
+    ///     Hint text for TextBox.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -181,7 +181,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     TextBox hint foreground color
+    ///     TextBox hint foreground color.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -218,7 +218,6 @@ public class ExTextBox : TextBox, IExControl
                 return;
             _defaultStyle = value;
             BorderStyle = value ? BorderStyle.Fixed3D : BorderStyle.FixedSingle;
-            Invalidate();
         }
     }
 
@@ -280,7 +279,7 @@ public class ExTextBox : TextBox, IExControl
         var rgn = Win32.CreateRectRgn(0, 0, Width, Height);
         var border = _hover || _selected ? HighlightColor : BorderColor;
         if (!Enabled) border = DisabledBorderColor;
-        var brush = Win32.CreateSolidBrush((uint)BGRtoInt(border.R, border.G, border.B));
+        var brush = Win32.CreateSolidBrush(Win32.RGBtoInt(border));
 
         Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness), RGN_DIFF);
 
@@ -309,12 +308,6 @@ public class ExTextBox : TextBox, IExControl
             HorizontalAlignment.Right => TextFormatFlags.VerticalCenter | TextFormatFlags.Right,
             _ => TextFormatFlags.VerticalCenter | TextFormatFlags.Left
         };
-    }
-
-    // ReSharper disable once InconsistentNaming
-    private static int BGRtoInt(int r, int g, int b)
-    {
-        return (r << 0) | (g << 8) | (b << 16);
     }
 
     /// <inheritdoc />
