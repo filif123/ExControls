@@ -5,7 +5,7 @@ namespace ExControls;
 /// <summary>
 /// 
 /// </summary>
-public static class ControlExtentions
+public static class ControlExtensions
 {
     /// <summary>
     /// 

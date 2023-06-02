@@ -5,7 +5,7 @@ namespace ExControls;
 /// <summary>
 /// 
 /// </summary>
-public static class GeneralExtentions
+public static class GeneralExtensions
 {
     /// <summary>
     ///     Converts collection to <see cref="ExBindingList{TSource}"/>.
