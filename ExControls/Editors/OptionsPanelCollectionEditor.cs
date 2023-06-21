@@ -1,6 +1,4 @@
-﻿#if NETFRAMEWORK
-using System.ComponentModel.Design;
-#else
+﻿#if !NETFRAMEWORK
 using Microsoft.DotNet.DesignTools.Editors;
 #endif
 using System.ComponentModel.Design;

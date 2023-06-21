@@ -26,7 +26,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     private bool _hover;
     private bool _selected;
 
-    private Win32.DATETIMEPICKERINFO _dtpInfo;
+    //private Win32.DATETIMEPICKERINFO _dtpInfo;
     private DateTimePickerEdit _edit;
 
     /// <inheritdoc />

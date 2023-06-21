@@ -13,12 +13,12 @@ namespace ExControls;
 /// <summary>
 /// WORK IN PROGRESS
 /// </summary>
-[Obsolete("Do not use in production")]
+//[Obsolete("Do not use in production")]
 [Designer(typeof(ExFormDesigner))]
 internal partial class ExFormTest
 {
     private bool _customMenu;
-    private bool _maximizing;
+    //private bool _maximizing;
 
     private Color _titleBarBackColor;
     private Color _titleBarForeColor;

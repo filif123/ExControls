@@ -420,7 +420,9 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
 
 /// <summary>Represents the hosted combo box control in a <see cref="T:System.Windows.Forms.DataGridViewComboBoxCell" />.</summary>
 [ComVisible(true)]
+#if NETFRAMEWORK
 [ClassInterface(ClassInterfaceType.AutoDispatch)]
+#endif
 [ToolboxItem(false)]
 public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEditingControl
 {

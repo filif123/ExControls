@@ -36,7 +36,7 @@ internal class DesignerParentControlBase<T> : ParentControlDesigner where T : Co
         }
     }
 
-//#if NETFRAMEWORK
+
     private ISelectionService _selectionService;
 
     /// <summary>
@@ -45,8 +45,11 @@ internal class DesignerParentControlBase<T> : ParentControlDesigner where T : Co
     /// <value></value>
     /// <returns></returns>
     /// <remarks></remarks>
+#if NETFRAMEWORK
     public ISelectionService SelectionService => _selectionService ??= (ISelectionService)GetService(typeof(ISelectionService));
-//#endif
+#else
+    public new ISelectionService SelectionService => _selectionService ??= (ISelectionService)GetService(typeof(ISelectionService));
+#endif
 
     /// <summary>
     /// Creates and returns the IDesignerHost service.

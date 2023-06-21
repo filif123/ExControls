@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.Design;
-#if NETFRAMEWORK
-using System.ComponentModel.Design;
-#else
+#if !NETFRAMEWORK
 using Microsoft.DotNet.DesignTools.Designers.Actions;
 #endif
 

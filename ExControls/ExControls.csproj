@@ -15,6 +15,9 @@
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
+	<PropertyGroup>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
 	<ItemGroup>
 		<Compile Update="Controls\ExButton.cs" />
 		<Compile Update="Controls\ExColorSelector.cs" />
@@ -51,6 +54,7 @@
 		<Compile Update="Controls\ExTextBox.cs" />
 		<Compile Update="Controls\ExToolStripComboBox.cs" />
 		<Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+		<None Include="README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="Controls\ExLineSeparator.bmp" />
@@ -66,7 +70,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
 		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.WinForms.Designer.SDK" Version="1.1.0-prerelease-preview3.22076.5" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net48'">
