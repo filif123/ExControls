@@ -54,7 +54,7 @@
 		<Compile Update="Controls\ExTextBox.cs" />
 		<Compile Update="Controls\ExToolStripComboBox.cs" />
 		<Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
-		<None Include="README.md" Pack="true" PackagePath="\"/>
+		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="Controls\ExLineSeparator.bmp" />
@@ -68,6 +68,9 @@
 			if exist "$(TargetPath)" if not exist "$(TargetPath).locked" move "$(TargetPath)" "$(TargetPath).locked"
 		</PreBuildEvent>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>ExControls</Title>
+		<PackageProjectUrl>https://github.com/filif123/ExControls</PackageProjectUrl>
+		<Description>Extended controls for Windows Forms.</Description>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
