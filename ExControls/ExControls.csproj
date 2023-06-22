@@ -71,6 +71,7 @@
 		<Title>ExControls</Title>
 		<PackageProjectUrl>https://github.com/filif123/ExControls</PackageProjectUrl>
 		<Description>Extended controls for Windows Forms.</Description>
+		<PackageTags>WinForms;Windows Forms</PackageTags>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
