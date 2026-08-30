@@ -52,12 +52,12 @@ namespace ExControls.Test
             this.exOptionsView1.HeaderNodeNameFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.exOptionsView1.HeaderNodeNameForeColor = System.Drawing.SystemColors.ControlText;
             this.exOptionsView1.LinkToChildrenForeColor = System.Drawing.Color.Empty;
-            this.exOptionsView1.Location = new System.Drawing.Point(1, 31);
+            this.exOptionsView1.Location = new System.Drawing.Point(0, 0);
             this.exOptionsView1.Name = "exOptionsView1";
             this.exOptionsView1.Panels.Add(this.exOptionsPanel1);
             this.exOptionsView1.Panels.Add(this.exOptionsPanel2);
             this.exOptionsView1.Panels.Add(this.exOptionsPanel3);
-            this.exOptionsView1.Size = new System.Drawing.Size(684, 456);
+            this.exOptionsView1.Size = new System.Drawing.Size(686, 488);
             this.exOptionsView1.TabIndex = 1;
             // 
             // exOptionsView1.ToolStripMenu
@@ -66,7 +66,7 @@ namespace ExControls.Test
             this.exOptionsView1.ToolStripMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.exOptionsView1.ToolStripMenu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.exOptionsView1.ToolStripMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.exOptionsView1.ToolStripMenu.Location = new System.Drawing.Point(354, 0);
+            this.exOptionsView1.ToolStripMenu.Location = new System.Drawing.Point(355, 0);
             this.exOptionsView1.ToolStripMenu.Name = "ToolStripMenu";
             this.exOptionsView1.ToolStripMenu.Size = new System.Drawing.Size(102, 25);
             this.exOptionsView1.ToolStripMenu.TabIndex = 1;
@@ -158,14 +158,14 @@ namespace ExControls.Test
             this.exPropertyGrid1.InnerToolStrip.Location = new System.Drawing.Point(0, 1);
             this.exPropertyGrid1.InnerToolStrip.Name = "InnerToolStrip";
             this.exPropertyGrid1.InnerToolStrip.Padding = new System.Windows.Forms.Padding(2, 0, 1, 0);
-            this.exPropertyGrid1.InnerToolStrip.Size = new System.Drawing.Size(450, 25);
+            this.exPropertyGrid1.InnerToolStrip.Size = new System.Drawing.Size(451, 25);
             this.exPropertyGrid1.InnerToolStrip.TabIndex = 1;
             this.exPropertyGrid1.InnerToolStrip.TabStop = true;
             this.exPropertyGrid1.InnerToolStrip.Text = "PropertyGridToolBar";
             this.exPropertyGrid1.Location = new System.Drawing.Point(0, 0);
             this.exPropertyGrid1.Name = "exPropertyGrid1";
             this.exPropertyGrid1.SelectedObject = this.exPropertyGrid1;
-            this.exPropertyGrid1.Size = new System.Drawing.Size(450, 425);
+            this.exPropertyGrid1.Size = new System.Drawing.Size(451, 457);
             this.exPropertyGrid1.TabIndex = 0;
             // 
             // exOptionsPanel3
@@ -179,12 +179,10 @@ namespace ExControls.Test
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(686, 488);
             this.Controls.Add(this.exOptionsView1);
             this.Name = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.Controls.SetChildIndex(this.exOptionsView1, 0);
             ((System.ComponentModel.ISupportInitialize)(this.exOptionsView1)).EndInit();
             this.exOptionsPanel2.ResumeLayout(false);
             this.exPropertyGrid1.ResumeLayout(false);

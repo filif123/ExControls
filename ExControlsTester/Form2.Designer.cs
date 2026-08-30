@@ -32,6 +32,7 @@
             this.exDateTimePicker1 = new ExControls.ExDateTimePicker();
             this.exTextBox1 = new ExControls.ExTextBox();
             this.exListBox1 = new ExControls.ExListBox();
+            this.undoRedoActionChooser1 = new ExControls.UndoRedoActionChooser();
             this.SuspendLayout();
             // 
             // exButton1
@@ -99,15 +100,24 @@
             this.exListBox1.Size = new System.Drawing.Size(120, 93);
             this.exListBox1.TabIndex = 3;
             // 
+            // undoRedoActionChooser1
+            // 
+            this.undoRedoActionChooser1.AutoSize = true;
+            this.undoRedoActionChooser1.Location = new System.Drawing.Point(348, 132);
+            this.undoRedoActionChooser1.Name = "undoRedoActionChooser1";
+            this.undoRedoActionChooser1.Size = new System.Drawing.Size(193, 24);
+            this.undoRedoActionChooser1.TabIndex = 4;
+            // 
             // Form2
             // 
             this.ClientSize = new System.Drawing.Size(714, 399);
+            this.Controls.Add(this.undoRedoActionChooser1);
             this.Controls.Add(this.exListBox1);
             this.Controls.Add(this.exTextBox1);
             this.Controls.Add(this.exDateTimePicker1);
             this.Controls.Add(this.exButton1);
-            this.CornersType = ExControls.FormCornersType.SmallRound;
-            this.FormStyle = ExControls.FormStyle.Mica;
+            this.CornersType = ExControls.FormCornersType.Round;
+            this.FormStyle = ExControls.FormStyle.Acrylic;
             this.Name = "Form2";
             this.Text = "hhh";
             this.TitleBarBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
@@ -125,5 +135,6 @@
         private ExDateTimePicker exDateTimePicker1;
         private ExTextBox exTextBox1;
         private ExListBox exListBox1;
+        private UndoRedoActionChooser undoRedoActionChooser1;
     }
 }
