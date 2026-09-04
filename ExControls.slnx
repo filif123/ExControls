@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ExControls/ExControls.csproj" />
+  <Project Path="ExControlsTester/ExControlsTester.csproj" />
+</Solution>
