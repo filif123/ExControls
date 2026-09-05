@@ -1,12 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 	<PropertyGroup>
-		<TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+		<TargetFrameworks>net48;net8.0-windows;net10.0-windows</TargetFrameworks>
 		<OutputType>Library</OutputType>
-		<Deterministic>false</Deterministic>
 		<LangVersion>latest</LangVersion>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+		<!-- WFO1000 (chýbajúci DesignerSerializationVisibility) je na net10.0-windows analyzer default=error
+		     (na net8.0-windows/net48 je to len info/warning). Ide o ~60 vlastností naprieč knižnicou -
+		     dočasne potlačené, kým sa TreatWarningsAsErrors politika nedorieši (pozri MIGRATION_PROGRESS.md). -->
+		<NoWarn>$(NoWarn);WFO1000</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<DocumentationFile>bin\Debug\ExControls.xml</DocumentationFile>
@@ -74,13 +78,14 @@
 		<PackageTags>WinForms;Windows Forms</PackageTags>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
-		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.WinForms.Designer.SDK" Version="1.1.0-prerelease-preview3.22076.5" />
+		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.Windows.Compatibility" Version="10.0.11" />
+		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.WinForms.Designer.SDK" Version="1.6.0" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net48'">
 		<Reference Include="System.Design">
 		  <EmbedInteropTypes></EmbedInteropTypes>
 		</Reference>
 		<Reference Include="System.Drawing.Design" />
+		<PackageReference Include="System.Resources.Extensions" Version="9.0.0" />
 	</ItemGroup>
 </Project>

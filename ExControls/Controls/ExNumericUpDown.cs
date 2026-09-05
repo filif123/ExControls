@@ -329,7 +329,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         private bool _doubleClickFired;
         private ButtonId _mouseOver;
         private ButtonId _pushed;
-        private Timer _timer;
+        private System.Windows.Forms.Timer _timer;
         private int _timerInterval;
         private UpDownEventHandler _upDownEventHandler;
 
@@ -552,7 +552,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         {
             if (_timer == null)
             {
-                _timer = new Timer();
+                _timer = new System.Windows.Forms.Timer();
                 _timer.Tick += TimerHandler;
             }
 

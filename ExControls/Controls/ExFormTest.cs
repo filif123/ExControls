@@ -14,7 +14,7 @@ namespace ExControls;
 /// WORK IN PROGRESS
 /// </summary>
 //[Obsolete("Do not use in production")]
-[Designer(typeof(ExFormDesigner))]
+[Designer("ExControls.Designers.ExFormDesigner, ExControls")]
 internal partial class ExFormTest
 {
     private bool _customMenu;

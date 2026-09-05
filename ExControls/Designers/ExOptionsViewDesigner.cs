@@ -136,6 +136,17 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
         ControlHost.SelectedPanel = (ExOptionsPanel)panel;
         SelectHost();
     }
+    
+    internal void OnSelectPanel(ExOptionsPanel panel)
+    {
+        if (ReferenceEquals(ControlHost.SelectedPanel, panel))
+            return;
+
+        var oldValue = ControlHost.SelectedPanel;
+        RaiseComponentChanging(TypeDescriptor.GetProperties(ControlHost)["Panels"]);
+        ControlHost.SelectedPanel = panel;
+        RaiseComponentChanged(TypeDescriptor.GetProperties(ControlHost)["Panels"], oldValue, panel);
+    }
 
     private void OnRemovePanel()
     {
@@ -182,7 +193,7 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
             get => Host.SelectedPanel;
             set
             {
-                SetProperty(nameof(SelectedPanel), value);
+                Designer.OnSelectPanel(value);
                 DesignerActionService.Refresh(Host);
             }
         }

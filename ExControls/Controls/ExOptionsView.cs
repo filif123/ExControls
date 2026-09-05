@@ -12,7 +12,7 @@ namespace ExControls;
 /// <summary>
 /// 
 /// </summary>
-[Designer(typeof(ExOptionsViewDesigner))]
+[Designer("ExControls.Designers.ExOptionsViewDesigner, ExControls")]
 [DefaultEvent("SelectedPanelChanged")]
 [ToolboxBitmap(typeof(ExOptionsView), "Controls\\ExOptionsView.bmp")]
 public partial class ExOptionsView : UserControl, ISupportInitialize

@@ -6,7 +6,7 @@ namespace ExControls;
 /// <summary>
 /// ExColorSelector control.
 /// </summary>
-[Designer(typeof(ExColorSelectorDesigner))]
+[Designer("ExControls.Designers.ExColorSelectorDesigner, ExControls")]
 [DefaultProperty(nameof(SelectedColor))]
 [DefaultEvent(nameof(SelectedColorChanged))]
 public partial class ExColorSelector : UserControl

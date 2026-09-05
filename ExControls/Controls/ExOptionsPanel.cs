@@ -10,7 +10,7 @@ namespace ExControls;
 ///     Represents a panel in the ExOptionsView containing one set of options.
 /// </summary>
 [ToolboxItem(false)]
-[Designer(typeof(ExOptionsPanelDesigner))]
+[Designer("ExControls.Designers.ExOptionsPanelDesigner, ExControls")]
 [TypeConverter(typeof(ExOptionsPanelConverter))]
 public class ExOptionsPanel : Panel
 {

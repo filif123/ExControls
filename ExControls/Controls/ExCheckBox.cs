@@ -12,7 +12,7 @@ namespace ExControls;
 ///     Expanded CheckBox Control
 /// </summary>
 [ToolboxBitmap(typeof(CheckBox), "CheckBox.bmp")]
-[Designer(typeof(ExCheckBoxDesigner))]
+[Designer("ExControls.Designers.ExCheckBoxDesigner, ExControls")]
 public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
 {
     private const int BoxSize = 16;

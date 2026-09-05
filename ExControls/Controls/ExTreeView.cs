@@ -10,7 +10,7 @@ namespace ExControls;
 /// <summary>
 ///  Expanded TreeView control.
 /// </summary>
-[Designer(typeof(ExTreeViewDesigner))]
+[Designer("ExControls.Designers.ExTreeViewDesigner, ExControls")]
 [ToolboxBitmap(typeof(TreeView), "TreeView.bmp")]
 [DefaultProperty(nameof(Nodes))]
 [DefaultEvent(nameof(AfterSelect))]

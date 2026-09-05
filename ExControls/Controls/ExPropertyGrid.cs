@@ -12,7 +12,7 @@ namespace ExControls;
 ///     Extended PropertyGrid.
 /// Part of this code is from: https://www.codeproject.com/Articles/13342/Filtering-properties-in-a-PropertyGrid
 /// </summary>
-[Designer(typeof(ExPropertyGridDesigner))]
+[Designer("ExControls.Designers.ExPropertyGridDesigner, ExControls")]
 [ToolboxBitmap(typeof(PropertyGrid),"PropertyGrid.bmp")]
 public class ExPropertyGrid : PropertyGrid, ISearchable
 {

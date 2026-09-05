@@ -12,7 +12,7 @@ namespace ExControls;
 ///     LineSeparator Control
 /// </summary>
 [ToolboxBitmap(typeof(ExLineSeparator), "Controls\\ExLineSeparator.bmp")]
-[Designer(typeof(ExLineSeparatorDesigner))]
+[Designer("ExControls.Designers.ExLineSeparatorDesigner, ExControls")]
 public class ExLineSeparator : Control
 {
     private Color _lineColor;

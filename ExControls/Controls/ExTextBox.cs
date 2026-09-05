@@ -11,7 +11,7 @@ namespace ExControls;
 ///     Expanded TextBox Control
 /// </summary>
 [ToolboxBitmap(typeof(TextBox), "TextBox.bmp")]
-[Designer(typeof(ExTextBoxDesigner))]
+[Designer("ExControls.Designers.ExTextBoxDesigner, ExControls")]
 [DefaultProperty(nameof(Text))]
 [DefaultEvent(nameof(TextChanged))]
 public class ExTextBox : TextBox, IExControl

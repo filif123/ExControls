@@ -13,7 +13,7 @@ namespace ExControls;
 ///     Expanded GroupBox Control.
 /// </summary>
 [ToolboxBitmap(typeof(GroupBox), "GroupBox.bmp")]
-[Designer(typeof(ExGroupBoxDesigner))]
+[Designer("ExControls.Designers.ExGroupBoxDesigner, ExControls")]
 public class ExGroupBox : GroupBox, IExControl
 {
     private Color _borderColor;

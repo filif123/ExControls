@@ -10,7 +10,7 @@ namespace ExControls;
 /// <summary>
 /// WORK IN PROGRESS
 /// </summary>
-[Designer(typeof(TitleBarDesigner))]
+[Designer("ExControls.Designers.TitleBarDesigner, ExControls")]
 internal partial class TitleBar : UserControl
 {
     // ReSharper disable once InconsistentNaming
