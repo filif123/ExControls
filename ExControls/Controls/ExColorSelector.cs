@@ -1,4 +1,4 @@
-﻿using ExControls.Designers;
+﻿
 // ReSharper disable UnusedMember.Global
 
 namespace ExControls;

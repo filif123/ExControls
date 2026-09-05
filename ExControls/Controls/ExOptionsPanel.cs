@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Design;
 using System.Drawing.Design;
 using ExControls.Converters;
-using ExControls.Designers;
 using ExControls.Editors;
 
 namespace ExControls;

@@ -1,5 +1,4 @@
 ﻿using ExControls.Controls;
-using ExControls.Designers;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global

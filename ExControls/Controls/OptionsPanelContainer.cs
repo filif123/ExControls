@@ -1,6 +1,4 @@
-﻿using ExControls.Designers;
-
-namespace ExControls;
+﻿namespace ExControls;
 
 /// <summary>
 /// Represents a panel that can only accept OptionPanel controls and raises an event when such controls are added or removed.

@@ -1,5 +1,4 @@
 ﻿using System.Drawing.Drawing2D;
-using ExControls.Designers;
 
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable MemberCanBePrivate.Global

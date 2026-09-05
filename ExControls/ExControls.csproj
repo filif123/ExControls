@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net48;net8.0-windows;net10.0-windows</TargetFrameworks>
 		<OutputType>Library</OutputType>
-		<LangVersion>latest</LangVersion>
+		<LangVersion>default</LangVersion>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>

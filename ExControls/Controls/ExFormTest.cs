@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using ExControls.Designers;
+
 // ReSharper disable ConvertToAutoProperty
 
 // ReSharper disable MemberCanBeProtected.Global

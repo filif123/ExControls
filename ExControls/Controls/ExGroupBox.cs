@@ -1,6 +1,5 @@
 ﻿using System.Drawing.Drawing2D;
 using ExControls.Controls;
-using ExControls.Designers;
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global

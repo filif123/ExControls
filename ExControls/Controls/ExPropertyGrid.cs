@@ -3,7 +3,6 @@
 // ReSharper disable ConvertToAutoPropertyWhenPossible
 // ReSharper disable ClassNeverInstantiated.Global
 
-using ExControls.Designers;
 using ExControls.Properties;
 
 namespace ExControls;

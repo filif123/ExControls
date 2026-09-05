@@ -1,5 +1,5 @@
 ﻿using ExControls.Collections;
-using ExControls.Designers;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
