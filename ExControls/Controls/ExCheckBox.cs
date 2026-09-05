@@ -1,4 +1,4 @@
-﻿using ExControls.Controls;
+using ExControls.Controls;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -144,7 +144,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     /// <summary>Occurs when the <see cref="DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DefaultStyle property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -167,27 +167,27 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     /// <summary>Occurs when the <see cref="DisabledForeColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DisabledForeColor property changes.")]
-    public event EventHandler DisabledForeColorChanged;
+    public event EventHandler? DisabledForeColorChanged;
 
     /// <summary>Occurs when the <see cref="BorderColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler BorderColorChanged;
+    public event EventHandler? BorderColorChanged;
 
     /// <summary>Occurs when the <see cref="MarkColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the MarkColor property changes.")]
-    public event EventHandler MarkColorChanged;
+    public event EventHandler? MarkColorChanged;
 
     /// <summary>Occurs when the <see cref="BoxBackColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BoxBackColor property changes.")]
-    public event EventHandler BoxBackColorChanged;
+    public event EventHandler? BoxBackColorChanged;
 
     /// <summary>Occurs when the <see cref="HighlightColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the HighlightColor property changes.")]
-    public event EventHandler HighlightColorChanged;
+    public event EventHandler? HighlightColorChanged;
 
     /// <inheritdoc />
     protected override void OnCreateControl()

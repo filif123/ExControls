@@ -1,4 +1,4 @@
-﻿using System.Drawing.Design;
+using System.Drawing.Design;
 using System.Runtime.InteropServices;
 using ExControls.Controls;
 // ReSharper disable UnusedMember.Global
@@ -21,10 +21,9 @@ public class ExComboBox : ComboBox, IExControl
 
     private bool _hover;
     private bool _selected;
-    private bool _wasDropDown;
 
     private SolidBrush _listbrush;
-    private ComboBoxEdit _editControl;
+    private ComboBoxEdit? _editControl;
 
     /// <summary>
     ///     Constructor
@@ -201,11 +200,11 @@ public class ExComboBox : ComboBox, IExControl
             switch (value)
             {
                 case false when !DefaultStyle && DropDownStyle == ComboBoxStyle.DropDown:
-                    _wasDropDown = true;
+                    field = true;
                     DropDownStyle = ComboBoxStyle.DropDownList;
                     break;
-                case true when !DefaultStyle && _wasDropDown:
-                    _wasDropDown = false;
+                case true when !DefaultStyle && field:
+                    field = false;
                     DropDownStyle = ComboBoxStyle.DropDown;
                     break;
             }
@@ -222,7 +221,7 @@ public class ExComboBox : ComboBox, IExControl
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
 
     /// <inheritdoc />
@@ -247,20 +246,20 @@ public class ExComboBox : ComboBox, IExControl
     /// <summary>Occurs when the <see cref="DropDownSelectedRowBackColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DropDownSelectedRowBackColor property changes.")]
-    public event EventHandler DropDownSelectedRowBackColorChanged;
+    public event EventHandler? DropDownSelectedRowBackColorChanged;
 
     /// <summary>Occurs when the <see cref="DropDownBackColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DropDownBackColor property changes.")]
-    public event EventHandler DropDownBackColorChanged;
+    public event EventHandler? DropDownBackColorChanged;
 
-    private void StyleOnPropertyChanged(object sender, ExPropertyChangedEventArgs e)
+    private void StyleOnPropertyChanged(object? sender, ExPropertyChangedEventArgs e)
     {
         if (!_drawing) Invalidate();
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleCreated" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.HandleCreated" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnHandleCreated(EventArgs e)
     {
         this.SetTheme(_defaultStyle ? WindowsTheme.Default : WindowsTheme.None);
@@ -270,17 +269,17 @@ public class ExComboBox : ComboBox, IExControl
         base.OnHandleCreated(e);
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleDestroyed" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.HandleDestroyed" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnHandleDestroyed(EventArgs e)
     {
         _listbrush.Dispose();
-        _editControl.ReleaseHandle();
+        _editControl?.ReleaseHandle();
         base.OnHandleDestroyed(e);
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.ComboBox.SelectedIndexChanged" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.ComboBox.SelectedIndexChanged" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data. </param>
     protected override void OnSelectedIndexChanged(EventArgs e)
     {
         base.OnSelectedIndexChanged(e);
@@ -365,7 +364,7 @@ public class ExComboBox : ComboBox, IExControl
 
         if (!Enabled)
         {
-            StyleDisabled.BackColor = back = StyleDisabled.BackColor ?? Parent.BackColor;
+            StyleDisabled.BackColor = back = StyleDisabled.BackColor ?? Parent?.BackColor ?? BackColor;
             StyleDisabled.ForeColor = fore = StyleDisabled.ForeColor ?? SystemColors.GrayText;
             if (StyleDisabled.BorderColor.HasValue) border = StyleDisabled.BorderColor.Value;
             StyleDisabled.ArrowColor = arrow = StyleDisabled.ArrowColor ?? SystemColors.GrayText;
@@ -470,11 +469,11 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseEnter(EventArgs eventargs)
+    protected override void OnMouseEnter(EventArgs e)
     {
         if (DefaultStyle)
         {
-            base.OnMouseEnter(eventargs);
+            base.OnMouseEnter(e);
             return;
         }
 
@@ -486,11 +485,11 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseLeave(EventArgs eventargs)
+    protected override void OnMouseLeave(EventArgs e)
     {
         if (DefaultStyle)
         {
-            base.OnMouseLeave(eventargs);
+            base.OnMouseLeave(e);
             return;
         }
 
@@ -624,7 +623,6 @@ public class ExComboBoxStyle : ExStyleOld
     private Color? _arrowColor;
     private Color? _buttonBackColor;
     private Color? _buttonBorderColor;
-    private bool? _buttonRenderFirst;
 
     /// <inheritdoc />
     public ExComboBoxStyle()
@@ -720,12 +718,12 @@ public class ExComboBoxStyle : ExStyleOld
     [ExDescription("Gets or sets whether DropDown button has to be rendered first.")]
     public bool? ButtonRenderFirst
     {
-        get => _buttonRenderFirst;
+        get;
         set
         {
-            if (_buttonRenderFirst == value)
+            if (field == value)
                 return;
-            _buttonRenderFirst = value;
+            field = value;
             OnPropertyChanged(new ExPropertyChangedEventArgs(nameof(ButtonRenderFirst), value));
         }
     }

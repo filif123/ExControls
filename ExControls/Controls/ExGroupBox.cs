@@ -1,4 +1,4 @@
-﻿using System.Drawing.Drawing2D;
+using System.Drawing.Drawing2D;
 using ExControls.Controls;
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
@@ -16,7 +16,6 @@ namespace ExControls;
 public class ExGroupBox : GroupBox, IExControl
 {
     private Color _borderColor;
-    private DashStyle _borderStyle;
     private int _borderThickness;
     private bool _defaultStyle;
     private Color _disabledForeColor;
@@ -102,12 +101,12 @@ public class ExGroupBox : GroupBox, IExControl
     [ExDescription("Style of the GroupBox's border.")]
     public DashStyle BorderStyle
     {
-        get => _borderStyle;
+        get;
         set
         {
-            if (_borderStyle == value)
+            if (field == value)
                 return;
-            _borderStyle = value;
+            field = value;
             Invalidate();
         }
     }
@@ -115,7 +114,7 @@ public class ExGroupBox : GroupBox, IExControl
     /// <summary>Occurs when the <see cref="DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DefaultStyle property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -138,27 +137,27 @@ public class ExGroupBox : GroupBox, IExControl
     /// <summary>Occurs when the <see cref="BorderColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler BorderColorChanged;
+    public event EventHandler? BorderColorChanged;
 
     /// <summary>Occurs when the <see cref="DisabledForeColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DisabledForeColor property changes.")]
-    public event EventHandler DisabledForeColorChanged;
+    public event EventHandler? DisabledForeColorChanged;
 
     /// <summary>Occurs when the <see cref="BorderThickness" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderThickness property changes.")]
-    public event EventHandler BorderThicknessChanged;
+    public event EventHandler? BorderThicknessChanged;
 
     /// <summary>Occurs when the <see cref="BorderStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderStyle property changes.")]
-    public event EventHandler BorderStyleChanged;
+    public event EventHandler? BorderStyleChanged;
 
     /// <summary>Occurs when the Line is drawing.</summary>
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Occurs when the Line is drawing.")]
-    public event EventHandler<LinePenEventArgs> LineDrawing;
+    public event EventHandler<LinePenEventArgs>? LineDrawing;
 
     /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)
@@ -170,7 +169,8 @@ public class ExGroupBox : GroupBox, IExControl
         }
 
         using Brush borderBrush = new SolidBrush(BorderColor);
-        using var borderPen = new Pen(borderBrush, BorderThickness) { DashStyle = BorderStyle };
+        using var borderPen = new Pen(borderBrush, BorderThickness);
+        borderPen.DashStyle = BorderStyle;
         SizeF strSize = TextRenderer.MeasureText(e.Graphics, Text, Font);
         var rect = new Rectangle(ClientRectangle.X, ClientRectangle.Y + (int)(strSize.Height / 2), ClientRectangle.Width - 1,
             ClientRectangle.Height - (int)(strSize.Height / 2) - 1);

@@ -7,7 +7,7 @@ namespace ExControls.Designers;
 
 internal class ExGroupBoxDesigner : DesignerParentControlBase<ExGroupBox>
 {
-    private DesignerActionListCollection _actionLists;
+    private DesignerActionListCollection? _actionLists;
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExGroupBoxActionList(ControlHost) };
 
     private sealed class ExGroupBoxActionList : DesignerActionListBase<ExGroupBox>
@@ -49,11 +49,13 @@ internal class ExGroupBoxDesigner : DesignerParentControlBase<ExGroupBox>
 
         public override DesignerActionItemCollection GetSortedActionItems()
         {
-            var items = new DesignerActionItemCollection();
-            items.Add(new DesignerActionHeaderItem("Basic"));
-            items.Add(new DesignerActionPropertyItem(nameof(Text), "Header text:", "Basic"));
-            items.Add(new DesignerActionPropertyItem(nameof(DefaultStyle), "Default style", "Basic"));
-            items.Add(new DesignerActionPropertyItem(nameof(Dock), "Dock:", string.Empty));
+            var items = new DesignerActionItemCollection
+            {
+                new DesignerActionHeaderItem("Basic"),
+                new DesignerActionPropertyItem(nameof(Text), "Header text:", "Basic"),
+                new DesignerActionPropertyItem(nameof(DefaultStyle), "Default style", "Basic"),
+                new DesignerActionPropertyItem(nameof(Dock), "Dock:", string.Empty)
+            };
             return items;
         }
     }

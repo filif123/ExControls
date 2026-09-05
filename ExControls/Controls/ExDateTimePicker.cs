@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using ExControls.Controls;
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
@@ -13,13 +13,13 @@ namespace ExControls;
 [ToolboxBitmap(typeof(DateTimePicker), "DateTimePicker.bmp")]
 public class ExDateTimePicker : DateTimePicker, IExControl
 {
-    private const int DTM_FIRST = 0x1000;
-    private const int DTM_GETDATETIMEPICKERINFO = DTM_FIRST + 14;
+    private const int DtmFirst = 0x1000;
+    private const int DtmGetDateTimePickerInfo = DtmFirst + 14;
+    
     private Color _arrowColor;
     private Color _backColor;
     private Color _borderColor;
     private bool _defaultStyle;
-    private Color _disabledBackColor;
     private Color _foreColor;
     private Color _highlightColor;
 
@@ -27,7 +27,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     private bool _selected;
 
     //private Win32.DATETIMEPICKERINFO _dtpInfo;
-    private DateTimePickerEdit _edit;
+    private DateTimePickerEdit? _edit;
 
     /// <inheritdoc />
     public ExDateTimePicker()
@@ -121,12 +121,12 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     [ExDescription("Background color of the TextBox's when it is disabled.")]
     public Color DisabledBackColor
     {
-        get => _disabledBackColor;
+        get;
         set
         {
-            if (_disabledBackColor == value)
+            if (field == value)
                 return;
-            _disabledBackColor = value;
+            field = value;
             Invalidate();
         }
     }
@@ -153,7 +153,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DefaultStyle property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -187,16 +187,16 @@ public class ExDateTimePicker : DateTimePicker, IExControl
         }
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleCreated" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.HandleCreated" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data. </param>
     protected override void OnHandleCreated(EventArgs e)
     {
         this.SetTheme(_defaultStyle ? WindowsTheme.Default : WindowsTheme.None);
         base.OnHandleCreated(e);
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HandleDestroyed" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.HandleDestroyed" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnHandleDestroyed(EventArgs e)
     {
         base.OnHandleDestroyed(e);
@@ -211,12 +211,12 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     {
         var info = new Win32.DATETIMEPICKERINFO();
         info.cbSize = Marshal.SizeOf(info);
-        SendMessagePicker(Handle, DTM_GETDATETIMEPICKERINFO, IntPtr.Zero, out info);
+        SendMessagePicker(Handle, DtmGetDateTimePickerInfo, IntPtr.Zero, out info);
         return info;
     }
 
     /// <summary>Processes Windows messages.</summary>
-    /// <param name="m">The Windows <see cref="T:System.Windows.Forms.Message" /> to process.</param>
+    /// <param name="m">The Windows <see cref="System.Windows.Forms.Message" /> to process.</param>
     protected override void WndProc(ref Message m)
     {
         
@@ -290,9 +290,9 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseEnter(EventArgs eventargs)
+    protected override void OnMouseEnter(EventArgs e)
     {
-        base.OnMouseEnter(eventargs);
+        base.OnMouseEnter(e);
         if (DefaultStyle)
             return;
 
@@ -304,9 +304,9 @@ public class ExDateTimePicker : DateTimePicker, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseLeave(EventArgs eventargs)
+    protected override void OnMouseLeave(EventArgs e)
     {
-        base.OnMouseLeave(eventargs);
+        base.OnMouseLeave(e);
         if (DefaultStyle)
             return;
 
@@ -385,7 +385,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
 
     private sealed class DateTimePickerEdit : NativeWindow
     {
-        private ExDateTimePicker _picker;
+        private readonly ExDateTimePicker _picker;
 
         public DateTimePickerEdit(ExDateTimePicker picker)
         {
@@ -393,7 +393,7 @@ public class ExDateTimePicker : DateTimePicker, IExControl
         }
 
         /// <summary>Invokes the default window procedure associated with this window. </summary>
-        /// <param name="m">A <see cref="T:System.Windows.Forms.Message" /> that is associated with the current Windows message. </param>
+        /// <param name="m">A <see cref="System.Windows.Forms.Message" /> that is associated with the current Windows message. </param>
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);

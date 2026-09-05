@@ -9,7 +9,7 @@ namespace ExControls.Designers;
 
 internal class ExColorSelectorDesigner : DesignerControlBase<ExColorSelector>
 {
-    private DesignerActionListCollection _actionLists;
+    private DesignerActionListCollection? _actionLists;
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExColorSelectorActionList(ControlHost)};
 
     private sealed class ExColorSelectorActionList : DesignerActionListBase<ExColorSelector>

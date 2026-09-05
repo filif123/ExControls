@@ -9,11 +9,11 @@ namespace ExControls.Converters;
 public class OptionsNodeConverter : TypeConverter
 {
     /// <inheritdoc />
-    public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType) 
+    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         => ReferenceEquals(destinationType, typeof(InstanceDescriptor)) || base.CanConvertTo(context, destinationType);
 
     /// <inheritdoc />
-    public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+    public override object? ConvertTo(ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object? value, Type destinationType)
     {
         if (ReferenceEquals(destinationType, typeof(InstanceDescriptor)))
         {

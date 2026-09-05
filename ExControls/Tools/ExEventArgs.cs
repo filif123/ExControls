@@ -25,7 +25,7 @@ public class ExPropertyChangedEventArgs : EventArgs
     /// </summary>
     /// <param name="name">name of changed property</param>
     /// <param name="value">new value of changed property</param>
-    public ExPropertyChangedEventArgs(string name, object value)
+    public ExPropertyChangedEventArgs(string name, object? value)
     {
         PropertyName = name;
         Value = value;
@@ -34,7 +34,7 @@ public class ExPropertyChangedEventArgs : EventArgs
     /// <summary>
     ///     New value of changed property
     /// </summary>
-    public object Value { get; }
+    public object? Value { get; }
 
     /// <summary>
     ///     Name of changed property

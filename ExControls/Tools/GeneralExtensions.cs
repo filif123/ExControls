@@ -80,14 +80,14 @@ public class ComparisonComparer<T> : IComparer<T>, IComparer
     }
 
     /// <inheritdoc />
-    public int Compare(T x, T y)
+    public int Compare(T? x, T? y)
     {
-        return _comparison(x, y);
+        return _comparison(x!, y!);
     }
 
     /// <inheritdoc />
-    public int Compare(object o1, object o2)
+    public int Compare(object? o1, object? o2)
     {
-        return _comparison((T)o1, (T)o2);
+        return _comparison((T)o1!, (T)o2!);
     }
 }

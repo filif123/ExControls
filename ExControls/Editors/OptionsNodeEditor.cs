@@ -9,23 +9,22 @@ namespace ExControls.Editors;
 /// </summary>
 public class OptionsNodeEditor : UITypeEditor
 {
-    private IWindowsFormsEditorService _editorService;
+    private IWindowsFormsEditorService? _editorService;
 
     /// <inheritdoc />
     // Tell the property grid we want to show a dropdown.
-    public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) => UITypeEditorEditStyle.DropDown;
+    public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext? context) => UITypeEditorEditStyle.DropDown;
 
     /// <inheritdoc />
-    public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+    public override object? EditValue(ITypeDescriptorContext? context, IServiceProvider provider, object? value)
     {
-        if (provider != null)
-            _editorService = (IWindowsFormsEditorService) provider.GetService(typeof(IWindowsFormsEditorService));
+        _editorService = (IWindowsFormsEditorService?) provider.GetService(typeof(IWindowsFormsEditorService));
 
         if (_editorService == null)
             return value ?? base.EditValue(context, provider, null);
 
         // Create the list of other nodes and show it in the dropdown
-        var list = CreateNodesList(context);
+        var list = CreateNodesList(context!);
         list.SelectedIndexChanged += (_, _) => _editorService.CloseDropDown();
         _editorService.DropDownControl(list);
 
@@ -44,7 +43,7 @@ public class OptionsNodeEditor : UITypeEditor
     {
         // Get the ExOptionsPanel that hosts the property so we can then get the node and the host ExOptionsView
         var panel = GetPanel(context);
-        var view = panel.Owner;
+        var view = panel.Owner!;
 
         // Recursively add all nodes to a list
         var nodes = new List<TreeNode>();
@@ -83,7 +82,7 @@ public class OptionsNodeEditor : UITypeEditor
         if (context.Instance is not ExOptionsPanel panel)
         {
             // If that failed, it is being edited from the ActionList / Smart Tag panel:
-            var actionList = (ExOptionsPanelDesigner.OptionsPanelActionList)context.Instance;
+            var actionList = (ExOptionsPanelDesigner.OptionsPanelActionList)context.Instance!;
             panel = actionList.Host;
         }
 

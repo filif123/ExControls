@@ -1,4 +1,4 @@
-﻿using ExControls.Controls;
+using ExControls.Controls;
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -15,7 +15,7 @@ namespace ExControls;
 [DefaultEvent(nameof(TextChanged))]
 public class ExTextBox : TextBox, IExControl
 {
-    private const int RGN_DIFF = 0x4;
+    private const int RgnDiff = 0x4;
 
     private Color _borderColor;
     private int _borderThickness;
@@ -26,7 +26,7 @@ public class ExTextBox : TextBox, IExControl
     private Color _disabledForeColor;
     private Color _highlightColor;
     private Color _hintForeColor;
-    private string _hintText;
+    private string? _hintText;
     private bool _hover;
     private bool _selected;
 
@@ -167,7 +167,7 @@ public class ExTextBox : TextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Hint text for TextBox.")]
-    public string HintText
+    public string? HintText
     {
         get => _hintText;
         set
@@ -201,7 +201,7 @@ public class ExTextBox : TextBox, IExControl
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -280,7 +280,7 @@ public class ExTextBox : TextBox, IExControl
         if (!Enabled) border = DisabledBorderColor;
         var brush = Win32.CreateSolidBrush(Win32.RGBtoInt(border));
 
-        Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness), RGN_DIFF);
+        Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness), RgnDiff);
 
         Win32.FillRgn(hdc, rgn, brush);
 
@@ -310,9 +310,9 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseEnter(EventArgs eventargs)
+    protected override void OnMouseEnter(EventArgs e)
     {
-        base.OnMouseEnter(eventargs);
+        base.OnMouseEnter(e);
         if (DefaultStyle)
             return;
 
@@ -324,9 +324,9 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseLeave(EventArgs eventargs)
+    protected override void OnMouseLeave(EventArgs e)
     {
-        base.OnMouseLeave(eventargs);
+        base.OnMouseLeave(e);
         if (DefaultStyle)
             return;
 

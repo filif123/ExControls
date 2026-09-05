@@ -15,11 +15,11 @@ public class ExOptionsPanelConverter : ReferenceConverter
     }
 
     /// <inheritdoc />
-    public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+    public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
         => ReferenceEquals(destinationType, typeof(InstanceDescriptor)) || base.CanConvertTo(context, destinationType);
 
     /// <inheritdoc />
-    public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+    public override object? ConvertTo(ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object? value, Type destinationType)
     {
         if (ReferenceEquals(destinationType, typeof(InstanceDescriptor)))
         {
@@ -28,29 +28,29 @@ public class ExOptionsPanelConverter : ReferenceConverter
             // Get the parameterless constructor of the OptionsNode type
             var constructorInfo = type.GetConstructor(new []{ typeof(ExOptionsView) });
 
-            var panel = (ExOptionsPanel) value;
+            var panel = (ExOptionsPanel) value!;
 
             // Return a new InstanceDescriptor for it (this creates the "new ExOptionsPanel(ExOptionsView owner)" code in InitializeComponent).
-            return new InstanceDescriptor(constructorInfo, new object[]{ panel.Owner }, false);
+            return new InstanceDescriptor(constructorInfo, new object[]{ panel.Owner! }, false);
         }
 
         return base.ConvertTo(context, culture, value, destinationType);
     }
     
-    public override bool GetStandardValuesSupported(ITypeDescriptorContext context) => GetOwnerView(context) is not null;
+    public override bool GetStandardValuesSupported(ITypeDescriptorContext? context) => GetOwnerView(context) is not null;
 
     /// <inheritdoc />
-    public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) => true;
+    public override bool GetStandardValuesExclusive(ITypeDescriptorContext? context) => true;
 
     /// <inheritdoc />
-    public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+    public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext? context)
     {
         var view = GetOwnerView(context);
         var panels = view is null ? Array.Empty<ExOptionsPanel>() : view.Panels.Cast<ExOptionsPanel>().ToArray();
         return new StandardValuesCollection(panels);
     }
     
-    private static ExOptionsView? GetOwnerView(ITypeDescriptorContext context) => context?.Instance switch
+    private static ExOptionsView? GetOwnerView(ITypeDescriptorContext? context) => context?.Instance switch
     {
         ExOptionsView view => view,
         ExOptionsPanel panel => panel.Owner,

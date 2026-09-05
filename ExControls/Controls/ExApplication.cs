@@ -1,11 +1,11 @@
-﻿namespace ExControls;
+namespace ExControls;
 
 /// <summary>
 /// WORK IN PROGRESS
 /// </summary>
 public static class ExApplication
 {
-    private static ExAppTheme _theme;
+    private static ExAppTheme? _theme;
 
     /// <summary>
     /// 
@@ -20,7 +20,7 @@ public class ExAppTheme
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> DarkTitleBarChanged;
+    public event EventHandler<EventArgs>? DarkTitleBarChanged;
 
     /// <summary>
     ///     

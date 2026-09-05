@@ -18,7 +18,6 @@ namespace ExControls.Designers;
 internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExOptionsPanel>
 {
     private readonly string[] _invisibleProperties;
-    private DesignerActionListCollection _actionLists;
 
     public ExOptionsPanelDesigner()
     {
@@ -32,7 +31,7 @@ internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExO
     // We don't want to allow moving or resizing the panel
     public override SelectionRules SelectionRules => SelectionRules.Locked;
 
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new OptionsPanelActionList(ControlHost) };
+    public override DesignerActionListCollection ActionLists => field ??= new DesignerActionListCollection { new OptionsPanelActionList(ControlHost) };
 
     // Copied from the PanelDesigner class
     private Pen BorderPen
@@ -83,7 +82,7 @@ internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExO
         }
 
         [Editor(typeof(OptionsNodeEditor), typeof(UITypeEditor))]
-        public OptionsNode ParentNode
+        public OptionsNode? ParentNode
         {
             get => Host.ParentNode;
 
@@ -107,7 +106,7 @@ internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExO
                 parent = owner;
             else
             {
-                parent = Host.ParentNode.Panel;
+                parent = Host.ParentNode.Panel!;
                 owner.SelectedPanel = (ExOptionsPanel)parent;
             }
 

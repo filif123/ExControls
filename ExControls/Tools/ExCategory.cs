@@ -29,7 +29,7 @@ public class ExCategoryAttribute : CategoryAttribute
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static string CategoryToString(CategoryType type) => SystemResources.GetString<Form>("Cat" + type, CultureInfo.CurrentCulture);
+    public static string CategoryToString(CategoryType type) => SystemResources.GetString<Form>("Cat" + type, CultureInfo.CurrentCulture) ?? type.ToString();
 }
 
 /// <summary>

@@ -7,7 +7,7 @@ namespace ExControls.Designers;
 
 internal class ExCheckBoxDesigner : DesignerControlBase<ExCheckBox>
 {
-    private DesignerActionListCollection _actionLists;
+    private DesignerActionListCollection? _actionLists;
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExCheckBoxActionList(ControlHost)};
 
     private sealed class ExCheckBoxActionList : DesignerActionListBase<ExCheckBox>

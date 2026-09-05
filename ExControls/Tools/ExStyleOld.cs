@@ -1,4 +1,4 @@
-﻿using System.Drawing.Design;
+using System.Drawing.Design;
 using ExControls.Controls;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -124,7 +124,7 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     }
 
     /// <summary>Occurs when a property value changes.</summary>
-    public event EventHandler<ExPropertyChangedEventArgs> PropertyChanged;
+    public event EventHandler<ExPropertyChangedEventArgs>? PropertyChanged;
 
     /// <summary>
     ///     Raises the <see cref="PropertyChanged" /> event.

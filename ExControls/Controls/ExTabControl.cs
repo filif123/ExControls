@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using ExControls.Controls;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable UnusedMember.Global
@@ -231,7 +231,7 @@ public class ExTabControl : TabControl, IExControl
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -255,7 +255,7 @@ public class ExTabControl : TabControl, IExControl
     ///     Occurs as a tab is being changed
     /// </summary>
     [ExDescription("Occurs as a tab is being changed.")]
-    public event EventHandler<TabPageChangeEventArgs> SelectedIndexChanging;
+    public event EventHandler<TabPageChangeEventArgs>? SelectedIndexChanging;
 
     /// <inheritdoc />
     protected override void OnCreateControl()
@@ -449,7 +449,7 @@ public class ExTabControl : TabControl, IExControl
     {
         if (m.Msg == (int)(WM_REFLECT + Win32.WM.NOTIFY))
         {
-            var hdr = (Win32.NMHDR)Marshal.PtrToStructure(m.LParam, typeof(Win32.NMHDR));
+            var hdr = (Win32.NMHDR)Marshal.PtrToStructure(m.LParam, typeof(Win32.NMHDR))!;
             if (hdr.code == TCN_SELCHANGING)
             {
                 var tp = TestTab(PointToClient(Cursor.Position));
@@ -469,7 +469,7 @@ public class ExTabControl : TabControl, IExControl
         base.WndProc(ref m);
     }
 
-    private TabPage TestTab(Point pt)
+    private TabPage? TestTab(Point pt)
     {
         for (var index = 0; index <= TabCount - 1; index++)
             if (GetTabRect(index).Contains(pt.X, pt.Y))
@@ -496,7 +496,7 @@ public class TabPageChangeEventArgs : EventArgs
     /// </summary>
     /// <param name="currentTab">current Tab</param>
     /// <param name="newTab">new tab</param>
-    public TabPageChangeEventArgs(TabPage currentTab, TabPage newTab)
+    public TabPageChangeEventArgs(TabPage? currentTab, TabPage newTab)
     {
         CurrentTab = currentTab;
         NewTab = newTab;
@@ -505,7 +505,7 @@ public class TabPageChangeEventArgs : EventArgs
     /// <summary>
     ///     Gets the current selected Tab.
     /// </summary>
-    public TabPage CurrentTab { get; }
+    public TabPage? CurrentTab { get; }
 
 
     /// <summary>

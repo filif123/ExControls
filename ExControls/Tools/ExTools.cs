@@ -41,9 +41,9 @@ public static class ExTools
     {
         try
         {
-            var res = (int) Registry.GetValue(
-                "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", 
-                system ? "SystemUseLightTheme" : "AppsUseLightTheme", 1);
+            var res = (int) (Registry.GetValue(
+                "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+                system ? "SystemUseLightTheme" : "AppsUseLightTheme", 1) ?? 1);
             return res == 1;
         }
         catch
@@ -66,7 +66,7 @@ public static class ExTools
         {
             var rk = Registry.LocalMachine.OpenSubKey(path);
             if (rk == null) return "";
-            return (string)rk.GetValue(key);
+            return (string?)rk.GetValue(key) ?? "";
         }
         catch
         {
@@ -334,7 +334,7 @@ public static class ExTools
     /// <param name="wParam"></param>
     /// <param name="lParam"></param>
     /// <returns></returns>
-    public static int SendMessage(this Process process, uint msg, IntPtr wParam, IntPtr lParam)
+    public static int SendMessage(this Process? process, uint msg, IntPtr wParam, IntPtr lParam)
     {
         if (process is null || process.HasExited)
             return -1;

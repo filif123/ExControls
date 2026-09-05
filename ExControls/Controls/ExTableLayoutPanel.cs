@@ -1,4 +1,4 @@
-﻿using ExControls.Controls;
+using ExControls.Controls;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -66,7 +66,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     }
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changed.</summary>
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -86,7 +86,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     }
 
     /// <summary>Receives a call when the cell should be refreshed.</summary>
-    /// <param name="e">A <see cref="T:System.Windows.Forms.TableLayoutCellPaintEventArgs" /> that provides data for the event.</param>
+    /// <param name="e">A <see cref="System.Windows.Forms.TableLayoutCellPaintEventArgs" /> that provides data for the event.</param>
     protected override void OnCellPaint(TableLayoutCellPaintEventArgs e)
     {
         if (DefaultStyle)

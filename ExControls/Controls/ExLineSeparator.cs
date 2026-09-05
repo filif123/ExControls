@@ -1,4 +1,4 @@
-﻿using System.Drawing.Drawing2D;
+using System.Drawing.Drawing2D;
 
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -118,42 +118,48 @@ public class ExLineSeparator : Control
 
     /// <inheritdoc />
     [Browsable(false)]
-    public override string Text { get; set; }
+    // Control.Text is [AllowNull] in the BCL (asymmetric: get is non-null, set accepts null).
+    // [AllowNull] itself can't be used here because it fails on net48 in this multi-targeted project
+    // (CS0122: AllowNullAttribute is inaccessible due to its protection level).
+#pragma warning disable CS8765
+    public override string Text { get; set; } = "";
+#pragma warning restore CS8765
 
     /// <summary>Occurs when the <see cref="LineColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the LineColor property changes.")]
-    public event EventHandler LineColorChanged;
+    public event EventHandler? LineColorChanged;
 
     /// <summary>Occurs when the <see cref="LineThickness" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the LineThickness property changes.")]
-    public event EventHandler LineThicknessChanged;
+    public event EventHandler? LineThicknessChanged;
 
     /// <summary>Occurs when the <see cref="LineOrientation" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the LineOrientation property changes.")]
-    public event EventHandler LineOrientationChanged;
+    public event EventHandler? LineOrientationChanged;
 
     /// <summary>Occurs when the <see cref="LineStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [Description("Occurs when the LineStyle property changes.")]
-    public event EventHandler LineStyleChanged;
+    public event EventHandler? LineStyleChanged;
 
     /// <summary>Occurs when the Line is drawing.</summary>
     [ExCategory(CategoryType.Appearance)]
     [Description("Occurs when the Line is drawing.")]
-    public event EventHandler<LinePenEventArgs> LineDrawing;
+    public event EventHandler<LinePenEventArgs>? LineDrawing;
 
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.Paint" /> event.</summary>
-    /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs" /> that contains the event data. </param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.Paint" /> event.</summary>
+    /// <param name="e">A <see cref="System.Windows.Forms.PaintEventArgs" /> that contains the event data. </param>
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
 
         using var g = e.Graphics;
-        using var pen = new Pen(LineColor, LineThickness) { DashStyle = LineStyle };
+        using var pen = new Pen(LineColor, LineThickness);
+        pen.DashStyle = LineStyle;
 
         OnLineDrawing(new LinePenEventArgs(pen));
 

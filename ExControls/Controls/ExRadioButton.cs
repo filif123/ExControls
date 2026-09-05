@@ -1,4 +1,4 @@
-﻿using System.Drawing.Drawing2D;
+using System.Drawing.Drawing2D;
 using ExControls.Controls;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -13,8 +13,8 @@ namespace ExControls;
 [ToolboxBitmap(typeof(RadioButton), "RadioButton.bmp")]
 public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
 {
-    private const int BOX_SIZE = 16;
-    private const int BOX_OFFSET = 3;
+    private const int BoxSize = 16;
+    private const int BoxOffset = 3;
 
     private Color _borderColor;
     private Color _boxBackColor;
@@ -144,7 +144,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -167,27 +167,27 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
     /// <summary>Occurs when the <see cref="DisabledForeColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DisabledForeColor property changes.")]
-    public event EventHandler DisabledForeColorChanged;
+    public event EventHandler? DisabledForeColorChanged;
 
     /// <summary>Occurs when the <see cref="BorderColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler BorderColorChanged;
+    public event EventHandler? BorderColorChanged;
 
     /// <summary>Occurs when the <see cref="MarkColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the MarkColor property changes.")]
-    public event EventHandler MarkColorChanged;
+    public event EventHandler? MarkColorChanged;
 
     /// <summary>Occurs when the <see cref="BoxBackColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BoxBackColor property changes.")]
-    public event EventHandler BoxBackColorChanged;
+    public event EventHandler? BoxBackColorChanged;
 
     /// <summary>Occurs when the <see cref="HighlightColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the HighlightColor property changes.")]
-    public event EventHandler HighlightColorChanged;
+    public event EventHandler? HighlightColorChanged;
 
     /// <inheritdoc />
     protected override void OnCreateControl()
@@ -201,15 +201,15 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
     }
 
     /// <inheritdoc />
-    protected override void OnPaint(PaintEventArgs e)
+    protected override void OnPaint(PaintEventArgs pevent)
     {
         if (DefaultStyle || Appearance == Appearance.Button) //TODO support Button appearance
         {
-            base.OnPaint(e);
+            base.OnPaint(pevent);
             return;
         }
-        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-        e.Graphics.Clear(BackColor);
+        pevent.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        pevent.Graphics.Clear(BackColor);
 
         //Colors preparing
         var colorMark = _hover ? HighlightColor : Enabled ? MarkColor : DisabledForeColor;
@@ -221,23 +221,23 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
         using var penBorder = new Pen(border);
 
         //Positons and Size preparing
-        var rects = ExButtonRenderer.GetBoxAndTextRectangle(e.Graphics, this, BOX_SIZE, BOX_OFFSET);
+        var rects = ExButtonRenderer.GetBoxAndTextRectangle(pevent.Graphics, this, BoxSize, BoxOffset);
         var boxRec = rects.BoxRectangle;
         boxRec.X += 1;
         var textRec = rects.TextRectangle;
         var rectBorder = new Rectangle(boxRec.Location, new Size(boxRec.Width - 1, boxRec.Height - 1));
 
         //Text render
-        TextRenderer.DrawText(e.Graphics, Text, Font, textRec.Location, colorText);
+        TextRenderer.DrawText(pevent.Graphics, Text, Font, textRec.Location, colorText);
 
         //Box background render
-        e.Graphics.FillEllipse(background, boxRec);
+        pevent.Graphics.FillEllipse(background, boxRec);
 
         //Box border render
-        e.Graphics.DrawEllipse(penBorder, rectBorder);
+        pevent.Graphics.DrawEllipse(penBorder, rectBorder);
 
         //Mark render
-        if (Checked) e.Graphics.FillEllipse(brushMark, boxRec.X + 3, boxRec.Y + 3, boxRec.Width - 7, boxRec.Height - 7);
+        if (Checked) pevent.Graphics.FillEllipse(brushMark, boxRec.X + 3, boxRec.Y + 3, boxRec.Width - 7, boxRec.Height - 7);
     }
 
     /// <inheritdoc />

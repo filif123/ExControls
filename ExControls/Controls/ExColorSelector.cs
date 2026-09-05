@@ -1,4 +1,4 @@
-﻿
+
 // ReSharper disable UnusedMember.Global
 
 namespace ExControls;
@@ -19,7 +19,7 @@ public partial class ExColorSelector : UserControl
     /// <summary>Occurs when the <see cref="SelectedColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the SelectedColor property changes.")]
-    public event EventHandler SelectedColorChanged;
+    public event EventHandler? SelectedColorChanged;
 
     /// <summary>
     /// 

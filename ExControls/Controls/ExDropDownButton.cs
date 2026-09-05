@@ -19,7 +19,7 @@ public class ExDropDownButton : ExButton
     ///     Drop down menu.
     /// </summary>
     [DefaultValue(null)]
-    public ContextMenuStrip DropDownMenu { get; set; }
+    public ContextMenuStrip? DropDownMenu { get; set; }
 
     /// <summary>
     ///    Gets or sets a value indicating whether the drop down menu should be showing under cursor.
@@ -76,9 +76,9 @@ public class ExDropDownButton : ExButton
     }
 
     /// <inheritdoc />
-    protected override void OnPaint(PaintEventArgs e)
+    protected override void OnPaint(PaintEventArgs pevent)
     {
-        base.OnPaint(e);
+        base.OnPaint(pevent);
 
         if (DropDownMenu == null) 
             return;
@@ -88,6 +88,6 @@ public class ExDropDownButton : ExButton
 
         using var brush = Enabled ? new SolidBrush(ArrowColor) : new SolidBrush(DisabledArrowColor);
         var arrows = new Point[] { new(arrowX, arrowY), new(arrowX + 7, arrowY), new(arrowX + 3, arrowY + 4) };
-        e.Graphics.FillPolygon(brush, arrows);
+        pevent.Graphics.FillPolygon(brush, arrows);
     }
 }

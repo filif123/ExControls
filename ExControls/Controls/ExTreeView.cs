@@ -1,10 +1,5 @@
 ﻿using ExControls.Collections;
 
-// ReSharper disable UnusedMember.Global
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace ExControls;
 
 /// <summary>
@@ -17,7 +12,6 @@ namespace ExControls;
 public class ExTreeView : TreeView
 {
     private readonly ExTreeNodeCollection _nodes;
-    private ExTreeViewStyle _style;
 
     /// <summary>
     ///
@@ -26,6 +20,7 @@ public class ExTreeView : TreeView
     {
         _nodes = new ExTreeNodeCollection(base.Nodes);
     }
+
     /// <summary>
     /// Style of PlusMinus sign.
     /// </summary>
@@ -34,12 +29,12 @@ public class ExTreeView : TreeView
     [DefaultValue(ExTreeViewStyle.Default)]
     public ExTreeViewStyle Style
     {
-        get => _style;
+        get;
         set
         {
-            if (_style == value)
+            if (field == value)
                 return;
-            _style = value;
+            field = value;
             switch (value)
             {
                 case ExTreeViewStyle.Default:
@@ -155,9 +150,9 @@ public class ExTreeViewNodeAddedEventArgs : EventArgs
 public class ExTreeViewNodeRemovedEventArgs : EventArgs
 {
     /// <summary>
-    ///     Node that was removed.
+    ///     Node that was removed, or <see langword="null"/> when the whole collection was cleared.
     /// </summary>
-    public TreeNode Node { get; }
+    public TreeNode? Node { get; }
 
     /// <summary>
     ///     Index of removed node in collection.
@@ -175,7 +170,7 @@ public class ExTreeViewNodeRemovedEventArgs : EventArgs
     /// <param name="node"></param>
     /// <param name="index"></param>
     /// <param name="count"></param>
-    public ExTreeViewNodeRemovedEventArgs(TreeNode node, int index, int count)
+    public ExTreeViewNodeRemovedEventArgs(TreeNode? node, int index, int count)
     {
         Node = node;
         Index = index;

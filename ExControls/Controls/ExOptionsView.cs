@@ -1,4 +1,4 @@
-﻿using ExControls.Collections;
+using ExControls.Collections;
 using ExControls.Designers;
 using ExControls.Editors;
 using System.Drawing.Design;
@@ -17,14 +17,12 @@ namespace ExControls;
 [ToolboxBitmap(typeof(ExOptionsView), "Controls\\ExOptionsView.bmp")]
 public partial class ExOptionsView : UserControl, ISupportInitialize
 {
-    private ExOptionsPanel _selectedPanel;
-    private readonly ExOptionsPanel _onSelectedPanelChangedOldSelection = null;
-    private Color _linkToChildrenForeColor;
+    private readonly ExOptionsPanel? _onSelectedPanelChangedOldSelection = null;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler SelectedPanelChanged;
+    public event EventHandler? SelectedPanelChanged;
 
     /// <summary>
     /// 
@@ -85,12 +83,12 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     [ExCategory(CategoryType.Appearance)]
     public Color LinkToChildrenForeColor
     {
-        get => _linkToChildrenForeColor;
+        get;
         set
         {
-            if (_linkToChildrenForeColor == value)
+            if (field == value)
                 return;
-            _linkToChildrenForeColor = value;
+            field = value;
             foreach (var panel in Panels.Cast<ExOptionsPanel>().Where(p => p.GenerateLinksToChildren))
                 panel.GenerateLinks();
         }
@@ -160,12 +158,12 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     /// </summary>
     [ExDescription("The selected (displayed) ExOptionsPanel.", true)]
     [ExCategory(CategoryType.Behavior)]
-    public ExOptionsPanel SelectedPanel
+    public ExOptionsPanel? SelectedPanel
     {
-        get => _selectedPanel;
+        get;
         set
         {
-            _selectedPanel = value;
+            field = value;
             OnSelectedPanelChanged();
         }
     }
@@ -242,7 +240,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     // Change the selected panel when a node is selected
-    private void OnNodeSelected(object sender, TreeViewEventArgs e)
+    private void OnNodeSelected(object? sender, TreeViewEventArgs e)
     {
         if (e.Node is not OptionsNode node)
             return;
@@ -251,7 +249,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
         labelPanelName.Text = SelectedPanel == null ? "" : node.FullPath;
     }
 
-    private void OnPanelAdded(object sender, RestrictivePanel<ExOptionsPanel>.RestrictivePanelEventArgs<ExOptionsPanel> e)
+    private void OnPanelAdded(object? sender, RestrictivePanel<ExOptionsPanel>.RestrictivePanelEventArgs<ExOptionsPanel> e)
     {
         if (!DesignMode)
             return;
@@ -260,7 +258,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
         AddNode(e.Control);
     }
 
-    private void OnPanelRemoved(object sender, RestrictivePanel<ExOptionsPanel>.RestrictivePanelEventArgs<ExOptionsPanel> e)
+    private void OnPanelRemoved(object? sender, RestrictivePanel<ExOptionsPanel>.RestrictivePanelEventArgs<ExOptionsPanel> e)
     {
         if (!DesignMode)
             return;

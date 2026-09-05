@@ -17,21 +17,7 @@ namespace ExControls;
 [Designer("ExControls.Designers.ExFormDesigner, ExControls")]
 internal partial class ExFormTest
 {
-    private bool _customMenu;
     //private bool _maximizing;
-
-    private Color _titleBarBackColor;
-    private Color _titleBarForeColor;
-    private Color _titleBarCloseButtonSelBackColor;
-    private Color _titleBarCloseButtonSelForeColor;
-    private Color _titleBarButtonBackColor;
-    private Color _titleBarButtonForeColor;
-    private Color _titleBarButtonSelBackColor;
-    private Color _titleBarButtonSelForeColor;
-    private Color _titleBarCloseButtonBackColor;
-    private Color _titleBarCloseButtonForeColor;
-    private Color _titleBarDeactivatedForeColor = Color.DimGray;
-    private Color _titleBarDeactivatedBackColor;
 
     /*[Browsable(false)] 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -47,25 +33,25 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarDeactivatedForeColor
     {
-        get => _titleBarDeactivatedForeColor;
+        get;
         set
         {
-            if (_titleBarDeactivatedForeColor == value) return;
-            _titleBarDeactivatedForeColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.DeactivatedForeColor = value;
         }
-    }
+    } = Color.DimGray;
 
     /// <summary>
     /// 
     /// </summary>
     public Color TitleBarDeactivatedBackColor
     {
-        get => _titleBarDeactivatedBackColor;
+        get;
         set
         {
-            if (_titleBarDeactivatedBackColor == value) return;
-            _titleBarDeactivatedBackColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.DeactivatedBackColor = value;
         }
     }
@@ -75,11 +61,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarBackColor
     {
-        get => _titleBarBackColor;
+        get;
         set
         {
-            if (_titleBarBackColor == value) return;
-            _titleBarBackColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.BackColor = value;
             TitleBar.Invalidate(true);
         }
@@ -90,11 +76,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarForeColor
     {
-        get => _titleBarForeColor;
+        get;
         set
         {
-            if (_titleBarForeColor == value) return;
-            _titleBarForeColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.ForeColor = value;
             TitleBar.Invalidate(true);
         }
@@ -105,11 +91,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarCloseButtonSelBackColor
     {
-        get => _titleBarCloseButtonSelBackColor;
+        get;
         set
         {
-            if (_titleBarCloseButtonSelBackColor == value) return;
-            _titleBarCloseButtonSelBackColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.CloseButtonSelBackColor = value;
             TitleBar.Invalidate(true);
         }
@@ -120,11 +106,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarCloseButtonSelForeColor
     {
-        get => _titleBarCloseButtonSelForeColor;
+        get;
         set
         {
-            if (_titleBarCloseButtonSelForeColor == value) return;
-            _titleBarCloseButtonSelForeColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.CloseButtonSelForeColor = value;
             TitleBar.Invalidate(true);
         }
@@ -135,11 +121,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarCloseButtonBackColor
     {
-        get => _titleBarCloseButtonBackColor;
+        get;
         set
         {
-            if (_titleBarCloseButtonBackColor == value) return;
-            _titleBarCloseButtonBackColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.CloseButtonBackColor = value;
             TitleBar.Invalidate(true);
         }
@@ -150,11 +136,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarCloseButtonForeColor
     {
-        get => _titleBarCloseButtonForeColor;
+        get;
         set
         {
-            if (_titleBarCloseButtonForeColor == value) return;
-            _titleBarCloseButtonForeColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.CloseButtonForeColor = value;
             TitleBar.Invalidate(true);
         }
@@ -165,11 +151,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarButtonBackColor
     {
-        get => _titleBarButtonBackColor;
+        get;
         set
         {
-            if (_titleBarButtonBackColor == value) return;
-            _titleBarButtonBackColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.ButtonBackColor = value;
             TitleBar.Invalidate(true);
         }
@@ -180,11 +166,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarButtonForeColor
     {
-        get => _titleBarButtonForeColor;
+        get;
         set
         {
-            if (_titleBarButtonForeColor == value) return;
-            _titleBarButtonForeColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.ButtonForeColor = value;
             TitleBar.Invalidate(true);
         }
@@ -195,11 +181,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarButtonSelBackColor
     {
-        get => _titleBarButtonSelBackColor;
+        get;
         set
         {
-            if (_titleBarButtonSelBackColor == value) return;
-            _titleBarButtonSelBackColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.ButtonSelBackColor = value;
             TitleBar.Invalidate(true);
         }
@@ -210,11 +196,11 @@ internal partial class ExFormTest
     /// </summary>
     public Color TitleBarButtonSelForeColor
     {
-        get => _titleBarButtonSelForeColor;
+        get;
         set
         {
-            if (_titleBarButtonSelForeColor == value) return;
-            _titleBarButtonSelForeColor = value;
+            if (field == value) return;
+            field = value;
             TitleBar.ButtonSelForeColor = value;
             TitleBar.Invalidate(true);
         }
@@ -227,7 +213,7 @@ internal partial class ExFormTest
     {
         InitializeComponent();
         TitleBar.Form = this;
-        TitleBar.BoxIcon.Image = base.Icon.ToBitmap();
+        TitleBar.BoxIcon.Image = base.Icon?.ToBitmap();
         TitleBar.TextLabel.Text = base.Text;
         TitleBar.ButtonHelp.Visible = false;
         TitleBar.ButtonMaximize.Click += ButtonMaximize_Click;
@@ -246,25 +232,25 @@ internal partial class ExFormTest
         SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
     }
 
-    private void ButtonMaximize_Click(object sender, EventArgs e)
+    private void ButtonMaximize_Click(object? sender, EventArgs e)
     {
         //_maximizing = true;
     }
 
-    /// <inheritdoc />
+    /*/// <inheritdoc />
     protected override void OnPaintBackground(PaintEventArgs e)
     {
         base.OnPaintBackground(e);
 
-        //Rectangle rc = new Rectangle(ClientSize.Width - cGrip, ClientSize.Height - cGrip, cGrip, cGrip);
-        //ControlPaint.DrawSizeGrip(e.Graphics, BackColor, rc);
-        //rc = new Rectangle(0, 0, ClientSize.Width, cCaption);
-        //e.Graphics.FillRectangle(Brushes.DarkBlue, rc);
+        Rectangle rc = new Rectangle(ClientSize.Width - cGrip, ClientSize.Height - cGrip, cGrip, cGrip);
+        ControlPaint.DrawSizeGrip(e.Graphics, BackColor, rc);
+        rc = new Rectangle(0, 0, ClientSize.Width, cCaption);
+        e.Graphics.FillRectangle(Brushes.DarkBlue, rc);
 
         if (WindowState == FormWindowState.Maximized)
             return;
-        //ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, BorderColor, ButtonBorderStyle.Solid);
-    }
+        ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, BorderColor, ButtonBorderStyle.Solid);
+    }*/
 
     /// <summary>
     /// 
@@ -282,13 +268,13 @@ internal partial class ExFormTest
     /// <summary>
     /// 
     /// </summary>
-    public new Icon Icon
+    public new Icon? Icon
     {
         get => base.Icon;
         set
         {
             base.Icon = value;
-            TitleBar.BoxIcon.Image = value.ToBitmap();
+            TitleBar.BoxIcon.Image = value?.ToBitmap();
         }
     }
 
@@ -297,17 +283,21 @@ internal partial class ExFormTest
     /// </summary>
     public bool CustomMenu
     {
-        get => _customMenu;
+        get;
         set
         {
-            if (_customMenu == value) return;
-            _customMenu = value;
-            TitleBar.EnableCustomMenu(_customMenu);
+            if (field == value) return;
+            field = value;
+            TitleBar.EnableCustomMenu(field);
         }
     }
 
 
     /// <inheritdoc />
+    // Control.Text is [AllowNull] in the BCL (asymmetric: get is non-null, set accepts null).
+    // [AllowNull] itself can't be used here because it fails on net48 in this multi-targeted project
+    // (CS0122: AllowNullAttribute is inaccessible due to its protection level).
+#pragma warning disable CS8765
     public override string Text
     {
         get => base.Text;
@@ -317,6 +307,7 @@ internal partial class ExFormTest
             TitleBar.TextLabel.Text = value;
         }
     }
+#pragma warning restore CS8765
 
     /// <summary>
     /// 
@@ -462,10 +453,11 @@ internal partial class ExFormTest
                 border.Top *= -1;
                 var ps = new Win32.NCCALCSIZE_PARAMS();
                 Marshal.PtrToStructure(m.LParam, ps);
-                ps.rgrc[0].Top += 1;
-                ps.rgrc[0].Left += border.Left;
-                ps.rgrc[0].Right -= border.Right;
-                ps.rgrc[0].Bottom -= border.Bottom;
+                var rects = ps.rgrc!;
+                rects[0].Top += 1;
+                rects[0].Left += border.Left;
+                rects[0].Right -= border.Right;
+                rects[0].Bottom -= border.Bottom;
                 m.Result = IntPtr.Zero;
                 return;
             }

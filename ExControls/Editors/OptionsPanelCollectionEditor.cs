@@ -36,15 +36,15 @@ public class OptionsPanelCollectionEditor : CollectionEditor
         if (!ReferenceEquals(itemType, typeof(ExOptionsPanel))) 
             return base.CreateInstance(itemType);
 
-        var designerHost = (IDesignerHost)GetService(typeof(IDesignerHost));
-        var view = (ExOptionsView)Context.Instance;
+        var designerHost = (IDesignerHost)GetService(typeof(IDesignerHost))!;
+        var view = (ExOptionsView)Context!.Instance!;
         var panel = ExOptionsPanel.CreatePanel(view, designerHost);
 
         return panel;
     }
 
 #if !NETFRAMEWORK
-    private ExPanelCollectionEditorViewModel _model;
+    private ExPanelCollectionEditorViewModel? _model;
 
     protected override CollectionEditorViewModel BeginEditValue(ITypeDescriptorContext context, object value)
     {
@@ -53,7 +53,7 @@ public class OptionsPanelCollectionEditor : CollectionEditor
 
     protected override object EndEditValue(bool commitChange)
     {
-        return _model.EditValue;
+        return _model!.EditValue;
     }
 
     private sealed class ExPanelCollectionEditorViewModel : CollectionEditorViewModel

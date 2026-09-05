@@ -10,7 +10,7 @@ internal static class Program
     {
         ExMessageBox.Style = new ExMessageBoxStyle
         {
-            LabelFont = new Font(new FontFamily(SystemFonts.MenuFont.Name), SystemFonts.MenuFont.SizeInPoints - 1),
+            LabelFont = new Font(new FontFamily(SystemFonts.MenuFont!.Name), SystemFonts.MenuFont.SizeInPoints - 1),
             ButtonsFont = null
         };
 

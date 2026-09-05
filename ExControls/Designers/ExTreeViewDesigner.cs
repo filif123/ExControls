@@ -16,7 +16,6 @@ namespace ExControls.Designers;
 internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 {
     private Win32.TVHITTESTINFO _tvhit;
-    private DesignerActionListCollection _actionLists;
 
     // ReSharper disable InconsistentNaming
     private const int TVM_HITTEST = 0x1100 + 17;
@@ -33,16 +32,19 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
     }
 
 #if NETFRAMEWORK
-    public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExTreeViewActionList(ControlHost, this) };
+    public override DesignerActionListCollection ActionLists
+    {
+        get => field ??= new DesignerActionListCollection { new ExTreeViewActionList(ControlHost, this) };
+    } = null!;
 #else
     public override DesignerActionListCollection ActionLists
     {
         get
         {
             DesignerActionListCollection result;
-            if ((result = _actionLists) == null)
+            if ((result = field) == null)
             {
-                result = InterlockedOperations.Initialize(ref _actionLists, new DesignerActionListCollection
+                result = InterlockedOperations.Initialize(ref field, new DesignerActionListCollection
                 {
                     new ExTreeViewActionList(ControlHost, this)
                 });
@@ -94,7 +96,7 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
         base.Dispose(disposing);
     }
 
-    private void TreeViewInvalidate(object sender, TreeViewEventArgs e)
+    private void TreeViewInvalidate(object? sender, TreeViewEventArgs e)
     {
         ControlHost?.Invalidate();
     }
@@ -175,10 +177,10 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 #endif
         }
 
-        public ImageList ImageList
+        public ImageList? ImageList
         {
-            get => ((TreeView)Component)?.ImageList;
-            set => TypeDescriptor.GetProperties(Component)["ImageList"]?.SetValue(Component, value);
+            get => ((TreeView?)Component)?.ImageList;
+            set => TypeDescriptor.GetProperties(Component!)["ImageList"]?.SetValue(Component, value);
         }
 
         public override DesignerActionItemCollection GetSortedActionItems()

@@ -15,7 +15,7 @@ namespace ExControls.Designers;
 internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
 {
     private readonly string[] _invisibleProperties;
-    private DesignerActionListCollection _actionLists;
+    private DesignerActionListCollection? _actionLists;
     private bool _newComponentInit;
 
     public ExOptionsViewDesigner()
@@ -29,7 +29,7 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
         new OptionsViewActionList(ControlHost, this)
     };
 
-    private ExOptionsPanel SelectedPanel { get; set; }
+    private ExOptionsPanel? SelectedPanel { get; set; }
 
     /*// Handle mouseclicks on the TreeView
     protected override void OnHostInitialized()
@@ -50,7 +50,7 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
     }
 
     /// <inheritdoc />
-    public override void InitializeNewComponent(IDictionary defaultValues)
+    public override void InitializeNewComponent(IDictionary? defaultValues)
     {
         base.InitializeNewComponent(defaultValues);
 
@@ -86,7 +86,7 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
         var array = new[] { nameof(SelectedPanel) };
         foreach (var t in array)
         {
-            var propertyDescriptor = (PropertyDescriptor)properties[t];
+            var propertyDescriptor = (PropertyDescriptor?)properties[t];
             if (propertyDescriptor != null)
                 properties[t] = TypeDescriptor.CreateProperty(typeof(ExOptionsViewDesigner), propertyDescriptor, Array.Empty<Attribute>());
         }
@@ -137,7 +137,7 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
         SelectHost();
     }
     
-    internal void OnSelectPanel(ExOptionsPanel panel)
+    internal void OnSelectPanel(ExOptionsPanel? panel)
     {
         if (ReferenceEquals(ControlHost.SelectedPanel, panel))
             return;
@@ -186,9 +186,9 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
             DesignerActionService.Refresh(Host);
         }
 
-        private void EditPanels() => ExEditorServiceContext.EditValue(Designer, Component, "Panels");
+        private void EditPanels() => ExEditorServiceContext.EditValue(Designer, Component!, "Panels");
 
-        public ExOptionsPanel SelectedPanel
+        public ExOptionsPanel? SelectedPanel
         {
             get => Host.SelectedPanel;
             set
