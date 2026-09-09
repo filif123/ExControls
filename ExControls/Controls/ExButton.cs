@@ -1,4 +1,4 @@
-﻿using ExControls.Controls;
+using ExControls.Controls;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -12,7 +12,7 @@ namespace ExControls;
 public class ExButton : Button, IExControl
 {
     private bool _defaultStyle;
-    private ExFlatButtonAppearance appearance;
+    private ExFlatButtonAppearance? appearance;
     private Color tmpBeforeHoverColor = Color.Empty;
     private Color tmpBeforeClickColor = Color.Empty;
     private Color tmpBeforeFocusColor = Color.Empty;
@@ -88,7 +88,7 @@ public class ExButton : Button, IExControl
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
     protected virtual void OnDefaultStyleChanged() => DefaultStyleChanged?.Invoke(this, EventArgs.Empty);
@@ -98,11 +98,11 @@ public class ExButton : Button, IExControl
     protected override void OnMouseDown(MouseEventArgs mevent)
     {
         base.OnMouseDown(mevent);
-        if (_defaultStyle || appearance.MouseDownBorderColor == Color.Empty)
+        if (_defaultStyle || ExFlatAppearance.MouseDownBorderColor == Color.Empty)
             return;
-        tmpBeforeClickColor = appearance.BorderColor;
-        appearance.SetTmpBeforeClickColor(tmpBeforeClickColor);
-        appearance.BorderColor = appearance.MouseDownBorderColor;
+        tmpBeforeClickColor = ExFlatAppearance.BorderColor;
+        ExFlatAppearance.SetTmpBeforeClickColor(tmpBeforeClickColor);
+        ExFlatAppearance.BorderColor = ExFlatAppearance.MouseDownBorderColor;
     }
 
     /// <summary>Raises the <see cref="M:System.Windows.Forms.ButtonBase.OnMouseUp(System.Windows.Forms.MouseEventArgs)" /> event.</summary>
@@ -110,10 +110,10 @@ public class ExButton : Button, IExControl
     protected override void OnMouseUp(MouseEventArgs mevent)
     {
         base.OnMouseUp(mevent);
-        if (_defaultStyle || appearance.MouseDownBorderColor == Color.Empty)
+        if (_defaultStyle || ExFlatAppearance.MouseDownBorderColor == Color.Empty)
             return;
-        appearance.BorderColor = tmpBeforeClickColor;
-        appearance.UnsetTmpBeforeClickColor();
+        ExFlatAppearance.BorderColor = tmpBeforeClickColor;
+        ExFlatAppearance.UnsetTmpBeforeClickColor();
         tmpBeforeClickColor = Color.Empty;
         if (focused)
             SetFocusColor();
@@ -124,11 +124,11 @@ public class ExButton : Button, IExControl
     protected override void OnMouseEnter(EventArgs e)
     {
         base.OnMouseEnter(e);
-        if (_defaultStyle || appearance.MouseOverBorderColor == Color.Empty)
+        if (_defaultStyle || ExFlatAppearance.MouseOverBorderColor == Color.Empty)
             return;
-        tmpBeforeHoverColor = appearance.BorderColor;
-        appearance.SetTmpBeforeHoverColor(tmpBeforeHoverColor);
-        appearance.BorderColor = appearance.MouseOverBorderColor;
+        tmpBeforeHoverColor = ExFlatAppearance.BorderColor;
+        ExFlatAppearance.SetTmpBeforeHoverColor(tmpBeforeHoverColor);
+        ExFlatAppearance.BorderColor = ExFlatAppearance.MouseOverBorderColor;
     }
 
     /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.Leave" /> event.</summary>
@@ -136,10 +136,10 @@ public class ExButton : Button, IExControl
     protected override void OnMouseLeave(EventArgs e)
     {
         base.OnMouseLeave(e);
-        if (_defaultStyle || appearance.MouseOverBorderColor == Color.Empty)
+        if (_defaultStyle || ExFlatAppearance.MouseOverBorderColor == Color.Empty)
             return;
-        appearance.BorderColor = tmpBeforeHoverColor;
-        appearance.UnsetTmpBeforeHoverColor();
+        ExFlatAppearance.BorderColor = tmpBeforeHoverColor;
+        ExFlatAppearance.UnsetTmpBeforeHoverColor();
         tmpBeforeHoverColor = Color.Empty;
         if (focused) 
             SetFocusColor();
@@ -151,7 +151,7 @@ public class ExButton : Button, IExControl
     {
         base.OnGotFocus(e);
         focused = true;
-        if (_defaultStyle || appearance.FocusBorderColor == Color.Empty)
+        if (_defaultStyle || ExFlatAppearance.FocusBorderColor == Color.Empty)
             return;
         SetFocusColor();
     }
@@ -162,22 +162,22 @@ public class ExButton : Button, IExControl
     {
         base.OnLostFocus(e);
         focused = false;
-        if (_defaultStyle || appearance.FocusBorderColor == Color.Empty)
+        if (_defaultStyle || ExFlatAppearance.FocusBorderColor == Color.Empty)
             return;
         UnsetFocusColor();
     }
 
     private void SetFocusColor()
     {
-        tmpBeforeFocusColor = appearance.BorderColor;
-        appearance.SetTmpBeforeFocusColor(tmpBeforeFocusColor);
-        appearance.BorderColor = appearance.FocusBorderColor;
+        tmpBeforeFocusColor = ExFlatAppearance.BorderColor;
+        ExFlatAppearance.SetTmpBeforeFocusColor(tmpBeforeFocusColor);
+        ExFlatAppearance.BorderColor = ExFlatAppearance.FocusBorderColor;
     }
 
     private void UnsetFocusColor()
     {
-        appearance.BorderColor = tmpBeforeFocusColor;
-        appearance.UnsetTmpBeforeFocusColor();
+        ExFlatAppearance.BorderColor = tmpBeforeFocusColor;
+        ExFlatAppearance.UnsetTmpBeforeFocusColor();
         tmpBeforeFocusColor = Color.Empty;
     }
 }

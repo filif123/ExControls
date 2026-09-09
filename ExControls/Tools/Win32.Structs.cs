@@ -47,7 +47,7 @@ internal static partial class Win32
 
         public static implicit operator Point(POINT point) => new(point.X, point.Y);
 
-        public static implicit operator POINT(Point point) => new((int) point.X, (int) point.Y);
+        public static implicit operator POINT(Point point) => new(point.X, point.Y);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -144,7 +144,7 @@ internal static partial class Win32
             return r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj switch
             {
@@ -246,7 +246,7 @@ internal static partial class Win32
         /// The last two rectangles are used in conjunction with the return value of the WM_NCCALCSIZE message to determine the area of the window to be preserved.
         /// </summary>
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-        public RECT[] rgrc;
+        public RECT[]? rgrc;
 
         /// <summary>
         ///     A pointer to a WINDOWPOS structure that contains the size and position values specified in the operation that moved or resized the window.

@@ -13,8 +13,8 @@ namespace ExControls.Designers;
 /// <typeparam name="T">The Control to design.</typeparam>
 internal class DesignerParentControlBase<T> : ParentControlDesigner where T : Control
 {
-    private T _host;
-    private IDesignerHost _designerHost;
+    private T? _host;
+    private IDesignerHost? _designerHost;
 
     protected DesignerParentControlBase()
     {
@@ -37,7 +37,7 @@ internal class DesignerParentControlBase<T> : ParentControlDesigner where T : Co
     }
 
 
-    private ISelectionService _selectionService;
+    private ISelectionService? _selectionService;
 
     /// <summary>
     /// Creates and returns the ISelectionService used to select components in the designer.
@@ -46,15 +46,15 @@ internal class DesignerParentControlBase<T> : ParentControlDesigner where T : Co
     /// <returns></returns>
     /// <remarks></remarks>
 #if NETFRAMEWORK
-    public ISelectionService SelectionService => _selectionService ??= (ISelectionService)GetService(typeof(ISelectionService));
+    public ISelectionService SelectionService => (_selectionService ??= (ISelectionService?)GetService(typeof(ISelectionService)))!;
 #else
-    public new ISelectionService SelectionService => _selectionService ??= (ISelectionService)GetService(typeof(ISelectionService));
+    public new ISelectionService SelectionService => (_selectionService ??= (ISelectionService?)GetService(typeof(ISelectionService)))!;
 #endif
 
     /// <summary>
     /// Creates and returns the IDesignerHost service.
     /// </summary>
-    public IDesignerHost DesignerHost => _designerHost ??= (IDesignerHost)GetService(typeof(IDesignerHost));
+    public IDesignerHost DesignerHost => (_designerHost ??= (IDesignerHost?)GetService(typeof(IDesignerHost)))!;
 
     protected virtual void OnHostInitialized()
     {

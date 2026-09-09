@@ -19,7 +19,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <inheritdoc />
-    public sealed override DataGridViewCell CellTemplate
+    public sealed override DataGridViewCell? CellTemplate
     {
         get => base.CellTemplate;
         set
@@ -32,7 +32,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
         }
     }
 
-    private DataGridViewExCheckBoxCell DynCheckBoxCellTemplate => (DataGridViewExCheckBoxCell)CellTemplate;
+    private DataGridViewExCheckBoxCell DynCheckBoxCellTemplate => (DataGridViewExCheckBoxCell)CellTemplate!;
 
     /// <summary>
     ///     Default style of the Control
@@ -166,12 +166,6 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
 public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
 {
     private bool _hover;
-    private Color _borderColor;
-
-    private bool _defaultStyle;
-    private Color _highlightColor;
-    private Color _markColor;
-    private Color _squareBackColor;
 
     /// <summary>
     ///     Constructor
@@ -190,10 +184,10 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     /// </summary>
     public bool DefaultStyle
     {
-        get => _defaultStyle;
+        get;
         set
         {
-            _defaultStyle = value;
+            field = value;
             DataGridView?.InvalidateColumn(ColumnIndex);
         }
     }
@@ -203,10 +197,10 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     /// </summary>
     public Color BorderColor
     {
-        get => _borderColor;
+        get;
         set
         {
-            _borderColor = value;
+            field = value;
             DataGridView?.InvalidateColumn(ColumnIndex);
         }
     }
@@ -216,10 +210,10 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     /// </summary>
     public Color MarkColor
     {
-        get => _markColor;
+        get;
         set
         {
-            _markColor = value;
+            field = value;
             DataGridView?.InvalidateColumn(ColumnIndex);
         }
     }
@@ -229,10 +223,10 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     /// </summary>
     public Color SquareBackColor
     {
-        get => _squareBackColor;
+        get;
         set
         {
-            _squareBackColor = value;
+            field = value;
             DataGridView?.InvalidateColumn(ColumnIndex);
         }
     }
@@ -242,10 +236,10 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     /// </summary>
     public Color HighlightColor
     {
-        get => _highlightColor;
+        get;
         set
         {
-            _highlightColor = value;
+            field = value;
             DataGridView?.InvalidateColumn(ColumnIndex);
         }
     }
@@ -265,22 +259,22 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     /// <inheritdoc />
     protected override void Paint(Graphics g,
         Rectangle clipBounds, Rectangle cellBounds,
-        int rowIndex, DataGridViewElementStates state,
-        object value, object formattedValue, string errorText,
+        int rowIndex, DataGridViewElementStates elementState,
+        object? value, object? formattedValue, string? errorText,
         DataGridViewCellStyle cellStyle,
         DataGridViewAdvancedBorderStyle advancedBorderStyle,
         DataGridViewPaintParts paintParts)
     {
         if (DefaultStyle)
         {
-            base.Paint(g, clipBounds, cellBounds, rowIndex, state, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
+            base.Paint(g, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
             return;
         }
 
         // Draw the cell background, if specified.
         if ((paintParts & DataGridViewPaintParts.Background) == DataGridViewPaintParts.Background)
         {
-            var selected = (state & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected;
+            var selected = (elementState & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected;
             using var cellBackground = selected ? new SolidBrush(cellStyle.SelectionBackColor) : new SolidBrush(cellStyle.BackColor);
             g.FillRectangle(cellBackground, cellBounds);
         }
@@ -298,13 +292,13 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
         if (_hover)
             colorMark = HighlightColor;
         else
-            colorMark = state != DataGridViewElementStates.ReadOnly ? MarkColor : Color.DimGray;
+            colorMark = elementState != DataGridViewElementStates.ReadOnly ? MarkColor : Color.DimGray;
 
         Color colorBorder;
         if (_hover)
             colorBorder = HighlightColor;
         else
-            colorBorder = state != DataGridViewElementStates.ReadOnly ? BorderColor : Color.DimGray;
+            colorBorder = elementState != DataGridViewElementStates.ReadOnly ? BorderColor : Color.DimGray;
 
         var bs = ButtonState.Normal;
 

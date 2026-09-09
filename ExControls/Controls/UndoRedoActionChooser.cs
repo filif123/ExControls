@@ -4,10 +4,10 @@ namespace ExControls;
 
 public partial class UndoRedoActionChooser : UserControl
 {
-    public IUndoRedoCommand FinalCommand { get; private set; }
+    public IUndoRedoCommand? FinalCommand { get; private set; }
 
     private ExBindingList<IUndoRedoCommand> Commands { get; }
-
+    
     public UndoRedoActionChooser()
     {
         InitializeComponent();
@@ -16,7 +16,7 @@ public partial class UndoRedoActionChooser : UserControl
         Commands.ListChanged += CommandsOnListChanged;
     }
 
-    private void CommandsOnListChanged(object sender, ListChangedEventArgs e)
+    private void CommandsOnListChanged(object? sender, ListChangedEventArgs e)
     {
         lbActions.Items.Clear();
         foreach (var command in Commands)
@@ -25,6 +25,9 @@ public partial class UndoRedoActionChooser : UserControl
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void OnShown()
     {
         lbActions.SelectedItems.Clear();

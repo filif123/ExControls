@@ -1,4 +1,4 @@
-﻿// ReSharper disable VirtualMemberNeverOverridden.Global
+// ReSharper disable VirtualMemberNeverOverridden.Global
 namespace ExControls;
 
 /// <summary>
@@ -12,11 +12,11 @@ public class RestrictivePanel<T> : Panel where T : Control
     /// <summary>
     /// 
     /// </summary>
-    public new event EventHandler<RestrictivePanelEventArgs<T>> ControlAdded;
+    public new event EventHandler<RestrictivePanelEventArgs<T>>? ControlAdded;
     /// <summary>
     /// 
     /// </summary>
-    public new event EventHandler<RestrictivePanelEventArgs<T>> ControlRemoved;
+    public new event EventHandler<RestrictivePanelEventArgs<T>>? ControlRemoved;
 
     /// <inheritdoc />
     protected override void OnControlAdded(ControlEventArgs e)
@@ -24,7 +24,7 @@ public class RestrictivePanel<T> : Panel where T : Control
         if (e.Control is not T control)
         {
             throw new InvalidOperationException(
-                $"Cannot add control of type '{e.Control.GetType().Name}' to this RestrictivePanel as it accepts only controls of type '{typeof(T).Name}'!");
+                $"Cannot add control of type '{e.Control?.GetType().Name}' to this RestrictivePanel as it accepts only controls of type '{typeof(T).Name}'!");
         }
 
         RaiseControlAdded(control);
@@ -35,7 +35,7 @@ public class RestrictivePanel<T> : Panel where T : Control
     protected override void OnControlRemoved(ControlEventArgs e)
     {
         base.OnControlRemoved(e);
-        RaiseControlRemoved((T)e.Control);
+        RaiseControlRemoved((T)e.Control!);
     }
 
     /// <summary>

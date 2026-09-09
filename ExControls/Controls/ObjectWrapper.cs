@@ -5,13 +5,13 @@ internal class ObjectWrapper : ICustomTypeDescriptor
 {
     /// <summary>Simple constructor.</summary>
     /// <param name="obj">A reference to the selected object that will linked to the parent PropertyGrid.</param>
-    internal ObjectWrapper(object obj)
+    internal ObjectWrapper(object? obj)
     {
         SelectedObject = obj;
     }
 
     /// <summary>Get or set a reference to the selected object that will linked to the parent PropertyGrid.</summary>
-    public object SelectedObject { get; set; }
+    public object? SelectedObject { get; set; }
 
     /// <summary>
     ///     Get or set a reference to the collection of properties to show in the parent PropertyGrid.
@@ -21,7 +21,7 @@ internal class ObjectWrapper : ICustomTypeDescriptor
 
     #region ICustomTypeDescriptor Members
 
-    public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+    public PropertyDescriptorCollection GetProperties(Attribute[]? attributes)
     {
         return GetProperties();
     }
@@ -35,61 +35,61 @@ internal class ObjectWrapper : ICustomTypeDescriptor
     /// <returns>AttributeCollection</returns>
     public AttributeCollection GetAttributes()
     {
-        return TypeDescriptor.GetAttributes(SelectedObject, true);
+        return TypeDescriptor.GetAttributes(SelectedObject!, true);
     }
     /// <summary>Get Class Name.</summary>
     /// <returns>String</returns>
-    public string GetClassName()
+    public string? GetClassName()
     {
-        return TypeDescriptor.GetClassName(SelectedObject, true);
+        return TypeDescriptor.GetClassName(SelectedObject!, true);
     }
     /// <summary>GetComponentName.</summary>
     /// <returns>String</returns>
-    public string GetComponentName()
+    public string? GetComponentName()
     {
-        return TypeDescriptor.GetComponentName(SelectedObject, true);
+        return TypeDescriptor.GetComponentName(SelectedObject!, true);
     }
 
     /// <summary>GetConverter.</summary>
     /// <returns>TypeConverter</returns>
     public TypeConverter GetConverter()
     {
-        return TypeDescriptor.GetConverter(SelectedObject, true);
+        return TypeDescriptor.GetConverter(SelectedObject!, true);
     }
 
     /// <summary>GetDefaultEvent.</summary>
     /// <returns>EventDescriptor</returns>
-    public EventDescriptor GetDefaultEvent()
+    public EventDescriptor? GetDefaultEvent()
     {
-        return TypeDescriptor.GetDefaultEvent(SelectedObject, true);
+        return TypeDescriptor.GetDefaultEvent(SelectedObject!, true);
     }
 
     /// <summary>GetDefaultProperty.</summary>
     /// <returns>PropertyDescriptor</returns>
-    public PropertyDescriptor GetDefaultProperty()
+    public PropertyDescriptor? GetDefaultProperty()
     {
-        return TypeDescriptor.GetDefaultProperty(SelectedObject, true);
+        return TypeDescriptor.GetDefaultProperty(SelectedObject!, true);
     }
 
     /// <summary>GetEditor.</summary>
     /// <param name="editorBaseType">editorBaseType</param>
     /// <returns>object</returns>
-    public object GetEditor(Type editorBaseType)
+    public object? GetEditor(Type editorBaseType)
     {
         return TypeDescriptor.GetEditor(this, editorBaseType, true);
     }
 
-    public EventDescriptorCollection GetEvents(Attribute[] attributes)
+    public EventDescriptorCollection GetEvents(Attribute[]? attributes)
     {
-        return TypeDescriptor.GetEvents(SelectedObject, attributes, true);
+        return TypeDescriptor.GetEvents(SelectedObject!, attributes, true);
     }
 
     public EventDescriptorCollection GetEvents()
     {
-        return TypeDescriptor.GetEvents(SelectedObject, true);
+        return TypeDescriptor.GetEvents(SelectedObject!, true);
     }
 
-    public object GetPropertyOwner(PropertyDescriptor pd)
+    public object? GetPropertyOwner(PropertyDescriptor? pd)
     {
         return SelectedObject;
     }

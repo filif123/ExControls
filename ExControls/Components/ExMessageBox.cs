@@ -16,33 +16,30 @@ namespace ExControls;
 public sealed class ExMessageBox
 {
     private MessageBoxButtons _buttons;
-    private MessageBoxDefaultButton _defaultButton;
-    private MessageBoxIcon _icon;
-    private MessageBoxOptions _options;
 
     /// <summary>
     ///     Initializes a new instance of the ExMessageBox class.
     /// </summary>
-    public ExMessageBox() : this((IWin32Window) null)
+    public ExMessageBox() : this((IWin32Window?) null)
     {
-        Form = new ExMessageBoxForm(Style);
-        Form.HelpRequested += Form_HelpRequested;
     }
 
     /// <summary>
     ///     Initializes a new instance of the ExMessageBox class with specified owner.
     /// </summary>
     /// <param name="owner">owner of this MessageBox</param>
-    public ExMessageBox(IWin32Window owner)
+    public ExMessageBox(IWin32Window? owner)
     {
         Owner = owner;
+        Form = new ExMessageBoxForm(Style);
+        Form.HelpRequested += Form_HelpRequested;
     }
 
     /// <summary>
     ///     Initializes a new instance of the ExMessageBox class with text.
     /// </summary>
     /// <param name="text">text in MessageBox's message</param>
-    public ExMessageBox([Localizable(true)] string text) : this((IWin32Window) null)
+    public ExMessageBox([Localizable(true)] string text) : this((IWin32Window?) null)
     {
         Text = text;
     }
@@ -52,7 +49,7 @@ public sealed class ExMessageBox
     /// </summary>
     /// <param name="text">text in MessageBox's message</param>
     /// <param name="caption">caption of the MessageBox</param>
-    public ExMessageBox([Localizable(true)] string text, [Localizable(true)] string caption) : this((IWin32Window) null)
+    public ExMessageBox([Localizable(true)] string text, [Localizable(true)] string caption) : this((IWin32Window?) null)
     {
         Text = text;
         Caption = caption;
@@ -63,7 +60,7 @@ public sealed class ExMessageBox
     /// </summary>
     /// <param name="owner"></param>
     /// <param name="text"></param>
-    public ExMessageBox(IWin32Window owner, [Localizable(true)] string text) : this(owner)
+    public ExMessageBox(IWin32Window? owner, [Localizable(true)] string text) : this(owner)
     {
         Text = text;
     }
@@ -74,7 +71,7 @@ public sealed class ExMessageBox
     /// <param name="owner"></param>
     /// <param name="text"></param>
     /// <param name="caption"></param>
-    public ExMessageBox(IWin32Window owner, [Localizable(true)] string text, [Localizable(true)] string caption) : this(owner)
+    public ExMessageBox(IWin32Window? owner, [Localizable(true)] string text, [Localizable(true)] string caption) : this(owner)
     {
         Text = text;
         Caption = caption;
@@ -123,7 +120,7 @@ public sealed class ExMessageBox
     /// <summary>
     ///     Gets or sets style of components in MessageBox.
     /// </summary>
-    public static ExMessageBoxStyle Style { get; set; }
+    public static ExMessageBoxStyle Style { get; set; } = new();
 
     /// <summary>
     ///     Gets form of this MessageBox.
@@ -133,7 +130,7 @@ public sealed class ExMessageBox
     /// <summary>
     ///     Gets owner of this MessageBox.
     /// </summary>
-    public IWin32Window Owner { get; }
+    public IWin32Window? Owner { get; }
 
     /// <summary>
     ///     Gets or sets the text associated with this control.
@@ -173,11 +170,11 @@ public sealed class ExMessageBox
     /// </summary>
     public MessageBoxIcon Icon
     {
-        get => _icon;
+        get;
         set
         {
-            _icon = value;
-            ChangeIcon(Form, _icon);
+            field = value;
+            ChangeIcon(Form, field);
         }
     }
 
@@ -186,11 +183,11 @@ public sealed class ExMessageBox
     /// </summary>
     public MessageBoxDefaultButton DefaultButton
     {
-        get => _defaultButton;
+        get;
         set
         {
-            _defaultButton = value;
-            RemapButtons(Form, _buttons, _defaultButton);
+            field = value;
+            RemapButtons(Form, _buttons, field);
         }
     }
 
@@ -199,11 +196,11 @@ public sealed class ExMessageBox
     /// </summary>
     public MessageBoxOptions Options
     {
-        get => _options;
+        get;
         set
         {
-            _options = value;
-            ChangeOptions(Form, _options);
+            field = value;
+            ChangeOptions(Form, field);
         }
     }
 
@@ -228,7 +225,7 @@ public sealed class ExMessageBox
     /// <summary>
     ///     Occurs when the user requests help for a control.
     /// </summary>
-    public event HelpEventHandler HelpRequested;
+    public event HelpEventHandler? HelpRequested;
 
     /// <summary>
     ///     Displays a message window, also known as a dialog box, which presents a message to the user.
@@ -245,7 +242,7 @@ public sealed class ExMessageBox
         return Form.ShowDialog(Owner);
     }
 
-    private void Form_HelpRequested(object sender, HelpEventArgs hlpevent) => OnHelpRequested(hlpevent);
+    private void Form_HelpRequested(object? sender, HelpEventArgs hlpevent) => OnHelpRequested(hlpevent);
 
     private static void RemapButtons(ExMessageBoxForm form, MessageBoxButtons buttons, MessageBoxDefaultButton defaultButton)
     {
@@ -319,8 +316,8 @@ public sealed class ExMessageBox
 
     private static void ChangeIcon(ExMessageBoxForm form, MessageBoxIcon icon)
     {
-        if (form.picIcon.Image != null) 
-            form.ShellIcon.Dispose();
+        if (form.picIcon.Image != null)
+            form.ShellIcon!.Dispose();
 
         switch (icon)
         {
@@ -343,8 +340,8 @@ public sealed class ExMessageBox
                 throw new ArgumentOutOfRangeException(nameof(icon), icon, null);
         }
 
-        if (icon != MessageBoxIcon.None) 
-            form.picIcon.Image = form.ShellIcon.ToBitmap();
+        if (icon != MessageBoxIcon.None)
+            form.picIcon.Image = form.ShellIcon!.ToBitmap();
     }
 
     private static void ChangeOptions(ExMessageBoxForm form, MessageBoxOptions options)
@@ -372,7 +369,7 @@ public sealed class ExMessageBox
     }
 
     private static DialogResult ShowCore(
-        IWin32Window owner,
+        IWin32Window? owner,
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
         MessageBoxButtons buttons,
@@ -407,7 +404,7 @@ public sealed class ExMessageBox
     }
 
     private static DialogResult ShowCore(
-        IWin32Window owner,
+        IWin32Window? owner,
         [Localizable(true)] string text,
         [Localizable(true)] string caption,
         MessageBoxButtons buttons,
@@ -781,12 +778,12 @@ public class ExMessageBoxStyle
     /// <summary>
     ///     Gets or sets the Font of label in MessageBox.
     /// </summary>
-    public Font LabelFont { get; set; }
+    public Font? LabelFont { get; set; }
 
     /// <summary>
     ///     Gets or sets the Font of buttons in MessageBox.
     /// </summary>
-    public Font ButtonsFont { get; set; }
+    public Font? ButtonsFont { get; set; }
 
     /// <summary>
     ///     Gets or sets whether default style of components in MessageBox is used.
@@ -893,7 +890,7 @@ internal class HelpInfo
 
     public HelpNavigator Navigator { get; }
 
-    public object Param { get; }
+    public object? Param { get; }
 
     public override string ToString() => "{HelpFilePath=" + HelpFilePath + ", keyword =" + Keyword + ", navigator=" + Navigator + "}";
 }

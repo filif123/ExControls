@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 namespace ExControls;
 
@@ -15,7 +15,7 @@ public record ExStyle : INotifyPropertyChanged
     private Color _borderColor;
 
     /// <inheritdoc />
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public ExStyle()
     {
@@ -46,14 +46,14 @@ public record ExStyle : INotifyPropertyChanged
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Control Control { get; }
+    public Control? Control { get; }
 
     /// <summary>
     /// Gets a parent style.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public ExStyle Parent { get; set; }
+    public ExStyle? Parent { get; set; }
 
     /// <summary>
     /// Gets or sets background color of the control.
@@ -61,7 +61,7 @@ public record ExStyle : INotifyPropertyChanged
     [DefaultValue(typeof(Color), "Empty")]
     public Color BackColor
     {
-        get => GetValue(_backColor, Parent._backColor);
+        get => GetValue(_backColor, Parent?._backColor ?? Color.Empty);
         set => SetField(ref _backColor, value);
     }
 
@@ -71,7 +71,7 @@ public record ExStyle : INotifyPropertyChanged
     [DefaultValue(typeof(Color), "Empty")]
     public Color ForeColor
     {
-        get => GetValue(_foreColor, Parent._foreColor);
+        get => GetValue(_foreColor, Parent?._foreColor ?? Color.Empty);
         set => SetField(ref _foreColor, value);
     }
 
@@ -81,19 +81,19 @@ public record ExStyle : INotifyPropertyChanged
     [DefaultValue(typeof(Color), "Empty")]
     public Color BorderColor
     {
-        get => GetValue(_borderColor, Parent._borderColor);
+        get => GetValue(_borderColor, Parent?._borderColor ?? Color.Empty);
         set => SetField(ref _borderColor, value);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="propertyName"></param>
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        if (!_initializing) 
-            Control.Invalidate();
+        if (!_initializing)
+            Control?.Invalidate();
     }
 
     /// <summary>
@@ -104,7 +104,7 @@ public record ExStyle : INotifyPropertyChanged
     /// <param name="propertyName"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) 
             return false;
@@ -136,7 +136,7 @@ public record ExStyle : INotifyPropertyChanged
     public void Endinit()
     {
         _initializing = false;
-        Control.Invalidate();
+        Control?.Invalidate();
     }
 }
 
@@ -147,37 +147,37 @@ public record ExStyle : INotifyPropertyChanged
 public sealed class ExStyleManager<TS> where TS : ExStyle, new()
 {
     private bool _defaultStyle;
-    private readonly IStylable<TS> _control;
+    private readonly IStylable<TS>? _control;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> DefaultStyleChanged;
+    public event EventHandler<EventArgs>? DefaultStyleChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<PropertyChangedEventArgs> StyleNormalChanged;
+    public event EventHandler<PropertyChangedEventArgs>? StyleNormalChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<PropertyChangedEventArgs> StyleDisabledChanged;
+    public event EventHandler<PropertyChangedEventArgs>? StyleDisabledChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<PropertyChangedEventArgs> StyleSelectedChanged;
+    public event EventHandler<PropertyChangedEventArgs>? StyleSelectedChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<PropertyChangedEventArgs> StyleHoverChanged;
+    public event EventHandler<PropertyChangedEventArgs>? StyleHoverChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<PropertyChangedEventArgs> StyleReadOnlyChanged;
+    public event EventHandler<PropertyChangedEventArgs>? StyleReadOnlyChanged;
 
     /// <summary>
     ///     Gets or sets
@@ -313,5 +313,5 @@ public interface ISupportsDefaultStyle
     public bool DefaultStyle { get; set; }
 
     /// <summary>Occurs when the <see cref="DefaultStyle" /> property changed.</summary>
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 }

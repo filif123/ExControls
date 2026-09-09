@@ -10,12 +10,12 @@ namespace ExControls.Designers;
 
 internal class ExTextBoxDesigner : DesignerControlBase<ExTextBox>
 {
-    private DesignerActionListCollection _actionLists;
+    private DesignerActionListCollection? _actionLists;
 
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExTextBoxDesignerActionList(ControlHost)};
 
     /// <summary>Gets the selection rules that indicate the movement capabilities of a component.</summary>
-    /// <returns>A bitwise combination of <see cref="T:System.Windows.Forms.Design.SelectionRules" /> values.</returns>
+    /// <returns>A bitwise combination of <see cref="System.Windows.Forms.Design.SelectionRules" /> values.</returns>
     public override SelectionRules SelectionRules
     {
         get

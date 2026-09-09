@@ -16,7 +16,7 @@ public class EquatableCollection<T> : Collection<T>
     }
 
     /// <inheritdoc />
-    public override bool Equals(object other)
+    public override bool Equals(object? other)
     {
         return other is IEnumerable<T> otherEnumerable && otherEnumerable.SequenceEqual(this);
     }
@@ -27,7 +27,7 @@ public class EquatableCollection<T> : Collection<T>
         var hash = 43;
         unchecked
         {
-            hash = this.Aggregate(hash, (current, item) => 19 * current + item.GetHashCode());
+            hash = this.Aggregate(hash, (current, item) => 19 * current + (item?.GetHashCode() ?? 0));
         }
 
         return hash;

@@ -15,7 +15,7 @@ public static class SystemResources
     /// <param name="culture"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static string GetString<T>(string key, CultureInfo culture)
+    public static string? GetString<T>(string key, CultureInfo culture)
     {
         var baseName = typeof(T).Namespace;
         if (baseName == null) 

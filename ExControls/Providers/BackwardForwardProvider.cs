@@ -1,4 +1,4 @@
-﻿// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable UnusedMember.Global
@@ -10,17 +10,16 @@ namespace ExControls.Providers;
 public class BackwardForwardProvider : Component
 {
     private readonly Stack<IBackwardForwardCommand> _backwardStack, _forwardStack;
-    private IBackwardForwardCommand _currentCommand;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<UndoRedoStateEventArgs> BackwardForwardStateChanged;
+    public event EventHandler<UndoRedoStateEventArgs>? BackwardForwardStateChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<BackwardForwardAddedCommandEventArgs> CommandAdded;
+    public event EventHandler<BackwardForwardAddedCommandEventArgs>? CommandAdded;
 
     /// <summary>
     ///     Enables or disables manager to add commands to stacks. Dafault is false.
@@ -32,10 +31,10 @@ public class BackwardForwardProvider : Component
     ///     Represents current command.
     /// </summary>
     [Browsable(false)]
-    public IBackwardForwardCommand CurrentCommand
+    public IBackwardForwardCommand? CurrentCommand
     {
-        get => _currentCommand;
-        protected set => _currentCommand = value ?? throw new ArgumentNullException(nameof(value));
+        get;
+        protected set => field = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     /// <summary>

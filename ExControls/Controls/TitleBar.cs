@@ -1,6 +1,5 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using ExControls.Designers;
 using ExControls.Properties;
 
 namespace ExControls;
@@ -10,7 +9,7 @@ namespace ExControls;
 /// <summary>
 /// WORK IN PROGRESS
 /// </summary>
-[Designer(typeof(TitleBarDesigner))]
+[Designer("ExControls.Designers.TitleBarDesigner, ExControls")]
 internal partial class TitleBar : UserControl
 {
     // ReSharper disable once InconsistentNaming
@@ -58,7 +57,7 @@ internal partial class TitleBar : UserControl
         }
     }
 
-    public Form Form { get; set; }
+    public Form? Form { get; set; }
 
     internal Color CloseButtonSelBackColor { get; set; } = Color.Red;
     internal Color CloseButtonSelForeColor { get; set; } = Color.White;
@@ -251,25 +250,25 @@ internal partial class TitleBar : UserControl
 
     private void ButtonMaximize_Click(object sender, EventArgs e)
     {
-        Form.WindowState = Form.WindowState == FormWindowState.Normal ? FormWindowState.Maximized : FormWindowState.Normal;
+        Form!.WindowState = Form!.WindowState == FormWindowState.Normal ? FormWindowState.Maximized : FormWindowState.Normal;
         ButtonMaximize.Invalidate();
     }
 
     private void ButtonMinimize_Click(object sender, EventArgs e)
     {
-        Form.WindowState = FormWindowState.Minimized;
+        Form!.WindowState = FormWindowState.Minimized;
         ButtonMinimize.Invalidate();
-        //Win32.AnimateWindow(Form.Handle, 300, Win32.AW_VER_POSITIVE | Win32.AW_SLIDE);
+        //Win32.AnimateWindow(Form!.Handle, 300, Win32.AW_VER_POSITIVE | Win32.AW_SLIDE);
     }
 
     private void ButtonHelp_Click(object sender, EventArgs e)
     {
-        Win32.SendMessage(Form.Handle, Win32.WM.SYSCOMMAND, (IntPtr) Win32.SC_CONTEXTHELP, IntPtr.Zero);
+        Win32.SendMessage(Form!.Handle, Win32.WM.SYSCOMMAND, (IntPtr) Win32.SC_CONTEXTHELP, IntPtr.Zero);
     }
 
     private void ButtonClose_Click(object sender, EventArgs e)
     {
-        Form.Close();
+        Form!.Close();
     }
 
     private void ButtonClose_MouseEnter(object sender, EventArgs e)
@@ -350,12 +349,12 @@ internal partial class TitleBar : UserControl
         {
             case MouseButtons.Left:
                 Win32.ReleaseCapture();
-                Win32.SendMessage(Form.Handle, Win32.WM.NCLBUTTONDOWN, (IntPtr) HT_CAPTION, IntPtr.Zero);
+                Win32.SendMessage(Form!.Handle, Win32.WM.NCLBUTTONDOWN, (IntPtr) HT_CAPTION, IntPtr.Zero);
                 break;
             case MouseButtons.Right:
             {
                 var p = MousePosition.X + (MousePosition.Y * 0x10000);
-                Win32.SendMessage(Form.Handle, Win32.WM.POPUPSYSTEMMENU, (IntPtr)0, (IntPtr)p);
+                Win32.SendMessage(Form!.Handle, Win32.WM.POPUPSYSTEMMENU, (IntPtr)0, (IntPtr)p);
                 break;
             }
         }
@@ -379,16 +378,16 @@ internal partial class TitleBar : UserControl
     private void ShowSystemContextMenu()
     {
         var p = MousePosition.X + (MousePosition.Y * 0x10000);
-        Win32.SendMessage(Form.Handle, Win32.WM.POPUPSYSTEMMENU, (IntPtr)0, (IntPtr)p);
+        Win32.SendMessage(Form!.Handle, Win32.WM.POPUPSYSTEMMENU, (IntPtr)0, (IntPtr)p);
     }
 
     private void TablePanel_DoubleClick(object sender, EventArgs e)
     {
-        Form.WindowState = Form.WindowState switch
+        Form!.WindowState = Form!.WindowState switch
         {
             FormWindowState.Maximized => FormWindowState.Normal,
             FormWindowState.Normal => FormWindowState.Maximized,
-            _ => Form.WindowState
+            _ => Form!.WindowState
         };
     }
 

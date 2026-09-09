@@ -1,4 +1,4 @@
-﻿using ExControls.Controls;
+using ExControls.Controls;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -168,7 +168,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changed.</summary>
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -207,8 +207,8 @@ public class ExRichTextBox : RichTextBox, IExControl
         }
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.Paint" /> event.</summary>
-    /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs" /> that contains the event data. </param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.Paint" /> event.</summary>
+    /// <param name="e">A <see cref="System.Windows.Forms.PaintEventArgs" /> that contains the event data. </param>
     protected override void OnPaint(PaintEventArgs e)
     {
         if (DefaultStyle)
@@ -229,9 +229,9 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseEnter(EventArgs eventargs)
+    protected override void OnMouseEnter(EventArgs e)
     {
-        base.OnMouseEnter(eventargs);
+        base.OnMouseEnter(e);
         if (DefaultStyle)
             return;
 
@@ -243,9 +243,9 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseLeave(EventArgs eventargs)
+    protected override void OnMouseLeave(EventArgs e)
     {
-        base.OnMouseLeave(eventargs);
+        base.OnMouseLeave(e);
         if (DefaultStyle)
             return;
 
@@ -316,16 +316,16 @@ public class ExRichTextBox : RichTextBox, IExControl
         }
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.RichTextBox.HScroll" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.RichTextBox.HScroll" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data. </param>
     protected override void OnHScroll(EventArgs e)
     {
         base.OnHScroll(e);
         if (!DefaultStyle) Invalidate();
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.RichTextBox.VScroll" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.RichTextBox.VScroll" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data. </param>
     protected override void OnVScroll(EventArgs e)
     {
         base.OnVScroll(e);

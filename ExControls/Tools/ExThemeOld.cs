@@ -1,4 +1,4 @@
-﻿// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMember.Global
 // ReSharper disable EventNeverSubscribedTo.Global
 // ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
@@ -11,26 +11,17 @@ namespace ExControls;
 /// </summary>
 internal class ExThemeOld
 {
-    private ExStyleOld styleNormal;
-    private ExStyleOld styleHover;
-    private ExStyleOld styleSelected;
-    private ExStyleOld styleDisabled;
-    private ExStyleOld styleReadOnly;
-
-    private bool defaultStyle;
-
-        
     /// <summary>
     ///     Gets or sets
     /// </summary>
     public bool DefaultStyle
     {
-        get => defaultStyle;
+        get;
         set
         {
-            if (value == defaultStyle)
+            if (value == field)
                 return;
-            defaultStyle = value;
+            field = value;
             OnDefaultStyleChanged();
         }
     }
@@ -38,14 +29,14 @@ internal class ExThemeOld
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyleOld StyleNormal
+    public ExStyleOld? StyleNormal
     {
-        get => styleNormal;
+        get;
         set
         {
-            if (value == styleNormal)
+            if (value == field)
                 return;
-            styleNormal = value;
+            field = value;
             OnStyleNormalChanged();
         }
     }
@@ -53,14 +44,14 @@ internal class ExThemeOld
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyleOld StyleHover
+    public ExStyleOld? StyleHover
     {
-        get => styleHover;
+        get;
         set
         {
-            if (value == styleHover)
+            if (value == field)
                 return;
-            styleHover = value;
+            field = value;
             OnStyleHoverChanged();
         }
     }
@@ -68,14 +59,14 @@ internal class ExThemeOld
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyleOld StyleSelected
+    public ExStyleOld? StyleSelected
     {
-        get => styleSelected;
+        get;
         set
         {
-            if (value == styleSelected)
+            if (value == field)
                 return;
-            styleSelected = value;
+            field = value;
             OnStyleSelectedChanged();
         }
     }
@@ -83,14 +74,14 @@ internal class ExThemeOld
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyleOld StyleDisabled
+    public ExStyleOld? StyleDisabled
     {
-        get => styleDisabled;
+        get;
         set
         {
-            if (value == styleDisabled)
+            if (value == field)
                 return;
-            styleDisabled = value;
+            field = value;
             OnStyleDisabledChanged();
         }
     }
@@ -98,14 +89,14 @@ internal class ExThemeOld
     /// <summary>
     ///     Gets or sets
     /// </summary>
-    public ExStyleOld StyleReadOnly
+    public ExStyleOld? StyleReadOnly
     {
-        get => styleReadOnly;
+        get;
         set
         {
-            if (value == styleReadOnly)
+            if (value == field)
                 return;
-            styleReadOnly = value;
+            field = value;
             OnStyleReadOnlyChanged();
         }
     }
@@ -113,32 +104,32 @@ internal class ExThemeOld
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> DefaultStyleChanged;
+    public event EventHandler<EventArgs>? DefaultStyleChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> StyleNormalChanged;
+    public event EventHandler<EventArgs>? StyleNormalChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> StyleHoverChanged;
+    public event EventHandler<EventArgs>? StyleHoverChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> StyleSelectedChanged;
+    public event EventHandler<EventArgs>? StyleSelectedChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> StyleDisabledChanged;
+    public event EventHandler<EventArgs>? StyleDisabledChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> StyleReadOnlyChanged;
+    public event EventHandler<EventArgs>? StyleReadOnlyChanged;
 
 
     /// <summary>
@@ -195,19 +186,17 @@ internal class ExThemeOld
 /// </summary>
 internal class ExAppThemeOld : ExThemeOld
 {
-    private bool darkTitleBar;
-
     /// <summary>
     ///     Gets or sets
     /// </summary>
     public bool DarkTitleBar
     {
-        get => darkTitleBar;
+        get;
         set
         {
-            if (value == darkTitleBar)
+            if (value == field)
                 return;
-            darkTitleBar = value;
+            field = value;
             OnDarkTitleBarChanged();
         }
     }
@@ -215,7 +204,7 @@ internal class ExAppThemeOld : ExThemeOld
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> DarkTitleBarChanged;
+    public event EventHandler<EventArgs>? DarkTitleBarChanged;
 
     /// <summary>
     /// 
@@ -231,19 +220,17 @@ internal class ExAppThemeOld : ExThemeOld
 /// </summary>
 internal class ExScrollableControlTheme : ExThemeOld
 {
-    private bool darkScrollBars;
-
     /// <summary>
     ///     Gets or sets
     /// </summary>
     public bool DarkScrollBars
     {
-        get => darkScrollBars;
+        get;
         set
         {
-            if (value == darkScrollBars)
+            if (value == field)
                 return;
-            darkScrollBars = value;
+            field = value;
             OnDarkScrollBarChanged();
         }
     }
@@ -251,7 +238,7 @@ internal class ExScrollableControlTheme : ExThemeOld
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<EventArgs> DarkScrollBarChanged;
+    public event EventHandler<EventArgs>? DarkScrollBarChanged;
 
     /// <summary>
     /// 
@@ -267,10 +254,8 @@ internal class ExScrollableControlTheme : ExThemeOld
 /// </summary>
 internal static class ExApplicationOld
 {
-    private static ExAppThemeOld _theme;
-
     /// <summary>
     /// 
     /// </summary>
-    public static ExAppThemeOld Theme => _theme ??= new ExAppThemeOld();
+    public static ExAppThemeOld Theme => field ??= new ExAppThemeOld();
 }

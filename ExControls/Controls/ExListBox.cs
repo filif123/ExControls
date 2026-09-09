@@ -1,4 +1,4 @@
-﻿namespace ExControls;
+namespace ExControls;
 
 /// <inheritdoc />
 public class ExListBox : ListBox
@@ -173,7 +173,7 @@ public class ExListBox : ListBox
     /// <summary>Occurs when the <see cref="SelectedRowBackColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the SelectedRowBackColor property changes.",true)]
-    public event EventHandler SelectedRowBackColorChanged;
+    public event EventHandler? SelectedRowBackColorChanged;
 
     /// <summary>Raises the <see cref="SelectedRowBackColorChanged" /> event.</summary>
     protected virtual void OnSelectedRowBackColorChanged()

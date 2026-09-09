@@ -14,7 +14,7 @@ public static class MessageBoxStrings
     /// </summary>
     /// <param name="type">Type of MessageBox button.</param>
     /// <returns></returns>
-    public static string GetLocalizedString(MessageBoxCmdType type) => Marshal.PtrToStringAuto(Win32.MB_GetString((int)type));
+    public static string GetLocalizedString(MessageBoxCmdType type) => Marshal.PtrToStringAuto(Win32.MB_GetString((int)type)) ?? "";
 }
 
 /// <summary>

@@ -1,4 +1,4 @@
-﻿using ExControls.Controls;
+using ExControls.Controls;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable UnusedMember.Global
 
@@ -136,7 +136,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
-    public event EventHandler DefaultStyleChanged;
+    public event EventHandler? DefaultStyleChanged;
 
     /// <inheritdoc />
     [Browsable(true)]
@@ -166,7 +166,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         }
     }
 
-    private void TextBox_MouseEnter(object sender, EventArgs e)
+    private void TextBox_MouseEnter(object? sender, EventArgs e)
     {
         if (!_hover)
         {
@@ -175,7 +175,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         }
     }
 
-    private void TextBox_MouseLeave(object sender, EventArgs e)
+    private void TextBox_MouseLeave(object? sender, EventArgs e)
     {
         if (_hover)
         {
@@ -184,7 +184,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         }
     }
 
-    private void OnUpDown(object source, UpDownEventArgs e)
+    private void OnUpDown(object? source, UpDownEventArgs e)
     {
         if (e.ButtonID == 1)
         {
@@ -217,11 +217,11 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseEnter(EventArgs eventargs)
+    protected override void OnMouseEnter(EventArgs e)
     {
         if (DefaultStyle)
         {
-            base.OnMouseEnter(eventargs);
+            base.OnMouseEnter(e);
             return;
         }
 
@@ -233,11 +233,11 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseLeave(EventArgs eventargs)
+    protected override void OnMouseLeave(EventArgs e)
     {
         if (DefaultStyle)
         {
-            base.OnMouseLeave(eventargs);
+            base.OnMouseLeave(e);
             return;
         }
 
@@ -329,9 +329,9 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         private bool _doubleClickFired;
         private ButtonId _mouseOver;
         private ButtonId _pushed;
-        private Timer _timer;
+        private System.Windows.Forms.Timer? _timer;
         private int _timerInterval;
-        private UpDownEventHandler _upDownEventHandler;
+        private UpDownEventHandler? _upDownEventHandler;
 
         internal UpDownButtons(ExNumericUpDown parent)
         {
@@ -552,7 +552,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         {
             if (_timer == null)
             {
-                _timer = new Timer();
+                _timer = new System.Windows.Forms.Timer();
                 _timer.Tick += TimerHandler;
             }
 
@@ -571,7 +571,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             }
         }
 
-        private void TimerHandler(object source, EventArgs args)
+        private void TimerHandler(object? source, EventArgs args)
         {
             if (!Capture)
             {

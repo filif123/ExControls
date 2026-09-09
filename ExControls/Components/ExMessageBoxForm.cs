@@ -18,15 +18,15 @@ public partial class ExMessageBoxForm : Form
     private int _countdown;
     private int _remains;
 
-    internal HelpInfo HelpInfo;
-    internal ShellIcon ShellIcon;
+    internal HelpInfo? HelpInfo;
+    internal ShellIcon? ShellIcon;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="style"></param>
     /// <param name="icon"></param>
-    public ExMessageBoxForm(ExMessageBoxStyle style, MessageBoxIcon icon = MessageBoxIcon.None)
+    public ExMessageBoxForm(ExMessageBoxStyle? style, MessageBoxIcon icon = MessageBoxIcon.None)
     {
         InitializeComponent();
         Style = style;
@@ -71,7 +71,7 @@ public partial class ExMessageBoxForm : Form
     /// <summary>
     /// 
     /// </summary>
-    public ExMessageBoxStyle Style { get; }
+    public ExMessageBoxStyle? Style { get; }
 
     /// <summary>
     /// 

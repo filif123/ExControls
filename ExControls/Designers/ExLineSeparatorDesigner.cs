@@ -10,7 +10,7 @@ namespace ExControls.Designers;
 
 internal class ExLineSeparatorDesigner : DesignerControlBase<ExLineSeparator>
 {
-    private DesignerActionListCollection _actionLists;
+    private DesignerActionListCollection? _actionLists;
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExLineSeparatorActionList(ControlHost, this)};
 
     private class ExLineSeparatorActionList : DesignerActionListBase<ExLineSeparator>

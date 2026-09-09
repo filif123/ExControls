@@ -26,173 +26,111 @@ namespace ExControls.Test
         #region Kód generovaný Návrhářem Windows Form
 
         /// <summary>
-        /// Metoda vyžadovaná pro podporu Návrháře - neupravovat
-        /// obsah této metody v editoru kódu.
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             ExControls.OptionsNode optionsNode1 = new ExControls.OptionsNode();
             ExControls.OptionsNode optionsNode2 = new ExControls.OptionsNode();
             ExControls.OptionsNode optionsNode3 = new ExControls.OptionsNode();
-            this.exOptionsView1 = new ExControls.ExOptionsView();
-            this.exOptionsPanel1 = new ExControls.ExOptionsPanel(this.exOptionsView1);
-            this.exOptionsPanel2 = new ExControls.ExOptionsPanel(this.exOptionsView1);
-            this.exPropertyGrid1 = new ExControls.ExPropertyGrid();
-            this.exOptionsPanel3 = new ExControls.ExOptionsPanel(this.exOptionsView1);
-            ((System.ComponentModel.ISupportInitialize)(this.exOptionsView1)).BeginInit();
-            this.exOptionsPanel2.SuspendLayout();
-            this.exPropertyGrid1.SuspendLayout();
-            this.SuspendLayout();
+            ExControls.OptionsNode optionsNode4 = new ExControls.OptionsNode();
+            exOptionsView1 = new ExControls.ExOptionsView();
+            exOptionsPanel1 = new ExControls.ExOptionsPanel(exOptionsView1);
+            exOptionsPanel2 = new ExControls.ExOptionsPanel(exOptionsView1);
+            exPropertyGrid1 = new ExControls.ExPropertyGrid();
+            exOptionsPanel3 = new ExControls.ExOptionsPanel(exOptionsView1);
+            exOptionsPanel4 = new ExControls.ExOptionsPanel(exOptionsView1);
+            ((System.ComponentModel.ISupportInitialize)exOptionsView1).BeginInit();
+            exOptionsPanel2.SuspendLayout();
+            exPropertyGrid1.SuspendLayout();
+            SuspendLayout();
             // 
             // exOptionsView1
             // 
-            this.exOptionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.exOptionsView1.HeaderNodeNameBackColor = System.Drawing.SystemColors.Control;
-            this.exOptionsView1.HeaderNodeNameFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.exOptionsView1.HeaderNodeNameForeColor = System.Drawing.SystemColors.ControlText;
-            this.exOptionsView1.LinkToChildrenForeColor = System.Drawing.Color.Empty;
-            this.exOptionsView1.Location = new System.Drawing.Point(0, 0);
-            this.exOptionsView1.Name = "exOptionsView1";
-            this.exOptionsView1.Panels.Add(this.exOptionsPanel1);
-            this.exOptionsView1.Panels.Add(this.exOptionsPanel2);
-            this.exOptionsView1.Panels.Add(this.exOptionsPanel3);
-            this.exOptionsView1.Size = new System.Drawing.Size(686, 488);
-            this.exOptionsView1.TabIndex = 1;
-            // 
-            // exOptionsView1.ToolStripMenu
-            // 
-            this.exOptionsView1.ToolStripMenu.BackColor = System.Drawing.SystemColors.Control;
-            this.exOptionsView1.ToolStripMenu.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.exOptionsView1.ToolStripMenu.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.exOptionsView1.ToolStripMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.exOptionsView1.ToolStripMenu.Location = new System.Drawing.Point(355, 0);
-            this.exOptionsView1.ToolStripMenu.Name = "ToolStripMenu";
-            this.exOptionsView1.ToolStripMenu.Size = new System.Drawing.Size(102, 25);
-            this.exOptionsView1.ToolStripMenu.TabIndex = 1;
-            this.exOptionsView1.ToolStripMenu.Text = "toolStrip1";
-            // 
-            // 
-            // 
-            this.exOptionsView1.TreeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.exOptionsView1.TreeView.FullRowSelect = true;
-            this.exOptionsView1.TreeView.HideSelection = false;
-            this.exOptionsView1.TreeView.Name = "treeView";
-            this.exOptionsView1.TreeView.PathSeparator = " / ";
-            this.exOptionsView1.TreeView.ShowLines = false;
-            this.exOptionsView1.TreeView.ShowNodeToolTips = true;
-            this.exOptionsView1.TreeView.TabIndex = 0;
+            exOptionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            exOptionsView1.HeaderNodeNameBackColor = System.Drawing.SystemColors.Control;
+            exOptionsView1.HeaderNodeNameFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)238));
+            exOptionsView1.HeaderNodeNameForeColor = System.Drawing.SystemColors.ControlText;
+            exOptionsView1.HeaderNodeNameVisible = true;
+            exOptionsView1.LinkToChildrenForeColor = System.Drawing.Color.Empty;
+            exOptionsView1.Location = new System.Drawing.Point(0, 0);
+            exOptionsView1.Name = "exOptionsView1";
+            exOptionsView1.SearchBoxVisible = true;
+            exOptionsView1.Size = new System.Drawing.Size(686, 488);
+            exOptionsView1.TabIndex = 1;
             // 
             // exOptionsPanel1
             // 
-            this.exOptionsPanel1.GenerateLinksToChildren = true;
-            this.exOptionsPanel1.Name = "exOptionsPanel1";
+            exOptionsPanel1.GenerateLinksToChildren = true;
+            exOptionsPanel1.Name = "exOptionsPanel1";
             optionsNode1.Name = "";
             optionsNode1.Text = "exOptionsPanel1";
-            this.exOptionsPanel1.Node = optionsNode1;
-            this.exOptionsPanel1.NodeText = "exOptionsPanel1";
-            this.exOptionsPanel1.ParentNode = null;
+            exOptionsPanel1.Node = optionsNode1;
+            exOptionsPanel1.NodeText = "exOptionsPanel1";
+            exOptionsPanel1.ParentNode = null;
             // 
             // exOptionsPanel2
             // 
-            this.exOptionsPanel2.Controls.Add(this.exPropertyGrid1);
-            this.exOptionsPanel2.Name = "exOptionsPanel2";
+            exOptionsPanel2.Controls.Add(exPropertyGrid1);
+            exOptionsPanel2.GenerateLinksToChildren = false;
+            exOptionsPanel2.Name = "exOptionsPanel2";
             optionsNode2.Name = "";
             optionsNode2.Text = "exOptionsPanel2";
-            this.exOptionsPanel2.Node = optionsNode2;
-            this.exOptionsPanel2.NodeText = "exOptionsPanel2";
-            this.exOptionsPanel2.ParentNode = optionsNode1;
+            exOptionsPanel2.Node = optionsNode2;
+            exOptionsPanel2.NodeText = "exOptionsPanel2";
+            exOptionsPanel2.ParentNode = optionsNode1;
             // 
             // exPropertyGrid1
             // 
-            this.exPropertyGrid1.BrowsableProperties = null;
-            // 
-            // 
-            // 
-            this.exPropertyGrid1.ButtonAlphabetical.AccessibleRole = System.Windows.Forms.AccessibleRole.CheckButton;
-            this.exPropertyGrid1.ButtonAlphabetical.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.exPropertyGrid1.ButtonAlphabetical.ImageIndex = 0;
-            this.exPropertyGrid1.ButtonAlphabetical.Name = "";
-            this.exPropertyGrid1.ButtonAlphabetical.Size = new System.Drawing.Size(23, 22);
-            this.exPropertyGrid1.ButtonAlphabetical.Text = "Alphabetical";
-            // 
-            // 
-            // 
-            this.exPropertyGrid1.ButtonCategorized.AccessibleRole = System.Windows.Forms.AccessibleRole.CheckButton;
-            this.exPropertyGrid1.ButtonCategorized.Checked = true;
-            this.exPropertyGrid1.ButtonCategorized.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.exPropertyGrid1.ButtonCategorized.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.exPropertyGrid1.ButtonCategorized.ImageIndex = 1;
-            this.exPropertyGrid1.ButtonCategorized.Name = "";
-            this.exPropertyGrid1.ButtonCategorized.Size = new System.Drawing.Size(23, 22);
-            this.exPropertyGrid1.ButtonCategorized.Text = "Categorized";
-            // 
-            // 
-            // 
-            this.exPropertyGrid1.ButtonPropertyPages.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.exPropertyGrid1.ButtonPropertyPages.Enabled = false;
-            this.exPropertyGrid1.ButtonPropertyPages.ImageIndex = 3;
-            this.exPropertyGrid1.ButtonPropertyPages.Name = "";
-            this.exPropertyGrid1.ButtonPropertyPages.Size = new System.Drawing.Size(23, 22);
-            this.exPropertyGrid1.ButtonPropertyPages.Text = "Property Pages";
-            this.exPropertyGrid1.ButtonPropertyPages.Visible = false;
-            this.exPropertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.exPropertyGrid1.FirstHideAllProperties = false;
-            this.exPropertyGrid1.HiddenAttributes = null;
-            this.exPropertyGrid1.HiddenProperties = null;
-            // 
-            // exPropertyGrid1.InnerToolStrip
-            // 
-            this.exPropertyGrid1.InnerToolStrip.AccessibleName = "Property Grid";
-            this.exPropertyGrid1.InnerToolStrip.AccessibleRole = System.Windows.Forms.AccessibleRole.ToolBar;
-            this.exPropertyGrid1.InnerToolStrip.AllowMerge = false;
-            this.exPropertyGrid1.InnerToolStrip.AutoSize = false;
-            this.exPropertyGrid1.InnerToolStrip.CanOverflow = false;
-            this.exPropertyGrid1.InnerToolStrip.Dock = System.Windows.Forms.DockStyle.None;
-            this.exPropertyGrid1.InnerToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.exPropertyGrid1.InnerToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exPropertyGrid1.ButtonCategorized,
-            this.exPropertyGrid1.ButtonAlphabetical,
-            this.exPropertyGrid1.Separator,
-            this.exPropertyGrid1.ButtonPropertyPages});
-            this.exPropertyGrid1.InnerToolStrip.Location = new System.Drawing.Point(0, 1);
-            this.exPropertyGrid1.InnerToolStrip.Name = "InnerToolStrip";
-            this.exPropertyGrid1.InnerToolStrip.Padding = new System.Windows.Forms.Padding(2, 0, 1, 0);
-            this.exPropertyGrid1.InnerToolStrip.Size = new System.Drawing.Size(451, 25);
-            this.exPropertyGrid1.InnerToolStrip.TabIndex = 1;
-            this.exPropertyGrid1.InnerToolStrip.TabStop = true;
-            this.exPropertyGrid1.InnerToolStrip.Text = "PropertyGridToolBar";
-            this.exPropertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.exPropertyGrid1.Name = "exPropertyGrid1";
-            this.exPropertyGrid1.SelectedObject = this.exPropertyGrid1;
-            this.exPropertyGrid1.Size = new System.Drawing.Size(451, 457);
-            this.exPropertyGrid1.TabIndex = 0;
+            exPropertyGrid1.BackColor = System.Drawing.SystemColors.Control;
+            exPropertyGrid1.BrowsableProperties = null;
+            exPropertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            exPropertyGrid1.FirstHideAllProperties = false;
+            exPropertyGrid1.HiddenAttributes = null;
+            exPropertyGrid1.HiddenProperties = null;
+            exPropertyGrid1.Location = new System.Drawing.Point(0, 0);
+            exPropertyGrid1.Name = "exPropertyGrid1";
+            exPropertyGrid1.SelectedObject = exPropertyGrid1;
+            exPropertyGrid1.Size = new System.Drawing.Size(451, 457);
+            exPropertyGrid1.TabIndex = 0;
             // 
             // exOptionsPanel3
             // 
-            this.exOptionsPanel3.Name = "exOptionsPanel3";
+            exOptionsPanel3.GenerateLinksToChildren = false;
+            exOptionsPanel3.Name = "exOptionsPanel3";
             optionsNode3.Name = "";
             optionsNode3.Text = "test3he";
-            this.exOptionsPanel3.Node = optionsNode3;
-            this.exOptionsPanel3.NodeText = "test3he";
-            this.exOptionsPanel3.ParentNode = optionsNode1;
+            exOptionsPanel3.Node = optionsNode3;
+            exOptionsPanel3.NodeText = "test3he";
+            exOptionsPanel3.ParentNode = optionsNode1;
+            // 
+            // exOptionsPanel4
+            // 
+            exOptionsPanel4.GenerateLinksToChildren = false;
+            exOptionsPanel4.Name = "exOptionsPanel4";
+            optionsNode4.Name = "";
+            optionsNode4.Text = "exOptionsPanel4";
+            exOptionsPanel4.Node = optionsNode4;
+            exOptionsPanel4.NodeText = "exOptionsPanel4";
+            exOptionsPanel4.ParentNode = null;
             // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(686, 488);
-            this.Controls.Add(this.exOptionsView1);
-            this.Name = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.exOptionsView1)).EndInit();
-            this.exOptionsPanel2.ResumeLayout(false);
-            this.exPropertyGrid1.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            ClientSize = new System.Drawing.Size(686, 488);
+            Controls.Add(exOptionsView1);
+            Load += Form1_Load;
+            ((System.ComponentModel.ISupportInitialize)exOptionsView1).EndInit();
+            exOptionsPanel2.ResumeLayout(false);
+            exPropertyGrid1.ResumeLayout(false);
+            ResumeLayout(false);
         }
+
+        private ExControls.ExOptionsPanel exOptionsPanel4;
 
         #endregion
 
-        private ExOptionsView exOptionsView1;
+        private ExControls.ExOptionsView exOptionsView1;
         private ExOptionsPanel exOptionsPanel1;
         private ExOptionsPanel exOptionsPanel2;
         private ExOptionsPanel exOptionsPanel3;

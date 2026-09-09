@@ -214,7 +214,7 @@ internal static partial class Win32
     public static extern int CloseThemeData(IntPtr hTheme);
 
     [DllImport(UXTHEME, ExactSpelling = true, CharSet = CharSet.Unicode)]
-    public static extern int SetWindowTheme(IntPtr hWnd, string textSubAppName, string textSubIdList);
+    public static extern int SetWindowTheme(IntPtr hWnd, string? textSubAppName, string? textSubIdList);
 
     #endregion
 

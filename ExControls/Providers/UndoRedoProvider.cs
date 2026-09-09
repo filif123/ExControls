@@ -1,4 +1,4 @@
-﻿// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable EventNeverSubscribedTo.Global
@@ -10,17 +10,17 @@ namespace ExControls.Providers;
 /// </summary>
 public class UndoRedoManager : Component
 {
-    private readonly Stack<(IUndoRedoCommand cmd, IUndoHandler handler)> _undoStack, _redoStack;
+    private readonly Stack<(IUndoRedoCommand cmd, IUndoHandler? handler)> _undoStack, _redoStack;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<UndoRedoStateEventArgs> UndoRedoStateChanged;
+    public event EventHandler<UndoRedoStateEventArgs>? UndoRedoStateChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler<UndoRedoAddedCommandEventArgs> CommandAdded;
+    public event EventHandler<UndoRedoAddedCommandEventArgs>? CommandAdded;
 
     /// <summary>
     ///     Enables or disables manager to add commands to stacks. Dafault is false.
@@ -31,7 +31,7 @@ public class UndoRedoManager : Component
     /// <summary>
     ///     Represents last saved undo command in history.
     /// </summary>
-    protected IUndoRedoCommand SavedStateCommand { get; set; }
+    protected IUndoRedoCommand? SavedStateCommand { get; set; }
 
     /// <summary>
     ///     Check if there is something to undo. Use this method to decide
@@ -68,8 +68,8 @@ public class UndoRedoManager : Component
     /// </summary>
     public UndoRedoManager()
     {
-        _undoStack = new Stack<(IUndoRedoCommand, IUndoHandler)>();
-        _redoStack = new Stack<(IUndoRedoCommand, IUndoHandler)>();
+        _undoStack = new Stack<(IUndoRedoCommand, IUndoHandler?)>();
+        _redoStack = new Stack<(IUndoRedoCommand, IUndoHandler?)>();
         ManagerEnabled = false;
     }
 

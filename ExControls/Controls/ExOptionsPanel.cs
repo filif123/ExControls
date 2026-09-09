@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Drawing.Design;
 using ExControls.Converters;
-using ExControls.Designers;
 using ExControls.Editors;
 
 namespace ExControls;
@@ -10,13 +9,13 @@ namespace ExControls;
 ///     Represents a panel in the ExOptionsView containing one set of options.
 /// </summary>
 [ToolboxItem(false)]
-[Designer(typeof(ExOptionsPanelDesigner))]
+[Designer("ExControls.Designers.ExOptionsPanelDesigner, ExControls")]
 [TypeConverter(typeof(ExOptionsPanelConverter))]
 public class ExOptionsPanel : Panel
 {
-    private ExOptionsView _owner;
-    private OptionsNode _node;
-    private OptionsNode _parentNode;
+    private ExOptionsView? _owner;
+    private OptionsNode? _node;
+    private OptionsNode? _parentNode;
     private bool _generateLinksToChildren;
 
     private readonly List<Control> _linkCollection;
@@ -24,17 +23,17 @@ public class ExOptionsPanel : Panel
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler ParentNodeChanged;
+    public event EventHandler? ParentNodeChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler ChildrenChanged;
+    public event EventHandler? ChildrenChanged;
 
     /// <summary>
     /// 
     /// </summary>
-    public event EventHandler NodeTextChanged;
+    public event EventHandler? NodeTextChanged;
 
     /// <inheritdoc />
     public ExOptionsPanel()
@@ -64,10 +63,10 @@ public class ExOptionsPanel : Panel
     /// <value></value>
     /// <returns></returns>
     /// <remarks></remarks>
-    public ExOptionsView Owner
+    public ExOptionsView? Owner
     {
         // Just in case the Owner has not been set, let's try to find it ourselves
-        get => _owner ??= FindOwner();
+        get => (_owner ??= FindOwner())!;
         private set => _owner = value;
     }
 
@@ -79,7 +78,7 @@ public class ExOptionsPanel : Panel
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public OptionsNode Node
     {
-        get => _node;
+        get => _node!;
         set
         {
             _node = value;
@@ -94,7 +93,7 @@ public class ExOptionsPanel : Panel
     [ExCategory("Nodes")]
     [ExDescription("The parent node for the node corresponding to this panel. Set to create child option panels.")]
     [Editor(typeof(OptionsNodeEditor), typeof(UITypeEditor))]
-    public OptionsNode ParentNode
+    public OptionsNode? ParentNode
     {
         get => _parentNode;
         set
@@ -177,7 +176,7 @@ public class ExOptionsPanel : Panel
         var spacing = GetFontHeight(Font) + 10;
 
         SuspendLayout();
-        foreach (var child in Owner.Panels.Cast<ExOptionsPanel>().Where(p => p.ParentNode?.Panel == this))
+        foreach (var child in Owner!.Panels.Cast<ExOptionsPanel>().Where(p => p.ParentNode?.Panel == this))
         {
             var linkLabel = new LinkLabel();
             linkLabel.Text = child.NodeText;
@@ -230,7 +229,7 @@ public class ExOptionsPanel : Panel
     }
 
     // Keep walking up the tree of parent controls until we reach an ExOptionsView.
-    private ExOptionsView FindOwner()
+    private ExOptionsView? FindOwner()
     {
         var parent = Parent;
         while (parent != null)

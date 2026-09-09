@@ -31,16 +31,16 @@ public class ExTreeNodeCollection : IList
     /// <summary>
     ///     Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
     /// </summary>
-    public event EventHandler<ExTreeViewNodeAddedEventArgs> TreeNodeAdded;
+    public event EventHandler<ExTreeViewNodeAddedEventArgs>? TreeNodeAdded;
 
     /// <summary>
     ///     Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
     /// </summary>
-    public event EventHandler<ExTreeViewNodeRemovedEventArgs> TreeNodeRemoved;
+    public event EventHandler<ExTreeViewNodeRemovedEventArgs>? TreeNodeRemoved;
 
     /// <summary>Adds a new tree node with the specified label text to the end of the current tree node collection.</summary>
-    /// <param name="text">The label text displayed by the <see cref="T:System.Windows.Forms.TreeNode" />.</param>
-    /// <returns>A <see cref="T:System.Windows.Forms.TreeNode" /> that represents the tree node being added to the collection.</returns>
+    /// <param name="text">The label text displayed by the <see cref="System.Windows.Forms.TreeNode" />.</param>
+    /// <returns>A <see cref="System.Windows.Forms.TreeNode" /> that represents the tree node being added to the collection.</returns>
     public virtual TreeNode Add(string text)
     {
         var node = _visibleNodes.Add(text);
@@ -52,7 +52,7 @@ public class ExTreeNodeCollection : IList
     /// <summary>Creates a new tree node with the specified key and text, and adds it to the collection.</summary>
     /// <param name="key">The name of the tree node.</param>
     /// <param name="text">The text to display in the tree node.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was added to the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was added to the collection.</returns>
     public virtual TreeNode Add(string key, string text)
     {
         var node = _visibleNodes.Add(key, text);
@@ -65,7 +65,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="key">The name of the tree node.</param>
     /// <param name="text">The text to display in the tree node.</param>
     /// <param name="imageIndex">The index of the image to display in the tree node.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was added to the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was added to the collection.</returns>
     public virtual TreeNode Add(string key, string text, int imageIndex)
     {
         var node = _visibleNodes.Add(key, text, imageIndex);
@@ -78,7 +78,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="key">The name of the tree node.</param>
     /// <param name="text">The text to display in the tree node.</param>
     /// <param name="imageKey">The image to display in the tree node.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was added to the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was added to the collection.</returns>
     public virtual TreeNode Add(string key, string text, string imageKey)
     {
         var node = _visibleNodes.Add(key, text, imageKey);
@@ -106,7 +106,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="text">The text to display in the tree node.</param>
     /// <param name="imageKey">The key of the image to display in the tree node.</param>
     /// <param name="selectedImageKey">The key of the image to display when the node is in a selected state.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was added to the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was added to the collection.</returns>
     public virtual TreeNode Add(string key, string text, string imageKey, string selectedImageKey)
     {
         var node = _visibleNodes.Add(key, text, imageKey, selectedImageKey);
@@ -116,9 +116,9 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>Adds a previously created tree node to the end of the tree node collection.</summary>
-    /// <param name="node">The <see cref="T:System.Windows.Forms.TreeNode" /> to add to the collection.</param>
-    /// <returns>The zero-based index value of the <see cref="T:System.Windows.Forms.TreeNode" /> added to the tree node collection.</returns>
-    /// <exception cref="T:System.ArgumentException">The <paramref name="node" /> is currently assigned to another <see cref="T:System.Windows.Forms.TreeView" />.</exception>
+    /// <param name="node">The <see cref="System.Windows.Forms.TreeNode" /> to add to the collection.</param>
+    /// <returns>The zero-based index value of the <see cref="System.Windows.Forms.TreeNode" /> added to the tree node collection.</returns>
+    /// <exception cref="System.ArgumentException">The <paramref name="node" /> is currently assigned to another <see cref="System.Windows.Forms.TreeView" />.</exception>
     public virtual int Add(TreeNode node)
     {
         var index = _visibleNodes.Add(node);
@@ -128,11 +128,11 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>Adds an array of previously created tree nodes to the collection.</summary>
-    /// <param name="nodes">An array of <see cref="T:System.Windows.Forms.TreeNode" /> objects representing the tree nodes to add to the collection.</param>
-    /// <exception cref="T:System.ArgumentNullException">
+    /// <param name="nodes">An array of <see cref="System.Windows.Forms.TreeNode" /> objects representing the tree nodes to add to the collection.</param>
+    /// <exception cref="System.ArgumentNullException">
     /// <paramref name="nodes" /> is <see langword="null" />.</exception>
-    /// <exception cref="T:System.ArgumentException">
-    /// <paramref name="nodes" /> is the child of another <see cref="T:System.Windows.Forms.TreeView" />.</exception>
+    /// <exception cref="System.ArgumentException">
+    /// <paramref name="nodes" /> is the child of another <see cref="System.Windows.Forms.TreeView" />.</exception>
     public virtual void AddRange(TreeNode[] nodes)
     {
         if (nodes == null)
@@ -148,8 +148,8 @@ public class ExTreeNodeCollection : IList
 
     /// <summary>Inserts an existing tree node into the tree node collection at the specified location.</summary>
     /// <param name="index">The indexed location within the collection to insert the tree node.</param>
-    /// <param name="node">The <see cref="T:System.Windows.Forms.TreeNode" /> to insert into the collection.</param>
-    /// <exception cref="T:System.ArgumentException">The <paramref name="node" /> is currently assigned to another <see cref="T:System.Windows.Forms.TreeView" />.</exception>
+    /// <param name="node">The <see cref="System.Windows.Forms.TreeNode" /> to insert into the collection.</param>
+    /// <exception cref="System.ArgumentException">The <paramref name="node" /> is currently assigned to another <see cref="System.Windows.Forms.TreeView" />.</exception>
     public virtual void Insert(int index, TreeNode node)
     {
         _nodes.Insert(index, node);
@@ -163,7 +163,7 @@ public class ExTreeNodeCollection : IList
     /// <summary>Creates a tree node with the specified text and inserts it at the specified index.</summary>
     /// <param name="index">The location within the collection to insert the node.</param>
     /// <param name="text">The text to display in the tree node.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
     public virtual TreeNode Insert(int index, string text)
     {
         var node = new TreeNode(text);
@@ -180,7 +180,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="index">The location within the collection to insert the node.</param>
     /// <param name="key">The name of the tree node.</param>
     /// <param name="text">The text to display in the tree node.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
     public virtual TreeNode Insert(int index, string key, string text)
     {
         var node = new TreeNode(text) {Name = key};
@@ -198,7 +198,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="key">The name of the tree node.</param>
     /// <param name="text">The text to display in the tree node.</param>
     /// <param name="imageIndex">The index of the image to display in the tree node.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
     public virtual TreeNode Insert(int index, string key, string text, int imageIndex)
     {
         var node = new TreeNode(text) {Name = key, ImageIndex = imageIndex};
@@ -216,7 +216,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="key">The name of the tree node.</param>
     /// <param name="text">The text to display in the tree node.</param>
     /// <param name="imageKey">The key of the image to display in the tree node.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
     public virtual TreeNode Insert(int index, string key, string text, string imageKey)
     {
         var node = new TreeNode(text) {Name = key, ImageKey = imageKey};
@@ -235,7 +235,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="text">The text to display in the tree node.</param>
     /// <param name="imageIndex">The index of the image to display in the tree node.</param>
     /// <param name="selectedImageIndex">The index of the image to display in the tree node when it is in a selected state.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
     public virtual TreeNode Insert(int index, string key, string text, int imageIndex, int selectedImageIndex)
     {
         var node = new TreeNode(text, imageIndex, selectedImageIndex){Name = key};
@@ -254,7 +254,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="text">The text to display in the tree node.</param>
     /// <param name="imageKey">The key of the image to display in the tree node.</param>
     /// <param name="selectedImageKey">The key of the image to display in the tree node when it is in a selected state.</param>
-    /// <returns>The <see cref="T:System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
+    /// <returns>The <see cref="System.Windows.Forms.TreeNode" /> that was inserted in the collection.</returns>
     public virtual TreeNode Insert(int index, string key, string text, string imageKey, string selectedImageKey)
     {
         var node = new TreeNode(text){Name = key, ImageKey = imageKey, SelectedImageKey = selectedImageKey};
@@ -294,7 +294,7 @@ public class ExTreeNodeCollection : IList
         OnTreeNodeRemoved(new ExTreeViewNodeRemovedEventArgs(null, 0, count));
     }
 
-    private void ClearInternal(TreeNode node)
+    private static void ClearInternal(TreeNode node)
     {
         foreach (TreeNode n in node.Nodes) 
             ClearInternal(n);
@@ -303,7 +303,7 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>Removes a tree node from the tree node collection at a specified index.</summary>
-    /// <param name="index">The index of the <see cref="T:System.Windows.Forms.TreeNode" /> to remove.</param>
+    /// <param name="index">The index of the <see cref="System.Windows.Forms.TreeNode" /> to remove.</param>
     public virtual void RemoveAt(int index)
     {
         var node = _nodes[index];
@@ -317,9 +317,9 @@ public class ExTreeNodeCollection : IList
     /// </summary>
     /// <param name="node">treenode</param>
     /// <param name="visible">whether node should be visible</param>
-    public void SetVisibility(TreeNode node, bool visible)
+    public void SetVisibility(TreeNode? node, bool visible)
     {
-        if (node == null || GetVisibility(node) == visible) 
+        if (node == null || GetVisibility(node) == visible)
             return;
 
         var index = _nodes.IndexOf(node);
@@ -390,14 +390,16 @@ public class ExTreeNodeCollection : IList
     /// <param name="key">key of treenode</param>
     /// <param name="visible">whether node should be visible</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public void SetVisibility(string key, bool visible)         //BUG setting visibility does not work for inner nodes
+    public void SetVisibility(string? key, bool visible)         //BUG setting visibility does not work for inner nodes
     {
         if (key == null || GetVisibility(key) == visible)
             return;
         
         var node = _nodes.FirstOrDefault(n => n.Name.Equals(key,StringComparison.OrdinalIgnoreCase));
+        if (node is null)
+            throw new ArgumentOutOfRangeException(nameof(key));
         var index = _nodes.IndexOf(node);
-        if (index == -1 || node is null)
+        if (index == -1)
             throw new ArgumentOutOfRangeException(nameof(key));
 
         if (visible)
@@ -485,7 +487,7 @@ public class ExTreeNodeCollection : IList
         return ContainsInternal(node, _visibleNodes);
     }
 
-    private bool ContainsInternal(TreeNode node, IEnumerable col)
+    private static bool ContainsInternal(TreeNode node, IEnumerable col)
     {
         foreach (TreeNode subnode in col)
             if (subnode == node || ContainsInternal(node, subnode.Nodes))
@@ -506,7 +508,7 @@ public class ExTreeNodeCollection : IList
     /// <param name="e"></param>
     protected virtual void OnTreeNodeRemoved(ExTreeViewNodeRemovedEventArgs e) => TreeNodeRemoved?.Invoke(this, e);
 
-    object IList.this[int index]
+    object? IList.this[int index]
     {
         get => _visibleNodes[index];
         set => _visibleNodes[index] = value as TreeNode ?? throw new ArgumentException(nameof(value));
@@ -515,9 +517,9 @@ public class ExTreeNodeCollection : IList
     /// <summary>Gets or sets the element at the specified index.</summary>
     /// <param name="index">The zero-based index of the element to get or set.</param>
     /// <returns>The element at the specified index.</returns>
-    /// <exception cref="T:System.ArgumentOutOfRangeException">
-    /// <paramref name="index" /> is not a valid index in the <see cref="T:System.Collections.IList" />.</exception>
-    /// <exception cref="T:System.NotSupportedException">The property is set and the <see cref="T:System.Collections.IList" /> is read-only.</exception>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    /// <paramref name="index" /> is not a valid index in the <see cref="System.Collections.IList" />.</exception>
+    /// <exception cref="System.NotSupportedException">The property is set and the <see cref="System.Collections.IList" /> is read-only.</exception>
     public virtual TreeNode this[int index]
     {
         get => _visibleNodes[index];
@@ -528,16 +530,16 @@ public class ExTreeNodeCollection : IList
     /// 
     /// </summary>
     /// <param name="key"></param>
-    public virtual TreeNode this[string key] => _visibleNodes[key];
+    public virtual TreeNode? this[string key] => _visibleNodes[key];
 
-    /// <summary>Gets a value indicating whether the <see cref="T:System.Collections.IList" /> is read-only.</summary>
+    /// <summary>Gets a value indicating whether the <see cref="System.Collections.IList" /> is read-only.</summary>
     /// <returns>
-    /// <see langword="true" /> if the <see cref="T:System.Collections.IList" /> is read-only; otherwise, <see langword="false" />.</returns>
+    /// <see langword="true" /> if the <see cref="System.Collections.IList" /> is read-only; otherwise, <see langword="false" />.</returns>
     public virtual bool IsReadOnly => false;
 
-    /// <summary>Gets a value indicating whether the <see cref="T:System.Collections.IList" /> has a fixed size.</summary>
+    /// <summary>Gets a value indicating whether the <see cref="System.Collections.IList" /> has a fixed size.</summary>
     /// <returns>
-    /// <see langword="true" /> if the <see cref="T:System.Collections.IList" /> has a fixed size; otherwise, <see langword="false" />.</returns>
+    /// <see langword="true" /> if the <see cref="System.Collections.IList" /> has a fixed size; otherwise, <see langword="false" />.</returns>
     public virtual bool IsFixedSize => false;
 
     /// <summary>Removes the tree node with the specified key from the collection.</summary>
@@ -545,51 +547,52 @@ public class ExTreeNodeCollection : IList
     public virtual void RemoveByKey(string key)
     {
         var node = _nodes.FirstOrDefault(n => n.Name.Equals(key,StringComparison.OrdinalIgnoreCase));
-        _nodes.Remove(node);
+        if (node is not null)
+            _nodes.Remove(node);
         _visibleNodes.RemoveByKey(key);
         OnTreeNodeRemoved(new ExTreeViewNodeRemovedEventArgs(node, 0, 1));
     }
-    /// <summary>Adds an item to the <see cref="T:System.Collections.IList" />.</summary>
-    /// <param name="value">The object to add to the <see cref="T:System.Collections.IList" />.</param>
+    /// <summary>Adds an item to the <see cref="System.Collections.IList" />.</summary>
+    /// <param name="value">The object to add to the <see cref="System.Collections.IList" />.</param>
     /// <returns>The position into which the new element was inserted, or -1 to indicate that the item was not inserted into the collection.</returns>
-    /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.IList" /> is read-only.
+    /// <exception cref="System.NotSupportedException">The <see cref="System.Collections.IList" /> is read-only.
     /// -or-
-    /// The <see cref="T:System.Collections.IList" /> has a fixed size.</exception>
-    public virtual int Add(object value)
+    /// The <see cref="System.Collections.IList" /> has a fixed size.</exception>
+    public virtual int Add(object? value)
     {
         if (value == null)
             throw new ArgumentNullException(nameof(value));
-        return value is TreeNode node ? Add(node) : Add(value.ToString()).Index;
+        return value is TreeNode node ? Add(node) : Add(value.ToString()!).Index;
     }
 
-    /// <summary>Determines the index of a specific item in the <see cref="T:System.Collections.IList" />.</summary>
-    /// <param name="value">The object to locate in the <see cref="T:System.Collections.IList" />.</param>
+    /// <summary>Determines the index of a specific item in the <see cref="System.Collections.IList" />.</summary>
+    /// <param name="value">The object to locate in the <see cref="System.Collections.IList" />.</param>
     /// <returns>The index of <paramref name="value" /> if found in the list; otherwise, -1.</returns>
-    int IList.IndexOf(object value) => value is TreeNode node ? _visibleNodes.IndexOf(node) : -1;
+    int IList.IndexOf(object? value) => value is TreeNode node ? _visibleNodes.IndexOf(node) : -1;
 
-    /// <summary>Inserts an item to the <see cref="T:System.Collections.IList" /> at the specified index.</summary>
+    /// <summary>Inserts an item to the <see cref="System.Collections.IList" /> at the specified index.</summary>
     /// <param name="index">The zero-based index at which <paramref name="value" /> should be inserted.</param>
-    /// <param name="value">The object to insert into the <see cref="T:System.Collections.IList" />.</param>
-    /// <exception cref="T:System.ArgumentOutOfRangeException">
-    /// <paramref name="index" /> is not a valid index in the <see cref="T:System.Collections.IList" />.</exception>
-    /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.IList" /> is read-only.
+    /// <param name="value">The object to insert into the <see cref="System.Collections.IList" />.</param>
+    /// <exception cref="System.ArgumentOutOfRangeException">
+    /// <paramref name="index" /> is not a valid index in the <see cref="System.Collections.IList" />.</exception>
+    /// <exception cref="System.NotSupportedException">The <see cref="System.Collections.IList" /> is read-only.
     /// -or-
-    /// The <see cref="T:System.Collections.IList" /> has a fixed size.</exception>
-    /// <exception cref="T:System.NullReferenceException">
-    /// <paramref name="value" /> is null reference in the <see cref="T:System.Collections.IList" />.</exception>
-    void IList.Insert(int index, object value)
+    /// The <see cref="System.Collections.IList" /> has a fixed size.</exception>
+    /// <exception cref="System.NullReferenceException">
+    /// <paramref name="value" /> is null reference in the <see cref="System.Collections.IList" />.</exception>
+    void IList.Insert(int index, object? value)
     {
         if (value is not TreeNode node)
             throw new ArgumentException(nameof(value));
         Insert(index, node);
     }
 
-    /// <summary>Removes the first occurrence of a specific object from the <see cref="T:System.Collections.IList" />.</summary>
-    /// <param name="value">The object to remove from the <see cref="T:System.Collections.IList" />.</param>
-    /// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.IList" /> is read-only.
+    /// <summary>Removes the first occurrence of a specific object from the <see cref="System.Collections.IList" />.</summary>
+    /// <param name="value">The object to remove from the <see cref="System.Collections.IList" />.</param>
+    /// <exception cref="System.NotSupportedException">The <see cref="System.Collections.IList" /> is read-only.
     /// -or-
-    /// The <see cref="T:System.Collections.IList" /> has a fixed size.</exception>
-    void IList.Remove(object value)
+    /// The <see cref="System.Collections.IList" /> has a fixed size.</exception>
+    void IList.Remove(object? value)
     {
         if (value is not TreeNode node)
             return;
@@ -602,42 +605,42 @@ public class ExTreeNodeCollection : IList
     /// <param name="node"></param>
     public virtual void Remove(TreeNode node) => node.Remove();
 
-    /// <summary>Determines whether the <see cref="T:System.Collections.IList" /> contains a specific value.</summary>
-    /// <param name="value">The object to locate in the <see cref="T:System.Collections.IList" />.</param>
+    /// <summary>Determines whether the <see cref="System.Collections.IList" /> contains a specific value.</summary>
+    /// <param name="value">The object to locate in the <see cref="System.Collections.IList" />.</param>
     /// <returns>
-    /// <see langword="true" /> if the <see cref="T:System.Object" /> is found in the <see cref="T:System.Collections.IList" />; otherwise, <see langword="false" />.</returns>
+    /// <see langword="true" /> if the <see cref="System.Object" /> is found in the <see cref="System.Collections.IList" />; otherwise, <see langword="false" />.</returns>
 
-    bool IList.Contains(object value) => value is TreeNode tn && _visibleNodes.Contains(tn);
+    bool IList.Contains(object? value) => value is TreeNode tn && _visibleNodes.Contains(tn);
 
     /// <summary>Returns an enumerator that iterates through a collection.</summary>
-    /// <returns>An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
+    /// <returns>An <see cref="System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
     public IEnumerator GetEnumerator() => _visibleNodes.GetEnumerator();
 
-    /// <summary>Copies the elements of the <see cref="T:System.Collections.ICollection" /> to an <see cref="T:System.Array" />, starting at a particular <see cref="T:System.Array" /> index.</summary>
-    /// <param name="array">The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied from <see cref="T:System.Collections.ICollection" />. The <see cref="T:System.Array" /> must have zero-based indexing.</param>
+    /// <summary>Copies the elements of the <see cref="System.Collections.ICollection" /> to an <see cref="System.Array" />, starting at a particular <see cref="System.Array" /> index.</summary>
+    /// <param name="array">The one-dimensional <see cref="System.Array" /> that is the destination of the elements copied from <see cref="System.Collections.ICollection" />. The <see cref="System.Array" /> must have zero-based indexing.</param>
     /// <param name="index">The zero-based index in <paramref name="array" /> at which copying begins.</param>
-    /// <exception cref="T:System.ArgumentNullException">
+    /// <exception cref="System.ArgumentNullException">
     /// <paramref name="array" /> is <see langword="null" />.</exception>
-    /// <exception cref="T:System.ArgumentOutOfRangeException">
+    /// <exception cref="System.ArgumentOutOfRangeException">
     /// <paramref name="index" /> is less than zero.</exception>
-    /// <exception cref="T:System.ArgumentException">
+    /// <exception cref="System.ArgumentException">
     ///         <paramref name="array" /> is multidimensional.
     /// -or-
-    /// The number of elements in the source <see cref="T:System.Collections.ICollection" /> is greater than the available space from <paramref name="index" /> to the end of the destination <paramref name="array" />.
+    /// The number of elements in the source <see cref="System.Collections.ICollection" /> is greater than the available space from <paramref name="index" /> to the end of the destination <paramref name="array" />.
     /// -or-
-    /// The type of the source <see cref="T:System.Collections.ICollection" /> cannot be cast automatically to the type of the destination <paramref name="array" />.</exception>
+    /// The type of the source <see cref="System.Collections.ICollection" /> cannot be cast automatically to the type of the destination <paramref name="array" />.</exception>
     public void CopyTo(Array array, int index) => _visibleNodes.CopyTo(array, index);
 
-    /// <summary>Gets the number of elements contained in the <see cref="T:System.Collections.ICollection" />.</summary>
-    /// <returns>The number of elements contained in the <see cref="T:System.Collections.ICollection" />.</returns>
+    /// <summary>Gets the number of elements contained in the <see cref="System.Collections.ICollection" />.</summary>
+    /// <returns>The number of elements contained in the <see cref="System.Collections.ICollection" />.</returns>
     public int Count => _visibleNodes.Count;
 
-    /// <summary>Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection" />.</summary>
-    /// <returns>An object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection" />.</returns>
+    /// <summary>Gets an object that can be used to synchronize access to the <see cref="System.Collections.ICollection" />.</summary>
+    /// <returns>An object that can be used to synchronize access to the <see cref="System.Collections.ICollection" />.</returns>
     public object SyncRoot => this;
 
-    /// <summary>Gets a value indicating whether access to the <see cref="T:System.Collections.ICollection" /> is synchronized (thread safe).</summary>
+    /// <summary>Gets a value indicating whether access to the <see cref="System.Collections.ICollection" /> is synchronized (thread safe).</summary>
     /// <returns>
-    /// <see langword="true" /> if access to the <see cref="T:System.Collections.ICollection" /> is synchronized (thread safe); otherwise, <see langword="false" />.</returns>
+    /// <see langword="true" /> if access to the <see cref="System.Collections.ICollection" /> is synchronized (thread safe); otherwise, <see langword="false" />.</returns>
     public bool IsSynchronized => false;
 }

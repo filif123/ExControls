@@ -1,4 +1,4 @@
-﻿namespace ExControls;
+namespace ExControls;
 
 /// <summary>
 ///     Expanded Label Control.
@@ -39,7 +39,7 @@ public class ExLabel : Label
     /// <summary>Occurs when the <see cref="DisabledForeColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the DisabledForeColor property changes.")]
-    public event EventHandler DisabledForeColorChanged;
+    public event EventHandler? DisabledForeColorChanged;
 
     /// <summary>Raises the <see cref="DisabledForeColorChanged" /> event.</summary>
     protected virtual void OnDisabledForeColorChanged()

@@ -11,7 +11,7 @@ namespace ExControls.Designers;
 /// </summary>
 public class ExFormDesigner : DocumentDesigner
 {
-    private ExFormTest FormControl => Control as ExFormTest;
+    private ExFormTest? FormControl => Control as ExFormTest;
 
     /// <inheritdoc />
     public override void Initialize(IComponent component)
