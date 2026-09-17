@@ -63,7 +63,7 @@ namespace ExControls
             this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
             this.tableLayoutPanel.RowCount = 3;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.Size = new System.Drawing.Size(682, 153);
@@ -75,6 +75,7 @@ namespace ExControls
             this.lText.AutoSize = true;
             this.lText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lText.Location = new System.Drawing.Point(79, 0);
+            this.lText.MaximumSize = new System.Drawing.Size(720, 0);
             this.lText.Name = "lText";
             this.lText.Padding = new System.Windows.Forms.Padding(10, 5, 100, 5);
             this.lText.Size = new System.Drawing.Size(600, 100);
@@ -241,7 +242,7 @@ namespace ExControls
             this.Controls.Add(this.tableLayoutPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(700, 500);
+            this.MinimumSize = new System.Drawing.Size(360, 0);
             this.MinimizeBox = false;
             this.Name = "ExMessageBoxForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
