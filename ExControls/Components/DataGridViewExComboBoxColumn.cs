@@ -395,7 +395,8 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
             if (StyleDisabled.ButtonRenderFirst.HasValue) bbfirst = StyleDisabled.ButtonRenderFirst.Value;
         }
 
-        g.FillRectangle(new SolidBrush(back), cellBounds);
+        using (var brushBack = new SolidBrush(back))
+            g.FillRectangle(brushBack, cellBounds);
 
         using var penBorder = new Pen(border);
 
