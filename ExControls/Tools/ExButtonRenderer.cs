@@ -34,6 +34,90 @@ public static class ExButtonRenderer
     }
 
     /// <summary>
+    ///     Draws a pixel-exact filled triangle (row by row, no anti-aliasing) pointing in the given direction.
+    ///     <paramref name="center" /> is the center of the triangle's bounding box, <paramref name="size" /> its height
+    ///     (number of rows/columns from the base to the tip); the base is 2 * size - 1 pixels long.
+    /// </summary>
+    /// <param name="g">Graphics.</param>
+    /// <param name="color">Fill color.</param>
+    /// <param name="center">Center of the triangle.</param>
+    /// <param name="size">Height of the triangle in pixels.</param>
+    /// <param name="direction">Direction the tip points to.</param>
+    public static void DrawTriangle(Graphics g, Color color, Point center, int size, ArrowDirection direction)
+    {
+        if (size < 1)
+            return;
+        using var pen = new Pen(color);
+        var half = size / 2;
+        for (var i = 0; i < size; i++)
+        {
+            // i = 0 je zakladna (najdlhsia) hrana, i = size - 1 spicka
+            var len = size - 1 - i;
+            switch (direction)
+            {
+                case ArrowDirection.Down:
+                    g.DrawLine(pen, center.X - len, center.Y - half + i, center.X + len + 1, center.Y - half + i);
+                    break;
+                case ArrowDirection.Up:
+                    g.DrawLine(pen, center.X - len, center.Y + half - i, center.X + len + 1, center.Y + half - i);
+                    break;
+                case ArrowDirection.Right:
+                    g.DrawLine(pen, center.X - half + i, center.Y - len, center.X - half + i, center.Y + len + 1);
+                    break;
+                default:
+                    g.DrawLine(pen, center.X + half - i, center.Y - len, center.X + half - i, center.Y + len + 1);
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Draws the drop-down button of a date picker: a small calendar glyph followed by a down arrow
+    ///     (the same shape as the DATEPICKER visual style glyph), all in <paramref name="glyphColor" />.
+    /// </summary>
+    /// <param name="g">Graphics.</param>
+    /// <param name="rec">Bounds of the button.</param>
+    /// <param name="backColor">Background color of the button.</param>
+    /// <param name="borderColor">Border color of the button.</param>
+    /// <param name="glyphColor">Color of the calendar glyph and arrow.</param>
+    /// <param name="scale">DPI scale (1 at 96 dpi).</param>
+    public static void DrawCalendarButton(Graphics g, Rectangle rec, Color backColor, Color borderColor, Color glyphColor, float scale = 1f)
+    {
+        using (var brushBack = new SolidBrush(backColor))
+            g.FillRectangle(brushBack, rec);
+
+        int S(int v) => (int)Math.Round(v * scale);
+
+        var calW = S(11);
+        var calH = S(10);
+        var gap = S(3);
+        var arrowSize = S(3);
+        var total = calW + gap + 2 * arrowSize - 1;
+        var x = rec.X + (rec.Width - total) / 2;
+        var y = rec.Y + (rec.Height - calH) / 2;
+
+        using (var pen = new Pen(glyphColor))
+        using (var brush = new SolidBrush(glyphColor))
+        {
+            // ramik kalendara s hrubsou hlavickou
+            g.DrawRectangle(pen, x, y, calW - 1, calH - 1);
+            g.FillRectangle(brush, x, y, calW, S(3));
+            // "bodky" dni: 3 stlpce x 2 riadky
+            var dot = Math.Max(1, S(1));
+            var stepX = (calW - 2 * dot) / 3f;
+            var stepY = (calH - S(3) - dot) / 3f;
+            for (var r = 0; r < 2; r++)
+            for (var c = 0; c < 3; c++)
+                g.FillRectangle(brush, x + dot + (int)Math.Round(stepX * c + stepX / 2 - dot / 2f), y + S(3) + (int)Math.Round(stepY * (r + 1) - dot / 2f), dot, dot);
+        }
+
+        DrawTriangle(g, glyphColor, new Point(x + calW + gap + arrowSize - 1, rec.Y + rec.Height / 2), arrowSize, ArrowDirection.Down);
+
+        using var penBorder = new Pen(borderColor);
+        g.DrawRectangle(penBorder, rec.X, rec.Y, rec.Width - 1, rec.Height - 1);
+    }
+
+    /// <summary>
     ///     Measures and returns bounds of the Text and Box of the <see cref="ExCheckBox" /> or <see cref="ExRadioButton" />.
     /// </summary>
     /// <param name="g">Graphics ot the control.</param>

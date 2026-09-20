@@ -28,113 +28,131 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.exButton1 = new ExControls.ExButton();
-            this.exDateTimePicker1 = new ExControls.ExDateTimePicker();
-            this.exTextBox1 = new ExControls.ExTextBox();
-            this.exListBox1 = new ExControls.ExListBox();
-            this.undoRedoActionChooser1 = new ExControls.UndoRedoActionChooser();
-            this.SuspendLayout();
+            exButton1 = new ExButton();
+            exTextBox1 = new ExTextBox();
+            exListBox1 = new ExListBox();
+            undoRedoActionChooser1 = new UndoRedoActionChooser();
+            dateTimePicker1 = new DateTimePicker();
+            exDateTimePicker1 = new ExDateTimePicker();
+            SuspendLayout();
             // 
             // exButton1
             // 
-            this.exButton1.Location = new System.Drawing.Point(252, 163);
-            this.exButton1.Name = "exButton1";
-            this.exButton1.Size = new System.Drawing.Size(75, 23);
-            this.exButton1.TabIndex = 0;
-            this.exButton1.Text = "exButton1";
-            this.exButton1.UseVisualStyleBackColor = true;
-            this.exButton1.Click += new System.EventHandler(this.ExButton1_Click);
-            // 
-            // exDateTimePicker1
-            // 
-            this.exDateTimePicker1.BackColor = System.Drawing.Color.Salmon;
-            this.exDateTimePicker1.CalendarFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.exDateTimePicker1.DisabledBackColor = System.Drawing.Color.Empty;
-            this.exDateTimePicker1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.exDateTimePicker1.ForeColor = System.Drawing.Color.Silver;
-            this.exDateTimePicker1.HighlightColor = System.Drawing.SystemColors.Highlight;
-            this.exDateTimePicker1.Location = new System.Drawing.Point(126, 95);
-            this.exDateTimePicker1.Name = "exDateTimePicker1";
-            this.exDateTimePicker1.Size = new System.Drawing.Size(190, 20);
-            this.exDateTimePicker1.TabIndex = 1;
-            this.exDateTimePicker1.MouseCaptureChanged += new System.EventHandler(this.ExDateTimePicker1_MouseCaptureChanged);
+            exButton1.DefaultStyle = true;
+            exButton1.Location = new Point(252, 163);
+            exButton1.Name = "exButton1";
+            exButton1.Size = new Size(75, 23);
+            exButton1.TabIndex = 0;
+            exButton1.Text = "exButton1";
+            exButton1.UseVisualStyleBackColor = true;
+            exButton1.Click += ExButton1_Click;
             // 
             // exTextBox1
             // 
-            this.exTextBox1.BackColor = System.Drawing.SystemColors.GrayText;
-            this.exTextBox1.BorderColor = System.Drawing.Color.SandyBrown;
-            this.exTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.exTextBox1.DefaultStyle = false;
-            this.exTextBox1.DisabledBackColor = System.Drawing.SystemColors.Control;
-            this.exTextBox1.DisabledBorderColor = System.Drawing.SystemColors.InactiveBorder;
-            this.exTextBox1.DisabledForeColor = System.Drawing.SystemColors.GrayText;
-            this.exTextBox1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.exTextBox1.HintForeColor = System.Drawing.SystemColors.GrayText;
-            this.exTextBox1.HintText = null;
-            this.exTextBox1.Location = new System.Drawing.Point(417, 94);
-            this.exTextBox1.Name = "exTextBox1";
-            this.exTextBox1.Size = new System.Drawing.Size(195, 20);
-            this.exTextBox1.TabIndex = 2;
-            this.exTextBox1.Text = "exTextBox1";
+            exTextBox1.BackColor = SystemColors.GrayText;
+            exTextBox1.BorderColor = Color.SandyBrown;
+            exTextBox1.BorderStyle = BorderStyle.FixedSingle;
+            exTextBox1.BorderThickness = 1;
+            exTextBox1.DefaultStyle = false;
+            exTextBox1.DisabledBackColor = SystemColors.Control;
+            exTextBox1.DisabledBorderColor = SystemColors.InactiveBorder;
+            exTextBox1.DisabledForeColor = SystemColors.GrayText;
+            exTextBox1.HighlightColor = Color.FromArgb(192, 255, 192);
+            exTextBox1.HintForeColor = SystemColors.GrayText;
+            exTextBox1.HintText = null;
+            exTextBox1.Location = new Point(417, 94);
+            exTextBox1.Name = "exTextBox1";
+            exTextBox1.Size = new Size(195, 23);
+            exTextBox1.TabIndex = 2;
+            exTextBox1.Text = "exTextBox1";
+            exTextBox1.UseDarkScrollBar = false;
             // 
             // exListBox1
             // 
-            this.exListBox1.BackColor = System.Drawing.SystemColors.GrayText;
-            this.exListBox1.BorderColor = System.Drawing.Color.IndianRed;
-            this.exListBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.exListBox1.DefaultStyle = false;
-            this.exListBox1.DisabledBackColor = System.Drawing.SystemColors.Control;
-            this.exListBox1.DisabledBorderColor = System.Drawing.SystemColors.InactiveBorder;
-            this.exListBox1.DisabledForeColor = System.Drawing.SystemColors.GrayText;
-            this.exListBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.exListBox1.FormattingEnabled = true;
-            this.exListBox1.Items.AddRange(new object[] {
-            "ghgfhghf",
-            "fhgfhg",
-            "fcg",
-            "gf",
-            "gfcdgffg"});
-            this.exListBox1.Location = new System.Drawing.Point(391, 184);
-            this.exListBox1.Name = "exListBox1";
-            this.exListBox1.SelectedRowBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.exListBox1.Size = new System.Drawing.Size(120, 93);
-            this.exListBox1.TabIndex = 3;
+            exListBox1.BackColor = SystemColors.GrayText;
+            exListBox1.BorderColor = Color.IndianRed;
+            exListBox1.BorderStyle = BorderStyle.FixedSingle;
+            exListBox1.BorderThickness = 1;
+            exListBox1.DefaultStyle = false;
+            exListBox1.DisabledBackColor = SystemColors.Control;
+            exListBox1.DisabledBorderColor = SystemColors.InactiveBorder;
+            exListBox1.DisabledForeColor = SystemColors.GrayText;
+            exListBox1.DrawMode = DrawMode.OwnerDrawFixed;
+            exListBox1.FormattingEnabled = true;
+            exListBox1.Items.AddRange(new object[] { "ghgfhghf", "fhgfhg", "fcg", "gf", "gfcdgffg" });
+            exListBox1.Location = new Point(391, 184);
+            exListBox1.Name = "exListBox1";
+            exListBox1.SelectedRowBackColor = SystemColors.GradientActiveCaption;
+            exListBox1.Size = new Size(120, 82);
+            exListBox1.TabIndex = 3;
             // 
             // undoRedoActionChooser1
             // 
-            this.undoRedoActionChooser1.AutoSize = true;
-            this.undoRedoActionChooser1.Location = new System.Drawing.Point(348, 132);
-            this.undoRedoActionChooser1.Name = "undoRedoActionChooser1";
-            this.undoRedoActionChooser1.Size = new System.Drawing.Size(193, 24);
-            this.undoRedoActionChooser1.TabIndex = 4;
+            undoRedoActionChooser1.AutoSize = true;
+            undoRedoActionChooser1.Location = new Point(348, 132);
+            undoRedoActionChooser1.Margin = new Padding(4, 3, 4, 3);
+            undoRedoActionChooser1.Name = "undoRedoActionChooser1";
+            undoRedoActionChooser1.Size = new Size(193, 28);
+            undoRedoActionChooser1.TabIndex = 4;
+            // 
+            // dateTimePicker1
+            // 
+            dateTimePicker1.Location = new Point(22, 73);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(200, 23);
+            dateTimePicker1.TabIndex = 5;
+            // 
+            // exDateTimePicker1
+            // 
+            exDateTimePicker1.ArrowColor = Color.Black;
+            exDateTimePicker1.BorderColor = Color.DimGray;
+            exDateTimePicker1.ButtonBackColor = Color.White;
+            exDateTimePicker1.Checked = true;
+            exDateTimePicker1.CustomFormat = null;
+            exDateTimePicker1.DefaultStyle = true;
+            exDateTimePicker1.DisabledBackColor = SystemColors.Control;
+            exDateTimePicker1.DisabledForeColor = SystemColors.GrayText;
+            exDateTimePicker1.DropDownAlign = LeftRightAlignment.Left;
+            exDateTimePicker1.Format = DateTimePickerFormat.Long;
+            exDateTimePicker1.HighlightColor = SystemColors.Highlight;
+            exDateTimePicker1.Location = new Point(22, 102);
+            exDateTimePicker1.Name = "exDateTimePicker1";
+            exDateTimePicker1.SelectedFieldBackColor = SystemColors.Highlight;
+            exDateTimePicker1.SelectedFieldForeColor = SystemColors.HighlightText;
+            exDateTimePicker1.ShowCheckBox = false;
+            exDateTimePicker1.ShowUpDown = false;
+            exDateTimePicker1.Size = new Size(200, 23);
+            exDateTimePicker1.TabIndex = 6;
             // 
             // Form2
             // 
-            this.ClientSize = new System.Drawing.Size(714, 399);
-            this.Controls.Add(this.undoRedoActionChooser1);
-            this.Controls.Add(this.exListBox1);
-            this.Controls.Add(this.exTextBox1);
-            this.Controls.Add(this.exDateTimePicker1);
-            this.Controls.Add(this.exButton1);
-            this.CornersType = ExControls.FormCornersType.Round;
-            this.FormStyle = ExControls.FormStyle.Acrylic;
-            this.Name = "Form2";
-            this.Text = "hhh";
-            this.TitleBarBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.TitleBarBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.TitleBarForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.Load += new System.EventHandler(this.Form2_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ClientSize = new Size(714, 399);
+            Controls.Add(exDateTimePicker1);
+            Controls.Add(dateTimePicker1);
+            Controls.Add(undoRedoActionChooser1);
+            Controls.Add(exListBox1);
+            Controls.Add(exTextBox1);
+            Controls.Add(exButton1);
+            CornersType = FormCornersType.Round;
+            FormStyle = FormStyle.Acrylic;
+            Name = "Form2";
+            Text = "hhh";
+            TitleBarBackColor = Color.FromArgb(255, 192, 255);
+            TitleBarBorderColor = Color.FromArgb(255, 192, 192);
+            TitleBarForeColor = Color.FromArgb(255, 255, 192);
+            Load += Form2_Load;
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
         private ExButton exButton1;
-        private ExDateTimePicker exDateTimePicker1;
         private ExTextBox exTextBox1;
         private ExListBox exListBox1;
         private UndoRedoActionChooser undoRedoActionChooser1;
+        private DateTimePicker dateTimePicker1;
+        private ExDateTimePicker exDateTimePicker1;
     }
 }
