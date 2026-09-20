@@ -1,4 +1,4 @@
-using ExControls.Controls;
+﻿using ExControls.Controls;
 
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -226,6 +226,7 @@ public class ExTextBox : TextBox, IExControl
             return;
 
         this.SetTheme(UseDarkScrollBar ? WindowsTheme.DarkExplorer : WindowsTheme.Default);
+        EnsureNativeBorder();
         DrawBorder();
     }
 
@@ -235,6 +236,29 @@ public class ExTextBox : TextBox, IExControl
         base.OnHandleCreated(e);
         if (UseDarkScrollBar)
             ApplyScrollBarTheme();
+        else
+            EnsureNativeBorder();
+    }
+
+    /// <summary>
+    ///     Tematicky Edit (comctl32 v6, Windows 11) pri vytvoreni okna odstrani WS_BORDER a ramik kresli sam
+    ///     v klientskej oblasti - neklientska oblast je potom nulova a scrollbar siaha az po okraj okna, takze
+    ///     prekryva nas ramik. WS_BORDER sa preto vrati, aby system vyhradil skutocny 1px ram a scrollbar
+    ///     ostal vnutri neho.
+    /// </summary>
+    private void EnsureNativeBorder()
+    {
+        if (DefaultStyle || !IsHandleCreated || DesignMode)
+            return;
+
+        var style = (uint)Win32.GetWindowLongPtr(Handle, Win32.GWL_STYLE).ToInt64();
+        if ((style & (uint)Win32.WindowStyles.WS_BORDER) != 0)
+            return;
+
+        Win32.SetWindowLong(Handle, Win32.GWL_STYLE, style | (uint)Win32.WindowStyles.WS_BORDER);
+        Win32.SetWindowPos(Handle, IntPtr.Zero, 0, 0, 0, 0,
+            Win32.SetWindowPosFlags.FrameChanged | Win32.SetWindowPosFlags.IgnoreMove | Win32.SetWindowPosFlags.IgnoreResize
+            | Win32.SetWindowPosFlags.IgnoreZOrder | Win32.SetWindowPosFlags.DoNotActivate);
     }
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
@@ -281,31 +305,29 @@ public class ExTextBox : TextBox, IExControl
     /// <inheritdoc />
     protected override void WndProc(ref Message m)
     {
+        if (!DefaultStyle && m.Msg == (int)Win32.WM.PAINT && m.WParam == IntPtr.Zero && IsHandleCreated)
+        {
+            PaintBuffered(ref m);
+            return;
+        }
+
+        if (!DefaultStyle && m.Msg == (int)Win32.WM.ERASEBKGND)
+        {
+            // Pozadie vyplni Edit v PaintBuffered, mazanie priamo na obrazovke by len blikalo.
+            m.Result = (IntPtr)1;
+            return;
+        }
+
         base.WndProc(ref m);
 
-        if (!DefaultStyle && RedrawsScrollBars(m.Msg))
+        if (!DefaultStyle && m.Msg == (int)Win32.WM.THEMECHANGED)
+            EnsureNativeBorder();
+
+        if (!DefaultStyle && m.Msg == (int)Win32.WM.NCPAINT)
         {
             // Neklientsku oblast (ramik + scrollbary) necha vykreslit system a az potom sa cez systemovy ramik
             // nakresli vlastny. Ak by sa WM_NCPAINT zahodil, scrollbary by sa nevykreslili, kym ich edit sam neprekresli.
-            // Edit prekresluje scrollbary aj mimo WM_NCPAINT (SetScrollInfo pri rolovani, pisani, zmene vyberu...)
-            // a pritom zmaze kus ramika vedla nich, preto sa ramik obnovuje aj po tychto spravach.
             DrawBorder();
-
-            // Temovany scrollbar po odchode kurzora (a po pusteni palca) dobieha animaciu zvyraznenia vlastnym
-            // casovacom mimo sprav okna a znova prekresli kus ramika - preto sa ramik chvilu obnovuje opakovane.
-            if ((Win32.WM)m.Msg is Win32.WM.NCMOUSEMOVE or Win32.WM.NCMOUSELEAVE or Win32.WM.NCLBUTTONUP
-                or Win32.WM.CAPTURECHANGED or Win32.WM.VSCROLL or Win32.WM.HSCROLL)
-                StartBorderRefresh();
-
-            if (m.Msg == (int)Win32.WM.NCPAINT)
-                return;
-        }
-
-        if (!DefaultStyle && m.Msg == (int)Win32.WM.PAINT)
-        {
-            using var args = new PaintEventArgs(Graphics.FromHwnd(Handle), ClientRectangle);
-            OnPaint(args);
-            m.Result = IntPtr.Zero;
             return;
         }
 
@@ -313,61 +335,45 @@ public class ExTextBox : TextBox, IExControl
             DrawHint(Graphics.FromHwnd(m.HWnd));
     }
 
-    private const int BorderRefreshTicks = 15;
-    private const int BorderRefreshInterval = 40;
-
-    private System.Windows.Forms.Timer? _borderTimer;
-    private int _borderTicksLeft;
+    private const int PrfClient = 0x0004;
+    private const int PrfEraseBkgnd = 0x0008;
 
     /// <summary>
-    ///     Spusti opakovane obnovovanie ramika (~600 ms), kym dobehne animacia scrollbaru.
+    ///     WM_PAINT bez blikania: Edit nakresli obsah (aj svoj tematicky vnutorny ramik) cez WM_PRINTCLIENT do bufferu,
+    ///     v nom sa ramik prekryje (OnPaint) a na obrazovku ide jeden blit. Kreslenie priamo na obrazovku
+    ///     (Edit a potom my) sposobovalo pri hoveri blikanie vnutorneho ramika.
     /// </summary>
-    private void StartBorderRefresh()
+    private void PaintBuffered(ref Message m)
     {
-        if (_borderTimer == null)
+        var hdc = Win32.BeginPaint(m.HWnd, out var ps);
+        try
         {
-            _borderTimer = new System.Windows.Forms.Timer { Interval = BorderRefreshInterval };
-            _borderTimer.Tick += (_, _) =>
+            var client = ClientRectangle;
+            if (client.Width > 0 && client.Height > 0)
             {
-                DrawBorder();
-                if (--_borderTicksLeft <= 0)
-                    _borderTimer!.Stop();
-            };
+                using var buffer = BufferedGraphicsManager.Current.Allocate(hdc, client);
+                // Multiline Edit vyplni len formatovaci obdlznik, pas medzi nim a okrajom by ostal z bufferu cierny
+                buffer.Graphics.Clear(Enabled ? BackColor : DisabledBackColor);
+                var memHdc = buffer.Graphics.GetHdc();
+                try
+                {
+                    Win32.SendMessage(Handle, (uint)Win32.WM.PRINTCLIENT, memHdc, (IntPtr)(PrfClient | PrfEraseBkgnd));
+                }
+                finally
+                {
+                    buffer.Graphics.ReleaseHdc(memHdc);
+                }
+
+                OnPaint(new PaintEventArgs(buffer.Graphics, client));
+                buffer.Render(hdc);
+            }
         }
-
-        _borderTicksLeft = BorderRefreshTicks;
-        _borderTimer.Start();
-    }
-
-    /// <inheritdoc />
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
+        finally
         {
-            _borderTimer?.Dispose();
-            _borderTimer = null;
+            Win32.EndPaint(m.HWnd, ref ps);
         }
 
-        base.Dispose(disposing);
-    }
-
-    /// <summary>
-    ///     Spravy, po ktorych edit (DefWindowProc) moze prekreslit scrollbary a tym aj kus ramika.
-    /// </summary>
-    private static bool RedrawsScrollBars(int msg)
-    {
-        // EM_* spravy (0x00B0 - 0x00DF) menia text/vyber a scrollbary
-        if (msg is >= 0x00B0 and <= 0x00DF)
-            return true;
-
-        return (Win32.WM)msg is Win32.WM.NCPAINT or Win32.WM.VSCROLL or Win32.WM.HSCROLL
-            or Win32.WM.MOUSEWHEEL or Win32.WM.MOUSEHWHEEL
-            or Win32.WM.KEYDOWN or Win32.WM.KEYUP or Win32.WM.CHAR
-            or Win32.WM.LBUTTONDOWN or Win32.WM.LBUTTONUP or Win32.WM.LBUTTONDBLCLK or Win32.WM.MOUSEMOVE
-            or Win32.WM.NCMOUSEMOVE or Win32.WM.NCLBUTTONDOWN or Win32.WM.NCLBUTTONUP or Win32.WM.NCMOUSELEAVE
-            or Win32.WM.CAPTURECHANGED or Win32.WM.TIMER
-            or Win32.WM.SETTEXT or Win32.WM.SETFONT or Win32.WM.SIZE or Win32.WM.SETFOCUS or Win32.WM.KILLFOCUS
-            or Win32.WM.CUT or Win32.WM.PASTE or Win32.WM.CLEAR or Win32.WM.UNDO;
+        m.Result = IntPtr.Zero;
     }
 
     /// <summary>
@@ -407,6 +413,13 @@ public class ExTextBox : TextBox, IExControl
             using var back = new SolidBrush(DisabledBackColor);
             e.Graphics.FillRectangle(back, ClientRectangle);
             TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, DisabledForeColor, DisabledBackColor, ConvertAligment(TextAlign));
+        }
+        else if (IsHandleCreated)
+        {
+            // Tematicky Edit si kresli vlastny 1px ramik po okraji klientskej oblasti (kvoli nemu odstranil WS_BORDER,
+            // pozri EnsureNativeBorder) - prekryje sa farbou pozadia, nas ramik je v neklientskej oblasti.
+            using var pen = new Pen(BackColor);
+            e.Graphics.DrawRectangle(pen, 0, 0, ClientSize.Width - 1, ClientSize.Height - 1);
         }
 
         DrawBorder();
