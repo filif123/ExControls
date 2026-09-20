@@ -99,6 +99,7 @@
             // 
             dateTimePicker1.Location = new Point(22, 73);
             dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.ShowCheckBox = true;
             dateTimePicker1.Size = new Size(200, 23);
             dateTimePicker1.TabIndex = 5;
             // 
@@ -109,7 +110,7 @@
             exDateTimePicker1.ButtonBackColor = Color.White;
             exDateTimePicker1.Checked = true;
             exDateTimePicker1.CustomFormat = null;
-            exDateTimePicker1.DefaultStyle = true;
+            exDateTimePicker1.DefaultStyle = false;
             exDateTimePicker1.DisabledBackColor = SystemColors.Control;
             exDateTimePicker1.DisabledForeColor = SystemColors.GrayText;
             exDateTimePicker1.DropDownAlign = LeftRightAlignment.Left;
@@ -119,7 +120,7 @@
             exDateTimePicker1.Name = "exDateTimePicker1";
             exDateTimePicker1.SelectedFieldBackColor = SystemColors.Highlight;
             exDateTimePicker1.SelectedFieldForeColor = SystemColors.HighlightText;
-            exDateTimePicker1.ShowCheckBox = false;
+            exDateTimePicker1.ShowCheckBox = true;
             exDateTimePicker1.ShowUpDown = false;
             exDateTimePicker1.Size = new Size(200, 23);
             exDateTimePicker1.TabIndex = 6;

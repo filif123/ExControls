@@ -218,7 +218,6 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
         var colorText = Enabled ? ForeColor : DisabledForeColor;
         using var brushMark = new SolidBrush(colorMark);
         using var background = new SolidBrush(BoxBackColor);
-        using var penMark = new Pen(brushMark, 2);
         using var border = new SolidBrush(colorBorder);
         using var penBorder = new Pen(border);
 
@@ -240,9 +239,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
         //Mark render
         if (CheckState == CheckState.Checked)
         {
-            e.Graphics.DrawLine(penMark, boxRec.X + 3, boxRec.Y + 7, boxRec.X + 6, boxRec.Y + 10);
-            e.Graphics.DrawLine(penMark, boxRec.X + 6, boxRec.Y + 10, boxRec.X + 12, boxRec.Y + 4);
-            e.Graphics.FillRectangle(brushMark, boxRec.X + 6, boxRec.Y + 11, 1, 1);
+            ExButtonRenderer.DrawCheckMark(e.Graphics, boxRec, colorMark);
         }
         else if (CheckState == CheckState.Indeterminate)
         {

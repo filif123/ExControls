@@ -34,6 +34,24 @@ public static class ExButtonRenderer
     }
 
     /// <summary>
+    ///     Draws the check mark used by <see cref="ExCheckBox" /> into the box, scaled to the box size
+    ///     (the shape is designed for a 16 px box).
+    /// </summary>
+    /// <param name="g">Graphics.</param>
+    /// <param name="box">Bounds of the check box.</param>
+    /// <param name="color">Color of the mark.</param>
+    public static void DrawCheckMark(Graphics g, Rectangle box, Color color)
+    {
+        var scale = box.Width / 16f;
+        int S(float v) => (int)Math.Round(v * scale);
+        using var brush = new SolidBrush(color);
+        using var pen = new Pen(brush, Math.Max(1, S(2)));
+        g.DrawLine(pen, box.X + S(3), box.Y + S(7), box.X + S(6), box.Y + S(10));
+        g.DrawLine(pen, box.X + S(6), box.Y + S(10), box.X + S(12), box.Y + S(4));
+        g.FillRectangle(brush, box.X + S(6), box.Y + S(11), 1, 1);
+    }
+
+    /// <summary>
     ///     Draws a pixel-exact filled triangle (row by row, no anti-aliasing) pointing in the given direction.
     ///     <paramref name="center" /> is the center of the triangle's bounding box, <paramref name="size" /> its height
     ///     (number of rows/columns from the base to the tip); the base is 2 * size - 1 pixels long.

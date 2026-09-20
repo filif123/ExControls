@@ -95,6 +95,7 @@ public class ExDateTimePicker : Control, IExControl
     private Rectangle _checkRect;
     private Rectangle _textRect;
     private Rectangle _buttonRect;
+    private bool _narrowButton;
     private System.Windows.Forms.Timer? _spinTimer;
 
     private ToolStripDropDown? _dropDown;
@@ -1044,7 +1045,8 @@ public class ExDateTimePicker : Control, IExControl
         // rozmery podla nativneho DateTimePicker (DTM_GETDATETIMEPICKERINFO pri 96 dpi):
         // tlacidlo 34 px vratane ramu cez celu vysku, text od x = 7, policko 13 px na x = 5
         const int border = 1;
-        var buttonWidth = _showUpDown ? SystemInformation.VerticalScrollBarWidth : LogicalToDeviceUnits(33);
+        // pri nedostatku miesta pre text sa tlacidlo zuzi na samotnu sipku (ako ComboBox)
+        var buttonWidth = _showUpDown || _narrowButton ? SystemInformation.VerticalScrollBarWidth : LogicalToDeviceUnits(33);
         _buttonRect = new Rectangle(Width - border - buttonWidth, border, buttonWidth, Height - 2 * border);
 
         int left;
@@ -1086,8 +1088,19 @@ public class ExDateTimePicker : Control, IExControl
     protected override void OnPaint(PaintEventArgs e)
     {
         EnsureFields();
-        ComputeLayout();
         var g = e.Graphics;
+        const TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.SingleLine | TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.NoPrefix;
+        var widths = new int[_fields.Count];
+        for (var i = 0; i < _fields.Count; i++)
+            widths[i] = TextRenderer.MeasureText(g, _fields[i].Text, Font, Size.Empty, flags).Width;
+        _narrowButton = false;
+        ComputeLayout();
+        if (!_showUpDown && widths.Sum() > _textRect.Width)
+        {
+            _narrowButton = true;
+            ComputeLayout();
+        }
+
         var enabled = Enabled;
         var active = enabled && (!_showCheckBox || _checked);
         var focused = Focused || _dropDownOpen;
@@ -1148,11 +1161,7 @@ public class ExDateTimePicker : Control, IExControl
                 g.FillRectangle(brush, _checkRect);
                 g.DrawRectangle(pen, _checkRect.X, _checkRect.Y, _checkRect.Width - 1, _checkRect.Height - 1);
                 if (_checked)
-                {
-                    using var mark = new Pen(enabled ? fore : _disabledForeColor, 2f);
-                    var r = _checkRect;
-                    g.DrawLines(mark, [new Point(r.X + 3, r.Y + r.Height / 2), new Point(r.X + r.Width / 2 - 1, r.Bottom - 4), new Point(r.Right - 3, r.Y + 3)]);
-                }
+                    ExButtonRenderer.DrawCheckMark(g, _checkRect, enabled ? fore : _disabledForeColor);
             }
 
             if (_checkBoxSelected && focused)
@@ -1160,13 +1169,12 @@ public class ExDateTimePicker : Control, IExControl
         }
 
         // polia
-        const TextFormatFlags flags = TextFormatFlags.NoPadding | TextFormatFlags.SingleLine | TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.NoPrefix;
         var x = _textRect.Left;
         g.SetClip(_textRect);
         for (var i = 0; i < _fields.Count; i++)
         {
             var f = _fields[i];
-            var size = TextRenderer.MeasureText(g, f.Text, Font, Size.Empty, flags);
+            var size = new Size(widths[i], _textRect.Height);
             f.Bounds = new Rectangle(x, _textRect.Top, size.Width, _textRect.Height);
             var textFore = fore;
             if (i == _selectedField && focused && active && !_checkBoxSelected)
@@ -1211,6 +1219,21 @@ public class ExDateTimePicker : Control, IExControl
         else
         {
             var buttonState = !enabled ? 4 : _pressedPart == Part.DropButton || _dropDownOpen ? 3 : _hoverPart == Part.DropButton ? 2 : 1;
+            if (_narrowButton)
+            {
+                var el = buttonState switch
+                {
+                    4 => VisualStyleElement.ComboBox.DropDownButton.Disabled,
+                    3 => VisualStyleElement.ComboBox.DropDownButton.Pressed,
+                    2 => VisualStyleElement.ComboBox.DropDownButton.Hot,
+                    _ => VisualStyleElement.ComboBox.DropDownButton.Normal
+                };
+                if (!VisualStyleRenderer.IsElementDefined(el))
+                    return false;
+                new VisualStyleRenderer(el).DrawBackground(g, _buttonRect);
+                return true;
+            }
+
             if (!TryRenderer("DATEPICKER", 3, buttonState, out var buttonRenderer))
                 return false;
             buttonRenderer!.DrawBackground(g, _buttonRect);
@@ -1225,6 +1248,16 @@ public class ExDateTimePicker : Control, IExControl
         var back = pressed && !_defaultStyle ? _highlightColor : buttonBack;
         var arrowColor = pressed && !_defaultStyle ? _selectedFieldForeColor : arrow;
         var buttonBorder = _hoverPart == Part.DropButton || pressed ? border : back;
+        if (_narrowButton)
+        {
+            using (var brush = new SolidBrush(back))
+                g.FillRectangle(brush, _buttonRect);
+            ExButtonRenderer.DrawTriangle(g, arrowColor, new Point(_buttonRect.X + _buttonRect.Width / 2, _buttonRect.Y + _buttonRect.Height / 2), LogicalToDeviceUnits(3), ArrowDirection.Down);
+            using var pen = new Pen(buttonBorder);
+            g.DrawRectangle(pen, _buttonRect.X, _buttonRect.Y, _buttonRect.Width - 1, _buttonRect.Height - 1);
+            return;
+        }
+
         ExButtonRenderer.DrawCalendarButton(g, _buttonRect, back, buttonBorder, arrowColor, DeviceDpi / 96f);
     }
 
