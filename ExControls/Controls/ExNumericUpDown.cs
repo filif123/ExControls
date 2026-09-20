@@ -118,7 +118,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     }
 
     /// <summary>Gets or sets the background color for the text box portion of the spin box (also known as an up-down control).</summary>
-    /// <returns>A <see cref="T:System.Drawing.Color" /> that represents the background color of the text box portion of the spin box.</returns>
+    /// <returns>A <see cref="System.Drawing.Color" /> that represents the background color of the text box portion of the spin box.</returns>
     public override Color BackColor
     {
         get => base.BackColor;

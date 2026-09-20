@@ -13,10 +13,7 @@ namespace ExControls;
 [TypeConverter(typeof(ExOptionsPanelConverter))]
 public class ExOptionsPanel : Panel
 {
-    private ExOptionsView? _owner;
     private OptionsNode? _node;
-    private OptionsNode? _parentNode;
-    private bool _generateLinksToChildren;
 
     private readonly List<Control> _linkCollection;
 
@@ -52,7 +49,7 @@ public class ExOptionsPanel : Panel
     /// <param name="owner"></param>
     public ExOptionsPanel(ExOptionsView owner) : this()
     {
-        _owner = owner;
+        Owner = owner;
     }
 
     #region  Properties
@@ -66,8 +63,8 @@ public class ExOptionsPanel : Panel
     public ExOptionsView? Owner
     {
         // Just in case the Owner has not been set, let's try to find it ourselves
-        get => (_owner ??= FindOwner())!;
-        private set => _owner = value;
+        get => (field ??= FindOwner())!;
+        private set;
     }
 
     /// <summary>
@@ -95,21 +92,21 @@ public class ExOptionsPanel : Panel
     [Editor(typeof(OptionsNodeEditor), typeof(UITypeEditor))]
     public OptionsNode? ParentNode
     {
-        get => _parentNode;
+        get;
         set
         {
             if (value != null && ReferenceEquals(value, Node))
                 throw new InvalidOperationException("ParentNode cannot be the same as the current Node!");
 
-            if (value is not null && value.Panel is not null && value.Panel.ParentNode == value) 
+            if (value is not null && value.Panel is not null && value.Panel.ParentNode == value)
                 value.Panel.ParentNode = null;
 
-            _parentNode = value;
+            field = value;
             OnParentNodeChanged();
 
             value?.Panel?.OnChildrenChanged();
 
-            if (GenerateLinksToChildren) 
+            if (GenerateLinksToChildren)
                 GenerateLinks();
 
             // Remove and Add the node again during design-time to 'refresh' the nodes
@@ -127,16 +124,16 @@ public class ExOptionsPanel : Panel
     ///     Gets or sets
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
-    [ExDescription("",true)]
+    [ExDescription("", true)]
     [DefaultValue(false)]
     public bool GenerateLinksToChildren
     {
-        get => _generateLinksToChildren;
+        get;
         set
         {
-            if (value == _generateLinksToChildren)
+            if (value == field)
                 return;
-            _generateLinksToChildren = value;
+            field = value;
             if (value)
                 GenerateLinks();
             else
@@ -243,15 +240,18 @@ public class ExOptionsPanel : Panel
     }
 
     // Tell the designer to serialize the Node and ParentNode properties to the designer file.
-#pragma warning disable S1144 // Unused private types or members should be removed
-#pragma warning disable S3400 // Methods should not return constants
-
+#pragma warning disable S1144  // Unused private types or members should be removed
+#pragma warning disable S3400  // Methods should not return constants
+#pragma warning disable CA1822 // Mark members as static
+    
     private bool ShouldSerializeNode() => true;
 
-    private bool ShouldSerializeParentNode() => true;
 
-#pragma warning restore S3400 // Methods should not return constants
-#pragma warning restore S1144 // Unused private types or members should be removed
+    private bool ShouldSerializeParentNode() => true;
+    
+#pragma warning restore CA1822 // Mark members as static
+#pragma warning restore S3400  // Methods should not return constants
+#pragma warning restore S1144  // Unused private types or members should be removed
 
     #endregion
 
