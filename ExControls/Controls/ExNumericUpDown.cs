@@ -1,4 +1,4 @@
-using ExControls.Controls;
+﻿using ExControls.Controls;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 // ReSharper disable UnusedMember.Global
 
@@ -166,22 +166,26 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         }
     }
 
-    private void TextBox_MouseEnter(object? sender, EventArgs e)
-    {
-        if (!_hover)
-        {
-            _hover = true;
-            Invalidate();
-        }
-    }
+    private void TextBox_MouseEnter(object? sender, EventArgs e) => UpdateHover();
 
-    private void TextBox_MouseLeave(object? sender, EventArgs e)
+    private void TextBox_MouseLeave(object? sender, EventArgs e) => UpdateHover();
+
+    /// <summary>
+    ///     Nastavi hover podla skutocnej polohy kurzora nad celym prvkom (textbox aj tlacidla su samostatne okna,
+    ///     takze Enter/Leave jednotlivych casti neurcuju, ci kurzor prvok naozaj opustil) a prekresli aj deti -
+    ///     tlacidla kreslia zvyrazneny obrys podla _hover.
+    /// </summary>
+    private void UpdateHover()
     {
-        if (_hover)
-        {
-            _hover = false;
-            Invalidate();
-        }
+        if (DefaultStyle)
+            return;
+
+        var hover = _selected || (IsHandleCreated && ClientRectangle.Contains(PointToClient(MousePosition)));
+        if (_hover == hover)
+            return;
+
+        _hover = hover;
+        Invalidate(true);
     }
 
     private void OnUpDown(object? source, UpDownEventArgs e)
@@ -225,11 +229,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             return;
         }
 
-        if (!_hover)
-        {
-            _hover = true;
-            Invalidate(true);
-        }
+        UpdateHover();
     }
 
     /// <inheritdoc />
@@ -241,11 +241,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             return;
         }
 
-        if (_hover && !_selected)
-        {
-            _hover = false;
-            Invalidate(true);
-        }
+        UpdateHover();
     }
 
     /// <inheritdoc />
@@ -276,8 +272,8 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
         if (_selected)
         {
-            _hover = false;
             _selected = false;
+            _hover = IsHandleCreated && ClientRectangle.Contains(PointToClient(MousePosition));
             Invalidate(true);
         }
     }
@@ -310,8 +306,8 @@ public class ExNumericUpDown : NumericUpDown, IExControl
 
         if (_selected)
         {
-            _hover = false;
             _selected = false;
+            _hover = IsHandleCreated && ClientRectangle.Contains(PointToClient(MousePosition));
             Invalidate(true);
         }
     }
@@ -411,34 +407,51 @@ public class ExNumericUpDown : NumericUpDown, IExControl
                 }
             }
 
+            // Pri rychlom pohybe moze WM_MOUSELEAVE (postnuta sprava) predbehnut este nespracovany WM_MOUSEMOVE
+            // so suradnicami vnutri tlacidla - preto sa zvyraznenie urcuje podla skutocnej polohy kurzora.
+            UpdateMouseOver();
+            _parent.UpdateHover();
+
+            _parent.OnMouseMove(TranslateMouseEvent(this, e));
+        }
+
+        private ButtonId HitTest(Point pt)
+        {
             var clientRectangle1 = ClientRectangle;
             var clientRectangle2 = ClientRectangle;
             clientRectangle1.Height /= 2;
             clientRectangle2.Y += clientRectangle2.Height / 2;
-            if (clientRectangle1.Contains(e.X, e.Y))
-            {
-                if (_mouseOver != ButtonId.Up)
-                {
-                    _mouseOver = ButtonId.Up;
-                    Invalidate();
-                }
-            }
-            else if (clientRectangle2.Contains(e.X, e.Y))
-            {
-                if (_mouseOver != ButtonId.Down)
-                {
-                    _mouseOver = ButtonId.Down;
-                    Invalidate();
-                }
-            }
+            if (clientRectangle1.Contains(pt))
+                return ButtonId.Up;
+            return clientRectangle2.Contains(pt) ? ButtonId.Down : ButtonId.None;
+        }
 
-            _parent.OnMouseMove(TranslateMouseEvent(this, e));
+        /// <summary>
+        ///     Nastavi zvyraznene tlacidlo podla aktualnej polohy kurzora (nie podla suradnic zo spravy).
+        /// </summary>
+        private void UpdateMouseOver()
+        {
+            var over = IsHandleCreated ? HitTest(PointToClient(MousePosition)) : ButtonId.None;
+            if (_mouseOver == over)
+                return;
+            _mouseOver = over;
+            Invalidate();
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            UpdateMouseOver();
+            _parent.UpdateHover();
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
+            {
                 EndButtonPress();
+                // Po uvolneni capture uz kurzor nemusi byt nad tlacidlom.
+                UpdateMouseOver();
+            }
 
             var screen = PointToScreen(new Point(e.X, e.Y));
             var e1 = TranslateMouseEvent(this, e);
@@ -465,28 +478,23 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             _parent.OnMouseUp(e1);
         }
 
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            if (_mouseOver != ButtonId.None)
-            {
-                _mouseOver = ButtonId.None;
-                Invalidate();
-                _parent.OnMouseLeave(e);
-            }
-        }
-
         private MouseEventArgs TranslateMouseEvent(IWin32Window child, MouseEventArgs e)
         {
-            if (child == null || !IsHandleCreated)
+            if (child == null || !IsHandleCreated || !_parent.IsHandleCreated)
                 return e;
             var pt = new Win32.POINT(e.X, e.Y);
-            Win32.MapWindowPoints(child.Handle, Handle, ref pt, 1);
+            Win32.MapWindowPoints(child.Handle, _parent.Handle, ref pt, 1);
             return new MouseEventArgs(e.Button, e.Clicks, pt.X, pt.Y, e.Delta);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+
+            // Poistka: ak kurzor uz nie je nad tlacidlom, nekreslit ho zvyraznene.
+            if (_mouseOver != ButtonId.None && !ClientRectangle.Contains(PointToClient(MousePosition)))
+                _mouseOver = ButtonId.None;
+
             DrawInternal(e.Graphics);
         }
 
@@ -534,7 +542,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             var arrowYu = ClientRectangle.Height / 2 - 4;
             var arrowYd = ClientRectangle.Height / 2 + 4;
 
-            Brush brush = _parent.Enabled ? new SolidBrush(_parent.ArrowsColor) : new SolidBrush(Color.DimGray);
+            using Brush brush = new SolidBrush(_parent.Enabled ? _parent.ArrowsColor : Color.DimGray);
 
             Point[] arrowUp = { new(arrowX, arrowYu), new(arrowX + 6, arrowYu), new(arrowX + 3, arrowYu - 4) };
             Point[] arrowDown = { new(arrowX + 1, arrowYd), new(arrowX + 6, arrowYd), new(arrowX + 3, arrowYd + 3) };

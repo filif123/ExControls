@@ -289,19 +289,40 @@ public class ExComboBox : ComboBox, IExControl
     /// <inheritdoc />
     protected override void WndProc(ref Message m)
     {
+        if (!DefaultStyle)
+        {
+            switch (m.GetMsg())
+            {
+                case Win32.WM.PAINT:
+                {
+                    var hdc = Win32.BeginPaint(m.HWnd, out var ps);
+                    try
+                    {
+                        using var buffer = BufferedGraphicsManager.Current.Allocate(hdc, ClientRectangle);
+                        OnPaint(new PaintEventArgs(buffer.Graphics, ClientRectangle));
+                        buffer.Render(hdc);
+                    }
+                    finally
+                    {
+                        Win32.EndPaint(m.HWnd, ref ps);
+                    }
+
+                    m.Result = IntPtr.Zero;
+                    return;
+                }
+                case Win32.WM.ERASEBKGND:
+                    m.Result = (IntPtr)1;
+                    return;
+            }
+        }
+
         base.WndProc(ref m);
 
-        if (DefaultStyle) 
+        if (DefaultStyle)
             return;
 
         switch (m.GetMsg())
         {
-            case Win32.WM.PAINT:
-            {
-                using var g = Graphics.FromHwnd(m.HWnd);
-                OnPaint(new PaintEventArgs(g, ClientRectangle));
-                break;
-            }
             case Win32.WM.CTLCOLORLISTBOX:
             {
                 _listbrush.Dispose();
@@ -445,6 +466,14 @@ public class ExComboBox : ComboBox, IExControl
         if (DefaultStyle)
         {
             base.OnDrawItem(e);
+            return;
+        }
+
+        if ((e.State & DrawItemState.ComboBoxEdit) == DrawItemState.ComboBoxEdit)
+        {
+            // Editacnu cast (DropDownList) kresli nativny ComboBox mimo WM_PAINT priamo na obrazovku
+            // (napr. pri zmene fokusu) - namiesto toho ju nechame prekreslit v OnPaint.
+            Invalidate();
             return;
         }
 

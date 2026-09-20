@@ -112,6 +112,12 @@ internal static partial class Win32
     public static extern bool ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
     [DllImport(USER32)]
+    public static extern IntPtr BeginPaint(IntPtr hWnd, out PAINTSTRUCT lpPaint);
+
+    [DllImport(USER32)]
+    public static extern bool EndPaint(IntPtr hWnd, ref PAINTSTRUCT lpPaint);
+
+    [DllImport(USER32)]
     public static extern IntPtr WindowFromPoint(POINT point);
 
     [DllImport(USER32, CharSet = CharSet.Auto, CallingConvention = CallingConvention.Winapi)]
