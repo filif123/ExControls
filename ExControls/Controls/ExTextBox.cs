@@ -242,10 +242,25 @@ public class ExTextBox : TextBox, IExControl
     /// <inheritdoc />
     protected override void WndProc(ref Message m)
     {
-        if (!DefaultStyle && m.Msg == (int)Win32.WM.NCPAINT)
-            return;
-
         base.WndProc(ref m);
+
+        if (!DefaultStyle && RedrawsScrollBars(m.Msg))
+        {
+            // Neklientsku oblast (ramik + scrollbary) necha vykreslit system a az potom sa cez systemovy ramik
+            // nakresli vlastny. Ak by sa WM_NCPAINT zahodil, scrollbary by sa nevykreslili, kym ich edit sam neprekresli.
+            // Edit prekresluje scrollbary aj mimo WM_NCPAINT (SetScrollInfo pri rolovani, pisani, zmene vyberu...)
+            // a pritom zmaze kus ramika vedla nich, preto sa ramik obnovuje aj po tychto spravach.
+            DrawBorder();
+
+            // Temovany scrollbar po odchode kurzora (a po pusteni palca) dobieha animaciu zvyraznenia vlastnym
+            // casovacom mimo sprav okna a znova prekresli kus ramika - preto sa ramik chvilu obnovuje opakovane.
+            if ((Win32.WM)m.Msg is Win32.WM.NCMOUSEMOVE or Win32.WM.NCMOUSELEAVE or Win32.WM.NCLBUTTONUP
+                or Win32.WM.CAPTURECHANGED or Win32.WM.VSCROLL or Win32.WM.HSCROLL)
+                StartBorderRefresh();
+
+            if (m.Msg == (int)Win32.WM.NCPAINT)
+                return;
+        }
 
         if (!DefaultStyle && m.Msg == (int)Win32.WM.PAINT)
         {
@@ -259,6 +274,87 @@ public class ExTextBox : TextBox, IExControl
             DrawHint(Graphics.FromHwnd(m.HWnd));
     }
 
+    private const int BorderRefreshTicks = 15;
+    private const int BorderRefreshInterval = 40;
+
+    private System.Windows.Forms.Timer? _borderTimer;
+    private int _borderTicksLeft;
+
+    /// <summary>
+    ///     Spusti opakovane obnovovanie ramika (~600 ms), kym dobehne animacia scrollbaru.
+    /// </summary>
+    private void StartBorderRefresh()
+    {
+        if (_borderTimer == null)
+        {
+            _borderTimer = new System.Windows.Forms.Timer { Interval = BorderRefreshInterval };
+            _borderTimer.Tick += (_, _) =>
+            {
+                DrawBorder();
+                if (--_borderTicksLeft <= 0)
+                    _borderTimer!.Stop();
+            };
+        }
+
+        _borderTicksLeft = BorderRefreshTicks;
+        _borderTimer.Start();
+    }
+
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _borderTimer?.Dispose();
+            _borderTimer = null;
+        }
+
+        base.Dispose(disposing);
+    }
+
+    /// <summary>
+    ///     Spravy, po ktorych edit (DefWindowProc) moze prekreslit scrollbary a tym aj kus ramika.
+    /// </summary>
+    private static bool RedrawsScrollBars(int msg)
+    {
+        // EM_* spravy (0x00B0 - 0x00DF) menia text/vyber a scrollbary
+        if (msg is >= 0x00B0 and <= 0x00DF)
+            return true;
+
+        return (Win32.WM)msg is Win32.WM.NCPAINT or Win32.WM.VSCROLL or Win32.WM.HSCROLL
+            or Win32.WM.MOUSEWHEEL or Win32.WM.MOUSEHWHEEL
+            or Win32.WM.KEYDOWN or Win32.WM.KEYUP or Win32.WM.CHAR
+            or Win32.WM.LBUTTONDOWN or Win32.WM.LBUTTONUP or Win32.WM.LBUTTONDBLCLK or Win32.WM.MOUSEMOVE
+            or Win32.WM.NCMOUSEMOVE or Win32.WM.NCLBUTTONDOWN or Win32.WM.NCLBUTTONUP or Win32.WM.NCMOUSELEAVE
+            or Win32.WM.CAPTURECHANGED or Win32.WM.TIMER
+            or Win32.WM.SETTEXT or Win32.WM.SETFONT or Win32.WM.SIZE or Win32.WM.SETFOCUS or Win32.WM.KILLFOCUS
+            or Win32.WM.CUT or Win32.WM.PASTE or Win32.WM.CLEAR or Win32.WM.UNDO;
+    }
+
+    /// <summary>
+    ///     Nakresli vlastny ramik do neklientskej oblasti okna (cez system. ramik BorderStyle.FixedSingle).
+    /// </summary>
+    private void DrawBorder()
+    {
+        if (!IsHandleCreated)
+            return;
+
+        var hdc = Win32.GetWindowDC(Handle);
+        var rgn = Win32.CreateRectRgn(0, 0, Width, Height);
+        var inner = Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness);
+        var border = _hover || _selected ? HighlightColor : BorderColor;
+        if (!Enabled) border = DisabledBorderColor;
+        var brush = Win32.CreateSolidBrush(Win32.RGBtoInt(border));
+
+        Win32.CombineRgn(rgn, rgn, inner, RgnDiff);
+        Win32.FillRgn(hdc, rgn, brush);
+
+        Win32.ReleaseDC(Handle, hdc);
+        Win32.DeleteObject(inner);
+        Win32.DeleteObject(rgn);
+        Win32.DeleteObject(brush);
+    }
+
     /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)
     {
@@ -269,24 +365,12 @@ public class ExTextBox : TextBox, IExControl
 
         if (!Enabled)
         {
-            e.Graphics.FillRectangle(new SolidBrush(DisabledBackColor), ClientRectangle);
+            using var back = new SolidBrush(DisabledBackColor);
+            e.Graphics.FillRectangle(back, ClientRectangle);
             TextRenderer.DrawText(e.Graphics, Text, Font, ClientRectangle, DisabledForeColor, DisabledBackColor, ConvertAligment(TextAlign));
         }
 
-        //border
-        var hdc = Win32.GetWindowDC(Handle);
-        var rgn = Win32.CreateRectRgn(0, 0, Width, Height);
-        var border = _hover || _selected ? HighlightColor : BorderColor;
-        if (!Enabled) border = DisabledBorderColor;
-        var brush = Win32.CreateSolidBrush(Win32.RGBtoInt(border));
-
-        Win32.CombineRgn(rgn, rgn, Win32.CreateRectRgn(BorderThickness, BorderThickness, Width - BorderThickness, Height - BorderThickness), RgnDiff);
-
-        Win32.FillRgn(hdc, rgn, brush);
-
-        Win32.ReleaseDC(Handle, hdc);
-        Win32.DeleteObject(rgn);
-        Win32.DeleteObject(brush);
+        DrawBorder();
     }
 
     /// <summary>
