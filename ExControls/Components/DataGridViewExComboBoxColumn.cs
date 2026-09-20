@@ -31,7 +31,44 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
         StyleNormal.ButtonBorderColor = StyleNormal.BackColor;
         StyleNormal.ButtonRenderFirst = true;
 
+        SubscribeTemplateStyles();
         DataGridView?.InvalidateColumn(Index);
+    }
+
+    // Bunky maju vlastne kopie stylov (Clone), preto zmena vlastnosti stylu sablony
+    // (napr. StyleNormal.ForeColor pri prepnuti temy) sa musi prenasat na vsetky existujuce bunky.
+    private void SubscribeTemplateStyles()
+    {
+        StyleNormal.PropertyChanged += TemplateStyleOnPropertyChanged;
+        StyleHighlight.PropertyChanged += TemplateStyleOnPropertyChanged;
+        StyleSelected.PropertyChanged += TemplateStyleOnPropertyChanged;
+        StyleDisabled.PropertyChanged += TemplateStyleOnPropertyChanged;
+    }
+
+    private void TemplateStyleOnPropertyChanged(object? sender, ExPropertyChangedEventArgs e)
+    {
+        if (sender is not ExComboBoxStyle style)
+            return;
+
+        if (ReferenceEquals(style, StyleNormal))
+            ForEachCell(cell => cell.StyleNormal = (ExComboBoxStyle)style.Clone());
+        else if (ReferenceEquals(style, StyleHighlight))
+            ForEachCell(cell => cell.StyleHighlight = (ExComboBoxStyle)style.Clone());
+        else if (ReferenceEquals(style, StyleSelected))
+            ForEachCell(cell => cell.StyleSelected = (ExComboBoxStyle)style.Clone());
+        else if (ReferenceEquals(style, StyleDisabled))
+            ForEachCell(cell => cell.StyleDisabled = (ExComboBoxStyle)style.Clone());
+    }
+
+    private void ForEachCell(Action<DataGridViewExComboBoxCell> action)
+    {
+        if (DataGridView == null)
+            return;
+        var rows = DataGridView.Rows;
+        for (var i = 0; i < rows.Count; i++)
+            if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
+                action(cell);
+        DataGridView.InvalidateColumn(Index);
     }
 
     /// <inheritdoc />
@@ -65,13 +102,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
             if (DefaultStyle == value)
                 return;
             ExComboBoxCellTemplate.DefaultStyle = value;
-            if (DataGridView == null)
-                return;
-            var rows = DataGridView.Rows;
-            for (var i = 1; i < DataGridView.Rows.Count; i++)
-                if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
-                    cell.DefaultStyle = value;
-            DataGridView.InvalidateColumn(Index);
+            ForEachCell(cell => cell.DefaultStyle = value);
         }
     }
 
@@ -90,13 +121,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
             if (DropDownSelectedBackColor == value)
                 return;
             ExComboBoxCellTemplate.DropDownSelectedBackColor = value;
-            if (DataGridView == null)
-                return;
-            var rows = DataGridView.Rows;
-            for (var i = 1; i < DataGridView.Rows.Count; i++)
-                if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
-                    cell.DropDownSelectedBackColor = value;
-            DataGridView.InvalidateColumn(Index);
+            ForEachCell(cell => cell.DropDownSelectedBackColor = value);
         }
     }
 
@@ -115,13 +140,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
             if (DropDownBackColor == value)
                 return;
             ExComboBoxCellTemplate.DropDownBackColor = value;
-            if (DataGridView == null)
-                return;
-            var rows = DataGridView.Rows;
-            for (var i = 1; i < DataGridView.Rows.Count; i++)
-                if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
-                    cell.DropDownBackColor = value;
-            DataGridView.InvalidateColumn(Index);
+            ForEachCell(cell => cell.DropDownBackColor = value);
         }
     }
 
@@ -137,14 +156,10 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
         get => ExComboBoxCellTemplate.StyleNormal;
         set
         {
+            ExComboBoxCellTemplate.StyleNormal.PropertyChanged -= TemplateStyleOnPropertyChanged;
             ExComboBoxCellTemplate.StyleNormal = value;
-            if (DataGridView == null)
-                return;
-            var rows = DataGridView.Rows;
-            for (var i = 1; i < DataGridView.Rows.Count; i++)
-                if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
-                    cell.StyleNormal = value;
-            DataGridView.InvalidateColumn(Index);
+            value.PropertyChanged += TemplateStyleOnPropertyChanged;
+            ForEachCell(cell => cell.StyleNormal = (ExComboBoxStyle)value.Clone());
         }
     }
 
@@ -160,14 +175,10 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
         get => ExComboBoxCellTemplate.StyleHighlight;
         set
         {
+            ExComboBoxCellTemplate.StyleHighlight.PropertyChanged -= TemplateStyleOnPropertyChanged;
             ExComboBoxCellTemplate.StyleHighlight = value;
-            if (DataGridView == null)
-                return;
-            var rows = DataGridView.Rows;
-            for (var i = 1; i < DataGridView.Rows.Count; i++)
-                if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
-                    cell.StyleHighlight = value;
-            DataGridView.InvalidateColumn(Index);
+            value.PropertyChanged += TemplateStyleOnPropertyChanged;
+            ForEachCell(cell => cell.StyleHighlight = (ExComboBoxStyle)value.Clone());
         }
     }
 
@@ -183,14 +194,10 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
         get => ExComboBoxCellTemplate.StyleSelected;
         set
         {
+            ExComboBoxCellTemplate.StyleSelected.PropertyChanged -= TemplateStyleOnPropertyChanged;
             ExComboBoxCellTemplate.StyleSelected = value;
-            if (DataGridView == null)
-                return;
-            var rows = DataGridView.Rows;
-            for (var i = 1; i < DataGridView.Rows.Count; i++)
-                if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
-                    cell.StyleSelected = value;
-            DataGridView.InvalidateColumn(Index);
+            value.PropertyChanged += TemplateStyleOnPropertyChanged;
+            ForEachCell(cell => cell.StyleSelected = (ExComboBoxStyle)value.Clone());
         }
     }
 
@@ -206,14 +213,10 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
         get => ExComboBoxCellTemplate.StyleDisabled;
         set
         {
+            ExComboBoxCellTemplate.StyleDisabled.PropertyChanged -= TemplateStyleOnPropertyChanged;
             ExComboBoxCellTemplate.StyleDisabled = value;
-            if (DataGridView == null)
-                return;
-            var rows = DataGridView.Rows;
-            for (var i = 1; i < DataGridView.Rows.Count; i++)
-                if (rows.SharedRow(i).Cells[Index] is DataGridViewExComboBoxCell cell)
-                    cell.StyleDisabled = value;
-            DataGridView.InvalidateColumn(Index);
+            value.PropertyChanged += TemplateStyleOnPropertyChanged;
+            ForEachCell(cell => cell.StyleDisabled = (ExComboBoxStyle)value.Clone());
         }
     }
 }

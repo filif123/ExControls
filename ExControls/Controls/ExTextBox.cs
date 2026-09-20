@@ -198,6 +198,45 @@ public class ExTextBox : TextBox, IExControl
         }
     }
 
+    /// <summary>
+    ///     Use dark (DarkMode_Explorer) scroll bars for the multiline TextBox.
+    /// </summary>
+    [Browsable(true)]
+    [ExCategory(CategoryType.Appearance)]
+    [DefaultValue(false)]
+    [ExDescription("Use dark (DarkMode_Explorer) scroll bars.")]
+    public bool UseDarkScrollBar
+    {
+        get;
+        set
+        {
+            if (field == value)
+                return;
+            field = value;
+            ApplyScrollBarTheme();
+        }
+    }
+
+    /// <summary>
+    ///     Nastavi temu okna podla UseDarkScrollBar (tema DarkMode_Explorer da tmave scrollbary).
+    /// </summary>
+    private void ApplyScrollBarTheme()
+    {
+        if (!IsHandleCreated || DesignMode)
+            return;
+
+        this.SetTheme(UseDarkScrollBar ? WindowsTheme.DarkExplorer : WindowsTheme.Default);
+        DrawBorder();
+    }
+
+    /// <inheritdoc />
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        base.OnHandleCreated(e);
+        if (UseDarkScrollBar)
+            ApplyScrollBarTheme();
+    }
+
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
