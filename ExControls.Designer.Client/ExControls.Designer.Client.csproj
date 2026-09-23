@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- Client part of the ExControls designer extension, loaded by Visual Studio (devenv.exe)
+	     from the Design/WinForms folder of the ExControls.Designer package. -->
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<LangVersion>default</LangVersion>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.WinForms.Designer.SDK" Version="1.6.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ExControls.Designer.Protocol\ExControls.Designer.Protocol.csproj" />
+	</ItemGroup>
+</Project>

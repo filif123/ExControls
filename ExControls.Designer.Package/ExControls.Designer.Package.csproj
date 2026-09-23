@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!--
+	  Builds the ExControls.Designer NuGet package (designer extension for the .NET out-of-process WinForms designer):
+	    lib/net8.0/ExControls.Designer.Protocol.dll                 - reference, by which VS finds the package
+	    lib/net8.0/Design/WinForms/*.dll                            - client (Visual Studio, net48)
+	    lib/net8.0/Design/WinForms/Server/*.dll                     - server (DesignToolsServer, .NET)
+	  Visual Studio loads designer extensions only from NuGet packages, not from project references.
+	  The package is written to ..\artifacts\packages and consumed via ..\ExControls.Designer.targets.
+	  After every change of the Client/Server/Protocol projects increase ExControlsDesignerVersion
+	  in ..\ExControls.Designer.targets (NuGet and Visual Studio cache packages by version).
+	-->
+	<PropertyGroup>
+		<ExControlsDesignerIsPackageProject>true</ExControlsDesignerIsPackageProject>
+	</PropertyGroup>
+	<Import Project="..\ExControls.Designer.targets" />
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageId>ExControls.Designer</PackageId>
+		<PackageVersion>$(ExControlsDesignerVersion)</PackageVersion>
+		<Description>Visual Studio designer extension for ExControls (collection editor of ExOptionsView.Panels).</Description>
+		<Authors>filif123</Authors>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\packages\</PackageOutputPath>
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_GetDesignerFilesToPackage</TargetsForTfmSpecificContentInPackage>
+		<!-- NU5100: dll outside lib root (Design/WinForms is intended), NU5128: no dependency groups (intended) -->
+		<NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Only for restore and build order; the outputs are collected by _BuildDesignerProjects.
+		     Each project has a single target framework of its own, so TargetFramework is not passed on
+		     (pack runs with TargetFramework=net8.0 as a global property). -->
+		<ProjectReference Include="..\ExControls.Designer.Protocol\ExControls.Designer.Protocol.csproj" />
+		<ProjectReference Include="..\ExControls.Designer.Client\ExControls.Designer.Client.csproj" />
+		<ProjectReference Include="..\ExControls.Designer.Server\ExControls.Designer.Server.csproj" />
+		<ProjectReference Update="@(ProjectReference)" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" Private="false"
+		                  UndefineProperties="TargetFramework;RuntimeIdentifier" />
+	</ItemGroup>
+
+	<Target Name="_BuildDesignerProjects" BeforeTargets="Build">
+		<MSBuild Projects="@(ProjectReference)" Targets="Build" BuildInParallel="false">
+			<Output TaskParameter="TargetOutputs" ItemName="_DesignerOutput" />
+		</MSBuild>
+	</Target>
+
+	<Target Name="_GetDesignerFilesToPackage" DependsOnTargets="_BuildDesignerProjects">
+		<ItemGroup>
+			<_ProtocolDll Include="@(_DesignerOutput)" Condition="'%(Filename)' == 'ExControls.Designer.Protocol'" />
+			<_ClientDll Include="@(_DesignerOutput)" Condition="'%(Filename)' == 'ExControls.Designer.Client'" />
+			<_ServerDll Include="@(_DesignerOutput)" Condition="'%(Filename)' == 'ExControls.Designer.Server'" />
+
+			<TfmSpecificPackageFile Include="@(_ProtocolDll)" PackagePath="lib/$(TargetFramework)" />
+			<TfmSpecificPackageFile Include="@(_ClientDll);@(_ProtocolDll)" PackagePath="lib/$(TargetFramework)/Design/WinForms" />
+			<TfmSpecificPackageFile Include="@(_ServerDll);@(_ProtocolDll)" PackagePath="lib/$(TargetFramework)/Design/WinForms/Server" />
+		</ItemGroup>
+		<Error Condition="'@(_ProtocolDll)' == '' Or '@(_ClientDll)' == '' Or '@(_ServerDll)' == ''" Text="Designer extension assemblies were not built." />
+	</Target>
+</Project>

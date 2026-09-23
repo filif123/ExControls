@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- Shared by the client (Visual Studio, .NET Framework) and the server (DesignToolsServer, .NET) part
+	     of the ExControls designer extension. Also serves as the lib/ asset of the ExControls.Designer package,
+	     so that Visual Studio recognizes the package reference and loads its Design/WinForms folders. -->
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>default</LangVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+</Project>

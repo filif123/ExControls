@@ -8,6 +8,10 @@ namespace ExControls.Editors;
 /// <summary>
 /// Provides a collection editor for a ControlCollection of OptionsPanels.
 /// </summary>
+/// <remarks>
+/// On .NET this is the server-side part of the editor; it is registered in DesignToolsServer
+/// and shown in Visual Studio by the ExControls.Designer package (see ExControls.Designer.targets).
+/// </remarks>
 public class OptionsPanelCollectionEditor : CollectionEditor
 {
 #if NETFRAMEWORK
@@ -42,31 +46,4 @@ public class OptionsPanelCollectionEditor : CollectionEditor
 
         return panel;
     }
-
-#if !NETFRAMEWORK
-    private ExPanelCollectionEditorViewModel? _model;
-
-    protected override CollectionEditorViewModel BeginEditValue(ITypeDescriptorContext context, object value)
-    {
-        return _model ??= new ExPanelCollectionEditorViewModel(this);
-    }
-
-    protected override object EndEditValue(bool commitChange)
-    {
-        return _model!.EditValue;
-    }
-
-    private sealed class ExPanelCollectionEditorViewModel : CollectionEditorViewModel
-    {
-        public ExPanelCollectionEditorViewModel(CollectionEditor editor) : base(editor)
-        {
-        }
-
-        protected override void OnEditValueChanged()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-#endif
 }

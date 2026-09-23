@@ -12,4 +12,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\ExControls\ExControls.csproj" />
 	</ItemGroup>
+	<!-- ExControls designer extension for VS (collection editor of ExOptionsView.Panels) -->
+	<Import Project="..\ExControls.Designer.targets" />
 </Project>

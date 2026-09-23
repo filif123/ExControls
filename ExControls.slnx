@@ -1,4 +1,11 @@
 <Solution>
+  <Folder Name="/Designer/">
+    <File Path="ExControls.Designer.targets" />
+    <Project Path="ExControls.Designer.Client/ExControls.Designer.Client.csproj" />
+    <Project Path="ExControls.Designer.Package/ExControls.Designer.Package.csproj" />
+    <Project Path="ExControls.Designer.Protocol/ExControls.Designer.Protocol.csproj" />
+    <Project Path="ExControls.Designer.Server/ExControls.Designer.Server.csproj" />
+  </Folder>
   <Project Path="ExControls/ExControls.csproj" />
   <Project Path="ExControlsTester/ExControlsTester.csproj" />
 </Solution>

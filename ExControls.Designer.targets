@@ -1,0 +1,18 @@
+<Project>
+	<!--
+	  Designer extension of ExControls for Visual Studio (collection editor of ExOptionsView.Panels).
+	  Import it in projects whose forms use ExControls; ExControls itself stays a ProjectReference.
+	  The package is built by ExControls.Designer.Package into artifacts\packages; while it is not built,
+	  the reference is skipped (the build works, only the collection editor is unavailable in the designer).
+	  The assembly is not copied to the output (ExcludeAssets=runtime) and does not flow to dependent projects.
+	-->
+	<PropertyGroup>
+		<ExControlsDesignerVersion>1.0.0</ExControlsDesignerVersion>
+		<ExControlsDesignerFeed>$(MSBuildThisFileDirectory)artifacts\packages</ExControlsDesignerFeed>
+		<_ExControlsDesignerAvailable Condition="'$(ExControlsDesignerIsPackageProject)' != 'true' And Exists('$(ExControlsDesignerFeed)\ExControls.Designer.$(ExControlsDesignerVersion).nupkg')">true</_ExControlsDesignerAvailable>
+		<RestoreAdditionalProjectSources Condition="'$(_ExControlsDesignerAvailable)' == 'true'">$(RestoreAdditionalProjectSources);$(ExControlsDesignerFeed)</RestoreAdditionalProjectSources>
+	</PropertyGroup>
+	<ItemGroup Condition="'$(_ExControlsDesignerAvailable)' == 'true'">
+		<PackageReference Include="ExControls.Designer" Version="$(ExControlsDesignerVersion)" ExcludeAssets="runtime" PrivateAssets="all" />
+	</ItemGroup>
+</Project>

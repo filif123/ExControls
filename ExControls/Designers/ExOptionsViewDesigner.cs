@@ -31,17 +31,6 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
 
     private ExOptionsPanel? SelectedPanel { get; set; }
 
-    /*// Handle mouseclicks on the TreeView
-    protected override void OnHostInitialized()
-    {
-        ControlHost.TreeView.MouseDown += OnTreeViewClicked;
-#if !NETFRAMEWORK
-        ControlHost.TreeView.AfterExpand += TreeViewInvalidate;
-        ControlHost.TreeView.AfterCollapse += TreeViewInvalidate;
-        ControlHost.TreeView.AfterSelect += TreeViewInvalidate;
-#endif
-    }*/
-
     /// <inheritdoc />
     public override void Initialize(IComponent component)
     {
@@ -66,15 +55,6 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
 
     public override bool CanParent(ControlDesigner controlDesigner) => false;
 
-    // When the treeview is clicked, select the host ExOptionsView (otherwise there would be no way to select it)
-    private void OnTreeViewClicked(object sender, MouseEventArgs e)
-    {
-        MessageBox.Show("Test");
-        SelectHost();
-    }
-
-    private void TreeViewInvalidate(object sender, TreeViewEventArgs e) => ControlHost.TreeView?.Invalidate();
-
     protected override void PreFilterProperties(IDictionary properties)
     {
         base.PreFilterProperties(properties);
@@ -92,35 +72,41 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
         }
     }
 
-/*#if !NETFRAMEWORK
+#if !NETFRAMEWORK
+    // In the out-of-process designer, a click for which GetHitTest returns true is not passed
+    // to the native TreeView but to this method, so select / expand the node manually.
     protected override void OnMouseDown(MouseEventArgs e)
     {
         base.OnMouseDown(e);
-        if (ControlHost.TreeView.ClientRectangle.Contains(e.Location))
-        {
-            var info = ControlHost.TreeView.HitTest(ControlHost.TreeView.PointToClient(e.Location));
-            ControlHost.TreeView.SelectedNode = info.Node;
-        }
+
+        var tree = ControlHost.TreeView;
+        var info = tree.HitTest(tree.PointToClient(Control.MousePosition));
+        if (info.Node is null)
+            return;
+
+        if (info.Location == TreeViewHitTestLocations.PlusMinus)
+            info.Node.Toggle();
+        else
+            tree.SelectedNode = info.Node;
+
+        tree.Invalidate();
     }
-#endif*/
+#endif
 
     protected override bool GetHitTest(Point screenCoordinates)
     {
-        var point = ControlHost.PointToClient(screenCoordinates);
-        
         // Allow treenode selection / expansion
-        if (ControlHost.TreeView.ClientRectangle.Contains(point))
+        var tree = ControlHost.TreeView;
+        if (tree.Visible && tree.RectangleToScreen(tree.ClientRectangle).Contains(screenCoordinates))
             return true;
 
         // Allow splitter moving
-        if (ControlHost.SplitContainer.SplitterRectangle.Contains(point))
+        var split = ControlHost.SplitContainer;
+        if (split.RectangleToScreen(split.SplitterRectangle).Contains(screenCoordinates))
             return true;
 
-        //Allow page scrolling
-        if (ControlHost.SelectedPanel != null && ControlHost.SelectedPanel.ClientRectangle.Contains(point))
-            return true;
-
-        return base.GetHitTest(point);
+        // Do not capture the panel area - ExOptionsPanel has its own designer (scrollbars, drag & drop from the toolbox)
+        return base.GetHitTest(screenCoordinates);
     }
 
     private void OnAddPanel()
@@ -186,7 +172,12 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
             DesignerActionService.Refresh(Host);
         }
 
+#if NETFRAMEWORK
         private void EditPanels() => ExEditorServiceContext.EditValue(Designer, Component!, "Panels");
+#else
+        // The editor dialog runs in Visual Studio (ExControls.Designer package), it cannot be shown from the server.
+        private void EditPanels() => Designer.InvokePropertyEditor(nameof(ExOptionsView.Panels));
+#endif
 
         public ExOptionsPanel? SelectedPanel
         {
@@ -215,11 +206,11 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
                 new DesignerActionHeaderItem("Panels"),
                 new DesignerActionMethodItem(this, nameof(AddPanel), "Add Panel", "Panels",
                     "Adds a new ExOptionsPanel to this ExOptionsView.", true),
-                new DesignerActionMethodItem(this, nameof(EditPanels), "Edit Panels...", "Panels", 
+                new DesignerActionMethodItem(this, nameof(EditPanels), "Edit Panels...", "Panels",
                     "Edits a collection of panels in this ExOptionsView.", true),
-                new DesignerActionPropertyItem(nameof(Dock), "Dock:", "", 
+                new DesignerActionPropertyItem(nameof(Dock), "Dock:", "",
                     "Docks this control to a side."),
-                new DesignerActionPropertyItem(nameof(SelectedPanel), "Selected Panel:", "Panels", 
+                new DesignerActionPropertyItem(nameof(SelectedPanel), "Selected Panel:", "Panels",
                     "Gets or sets the selected ExOptionsPanel.")
             };
 

@@ -148,7 +148,13 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     /// Gets the collection of ExOptionsPanel controls.
     /// </summary>
     [ExDescription("The ExOptionsPanel controls on this ExOptionsView.", true)]
+#if NETFRAMEWORK
     [Editor(typeof(OptionsPanelCollectionEditor), typeof(UITypeEditor))]
+#else
+    // Name routed by the ExControls.Designer package to the Visual Studio collection editor,
+    // which is driven by OptionsPanelCollectionEditor in DesignToolsServer.
+    [Editor("OptionsPanelCollectionEditor", typeof(UITypeEditor))]
+#endif
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [ExCategory(CategoryType.Behavior)]
     public ControlCollection Panels => PanelContainer.Controls;

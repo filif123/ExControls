@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- Server part of the ExControls designer extension, loaded by DesignToolsServer.exe
+	     from the Design/WinForms/Server folder of the ExControls.Designer package. -->
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<LangVersion>default</LangVersion>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.WinForms.Designer.SDK" Version="1.6.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ExControls.Designer.Protocol\ExControls.Designer.Protocol.csproj" />
+		<!-- ExControls.dll is loaded by the designed project itself, it must not be packed with the extension. -->
+		<ProjectReference Include="..\ExControls\ExControls.csproj" Private="false" />
+	</ItemGroup>
+</Project>

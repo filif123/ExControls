@@ -25,3 +25,13 @@ These components have been extended:
 ```
 dotnet add package ExControls
 ```
+
+## Designer extension (.NET)
+The .NET WinForms designer runs out of process and loads custom type editors only from NuGet packages.
+`ExControls.Designer.Package` builds `artifacts/packages/ExControls.Designer.<version>.nupkg`
+(client part for Visual Studio, server part for DesignToolsServer); projects that design forms with
+ExControls import `ExControls.Designer.targets` next to their `ExControls` project reference.
+
+After changing `ExControls.Designer.Client/Server/Protocol`, increase `ExControlsDesignerVersion`
+in `ExControls.Designer.targets`, rebuild the package and restart Visual Studio -
+NuGet and the designer cache packages by version.
