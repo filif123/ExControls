@@ -8,6 +8,7 @@
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
 		<PackageReference Include="Microsoft.WinForms.Designer.SDK" Version="1.6.0" />
 	</ItemGroup>
 	<ItemGroup>

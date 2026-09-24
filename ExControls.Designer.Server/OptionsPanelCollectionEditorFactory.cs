@@ -1,5 +1,6 @@
 using ExControls.Designer.Protocol;
 using ExControls.Editors;
+using JetBrains.Annotations;
 using Microsoft.DotNet.DesignTools.Editors;
 
 namespace ExControls.Designer.Server;
@@ -9,6 +10,7 @@ namespace ExControls.Designer.Server;
 /// on the client asks for the editor by its name (<see cref="EditorNames.OptionsPanelCollectionEditor"/>).
 /// </summary>
 [ExportCollectionEditorFactory(EditorNames.OptionsPanelCollectionEditor)]
+[UsedImplicitly]
 internal sealed class OptionsPanelCollectionEditorFactory : CollectionEditorFactory<OptionsPanelCollectionEditor>
 {
     protected override OptionsPanelCollectionEditor CreateCollectionEditor(IServiceProvider provider, Type collectionType)

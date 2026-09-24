@@ -49,7 +49,9 @@ public class ExDateTimePicker : Control, IExControl
         public string Text = string.Empty;
         public Rectangle Bounds;
         public bool Editable => Kind is not (FieldKind.Literal or FieldKind.DayName);
-        public bool Numeric => Kind is FieldKind.Day or FieldKind.Month or FieldKind.MonthName or FieldKind.Year or FieldKind.Hour12 or FieldKind.Hour24 or FieldKind.Minute or FieldKind.Second;
+        public bool Numeric => Kind is 
+            FieldKind.Day or FieldKind.Month or FieldKind.MonthName or FieldKind.Year or 
+            FieldKind.Hour12 or FieldKind.Hour24 or FieldKind.Minute or FieldKind.Second;
     }
 
     private enum Part
