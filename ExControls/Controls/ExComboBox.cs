@@ -436,8 +436,13 @@ public class ExComboBox : ComboBox, IExControl
         }
 
         if (DropDownStyle == ComboBoxStyle.DropDownList)
-            TextRenderer.DrawText(g, Text, Font, textStart, fore, back,
-                RightToLeft == RightToLeft.Yes ? TextFormatFlags.Right : TextFormatFlags.Default);
+        {
+            // dlhy text sa nesmie kreslit cez tlacidlo so sipkou - skrati sa s tromi bodkami
+            var textBounds = new Rectangle(textStart.X, textStart.Y, Math.Max(0, dropButton.Left - textStart.X - 2), Height - textStart.Y);
+            TextRenderer.DrawText(g, Text, Font, textBounds, fore, back,
+                (RightToLeft == RightToLeft.Yes ? TextFormatFlags.Right : TextFormatFlags.Default) |
+                TextFormatFlags.EndEllipsis | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix);
+        }
 
         base.OnPaint(e);
 

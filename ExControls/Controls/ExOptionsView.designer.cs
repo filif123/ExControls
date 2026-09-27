@@ -55,6 +55,7 @@ namespace ExControls
             // split
             // 
             this.split.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.split.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.split.Location = new System.Drawing.Point(0, 0);
             this.split.Name = "split";
             // 

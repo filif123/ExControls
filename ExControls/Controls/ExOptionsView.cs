@@ -1,4 +1,4 @@
-using ExControls.Collections;
+﻿using ExControls.Collections;
 using ExControls.Designers;
 using ExControls.Editors;
 using System.Drawing.Design;
@@ -193,14 +193,21 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
         
         foreach (ExOptionsPanel panel in Panels)
             AddNode(panel);
+
+        // Only the selected panel stays visible. Otherwise every panel would get its window handles (and layout)
+        // created when the form is shown, although only one of them is displayed - slow for many rich panels.
+        if (SelectedPanel is null && Panels.Count != 0)
+            SelectedPanel = (ExOptionsPanel)Panels[0];
     }
 
     /// <inheritdoc />
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
-        if (Panels.Count != 0) 
-            TreeView.SelectedNode = ((ExOptionsPanel) Panels[0]).Node;
+        // keep the panel selected before the control was shown (e.g. the page a dialog should open on)
+        var selected = SelectedPanel ?? (Panels.Count != 0 ? (ExOptionsPanel)Panels[0] : null);
+        if (selected is not null)
+            TreeView.SelectedNode = selected.Node;
 
         foreach (ExOptionsPanel panel in Panels)
             if (panel.GenerateLinksToChildren)
