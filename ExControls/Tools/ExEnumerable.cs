@@ -3,9 +3,12 @@ namespace System.Linq;
 
 
 
-/// <summary>Provides a set of <see langword="static" /> (<see langword="Shared" /> in Visual Basic) methods for querying objects that implement <see cref="T:System.Collections.Generic.IEnumerable`1" />.</summary>
-
-public static class Enumerable
+/// <summary>
+/// Extension methods for <see cref="T:System.Collections.Generic.IEnumerable`1" /> missing in the BCL.
+/// Kept in the <c>System.Linq</c> namespace so existing calls keep compiling, but under its own name -
+/// a second <c>System.Linq.Enumerable</c> made <c>Enumerable.Range</c> and similar calls ambiguous (CS0433).
+/// </summary>
+public static class ExEnumerable
 {
     ///<summary>Finds the index of the first item matching an expression in an enumerable.</summary>
     ///<param name="items">The enumerable to search.</param>
