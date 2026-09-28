@@ -8,7 +8,7 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded CheckBox Control
+/// Expanded CheckBox Control
 /// </summary>
 [ToolboxBitmap(typeof(CheckBox), "CheckBox.bmp")]
 [Designer("ExControls.Designers.ExCheckBoxDesigner, ExControls")]
@@ -27,7 +27,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     private Color _markColor;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExCheckBox()
     {
@@ -42,7 +42,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's text and box when the Control is disabled
+    /// Color of the CheckBox's text and box when the Control is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -62,7 +62,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's border
+    /// Color of the CheckBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -82,7 +82,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's mark
+    /// Color of the CheckBox's mark
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -102,7 +102,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Background color of CheckBox's square
+    /// Background color of CheckBox's square
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -122,7 +122,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Foreground color of text if Control is disabled
+    /// Foreground color of text if Control is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

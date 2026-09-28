@@ -7,7 +7,7 @@
 namespace ExControls;
 
 /// <summary>
-///     Expanded TextBox Control
+/// Expanded TextBox Control
 /// </summary>
 [ToolboxBitmap(typeof(TextBox), "TextBox.bmp")]
 [Designer("ExControls.Designers.ExTextBoxDesigner, ExControls")]
@@ -31,7 +31,7 @@ public class ExTextBox : TextBox, IExControl
     private bool _selected;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExTextBox()
     {
@@ -48,7 +48,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border.
+    /// Color of the TextBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -67,7 +67,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border when it is disabled.
+    /// Color of the TextBox's border when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -86,7 +86,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Background color of the TextBox's when it is disabled.
+    /// Background color of the TextBox's when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -105,7 +105,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the TextBox's when it is disabled.
+    /// Foreground color of the TextBox's when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -124,7 +124,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the border of TextBox when mouse is over the Control.
+    /// Color of the border of TextBox when mouse is over the Control.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -143,7 +143,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Width of the TextBox's border.
+    /// Width of the TextBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -162,7 +162,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Hint text for TextBox.
+    /// Hint text for TextBox.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -180,7 +180,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     TextBox hint foreground color.
+    /// TextBox hint foreground color.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -199,7 +199,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Use dark (DarkMode_Explorer) scroll bars for the multiline TextBox.
+    /// Use dark (DarkMode_Explorer) scroll bars for the multiline TextBox.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -218,7 +218,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Nastavi temu okna podla UseDarkScrollBar (tema DarkMode_Explorer da tmave scrollbary).
+    /// Nastavi temu okna podla UseDarkScrollBar (tema DarkMode_Explorer da tmave scrollbary).
     /// </summary>
     private void ApplyScrollBarTheme()
     {
@@ -241,10 +241,10 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Tematicky Edit (comctl32 v6, Windows 11) pri vytvoreni okna odstrani WS_BORDER a ramik kresli sam
-    ///     v klientskej oblasti - neklientska oblast je potom nulova a scrollbar siaha az po okraj okna, takze
-    ///     prekryva nas ramik. WS_BORDER sa preto vrati, aby system vyhradil skutocny 1px ram a scrollbar
-    ///     ostal vnutri neho.
+    /// Tematicky Edit (comctl32 v6, Windows 11) pri vytvoreni okna odstrani WS_BORDER a ramik kresli sam
+    /// v klientskej oblasti - neklientska oblast je potom nulova a scrollbar siaha az po okraj okna, takze
+    /// prekryva nas ramik. WS_BORDER sa preto vrati, aby system vyhradil skutocny 1px ram a scrollbar
+    /// ostal vnutri neho.
     /// </summary>
     private void EnsureNativeBorder()
     {
@@ -339,9 +339,9 @@ public class ExTextBox : TextBox, IExControl
     private const int PrfEraseBkgnd = 0x0008;
 
     /// <summary>
-    ///     WM_PAINT bez blikania: Edit nakresli obsah (aj svoj tematicky vnutorny ramik) cez WM_PRINTCLIENT do bufferu,
-    ///     v nom sa ramik prekryje (OnPaint) a na obrazovku ide jeden blit. Kreslenie priamo na obrazovku
-    ///     (Edit a potom my) sposobovalo pri hoveri blikanie vnutorneho ramika.
+    /// WM_PAINT bez blikania: Edit nakresli obsah (aj svoj tematicky vnutorny ramik) cez WM_PRINTCLIENT do bufferu,
+    /// v nom sa ramik prekryje (OnPaint) a na obrazovku ide jeden blit. Kreslenie priamo na obrazovku
+    /// (Edit a potom my) sposobovalo pri hoveri blikanie vnutorneho ramika.
     /// </summary>
     private void PaintBuffered(ref Message m)
     {
@@ -377,7 +377,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Nakresli vlastny ramik do neklientskej oblasti okna (cez system. ramik BorderStyle.FixedSingle).
+    /// Nakresli vlastny ramik do neklientskej oblasti okna (cez system. ramik BorderStyle.FixedSingle).
     /// </summary>
     private void DrawBorder()
     {
@@ -426,7 +426,7 @@ public class ExTextBox : TextBox, IExControl
     }
 
     /// <summary>
-    ///     Draws a hint text on TextBox
+    /// Draws a hint text on TextBox
     /// </summary>
     /// <param name="g"></param>
     protected virtual void DrawHint(Graphics g)

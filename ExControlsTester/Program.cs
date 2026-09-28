@@ -3,7 +3,7 @@
 internal static class Program
 {
     /// <summary>
-    ///     Hlavní vstupní bod aplikace.
+    /// Hlavní vstupní bod aplikace.
     /// </summary>
     [STAThread]
     private static void Main()

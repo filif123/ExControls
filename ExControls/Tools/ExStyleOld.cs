@@ -7,7 +7,7 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Class for definition styles for Control.
+/// Class for definition styles for Control.
 /// </summary>
 [DisplayName("(Collection)")]
 public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
@@ -17,14 +17,14 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     private Color? _foreColor;
 
     /// <summary>
-    ///     Constructor for designer.
+    /// Constructor for designer.
     /// </summary>
     public ExStyleOld() : this(StyleType.Normal)
     {
     }
 
     /// <summary>
-    ///     Constructor.
+    /// Constructor.
     /// </summary>
     protected ExStyleOld(StyleType type)
     {
@@ -32,7 +32,7 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     }
 
     /// <summary>
-    ///     Constructor.
+    /// Constructor.
     /// </summary>
     /// <param name="copy"></param>
     protected ExStyleOld(ExStyleOld copy)
@@ -44,12 +44,12 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     }
 
     /// <summary>
-    ///     Type of style.
+    /// Type of style.
     /// </summary>
     public StyleType Type { get; }
 
     /// <summary>
-    ///     Foreground color of the Control.
+    /// Foreground color of the Control.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -71,7 +71,7 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     }
 
     /// <summary>
-    ///     Background color of the Control.
+    /// Background color of the Control.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -94,7 +94,7 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     }
 
     /// <summary>
-    ///     Color of the Controls's border.
+    /// Color of the Controls's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -127,7 +127,7 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
     public event EventHandler<ExPropertyChangedEventArgs>? PropertyChanged;
 
     /// <summary>
-    ///     Raises the <see cref="PropertyChanged" /> event.
+    /// Raises the <see cref="PropertyChanged" /> event.
     /// </summary>
     /// <param name="e"></param>
     protected void OnPropertyChanged(ExPropertyChangedEventArgs e)
@@ -137,32 +137,32 @@ public class ExStyleOld : IExNotifyPropertyChanged, ICloneable
 }
 
 /// <summary>
-///     Type of style.
+/// Type of style.
 /// </summary>
 public enum StyleType
 {
     /// <summary>
-    ///     Normal style of the control.
+    /// Normal style of the control.
     /// </summary>
     Normal,
 
     /// <summary>
-    ///     Hover style of the control.
+    /// Hover style of the control.
     /// </summary>
     Hover,
 
     /// <summary>
-    ///     Selected style of the control.
+    /// Selected style of the control.
     /// </summary>
     Selected,
 
     /// <summary>
-    ///     Disabled style of the control.
+    /// Disabled style of the control.
     /// </summary>
     Disabled,
 
     /// <summary>
-    ///     ReadOnly style of the control.
+    /// ReadOnly style of the control.
     /// </summary>
     ReadOnly
 }

@@ -5,7 +5,7 @@ namespace ExControls;
 //TODO: WIP --------------
 
 /// <summary>
-///     Defines style of control. This class is abstract.
+/// Defines style of control. This class is abstract.
 /// </summary>
 public record ExStyle : INotifyPropertyChanged
 {
@@ -30,7 +30,7 @@ public record ExStyle : INotifyPropertyChanged
     }
 
     /// <summary>
-    ///     Copy constructor.
+    /// Copy constructor.
     /// </summary>
     /// <param name="original"></param>
     protected ExStyle(ExStyle original)
@@ -42,7 +42,7 @@ public record ExStyle : INotifyPropertyChanged
     }
 
     /// <summary>
-    ///     Gets the editing control.
+    /// Gets the editing control.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -97,7 +97,7 @@ public record ExStyle : INotifyPropertyChanged
     }
 
     /// <summary>
-    ///     Sets the field value and calls OnPropertyChanged().
+    /// Sets the field value and calls OnPropertyChanged().
     /// </summary>
     /// <param name="field"></param>
     /// <param name="value"></param>
@@ -180,7 +180,7 @@ public sealed class ExStyleManager<TS> where TS : ExStyle, new()
     public event EventHandler<PropertyChangedEventArgs>? StyleReadOnlyChanged;
 
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     [DefaultValue(true)]
     public bool DefaultStyle
@@ -294,7 +294,7 @@ public interface IStylable<T> where T : ExStyle, new()
     public ExStyleManager<T> StyleManager { get; }
 
     /// <summary>
-    ///     Gets a static style template of this control.
+    /// Gets a static style template of this control.
     /// </summary>
     /// <returns></returns>
     public ExStyleManager<T> GetTemplateStyleManager();
@@ -308,7 +308,7 @@ public interface IStylable<T> where T : ExStyle, new()
 public interface ISupportsDefaultStyle
 {
     /// <summary>
-    ///     Default style of the Control.
+    /// Default style of the Control.
     /// </summary>
     public bool DefaultStyle { get; set; }
 

@@ -10,8 +10,8 @@ using ExControls.Designers;
 namespace ExControls;
 
 /// <summary>
-///     Date/time picker drawn completely by the library (no Win32 DateTimePicker). The drop-down part is an
-///     <see cref="ExCalendar" />. Public API mirrors <see cref="DateTimePicker" /> so the controls are interchangeable.
+/// Date/time picker drawn completely by the library (no Win32 DateTimePicker). The drop-down part is an
+/// <see cref="ExCalendar" />. Public API mirrors <see cref="DateTimePicker" /> so the controls are interchangeable.
 /// </summary>
 [ToolboxBitmap(typeof(DateTimePicker), "DateTimePicker.bmp")]
 [DefaultProperty(nameof(Value))]
@@ -106,7 +106,7 @@ public class ExDateTimePicker : Control, IExControl
     private int _dropDownClosedAt;
 
     /// <summary>
-    ///     Constructor.
+    /// Constructor.
     /// </summary>
     public ExDateTimePicker()
     {
@@ -141,7 +141,7 @@ public class ExDateTimePicker : Control, IExControl
     #region Properties - data
 
     /// <summary>
-    ///     Selected date and time.
+    /// Selected date and time.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Selected date and time.")]
@@ -174,7 +174,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Minimum selectable date.
+    /// Minimum selectable date.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Minimum selectable date.")]
@@ -199,7 +199,7 @@ public class ExDateTimePicker : Control, IExControl
     private void ResetMinDate() => MinDate = MinimumDateTime;
 
     /// <summary>
-    ///     Maximum selectable date.
+    /// Maximum selectable date.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Maximum selectable date.")]
@@ -224,7 +224,7 @@ public class ExDateTimePicker : Control, IExControl
     private void ResetMaxDate() => MaxDate = MaximumDateTime;
 
     /// <summary>
-    ///     Format of the displayed date/time.
+    /// Format of the displayed date/time.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(DateTimePickerFormat.Long)]
@@ -244,7 +244,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Custom format string used when <see cref="Format" /> is <see cref="DateTimePickerFormat.Custom" />.
+    /// Custom format string used when <see cref="Format" /> is <see cref="DateTimePickerFormat.Custom" />.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [DefaultValue(null)]
@@ -265,7 +265,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Shows a spin control instead of the drop-down calendar.
+    /// Shows a spin control instead of the drop-down calendar.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(false)]
@@ -284,7 +284,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Shows a check box; when unchecked, no value is selected.
+    /// Shows a check box; when unchecked, no value is selected.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(false)]
@@ -303,7 +303,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Whether the value is selected (has meaning only when <see cref="ShowCheckBox" /> is true).
+    /// Whether the value is selected (has meaning only when <see cref="ShowCheckBox" /> is true).
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [DefaultValue(true)]
@@ -324,7 +324,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Alignment of the drop-down calendar.
+    /// Alignment of the drop-down calendar.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(LeftRightAlignment.Left)]
@@ -337,7 +337,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Calendar shown in the drop-down. Its appearance (colors, TodayText, ShowWeekNumbers...) can be set here.
+    /// Calendar shown in the drop-down. Its appearance (colors, TodayText, ShowWeekNumbers...) can be set here.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -345,15 +345,15 @@ public class ExDateTimePicker : Control, IExControl
     public ExCalendar Calendar { get; }
 
     /// <summary>
-    ///     Height of the control computed from the font.
+    /// Height of the control computed from the font.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int PreferredHeight => FontHeight + LogicalToDeviceUnits(7);
 
     /// <summary>
-    ///     Formatted value. Empty when <see cref="ShowCheckBox" /> is true and the control is unchecked.
-    ///     Setting parses the string using the current format.
+    /// Formatted value. Empty when <see cref="ShowCheckBox" /> is true and the control is unchecked.
+    /// Setting parses the string using the current format.
     /// </summary>
     [Browsable(false)]
     [Bindable(false)]
@@ -441,7 +441,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the border.
+    /// Color of the border.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "DimGray")]
@@ -459,7 +459,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the border and of the pressed button when the mouse is over the control or it has focus.
+    /// Color of the border and of the pressed button when the mouse is over the control or it has focus.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
@@ -477,7 +477,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the arrow(s) on the drop-down/spin button.
+    /// Color of the arrow(s) on the drop-down/spin button.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
@@ -495,7 +495,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Background color of the drop-down/spin button.
+    /// Background color of the drop-down/spin button.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "White")]
@@ -513,7 +513,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Background color when the control is disabled.
+    /// Background color when the control is disabled.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Control")]
@@ -531,7 +531,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Text color when the control is disabled or unchecked.
+    /// Text color when the control is disabled or unchecked.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "GrayText")]
@@ -549,7 +549,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Background color of the selected field (day, month...).
+    /// Background color of the selected field (day, month...).
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
@@ -567,7 +567,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Text color of the selected field (day, month...).
+    /// Text color of the selected field (day, month...).
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "HighlightText")]
@@ -800,7 +800,7 @@ public class ExDateTimePicker : Control, IExControl
     };
 
     /// <summary>
-    ///     Sets a numeric field; the day is clamped to the month length, the result to Min/MaxDate.
+    /// Sets a numeric field; the day is clamped to the month length, the result to Min/MaxDate.
     /// </summary>
     private void SetFieldValue(Field f, int n)
     {
@@ -1588,7 +1588,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Shows the drop-down calendar.
+    /// Shows the drop-down calendar.
     /// </summary>
     public void ShowDropDown()
     {
@@ -1617,7 +1617,7 @@ public class ExDateTimePicker : Control, IExControl
     }
 
     /// <summary>
-    ///     Closes the drop-down calendar.
+    /// Closes the drop-down calendar.
     /// </summary>
     public void CloseDropDown()
     {

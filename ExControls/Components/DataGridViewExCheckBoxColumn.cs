@@ -1,12 +1,12 @@
 ﻿namespace ExControls;
 
 /// <summary>
-///     Expanded CheckBox Column for DataGridView.
+/// Expanded CheckBox Column for DataGridView.
 /// </summary>
 public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
 {
     /// <summary>
-    ///     Creates new instance of 
+    /// Creates new instance of 
     /// </summary>
     public DataGridViewExCheckBoxColumn()
     {
@@ -35,7 +35,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     private DataGridViewExCheckBoxCell DynCheckBoxCellTemplate => (DataGridViewExCheckBoxCell)CellTemplate!;
 
     /// <summary>
-    ///     Default style of the Control
+    /// Default style of the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -60,7 +60,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <summary>
-    ///     Color of the CheckBox's border
+    /// Color of the CheckBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -85,7 +85,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <summary>
-    ///     Color of the CheckBox's mark
+    /// Color of the CheckBox's mark
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -110,7 +110,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <summary>
-    ///     Background color of CheckBox's square
+    /// Background color of CheckBox's square
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -135,7 +135,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <summary>
-    ///     Color of the border and mark of CheckBox when mouse is over the Control
+    /// Color of the border and mark of CheckBox when mouse is over the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -161,14 +161,14 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
 }
 
 /// <summary>
-///     Expanded CheckBox Cell for DataGridView
+/// Expanded CheckBox Cell for DataGridView
 /// </summary>
 public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
 {
     private bool _hover;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public DataGridViewExCheckBoxCell()
     {
@@ -180,7 +180,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Default style of the Control
+    /// Default style of the Control
     /// </summary>
     public bool DefaultStyle
     {
@@ -193,7 +193,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Color of the CheckBox's border
+    /// Color of the CheckBox's border
     /// </summary>
     public Color BorderColor
     {
@@ -206,7 +206,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Color of the CheckBox's mark
+    /// Color of the CheckBox's mark
     /// </summary>
     public Color MarkColor
     {
@@ -219,7 +219,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Background color of CheckBox's square
+    /// Background color of CheckBox's square
     /// </summary>
     public Color SquareBackColor
     {
@@ -232,7 +232,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Color of the border and mark of CheckBox when mouse is over the Control
+    /// Color of the border and mark of CheckBox when mouse is over the Control
     /// </summary>
     public Color HighlightColor
     {

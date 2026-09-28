@@ -6,7 +6,7 @@
 namespace ExControls.Providers;
 
 /// <summary>
-///     Provides undo-redo capability.
+/// Provides undo-redo capability.
 /// </summary>
 public class UndoRedoManager : Component
 {
@@ -23,18 +23,18 @@ public class UndoRedoManager : Component
     public event EventHandler<UndoRedoAddedCommandEventArgs>? CommandAdded;
 
     /// <summary>
-    ///     Enables or disables manager to add commands to stacks. Dafault is false.
+    /// Enables or disables manager to add commands to stacks. Dafault is false.
     /// </summary>
     [DefaultValue(false)]
     public bool ManagerEnabled { get; set; }
 
     /// <summary>
-    ///     Represents last saved undo command in history.
+    /// Represents last saved undo command in history.
     /// </summary>
     protected IUndoRedoCommand? SavedStateCommand { get; set; }
 
     /// <summary>
-    ///     Check if there is something to undo. Use this method to decide
+    /// Check if there is something to undo. Use this method to decide
     /// whether your application's "Undo" menu item should be enabled
     /// or disabled.
     /// </summary>
@@ -42,7 +42,7 @@ public class UndoRedoManager : Component
     public bool CanUndo => _undoStack.Count > 0;
 
     /// <summary>
-    ///     Check if there is something to redo. Use this method to decide
+    /// Check if there is something to redo. Use this method to decide
     /// whether your application's "Redo" menu item should be enabled
     /// or disabled.
     /// </summary>
@@ -50,21 +50,21 @@ public class UndoRedoManager : Component
     public bool CanRedo => _redoStack.Count > 0;
 
     /// <summary>
-    ///     Get the next (or newest) undo command. This is like a "Peek" method.
+    /// Get the next (or newest) undo command. This is like a "Peek" method.
     /// It does not remove the command from the undo list.
     /// </summary>
     [Browsable(false)]
     public IUndoRedoCommand NextUndoCommand => _undoStack.Peek().cmd;
 
     /// <summary>
-    ///     Get the next redo command. This is like a "Peek" method.
+    /// Get the next redo command. This is like a "Peek" method.
     /// It does not remove the command from the redo stack.
     /// </summary>
     [Browsable(false)]
     public IUndoRedoCommand NextRedoCommand => _redoStack.Peek().cmd;
 
     /// <summary>
-    ///     Constructor which initializes the manager.
+    /// Constructor which initializes the manager.
     /// </summary>
     public UndoRedoManager()
     {
@@ -74,7 +74,7 @@ public class UndoRedoManager : Component
     }
 
     /// <summary>
-    ///     Register a new undo command. Use this method after your
+    /// Register a new undo command. Use this method after your
     /// application has performed an operation/command that is
     /// undoable.
     /// </summary>
@@ -91,7 +91,7 @@ public class UndoRedoManager : Component
     }
 
     /// <summary>
-    ///     Register a new undo command along with an undo handler.
+    /// Register a new undo command along with an undo handler.
     /// The undo handler is used to perform the actual undo or redo
     /// operation later when requested.
     /// </summary>
@@ -109,7 +109,7 @@ public class UndoRedoManager : Component
     }
 
     /// <summary>
-    ///     Clear the internal undo/redo data structures. Use this method
+    /// Clear the internal undo/redo data structures. Use this method
     /// when your application performs an operation that cannot be undone.
     /// For example, when the user "saves" or "commits" all the changes in
     /// the application, or when a form is closed.
@@ -122,18 +122,18 @@ public class UndoRedoManager : Component
     }
 
     /// <summary>
-    ///     Sets current state as saved.
+    /// Sets current state as saved.
     /// </summary>
     public void SetSavedState() => SavedStateCommand = _undoStack.Count == 0 ? null : NextUndoCommand;
 
     /// <summary>
-    ///     Returns whether the manager is in saved state.
+    /// Returns whether the manager is in saved state.
     /// </summary>
     /// <returns></returns>
     public bool IsInSavedState() => ReferenceEquals(_undoStack.Count == 0 ? null : NextUndoCommand, SavedStateCommand);
 
     /// <summary>
-    ///     Perform the undo operation.
+    /// Perform the undo operation.
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the undo.
     /// </summary>
@@ -156,7 +156,7 @@ public class UndoRedoManager : Component
     }
 
     /// <summary>
-    ///     Perform the undo operation.
+    /// Perform the undo operation.
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the undo.
     /// </summary>
@@ -176,7 +176,7 @@ public class UndoRedoManager : Component
     }
 
     /// <summary>
-    ///     Perform the redo operation.
+    /// Perform the redo operation.
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the redo.
     /// </summary>
@@ -199,7 +199,7 @@ public class UndoRedoManager : Component
     }
 
     /// <summary>
-    ///     Perform the redo operation.
+    /// Perform the redo operation.
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the redo.
     /// </summary>
@@ -219,7 +219,7 @@ public class UndoRedoManager : Component
     }
 
     /// <summary>
-    ///     Get the text value of the next undo command. Use this method
+    /// Get the text value of the next undo command. Use this method
     /// to update the Text property of your "Undo" menu item if
     /// desired. For example, the text value for a command might be
     /// "Draw Circle". This allows you to change your menu item Text
@@ -228,7 +228,7 @@ public class UndoRedoManager : Component
     public string GetUndoText() => CanUndo ? NextUndoCommand.CommandName : "";
 
     /// <summary>
-    ///     Get the text value of the next redo command. Use this method
+    /// Get the text value of the next redo command. Use this method
     /// to update the Text property of your "Redo" menu item if desired.
     /// For example, the text value for a command might be "Draw Line".
     /// This allows you to change your menu item text to "Redo Draw Line".
@@ -236,13 +236,13 @@ public class UndoRedoManager : Component
     public string GetRedoText() => CanRedo ? NextRedoCommand.CommandName : "";
 
     /// <summary>
-    ///     Gets current history of undo commands.
+    /// Gets current history of undo commands.
     /// </summary>
     /// <returns></returns>
     public IEnumerable<IUndoRedoCommand> GetUndoHistory() => _undoStack.Select(x => x.cmd);
 
     /// <summary>
-    ///     Gets current history of redo commands.
+    /// Gets current history of redo commands.
     /// </summary>
     /// <returns></returns>
     public IEnumerable<IUndoRedoCommand> GetRedoHistory() => _redoStack.Select(x => x.cmd);

@@ -8,7 +8,7 @@ namespace ExControls;
 public static class GeneralExtensions
 {
     /// <summary>
-    ///     Converts collection to <see cref="ExBindingList{TSource}"/>.
+    /// Converts collection to <see cref="ExBindingList{TSource}"/>.
     /// </summary>
     /// <typeparam name="TSource">Type of item in collection.</typeparam>
     /// <param name="source">The collection.</param>
@@ -35,7 +35,7 @@ public static class GeneralExtensions
 public static class SortExtensions
 {
     /// <summary>
-    ///  Sorts an IList{T} in place.
+    /// Sorts an IList{T} in place.
     /// </summary>
     public static void Sort<T>(this IList<T> list, Comparison<T> comparison)
     {

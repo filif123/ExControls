@@ -6,7 +6,7 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded TableLayoutPanel Control
+/// Expanded TableLayoutPanel Control
 /// </summary>
 [ToolboxBitmap(typeof(TableLayoutPanel), "TableLayoutPanel.bmp")]
 public class ExTableLayoutPanel : TableLayoutPanel, IExControl
@@ -16,7 +16,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     private bool _defaultStyle;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExTableLayoutPanel()
     {
@@ -26,7 +26,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     }
 
     /// <summary>
-    ///     Color of the TableLayoutPanel's border
+    /// Color of the TableLayoutPanel's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -46,7 +46,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     }
 
     /// <summary>
-    ///     Thickness of the TableLayoutPanel's border
+    /// Thickness of the TableLayoutPanel's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

@@ -1,7 +1,7 @@
 namespace ExControls;
 
 /// <summary>
-///     Expanded Label Control.
+/// Expanded Label Control.
 /// </summary>
 [ToolboxBitmap(typeof(Label), "Label.bmp")]
 public class ExLabel : Label
@@ -17,7 +17,7 @@ public class ExLabel : Label
     }
 
     /// <summary>
-    ///     Color of the CheckBox's text and box when the Control is disabled
+    /// Color of the CheckBox's text and box when the Control is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

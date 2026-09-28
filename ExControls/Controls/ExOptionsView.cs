@@ -43,7 +43,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Gets the TreeView on this ExOptionsView.
+    /// Gets the TreeView on this ExOptionsView.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -51,7 +51,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     public ExOptionsTreeView TreeView => treeView;
 
     /// <summary>
-    ///     Gets the ToolStrip on this ExOptionsView.
+    /// Gets the ToolStrip on this ExOptionsView.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -59,14 +59,14 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     public ToolStrip ToolStripMenu => toolStripMenu;
 
     /// <summary>
-    ///     Gets the SearchBox on this ExOptionsView.
+    /// Gets the SearchBox on this ExOptionsView.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Browsable(false)]
     public ExTextBox SearchBox => tbSearch;
 
     /// <summary>
-    ///     Gets or sets visibility of the SearchBox.
+    /// Gets or sets visibility of the SearchBox.
     /// </summary>
     [DefaultValue(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -77,7 +77,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Gets or sets foreground color of generated links for children.
+    /// Gets or sets foreground color of generated links for children.
     /// </summary>
     [DefaultValue(typeof(Color), "Blue")]
     [ExCategory(CategoryType.Appearance)]
@@ -95,7 +95,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Gets or sets foreground color of node name label.
+    /// Gets or sets foreground color of node name label.
     /// </summary>
     [DefaultValue(typeof(Color), "Black")]
     [ExCategory(CategoryType.Appearance)]
@@ -106,7 +106,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Gets or sets background color of node name label.
+    /// Gets or sets background color of node name label.
     /// </summary>
     [DefaultValue(typeof(SystemColors), "Control")]
     [ExCategory(CategoryType.Appearance)]
@@ -297,8 +297,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Search and select specific panel by its name (not NodeText).
-    ///     If panel was not found, do nothing.
+    /// Search and select specific panel by its name (not NodeText).
+    /// If panel was not found, do nothing.
     /// </summary>
     /// <param name="name">name of panel.</param>
     public void ShowPanel(string name)

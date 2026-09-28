@@ -1,13 +1,13 @@
 ﻿namespace ExControls.Providers;
 
 /// <summary>
-///    Provides data for the <see cref="ExControls.Providers.BackwardForwardProvider.AddedCommand"/> event.
+/// Provides data for the <see cref="ExControls.Providers.BackwardForwardProvider.AddedCommand"/> event.
 /// </summary>
 /// <seealso cref="System.EventArgs" />
 public class BackwardForwardAddedCommandEventArgs : EventArgs
 {
     /// <summary>
-    ///     New command added to history.
+    /// New command added to history.
     /// </summary>
     public IBackwardForwardCommand NewCommand { get; }
 

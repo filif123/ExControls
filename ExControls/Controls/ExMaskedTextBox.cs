@@ -6,7 +6,7 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded MaskedTextBox Control
+/// Expanded MaskedTextBox Control
 /// </summary>
 [ToolboxBitmap(typeof(MaskedTextBox), "MaskedTextBox.bmp")]
 public class ExMaskedTextBox : MaskedTextBox, IExControl
@@ -23,7 +23,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     private bool _selected;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExMaskedTextBox()
     {
@@ -38,7 +38,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border
+    /// Color of the TextBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -57,7 +57,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border when it is disabled
+    /// Color of the TextBox's border when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -76,7 +76,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the border of TextBox when mouse is over the Control
+    /// Color of the border of TextBox when mouse is over the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -95,7 +95,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <summary>
-    ///     Width of the TextBox's border
+    /// Width of the TextBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

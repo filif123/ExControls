@@ -228,20 +228,20 @@ internal static partial class Win32
     }
 
     /// <summary>
-    ///     https://www.pinvoke.net/default.aspx/Structures/NCCALCSIZE_PARAMS.html
+    /// https://www.pinvoke.net/default.aspx/Structures/NCCALCSIZE_PARAMS.html
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public class NCCALCSIZE_PARAMS
     {
         /// <summary>
-        ///     An array of rectangles. The meaning of the array of rectangles changes during the processing of the WM_NCCALCSIZE message.<br></br>
-        ///     <br></br>
-        ///     When the window procedure receives the WM_NCCALCSIZE message, the first rectangle contains the new coordinates of a window that has been moved or resized,
+        /// An array of rectangles. The meaning of the array of rectangles changes during the processing of the WM_NCCALCSIZE message.<br></br>
+        /// <br></br>
+        /// When the window procedure receives the WM_NCCALCSIZE message, the first rectangle contains the new coordinates of a window that has been moved or resized,
         /// that is, it is the proposed new window coordinates. The second contains the coordinates of the window before it was moved or resized.
         /// The third contains the coordinates of the window's client area before the window was moved or resized. If the window is a child window,
         /// the coordinates are relative to the client area of the parent window. If the window is a top-level window, the coordinates are relative to the screen origin.<br></br>
-        ///     <br></br>
-        ///     When the window procedure returns, the first rectangle contains the coordinates of the new client rectangle resulting from the move or resize.
+        /// <br></br>
+        /// When the window procedure returns, the first rectangle contains the coordinates of the new client rectangle resulting from the move or resize.
         /// The second rectangle contains the valid destination rectangle, and the third rectangle contains the valid source rectangle.
         /// The last two rectangles are used in conjunction with the return value of the WM_NCCALCSIZE message to determine the area of the window to be preserved.
         /// </summary>
@@ -249,7 +249,7 @@ internal static partial class Win32
         public RECT[]? rgrc;
 
         /// <summary>
-        ///     A pointer to a WINDOWPOS structure that contains the size and position values specified in the operation that moved or resized the window.
+        /// A pointer to a WINDOWPOS structure that contains the size and position values specified in the operation that moved or resized the window.
         /// </summary>
         public WINDOWPOS lppos;
 

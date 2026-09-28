@@ -9,7 +9,7 @@ using Microsoft.DotNet.DesignTools.Designers.Actions;
 namespace ExControls.Designers;
 
 /// <summary>
-///     This is the designer for tree view controls.  It inherits 
+/// This is the designer for tree view controls.  It inherits 
 /// from the base control designer and adds live hit testing
 /// capabilites for the tree view control. 
 /// </summary>
@@ -56,7 +56,7 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 
 
     /// <summary>
-    ///     Allows your component to support a design time user interface. A TabStrip
+    /// Allows your component to support a design time user interface. A TabStrip
     /// control, for example, has a design time user interface that allows the user 
     /// to click the tabs to change tabs. To implement this, TabStrip returns
     /// true whenever the given point is within its tabs. 

@@ -29,12 +29,12 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
+    /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
     /// </summary>
     public event EventHandler<ExTreeViewNodeAddedEventArgs>? TreeNodeAdded;
 
     /// <summary>
-    ///     Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
+    /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
     /// </summary>
     public event EventHandler<ExTreeViewNodeRemovedEventArgs>? TreeNodeRemoved;
 
@@ -313,7 +313,7 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Sets the visibility of the tree node.
+    /// Sets the visibility of the tree node.
     /// </summary>
     /// <param name="node">treenode</param>
     /// <param name="visible">whether node should be visible</param>
@@ -354,7 +354,7 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Sets the visibility of the tree node by index.
+    /// Sets the visibility of the tree node by index.
     /// </summary>
     /// <param name="index">index of treenode</param>
     /// <param name="visible">whether node should be visible</param>
@@ -385,7 +385,7 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Sets the visibility of the tree node by key.
+    /// Sets the visibility of the tree node by key.
     /// </summary>
     /// <param name="key">key of treenode</param>
     /// <param name="visible">whether node should be visible</param>
@@ -418,14 +418,14 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Gets the visibility of the tree node by node.
+    /// Gets the visibility of the tree node by node.
     /// </summary>
     /// <param name="node">tree node</param>
     /// <returns></returns>
     public bool GetVisibility(TreeNode node) => _visibleNodes.Contains(node);
 
     /// <summary>
-    ///    Gets the visibility of the tree node by index.
+    /// Gets the visibility of the tree node by index.
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
@@ -438,14 +438,14 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Gets the visibility of the tree node by key.
+    /// Gets the visibility of the tree node by key.
     /// </summary>
     /// <param name="key">tree node key</param>
     /// <returns></returns>
     public bool GetVisibility(string key) => _visibleNodes.ContainsKey(key);
 
     /// <summary>
-    ///     Sets the visibility of all tree nodes.
+    /// Sets the visibility of all tree nodes.
     /// </summary>
     /// <param name="visible">whether node should be visible</param>
     public void SetVisibilityForAll(bool visible)
@@ -624,7 +624,7 @@ public class ExTreeNodeCollection : IList
     /// <exception cref="System.ArgumentOutOfRangeException">
     /// <paramref name="index" /> is less than zero.</exception>
     /// <exception cref="System.ArgumentException">
-    ///         <paramref name="array" /> is multidimensional.
+    /// <paramref name="array" /> is multidimensional.
     /// -or-
     /// The number of elements in the source <see cref="System.Collections.ICollection" /> is greater than the available space from <paramref name="index" /> to the end of the destination <paramref name="array" />.
     /// -or-

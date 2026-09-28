@@ -18,7 +18,7 @@ internal static partial class Win32
     #region USER32
 
     /// <summary>
-    ///     Retrieves the show state and the restored, minimized, and maximized positions of the specified window.
+    /// Retrieves the show state and the restored, minimized, and maximized positions of the specified window.
     /// </summary>
     /// <param name="hWnd">A handle to the window.</param>
     /// <param name="lpwndpl">A pointer to the WINDOWPLACEMENT structure that receives the show state and position information. Before calling GetWindowPlacement, set the length member to sizeof(WINDOWPLACEMENT). GetWindowPlacement fails if lpwndpl-&gt; length is not set correctly.</param>
@@ -37,7 +37,7 @@ internal static partial class Win32
     private static extern IntPtr GetWindowLongPtr64(IntPtr hWnd, int nIndex);
 
     /// <summary>
-    ///     Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD) value at the specified offset into the extra window memory.
+    /// Retrieves information about the specified window. The function also retrieves the 32-bit (DWORD) value at the specified offset into the extra window memory.
     /// </summary>
     /// <param name="hWnd">A handle to the window and, indirectly, the class to which the window belongs.</param>
     /// <param name="nIndex">The zero-based offset to the value to be retrieved. Valid values are in the range zero through the number of bytes of extra window memory, minus four; for example, if you specified 12 or more bytes of extra memory, a value of 8 would be an index to the third 32-bit integer. To retrieve any other value, specify one of the following values.</param>
@@ -58,7 +58,7 @@ internal static partial class Win32
     public static extern int SetWindowLong(IntPtr hWnd, int nIndex, uint dwNewLong);
 
     /// <summary>
-    ///     Releases the mouse capture from a window in the current thread and restores normal mouse input processing.
+    /// Releases the mouse capture from a window in the current thread and restores normal mouse input processing.
     /// A window that has captured the mouse receives all mouse input, regardless of the position of the cursor,
     /// except when a mouse button is clicked while the cursor hot spot is in the window of another thread.
     /// </summary>
@@ -70,9 +70,9 @@ internal static partial class Win32
     public static extern bool ReleaseCapture();
 
     /// <summary>
-    ///     Enables you to produce special effects when showing or hiding windows.
+    /// Enables you to produce special effects when showing or hiding windows.
     /// There are four types of animation: roll, slide, collapse or expand, and alpha-blended fade.<br></br>
-    ///     https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-animatewindow
+    /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-animatewindow
     /// </summary>
     /// <param name="hwnd">A handle to the window to animate. The calling thread must own this window.</param>
     /// <param name="dwTime">The time it takes to play the animation, in milliseconds. Typically, an animation takes 200 milliseconds to play.</param>
@@ -127,7 +127,7 @@ internal static partial class Win32
     public static extern bool DestroyIcon(IntPtr hIcon);
 
     /// <summary>
-    ///     Plays a waveform sound. The waveform sound for each sound type is identified by an entry in the registry.
+    /// Plays a waveform sound. The waveform sound for each sound type is identified by an entry in the registry.
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>

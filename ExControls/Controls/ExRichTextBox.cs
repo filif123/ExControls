@@ -6,7 +6,7 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded RichTextBox Control
+/// Expanded RichTextBox Control
 /// </summary>
 [ToolboxBitmap(typeof(RichTextBox), "RichTextBox.bmp")]
 public class ExRichTextBox : RichTextBox, IExControl
@@ -23,7 +23,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     private bool _selected;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExRichTextBox()
     {
@@ -54,7 +54,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border
+    /// Color of the TextBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -73,7 +73,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border when it is disabled
+    /// Color of the TextBox's border when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -92,7 +92,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    ///     Background color of the TextBox's when it is disabled
+    /// Background color of the TextBox's when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -111,7 +111,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the TextBox's when it is disabled
+    /// Foreground color of the TextBox's when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -130,7 +130,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the border of TextBox when mouse is over the Control
+    /// Color of the border of TextBox when mouse is over the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -149,7 +149,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    ///     Width of the TextBox's border
+    /// Width of the TextBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

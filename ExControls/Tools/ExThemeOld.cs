@@ -7,12 +7,12 @@ namespace ExControls;
 
 //TODO WORK IN PROGRESS
 /// <summary>
-///     Theme for WinForms application and its controls.
+/// Theme for WinForms application and its controls.
 /// </summary>
 internal class ExThemeOld
 {
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public bool DefaultStyle
     {
@@ -27,7 +27,7 @@ internal class ExThemeOld
     }
 
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public ExStyleOld? StyleNormal
     {
@@ -42,7 +42,7 @@ internal class ExThemeOld
     }
 
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public ExStyleOld? StyleHover
     {
@@ -57,7 +57,7 @@ internal class ExThemeOld
     }
 
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public ExStyleOld? StyleSelected
     {
@@ -72,7 +72,7 @@ internal class ExThemeOld
     }
 
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public ExStyleOld? StyleDisabled
     {
@@ -87,7 +87,7 @@ internal class ExThemeOld
     }
 
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public ExStyleOld? StyleReadOnly
     {
@@ -187,7 +187,7 @@ internal class ExThemeOld
 internal class ExAppThemeOld : ExThemeOld
 {
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public bool DarkTitleBar
     {
@@ -221,7 +221,7 @@ internal class ExAppThemeOld : ExThemeOld
 internal class ExScrollableControlTheme : ExThemeOld
 {
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public bool DarkScrollBars
     {

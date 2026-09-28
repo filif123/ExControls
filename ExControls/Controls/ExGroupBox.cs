@@ -9,7 +9,7 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded GroupBox Control.
+/// Expanded GroupBox Control.
 /// </summary>
 [ToolboxBitmap(typeof(GroupBox), "GroupBox.bmp")]
 [Designer("ExControls.Designers.ExGroupBoxDesigner, ExControls")]
@@ -21,7 +21,7 @@ public class ExGroupBox : GroupBox, IExControl
     private Color _disabledForeColor;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExGroupBox()
     {
@@ -33,7 +33,7 @@ public class ExGroupBox : GroupBox, IExControl
     }
 
     /// <summary>
-    ///     Width of the GroupBox's border.
+    /// Width of the GroupBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -53,7 +53,7 @@ public class ExGroupBox : GroupBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the GroupBox's border.
+    /// Color of the GroupBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -73,7 +73,7 @@ public class ExGroupBox : GroupBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the GroupBox's text when the control is disabled.
+    /// Color of the GroupBox's text when the control is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -93,7 +93,7 @@ public class ExGroupBox : GroupBox, IExControl
     }
 
     /// <summary>
-    ///     Style of the GroupBox's border.
+    /// Style of the GroupBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

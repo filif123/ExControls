@@ -6,12 +6,12 @@
 public class UndoRedoAddedCommandEventArgs : EventArgs
 {
     /// <summary>
-    ///     New command added to history.
+    /// New command added to history.
     /// </summary>
     public IUndoRedoCommand NewCommand { get; }
 
     /// <summary>
-    ///     New command handler added to history. Null if undefined.
+    /// New command handler added to history. Null if undefined.
     /// </summary>
     public IUndoHandler? NewHandler { get; }
 

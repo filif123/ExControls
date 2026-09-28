@@ -8,7 +8,7 @@ using System.Drawing.Drawing2D;
 namespace ExControls;
 
 /// <summary>
-///     LineSeparator Control
+/// LineSeparator Control
 /// </summary>
 [ToolboxBitmap(typeof(ExLineSeparator), "Controls\\ExLineSeparator.bmp")]
 [Designer("ExControls.Designers.ExLineSeparatorDesigner, ExControls")]
@@ -20,7 +20,7 @@ public class ExLineSeparator : Control
     private int _lineThickness;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExLineSeparator()
     {
@@ -36,7 +36,7 @@ public class ExLineSeparator : Control
     }
 
     /// <summary>
-    ///     Thickness of the LineSeparator's line
+    /// Thickness of the LineSeparator's line
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -56,7 +56,7 @@ public class ExLineSeparator : Control
     }
 
     /// <summary>
-    ///     Orientation of the LineSeparator's line
+    /// Orientation of the LineSeparator's line
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -77,7 +77,7 @@ public class ExLineSeparator : Control
     }
 
     /// <summary>
-    ///     Orientation of the LineSeparator's line
+    /// Orientation of the LineSeparator's line
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -97,7 +97,7 @@ public class ExLineSeparator : Control
     }
 
     /// <summary>
-    ///     Color of the LineSeparator's line
+    /// Color of the LineSeparator's line
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -208,17 +208,17 @@ public class ExLineSeparator : Control
 }
 
 /// <summary>
-///     Orientation of the LineSeparator.
+/// Orientation of the LineSeparator.
 /// </summary>
 public enum LineOrientation
 {
     /// <summary>
-    ///     Horizontal orientation.
+    /// Horizontal orientation.
     /// </summary>
     Horizontal,
 
     /// <summary>
-    ///     Vertical orientation.
+    /// Vertical orientation.
     /// </summary>
     Vertical
 }

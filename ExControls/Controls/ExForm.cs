@@ -1,7 +1,7 @@
 ﻿namespace ExControls;
 
 /// <summary>
-///     Extended form.
+/// Extended form.
 /// </summary>
 public class ExForm : Form
 {
@@ -38,7 +38,7 @@ public class ExForm : Form
     }
 
     /// <summary>
-    ///     Gets or sets whether form's titlebar uses dark mode. Default is false.
+    /// Gets or sets whether form's titlebar uses dark mode. Default is false.
     /// Works only in Windows 10+.
     /// </summary>
     [ExDescription("Gets or sets whether form's titlebar uses dark mode.", true)]
@@ -60,7 +60,7 @@ public class ExForm : Form
     }
 
     /// <summary>
-    ///     Gets or sets background color of the titlebar. Set Color.Empty for default color.
+    /// Gets or sets background color of the titlebar. Set Color.Empty for default color.
     /// Works only in Windows 11+.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
@@ -81,7 +81,7 @@ public class ExForm : Form
     }
 
     /// <summary>
-    ///     Gets or sets foreground color of the titlebar. Set Color.Empty for default color.
+    /// Gets or sets foreground color of the titlebar. Set Color.Empty for default color.
     /// Works only in Windows 11+.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
@@ -100,7 +100,7 @@ public class ExForm : Form
     }
 
     /// <summary>
-    ///     Gets or sets border color of the titlebar. Set Color.Empty for default color.
+    /// Gets or sets border color of the titlebar. Set Color.Empty for default color.
     /// Works only in Windows 11+.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
@@ -119,7 +119,7 @@ public class ExForm : Form
     }
 
     /// <summary>
-    ///     Gets or sets type of form corner. Default is FormCornersType.Default.
+    /// Gets or sets type of form corner. Default is FormCornersType.Default.
     /// Works only in Windows 11+.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]

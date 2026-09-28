@@ -6,7 +6,7 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded Button Control.
+/// Expanded Button Control.
 /// </summary>
 [ToolboxBitmap(typeof(Button), "Button.bmp")]
 public class ExButton : Button, IExControl
@@ -19,7 +19,7 @@ public class ExButton : Button, IExControl
     private bool focused;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExButton()
     {
@@ -61,7 +61,7 @@ public class ExButton : Button, IExControl
     }
 
     /// <summary>
-    ///     Dont use.
+    /// Dont use.
     /// </summary>
     [Browsable(false)]
     [Obsolete]
@@ -184,7 +184,7 @@ public class ExButton : Button, IExControl
 
 
 /// <summary>
-///     ....
+/// ....
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
 public class ExFlatButtonAppearance
@@ -202,7 +202,7 @@ public class ExFlatButtonAppearance
     private bool _inFocusMode;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="owner"></param>
     public ExFlatButtonAppearance(ButtonBase owner) => this.owner = owner;

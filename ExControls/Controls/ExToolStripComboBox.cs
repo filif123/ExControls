@@ -7,30 +7,30 @@ using System.Windows.Forms.Design;
 namespace ExControls;
 
 /// <summary>
-///     Expanded ComboBox Control for ToolStrip.
+/// Expanded ComboBox Control for ToolStrip.
 /// </summary>
 [ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.ToolStrip | ToolStripItemDesignerAvailability.MenuStrip | ToolStripItemDesignerAvailability.ContextMenuStrip)]
 [DefaultProperty("Items")]
 public class ExToolStripComboBox : ToolStripControlHost
 {
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExToolStripComboBox() : base(new ExComboBox())
     {
     }
 
     /// <summary>
-    ///     Object ComboBox, type <see cref="ExComboBox" />.
+    /// Object ComboBox, type <see cref="ExComboBox" />.
     /// </summary>
     [Browsable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBox ComboBox => (Control as ExComboBox)!;
 
     /// <summary>
-    ///     Gets or sets the custom string collection to use when the
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox.AutoCompleteSource" /> property is set to
-    ///     <see cref="System.Windows.Forms.AutoCompleteSource.CustomSource" />.
+    /// Gets or sets the custom string collection to use when the
+    /// <see cref="System.Windows.Forms.ToolStripComboBox.AutoCompleteSource" /> property is set to
+    /// <see cref="System.Windows.Forms.AutoCompleteSource.CustomSource" />.
     /// </summary>
     /// <returns>An <see cref="System.Windows.Forms.AutoCompleteStringCollection" /> that contains the strings.</returns>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -47,12 +47,12 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets a value that indicates the text completion behavior of the
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox" />.
+    /// Gets or sets a value that indicates the text completion behavior of the
+    /// <see cref="System.Windows.Forms.ToolStripComboBox" />.
     /// </summary>
     /// <returns>
-    ///     One of the <see cref="System.Windows.Forms.AutoCompleteMode" /> values. The default is
-    ///     <see cref="System.Windows.Forms.AutoCompleteMode.None" />.
+    /// One of the <see cref="System.Windows.Forms.AutoCompleteMode" /> values. The default is
+    /// <see cref="System.Windows.Forms.AutoCompleteMode.None" />.
     /// </returns>
     [DefaultValue(AutoCompleteMode.None)]
     [Browsable(true)]
@@ -65,8 +65,8 @@ public class ExToolStripComboBox : ToolStripControlHost
 
     /// <summary>Gets or sets the source of complete strings used for automatic completion.</summary>
     /// <returns>
-    ///     One of the <see cref="System.Windows.Forms.AutoCompleteSource" /> values. The default is
-    ///     <see cref="System.Windows.Forms.AutoCompleteSource.None" />.
+    /// One of the <see cref="System.Windows.Forms.AutoCompleteSource" /> values. The default is
+    /// <see cref="System.Windows.Forms.AutoCompleteSource.None" />.
     /// </returns>
     [DefaultValue(AutoCompleteSource.None)]
     [Browsable(true)]
@@ -100,8 +100,8 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets the height, in pixels, of the drop-down portion box of a
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox" />.
+    /// Gets or sets the height, in pixels, of the drop-down portion box of a
+    /// <see cref="System.Windows.Forms.ToolStripComboBox" />.
     /// </summary>
     /// <returns>The height, in pixels, of the drop-down box.</returns>
     [Browsable(true)]
@@ -115,8 +115,8 @@ public class ExToolStripComboBox : ToolStripControlHost
 
     /// <summary>Gets or sets a value specifying the style of the <see cref="System.Windows.Forms.ToolStripComboBox" />.</summary>
     /// <returns>
-    ///     One of the <see cref="System.Windows.Forms.ComboBoxStyle" /> values. The default is
-    ///     <see cref="System.Windows.Forms.ComboBoxStyle.DropDown" />.
+    /// One of the <see cref="System.Windows.Forms.ComboBoxStyle" /> values. The default is
+    /// <see cref="System.Windows.Forms.ComboBoxStyle.DropDown" />.
     /// </returns>
     [DefaultValue(ComboBoxStyle.DropDown)]
     [RefreshProperties(RefreshProperties.Repaint)]
@@ -127,8 +127,8 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets the width, in pixels, of the drop-down portion of a
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox" />.
+    /// Gets or sets the width, in pixels, of the drop-down portion of a
+    /// <see cref="System.Windows.Forms.ToolStripComboBox" />.
     /// </summary>
     /// <returns>The width, in pixels, of the drop-down box.</returns>
     public int DropDownWidth
@@ -138,12 +138,12 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets a value indicating whether the <see cref="System.Windows.Forms.ToolStripComboBox" /> currently
-    ///     displays its drop-down portion.
+    /// Gets or sets a value indicating whether the <see cref="System.Windows.Forms.ToolStripComboBox" /> currently
+    /// displays its drop-down portion.
     /// </summary>
     /// <returns>
-    ///     <see langword="true" /> if the <see cref="System.Windows.Forms.ToolStripComboBox" /> currently displays its
-    ///     drop-down portion; otherwise, <see langword="false" />.
+    /// <see langword="true" /> if the <see cref="System.Windows.Forms.ToolStripComboBox" /> currently displays its
+    /// drop-down portion; otherwise, <see langword="false" />.
     /// </returns>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -155,11 +155,11 @@ public class ExToolStripComboBox : ToolStripControlHost
 
     /// <summary>Gets or sets the appearance of the <see cref="System.Windows.Forms.ToolStripComboBox" />.</summary>
     /// <returns>
-    ///     One of the values of <see cref="System.Windows.Forms.FlatStyle" />. The options are
-    ///     <see cref="System.Windows.Forms.FlatStyle.Flat" />, <see cref="System.Windows.Forms.FlatStyle.Popup" />,
-    ///     <see cref="System.Windows.Forms.FlatStyle.Standard" />, and
-    ///     <see cref="System.Windows.Forms.FlatStyle.System" />. The default is
-    ///     <see cref="System.Windows.Forms.FlatStyle.Popup" />.
+    /// One of the values of <see cref="System.Windows.Forms.FlatStyle" />. The options are
+    /// <see cref="System.Windows.Forms.FlatStyle.Flat" />, <see cref="System.Windows.Forms.FlatStyle.Popup" />,
+    /// <see cref="System.Windows.Forms.FlatStyle.Standard" />, and
+    /// <see cref="System.Windows.Forms.FlatStyle.System" />. The default is
+    /// <see cref="System.Windows.Forms.FlatStyle.Popup" />.
     /// </returns>
     [DefaultValue(FlatStyle.Popup)]
     [Localizable(true)]
@@ -170,12 +170,12 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets a value indicating whether the <see cref="System.Windows.Forms.ToolStripComboBox" /> should
-    ///     resize to avoid showing partial items.
+    /// Gets or sets a value indicating whether the <see cref="System.Windows.Forms.ToolStripComboBox" /> should
+    /// resize to avoid showing partial items.
     /// </summary>
     /// <returns>
-    ///     <see langword="true" /> if the list portion can contain only complete items; otherwise, <see langword="false" />.
-    ///     The default is <see langword="true" />.
+    /// <see langword="true" /> if the list portion can contain only complete items; otherwise, <see langword="false" />.
+    /// The default is <see langword="true" />.
     /// </returns>
     [DefaultValue(true)]
     [Localizable(true)]
@@ -195,12 +195,12 @@ public class ExToolStripComboBox : ToolStripControlHost
     public ComboBox.ObjectCollection Items => ComboBox.Items;
 
     /// <summary>
-    ///     Gets or sets the maximum number of items to be shown in the drop-down portion of the
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox" />.
+    /// Gets or sets the maximum number of items to be shown in the drop-down portion of the
+    /// <see cref="System.Windows.Forms.ToolStripComboBox" />.
     /// </summary>
     /// <returns>
-    ///     The maximum number of items in the drop-down portion. The minimum for this property is 1 and the maximum is
-    ///     100.
+    /// The maximum number of items in the drop-down portion. The minimum for this property is 1 and the maximum is
+    /// 100.
     /// </returns>
     [DefaultValue(8)]
     [Localizable(true)]
@@ -212,8 +212,8 @@ public class ExToolStripComboBox : ToolStripControlHost
 
     /// <summary>Gets or sets the maximum number of characters allowed in the editable portion of a combo box.</summary>
     /// <returns>
-    ///     The maximum number of characters the user can enter. Values of less than zero are reset to zero, which is the
-    ///     default value.
+    /// The maximum number of characters the user can enter. Values of less than zero are reset to zero, which is the
+    /// default value.
     /// </returns>
     [DefaultValue(0)]
     [Localizable(true)]
@@ -225,8 +225,8 @@ public class ExToolStripComboBox : ToolStripControlHost
 
     /// <summary>Gets or sets the index specifying the currently selected item.</summary>
     /// <returns>
-    ///     A zero-based index of the currently selected item. A value of negative one (-1) is returned if no item is
-    ///     selected.
+    /// A zero-based index of the currently selected item. A value of negative one (-1) is returned if no item is
+    /// selected.
     /// </returns>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -238,8 +238,8 @@ public class ExToolStripComboBox : ToolStripControlHost
 
     /// <summary>Gets or sets currently selected item in the <see cref="System.Windows.Forms.ToolStripComboBox" />.</summary>
     /// <returns>
-    ///     The object that is the currently selected item or <see langword="null" /> if there is no currently selected
-    ///     item.
+    /// The object that is the currently selected item or <see langword="null" /> if there is no currently selected
+    /// item.
     /// </returns>
     [Browsable(false)]
     [Bindable(true)]
@@ -251,13 +251,13 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets the text that is selected in the editable portion of a
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox" />.
+    /// Gets or sets the text that is selected in the editable portion of a
+    /// <see cref="System.Windows.Forms.ToolStripComboBox" />.
     /// </summary>
     /// <returns>
-    ///     A string that represents the currently selected text in the combo box. If
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox.DropDownStyle" /> is set to <see langword="DropDownList" />,
-    ///     the return value is an empty string ("").
+    /// A string that represents the currently selected text in the combo box. If
+    /// <see cref="System.Windows.Forms.ToolStripComboBox.DropDownStyle" /> is set to <see langword="DropDownList" />,
+    /// the return value is an empty string ("").
     /// </returns>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -268,8 +268,8 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets the number of characters selected in the editable portion of the
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox" />.
+    /// Gets or sets the number of characters selected in the editable portion of the
+    /// <see cref="System.Windows.Forms.ToolStripComboBox" />.
     /// </summary>
     /// <returns>The number of characters selected in the <see cref="System.Windows.Forms.ToolStripComboBox" />.</returns>
     [Browsable(false)]
@@ -281,8 +281,8 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets the starting index of text selected in the
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox" />.
+    /// Gets or sets the starting index of text selected in the
+    /// <see cref="System.Windows.Forms.ToolStripComboBox" />.
     /// </summary>
     /// <returns>The zero-based index of the first character in the string of the current text selection.</returns>
     [Browsable(false)]
@@ -294,12 +294,12 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Gets or sets a value indicating whether the items in the
-    ///     <see cref="System.Windows.Forms.ToolStripComboBox" /> are sorted.
+    /// Gets or sets a value indicating whether the items in the
+    /// <see cref="System.Windows.Forms.ToolStripComboBox" /> are sorted.
     /// </summary>
     /// <returns>
-    ///     <see langword="true" /> if the combo box is sorted; otherwise, <see langword="false" />. The default is
-    ///     <see langword="false" />.
+    /// <see langword="true" /> if the combo box is sorted; otherwise, <see langword="false" />. The default is
+    /// <see langword="false" />.
     /// </returns>
     [DefaultValue(false)]
     public bool Sorted
@@ -346,8 +346,8 @@ public class ExToolStripComboBox : ToolStripControlHost
     }
 
     /// <summary>
-    ///     Occurs when the value of the <see cref="System.Windows.Forms.ToolStripComboBox.SelectedIndex" /> property
-    ///     has changed.
+    /// Occurs when the value of the <see cref="System.Windows.Forms.ToolStripComboBox.SelectedIndex" /> property
+    /// has changed.
     /// </summary>
     public event EventHandler SelectedIndexChanged
     {

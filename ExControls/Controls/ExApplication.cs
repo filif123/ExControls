@@ -28,7 +28,7 @@ public class ExAppTheme
     public ExStyleManager<ExStyle> StyleManager { get; } = new();
 
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     public bool DarkTitleBar
     {

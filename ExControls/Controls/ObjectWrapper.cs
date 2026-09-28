@@ -14,7 +14,7 @@ internal class ObjectWrapper : ICustomTypeDescriptor
     public object? SelectedObject { get; set; }
 
     /// <summary>
-    ///     Get or set a reference to the collection of properties to show in the parent PropertyGrid.
+    /// Get or set a reference to the collection of properties to show in the parent PropertyGrid.
     /// By default, PropertyDescriptors contain all the properties of the object.
     /// </summary>
     public List<PropertyDescriptor> PropertyDescriptors { get; set; } = new();

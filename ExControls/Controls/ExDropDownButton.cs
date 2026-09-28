@@ -1,7 +1,7 @@
 ﻿namespace ExControls;
 
 /// <summary>
-///     Extended button control with drop down menu.
+/// Extended button control with drop down menu.
 /// </summary>
 public class ExDropDownButton : ExButton
 {
@@ -16,13 +16,13 @@ public class ExDropDownButton : ExButton
     }
     
     /// <summary>
-    ///     Drop down menu.
+    /// Drop down menu.
     /// </summary>
     [DefaultValue(null)]
     public ContextMenuStrip? DropDownMenu { get; set; }
 
     /// <summary>
-    ///    Gets or sets a value indicating whether the drop down menu should be showing under cursor.
+    /// Gets or sets a value indicating whether the drop down menu should be showing under cursor.
     /// </summary>
     [DefaultValue(false)]
     public bool ShowMenuUnderCursor { get; set; }

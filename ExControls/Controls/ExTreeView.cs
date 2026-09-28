@@ -3,7 +3,7 @@
 namespace ExControls;
 
 /// <summary>
-///  Expanded TreeView control.
+/// Expanded TreeView control.
 /// </summary>
 [Designer("ExControls.Designers.ExTreeViewDesigner, ExControls")]
 [ToolboxBitmap(typeof(TreeView), "TreeView.bmp")]
@@ -56,7 +56,7 @@ public class ExTreeView : TreeView
     }
 
     /// <summary>
-    ///     Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
+    /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
     /// </summary>
     public event EventHandler<ExTreeViewNodeAddedEventArgs> TreeNodeAdded
     {
@@ -65,7 +65,7 @@ public class ExTreeView : TreeView
     }
 
     /// <summary>
-    ///     Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
+    /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
     /// </summary>
     public event EventHandler<ExTreeViewNodeRemovedEventArgs> TreeNodeRemoved
     {
@@ -116,17 +116,17 @@ public enum ExTreeViewStyle
 public class ExTreeViewNodeAddedEventArgs : EventArgs
 {
     /// <summary>
-    ///     Node that was added or removed.
+    /// Node that was added or removed.
     /// </summary>
     public TreeNode Node { get; }
 
     /// <summary>
-    ///     Index of added node in collection.
+    /// Index of added node in collection.
     /// </summary>
     public int Index { get; }
 
     /// <summary>
-    ///     Number of added nodes.
+    /// Number of added nodes.
     /// </summary>
     public int Count { get; }
 
@@ -145,22 +145,22 @@ public class ExTreeViewNodeAddedEventArgs : EventArgs
 }
 
 /// <summary>
-///     Occurs when the <see cref="TreeNode"/> was removed frm <see cref="TreeNodeCollection"/>.
+/// Occurs when the <see cref="TreeNode"/> was removed frm <see cref="TreeNodeCollection"/>.
 /// </summary>
 public class ExTreeViewNodeRemovedEventArgs : EventArgs
 {
     /// <summary>
-    ///     Node that was removed, or <see langword="null"/> when the whole collection was cleared.
+    /// Node that was removed, or <see langword="null"/> when the whole collection was cleared.
     /// </summary>
     public TreeNode? Node { get; }
 
     /// <summary>
-    ///     Index of removed node in collection.
+    /// Index of removed node in collection.
     /// </summary>
     public int Index { get; }
 
     /// <summary>
-    ///     Number of removed nodes.
+    /// Number of removed nodes.
     /// </summary>
     public int Count { get; }
 

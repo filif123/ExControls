@@ -9,7 +9,7 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded ComboBox Control
+/// Expanded ComboBox Control
 /// </summary>
 [ToolboxBitmap(typeof(ComboBox), "ComboBox.bmp")]
 public class ExComboBox : ComboBox, IExControl
@@ -26,7 +26,7 @@ public class ExComboBox : ComboBox, IExControl
     private ComboBoxEdit? _editControl;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExComboBox()
     {
@@ -53,19 +53,19 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <summary>
-    ///     Don't use directly in the code.
+    /// Don't use directly in the code.
     /// </summary>
     [Browsable(false)]
     public Color ActualBackColor { get; private set; }
 
     /// <summary>
-    ///     Don't use directly in code.
+    /// Don't use directly in code.
     /// </summary>
     [Browsable(false)]
     public Color ActualForeColor { get; private set; }
 
     /// <summary>
-    ///     Normal style of the Control (when is inactive).
+    /// Normal style of the Control (when is inactive).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -77,7 +77,7 @@ public class ExComboBox : ComboBox, IExControl
     public ExComboBoxStyle StyleNormal { get; set; }
 
     /// <summary>
-    ///     Highlight style of the Control (when mouse is over control).
+    /// Highlight style of the Control (when mouse is over control).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -89,7 +89,7 @@ public class ExComboBox : ComboBox, IExControl
     public ExComboBoxStyle StyleHighlight { get; set; }
 
     /// <summary>
-    ///     Selected style of the Control (when control is selected).
+    /// Selected style of the Control (when control is selected).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -101,7 +101,7 @@ public class ExComboBox : ComboBox, IExControl
     public ExComboBoxStyle StyleSelected { get; set; }
 
     /// <summary>
-    ///     Disabled style of the Control (when control is not Enabled).
+    /// Disabled style of the Control (when control is not Enabled).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -113,7 +113,7 @@ public class ExComboBox : ComboBox, IExControl
     public ExComboBoxStyle StyleDisabled { get; set; }
 
     /// <summary>
-    ///     Color of the selected row in drop down menu
+    /// Color of the selected row in drop down menu
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -133,7 +133,7 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <summary>
-    ///     Background color of the drop down menu.
+    /// Background color of the drop down menu.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -153,7 +153,7 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <summary>
-    ///     Draw mode of ComboBox
+    /// Draw mode of ComboBox
     /// </summary>
     public new DrawMode DrawMode
     {
@@ -650,7 +650,7 @@ public class ExComboBox : ComboBox, IExControl
 }
 
 /// <summary>
-///     Class for definition styles for ExComboBox
+/// Class for definition styles for ExComboBox
 /// </summary>
 public class ExComboBoxStyle : ExStyleOld
 {
@@ -678,7 +678,7 @@ public class ExComboBoxStyle : ExStyleOld
     }
 
     /// <summary>
-    ///     Color of the arrow which is in this Control as the dropdown button
+    /// Color of the arrow which is in this Control as the dropdown button
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
@@ -700,7 +700,7 @@ public class ExComboBoxStyle : ExStyleOld
     }
 
     /// <summary>
-    ///     Background color of the dropdown button
+    /// Background color of the dropdown button
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
@@ -722,7 +722,7 @@ public class ExComboBoxStyle : ExStyleOld
     }
 
     /// <summary>
-    ///     Border color of the dropdown button
+    /// Border color of the dropdown button
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
@@ -744,7 +744,7 @@ public class ExComboBoxStyle : ExStyleOld
     }
 
     /// <summary>
-    ///     Gets or sets whether DropDown button has to draw first
+    /// Gets or sets whether DropDown button has to draw first
     /// </summary>
     [DefaultValue(false)]
     [ExCategory(CategoryType.Appearance)]

@@ -56,7 +56,7 @@ public class ExListBox : ListBox
     }
 
     /// <summary>
-    ///     Color of the selected row.
+    /// Color of the selected row.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -76,7 +76,7 @@ public class ExListBox : ListBox
     }
 
     /// <summary>
-    ///     Color of the ListBox's border.
+    /// Color of the ListBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -95,7 +95,7 @@ public class ExListBox : ListBox
     }
 
     /// <summary>
-    ///     Color of the ListBox's border when it is disabled.
+    /// Color of the ListBox's border when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -114,7 +114,7 @@ public class ExListBox : ListBox
     }
 
     /// <summary>
-    ///     Background color of the ListBox's when it is disabled.
+    /// Background color of the ListBox's when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -133,7 +133,7 @@ public class ExListBox : ListBox
     }
 
     /// <summary>
-    ///     Foreground color of the ListBox's when it is disabled
+    /// Foreground color of the ListBox's when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -152,7 +152,7 @@ public class ExListBox : ListBox
     }
 
     /// <summary>
-    ///     Width of the ListBox's border.
+    /// Width of the ListBox's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

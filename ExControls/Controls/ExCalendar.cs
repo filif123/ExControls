@@ -8,8 +8,8 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Month calendar control drawn completely by the library (no Win32 MonthCalendar).
-///     Used standalone or as the drop-down part of <see cref="ExDateTimePicker" />.
+/// Month calendar control drawn completely by the library (no Win32 MonthCalendar).
+/// Used standalone or as the drop-down part of <see cref="ExDateTimePicker" />.
 /// </summary>
 [ToolboxBitmap(typeof(MonthCalendar), "MonthCalendar.bmp")]
 [DefaultProperty(nameof(SelectionDate))]
@@ -80,7 +80,7 @@ public class ExCalendar : Control, IExControl
     private int _hoverCell = -1;
 
     /// <summary>
-    ///     Constructor.
+    /// Constructor.
     /// </summary>
     public ExCalendar()
     {
@@ -118,7 +118,7 @@ public class ExCalendar : Control, IExControl
     #region Properties - data
 
     /// <summary>
-    ///     Selected date (time part is ignored).
+    /// Selected date (time part is ignored).
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Selected date.")]
@@ -144,7 +144,7 @@ public class ExCalendar : Control, IExControl
     private void ResetSelectionDate() => SelectionDate = DateTime.Today;
 
     /// <summary>
-    ///     First day of the displayed month.
+    /// First day of the displayed month.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -169,8 +169,8 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Current view: days of a month, months of a year, years of a decade or decades of a century.
-    ///     Clicking the header switches to the next coarser view, clicking an item goes back down.
+    /// Current view: days of a month, months of a year, years of a decade or decades of a century.
+    /// Clicking the header switches to the next coarser view, clicking an item goes back down.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -189,7 +189,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Minimum selectable date.
+    /// Minimum selectable date.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Minimum selectable date.")]
@@ -214,7 +214,7 @@ public class ExCalendar : Control, IExControl
     private void ResetMinDate() => MinDate = new DateTime(1753, 1, 1);
 
     /// <summary>
-    ///     Maximum selectable date.
+    /// Maximum selectable date.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Maximum selectable date.")]
@@ -239,7 +239,7 @@ public class ExCalendar : Control, IExControl
     private void ResetMaxDate() => MaxDate = new DateTime(9998, 12, 31);
 
     /// <summary>
-    ///     Date treated as "today". When not set, <see cref="DateTime.Today" /> is used.
+    /// Date treated as "today". When not set, <see cref="DateTime.Today" /> is used.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Date treated as today. When not set, the system date is used.")]
@@ -264,7 +264,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     First day of the week. <see cref="Day.Default" /> uses the current culture.
+    /// First day of the week. <see cref="Day.Default" /> uses the current culture.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [DefaultValue(Day.Default)]
@@ -283,7 +283,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Shows the "Today" line at the bottom of the calendar.
+    /// Shows the "Today" line at the bottom of the calendar.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
@@ -301,7 +301,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Shows week numbers in the first column.
+    /// Shows week numbers in the first column.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(false)]
@@ -319,7 +319,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Draws a one pixel border around the control.
+    /// Draws a one pixel border around the control.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(true)]
@@ -337,7 +337,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Label shown before today's date in the "Today" line.
+    /// Label shown before today's date in the "Today" line.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue("Today:")]
@@ -372,7 +372,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Not used.
+    /// Not used.
     /// </summary>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -430,7 +430,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the border.
+    /// Color of the border.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "DimGray")]
@@ -448,7 +448,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the month/year header text.
+    /// Color of the month/year header text.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
@@ -466,7 +466,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the day-of-week names.
+    /// Color of the day-of-week names.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
@@ -484,7 +484,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the days that belong to the previous or next month.
+    /// Color of the days that belong to the previous or next month.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Gray")]
@@ -502,7 +502,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the days outside of the MinDate-MaxDate range and of all text when the control is disabled.
+    /// Color of the days outside of the MinDate-MaxDate range and of all text when the control is disabled.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Silver")]
@@ -520,7 +520,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the week numbers.
+    /// Color of the week numbers.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Gray")]
@@ -538,7 +538,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Background color of the selected day.
+    /// Background color of the selected day.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
@@ -556,7 +556,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Text color of the selected day.
+    /// Text color of the selected day.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "HighlightText")]
@@ -574,7 +574,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Background color of the day or arrow under the mouse.
+    /// Background color of the day or arrow under the mouse.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Gainsboro")]
@@ -592,7 +592,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the frame around today's date.
+    /// Color of the frame around today's date.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(SystemColors), "Highlight")]
@@ -610,7 +610,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Color of the previous/next month arrows.
+    /// Color of the previous/next month arrows.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [DefaultValue(typeof(Color), "Black")]
@@ -663,17 +663,17 @@ public class ExCalendar : Control, IExControl
     #region Public methods
 
     /// <summary>
-    ///     Scrolls the calendar so that the month of the date is visible.
+    /// Scrolls the calendar so that the month of the date is visible.
     /// </summary>
     public void EnsureVisible(DateTime date) => DisplayMonth = new DateTime(date.Year, date.Month, 1);
 
     /// <summary>
-    ///     Selects today's date and raises <see cref="DateSelected" />.
+    /// Selects today's date and raises <see cref="DateSelected" />.
     /// </summary>
     public void SelectToday() => Select(TodayDate);
 
     /// <summary>
-    ///     Returns the date at the specified client point, or null when there is no day.
+    /// Returns the date at the specified client point, or null when there is no day.
     /// </summary>
     public DateTime? HitTestDate(Point pt)
     {
@@ -839,7 +839,7 @@ public class ExCalendar : Control, IExControl
     private int CenturyStart => _displayMonth.Year / 100 * 100;
 
     /// <summary>
-    ///     Index of the item that corresponds to the displayed month in the current view.
+    /// Index of the item that corresponds to the displayed month in the current view.
     /// </summary>
     private int CursorForDisplayMonth() => _view switch
     {
@@ -850,7 +850,7 @@ public class ExCalendar : Control, IExControl
     };
 
     /// <summary>
-    ///     First and last date covered by the item of the current view (month, year or decade).
+    /// First and last date covered by the item of the current view (month, year or decade).
     /// </summary>
     private (DateTime From, DateTime To, bool Trailing) ViewItemRange(int index)
     {
@@ -916,7 +916,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Moves the display by one page of the current view (month, year, decade, century).
+    /// Moves the display by one page of the current view (month, year, decade, century).
     /// </summary>
     private void Page(int direction)
     {
@@ -941,7 +941,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Header click: switches to the next coarser view.
+    /// Header click: switches to the next coarser view.
     /// </summary>
     private void ZoomOut()
     {
@@ -951,7 +951,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Item click in a year/decade/century view: goes one level down to the picked month/year/decade.
+    /// Item click in a year/decade/century view: goes one level down to the picked month/year/decade.
     /// </summary>
     private void ActivateViewItem(int index)
     {
@@ -1349,7 +1349,7 @@ public class ExCalendar : Control, IExControl
     }
 
     /// <summary>
-    ///     Keyboard in the year/decade/century views: arrows move the cursor, PgUp/PgDn page, Enter picks, Back zooms out.
+    /// Keyboard in the year/decade/century views: arrows move the cursor, PgUp/PgDn page, Enter picks, Back zooms out.
     /// </summary>
     private void OnViewKeyDown(KeyEventArgs e)
     {
@@ -1414,7 +1414,7 @@ public class ExCalendar : Control, IExControl
 }
 
 /// <summary>
-///     Views of the <see cref="ExCalendar" />.
+/// Views of the <see cref="ExCalendar" />.
 /// </summary>
 public enum ExCalendarView
 {

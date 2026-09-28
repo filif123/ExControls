@@ -11,8 +11,8 @@ namespace ExControls;
 #if NETFRAMEWORK
 
 /// <summary>
-///  Represents a common dialog box that allows the user to specify options for
-///  selecting a folder. This class cannot be inherited.
+/// Represents a common dialog box that allows the user to specify options for
+/// selecting a folder. This class cannot be inherited.
 /// </summary>
 [DefaultEvent(nameof(HelpRequest))]
 [DefaultProperty(nameof(SelectedPath))]
@@ -28,7 +28,7 @@ public sealed class ExFolderBrowserDialog : CommonDialog
     public ExFolderBrowserDialog() => Reset();
 
     /// <summary>
-    ///  Gets or sets the initial directory displayed by the folder browser dialog.
+    /// Gets or sets the initial directory displayed by the folder browser dialog.
     /// </summary>
     public string InitialDirectory { get; set; } = Environment.CurrentDirectory;
 
@@ -44,8 +44,8 @@ public sealed class ExFolderBrowserDialog : CommonDialog
     }
 
     /// <summary>
-    ///  Gets or sets a description to show above the folders. Here you can provide
-    ///  instructions for selecting a folder.
+    /// Gets or sets a description to show above the folders. Here you can provide
+    /// instructions for selecting a folder.
     /// </summary>
     [Browsable(true)]
     [DefaultValue("")]
@@ -54,8 +54,8 @@ public sealed class ExFolderBrowserDialog : CommonDialog
     public string Description { get; set; } = "";
 
     /// <summary>
-    ///  Determines if the 'New Folder' button should be exposed.
-    ///  This property has no effect if the Vista style dialog is used; in that case, the New Folder button is always shown.
+    /// Determines if the 'New Folder' button should be exposed.
+    /// This property has no effect if the Vista style dialog is used; in that case, the New Folder button is always shown.
     /// </summary>
     [Browsable(true)]
     [DefaultValue(true)]
@@ -64,7 +64,7 @@ public sealed class ExFolderBrowserDialog : CommonDialog
     public bool ShowNewFolderButton { get; set; }
 
     /// <summary>
-    ///  Gets/sets the root node of the directory tree.
+    /// Gets/sets the root node of the directory tree.
     /// </summary>
     [Browsable(true)]
     [DefaultValue(Environment.SpecialFolder.Desktop)]
@@ -86,8 +86,8 @@ public sealed class ExFolderBrowserDialog : CommonDialog
     }
 
     /// <summary>
-    ///  Gets the directory path of the folder the user picked.
-    ///  Sets the directory path of the initial folder shown in the dialog box.
+    /// Gets the directory path of the folder the user picked.
+    /// Sets the directory path of the initial folder shown in the dialog box.
     /// </summary>
     [Browsable(true)]
     [DefaultValue("")]

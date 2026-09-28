@@ -6,7 +6,7 @@
 namespace ExControls;
 
 /// <summary>
-///     Provides a generic collection that supports data binding and sorting.
+/// Provides a generic collection that supports data binding and sorting.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class ExBindingList<T> : BindingList<T>
@@ -16,52 +16,52 @@ public class ExBindingList<T> : BindingList<T>
     private PropertyDescriptor? _sortProperty;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="ExBindingList{T}" /> class.
+    /// Initializes a new instance of the <see cref="ExBindingList{T}" /> class.
     /// </summary>
     public ExBindingList() : this(new List<T>())
     {
     }
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="ExBindingList{T}" /> class.
+    /// Initializes a new instance of the <see cref="ExBindingList{T}" /> class.
     /// </summary>
     public ExBindingList(IList<T> list) : base(list)
     {
     }
 
     /// <summary>
-    ///     Gets a value indicating whether the list supports sorting.
+    /// Gets a value indicating whether the list supports sorting.
     /// </summary>
     protected override bool SupportsSortingCore => Sortable;
 
     /// <summary>
-    ///     Gets a value indicating whether the list is sorted.
+    /// Gets a value indicating whether the list is sorted.
     /// </summary>
     protected override bool IsSortedCore => _isSorted;
 
     /// <summary>
-    ///     Gets the direction the list is sorted.
+    /// Gets the direction the list is sorted.
     /// </summary>
     protected override ListSortDirection SortDirectionCore => _sortDirection;
 
     /// <summary>
-    ///     Gets or sets whether collection is sortable.
+    /// Gets or sets whether collection is sortable.
     /// </summary>
     public bool Sortable { get; set; } = true;
 
     /// <summary>
-    ///     Gets or sets whether to trigger an event when sorting items in a collection.
+    /// Gets or sets whether to trigger an event when sorting items in a collection.
     /// </summary>
     public bool FireEventOnSort { get; set; }
 
     /// <summary>
-    ///     Gets the property descriptor that is used for sorting the list if sorting is implemented in a derived class;
-    ///     otherwise, returns <see langword="null" />.
+    /// Gets the property descriptor that is used for sorting the list if sorting is implemented in a derived class;
+    /// otherwise, returns <see langword="null" />.
     /// </summary>
     protected override PropertyDescriptor? SortPropertyCore => _sortProperty;
 
     /// <summary>
-    ///     Removes any sort applied with ApplySortCore if sorting is implemented
+    /// Removes any sort applied with ApplySortCore if sorting is implemented
     /// </summary>
     protected override void RemoveSortCore()
     {
@@ -71,7 +71,7 @@ public class ExBindingList<T> : BindingList<T>
     }
 
     /// <summary>
-    ///     Sorts the items.
+    /// Sorts the items.
     /// </summary>
     /// <param name="prop"></param>
     /// <param name="direction"></param>
@@ -124,7 +124,7 @@ public class ExBindingList<T> : BindingList<T>
     }
 
     /// <summary>
-    ///     Compares two property values
+    /// Compares two property values
     /// </summary>
     /// <param name="left">left item</param>
     /// <param name="right">right item</param>
@@ -143,7 +143,7 @@ public class ExBindingList<T> : BindingList<T>
     }
 
     /// <summary>
-    ///     Adds the elements of the specified collection to the end of the <see cref="ExBindingList{T}" />.
+    /// Adds the elements of the specified collection to the end of the <see cref="ExBindingList{T}" />.
     /// </summary>
     /// <param name="items"></param>
     public void AddRange(IEnumerable<T> items)
