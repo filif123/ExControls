@@ -148,8 +148,7 @@ public class ExBindingList<T> : BindingList<T>
     /// <param name="items"></param>
     public void AddRange(IEnumerable<T> items)
     {
-        if (items is null)
-            throw new ArgumentNullException(nameof(items));
+        ArgumentNullException.ThrowIfNull(items);
 
         var raise = RaiseListChangedEvents;
         var newIndex = Items.Count;

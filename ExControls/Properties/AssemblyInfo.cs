@@ -13,6 +13,7 @@ using System.Runtime.Versioning;
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: System.Resources.NeutralResourcesLanguage("en")]
 
 #if !NETFRAMEWORK
 [assembly: SupportedOSPlatform("windows7.0")]

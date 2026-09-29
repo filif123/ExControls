@@ -56,7 +56,7 @@ public static class ExTools
     {
         var ver = HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
         if (int.TryParse(HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CurrentBuild"), out var cb))
-            return ver.StartsWith("Windows 10") && cb >= build;
+            return ver.StartsWith("Windows 10", StringComparison.Ordinal) && cb >= build;
         return false;
     }
 
@@ -257,8 +257,7 @@ public static class ExTools
     /// </param>
     public static void SetTheme(this Control control, WindowsTheme theme, string customThemeName = "")
     {
-        if (control is null)
-            throw new ArgumentNullException(nameof(control));
+        ArgumentNullException.ThrowIfNull(control);
 
         SetTheme(control.Handle, theme, customThemeName);
     }
@@ -307,8 +306,7 @@ public static class ExTools
     /// <exception cref="ArgumentOutOfRangeException">when <paramref name="color" /> is invalid.</exception>
     public static void SetProgressBarColor(this ProgressBar bar, ProgressBarColor color)
     {
-        if (bar is null)
-            throw new ArgumentNullException(nameof(bar));
+        ArgumentNullException.ThrowIfNull(bar);
 
         switch (color)
         {

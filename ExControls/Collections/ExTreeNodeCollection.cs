@@ -13,8 +13,10 @@ namespace ExControls.Collections;
 
 //, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a
 [Editor("System.Windows.Forms.Design.TreeNodeCollectionEditor", typeof(UITypeEditor))]
-public class ExTreeNodeCollection : IList
+public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
 {
+    private const string NotTreeNode = "Value must be a TreeNode.";
+
     private readonly List<TreeNode> _nodes;
     private readonly TreeNodeCollection _visibleNodes;
 
@@ -135,8 +137,7 @@ public class ExTreeNodeCollection : IList
     /// <paramref name="nodes" /> is the child of another <see cref="System.Windows.Forms.TreeView" />.</exception>
     public virtual void AddRange(TreeNode[] nodes)
     {
-        if (nodes == null)
-            throw new ArgumentNullException(nameof(nodes));
+        ArgumentNullException.ThrowIfNull(nodes);
         if (nodes.Length == 0)
             return;
 
@@ -489,7 +490,7 @@ public class ExTreeNodeCollection : IList
     object? IList.this[int index]
     {
         get => _visibleNodes[index];
-        set => _visibleNodes[index] = value as TreeNode ?? throw new ArgumentException(nameof(value));
+        set => _visibleNodes[index] = value as TreeNode ?? throw new ArgumentException(NotTreeNode, nameof(value));
     }
 
     /// <summary>Gets or sets the element at the specified index.</summary>
@@ -538,8 +539,7 @@ public class ExTreeNodeCollection : IList
     /// The <see cref="System.Collections.IList" /> has a fixed size.</exception>
     public virtual int Add(object? value)
     {
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
         return value is TreeNode node ? Add(node) : Add(value.ToString()!).Index;
     }
 
@@ -561,7 +561,7 @@ public class ExTreeNodeCollection : IList
     void IList.Insert(int index, object? value)
     {
         if (value is not TreeNode node)
-            throw new ArgumentException(nameof(value));
+            throw new ArgumentException(NotTreeNode, nameof(value));
         Insert(index, node);
     }
 
@@ -601,6 +601,9 @@ public class ExTreeNodeCollection : IList
     /// <summary>Returns an enumerator that iterates through a collection.</summary>
     /// <returns>An <see cref="System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
     public IEnumerator GetEnumerator() => _visibleNodes.GetEnumerator();
+
+    /// <inheritdoc />
+    IEnumerator<TreeNode> IEnumerable<TreeNode>.GetEnumerator() => _visibleNodes.Cast<TreeNode>().GetEnumerator();
 
     /// <summary>Copies the elements of the <see cref="System.Collections.ICollection" /> to an <see cref="System.Array" />, starting at a particular <see cref="System.Array" /> index.</summary>
     /// <param name="array">The one-dimensional <see cref="System.Array" /> that is the destination of the elements copied from <see cref="System.Collections.ICollection" />. The <see cref="System.Array" /> must have zero-based indexing.</param>

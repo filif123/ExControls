@@ -467,7 +467,7 @@ public class ExTabControl : TabControl, IExControl, IThemeable
     {
         if (m.Msg == (int)(WM_REFLECT + Win32.WM.NOTIFY))
         {
-            var hdr = (Win32.NMHDR)Marshal.PtrToStructure(m.LParam, typeof(Win32.NMHDR))!;
+            var hdr = Marshal.PtrToStructure<Win32.NMHDR>(m.LParam)!;
             if (hdr.code == TCN_SELCHANGING)
             {
                 var tp = TestTab(PointToClient(Cursor.Position));

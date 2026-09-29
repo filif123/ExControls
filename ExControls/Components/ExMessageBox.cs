@@ -841,9 +841,9 @@ public class ExMessageBoxStyle
     public Color? ButtonMouseOverColor { get; set; }
 }
 
-internal class HelpInfo
+internal sealed class HelpInfo
 {
-    public const int HLP_FILE = 1, HLP_KEYWORD = 2, HLP_NAVIGATOR = 3, HLP_OBJECT = 4;
+    public const int HlpFile = 1, HlpKeyword = 2, HlpNavigator = 3, HlpObject = 4;
 
     public HelpInfo(string helpfilepath)
     {
@@ -851,7 +851,7 @@ internal class HelpInfo
         Keyword = "";
         Navigator = HelpNavigator.TableOfContents;
         Param = null;
-        Option = HLP_FILE;
+        Option = HlpFile;
     }
 
     public HelpInfo(string helpfilepath, string keyword)
@@ -860,7 +860,7 @@ internal class HelpInfo
         Keyword = keyword;
         Navigator = HelpNavigator.TableOfContents;
         Param = null;
-        Option = HLP_KEYWORD;
+        Option = HlpKeyword;
     }
 
     public HelpInfo(string helpfilepath, HelpNavigator navigator)
@@ -869,7 +869,7 @@ internal class HelpInfo
         Keyword = "";
         Navigator = navigator;
         Param = null;
-        Option = HLP_NAVIGATOR;
+        Option = HlpNavigator;
     }
 
 
@@ -879,7 +879,7 @@ internal class HelpInfo
         Keyword = "";
         Navigator = navigator;
         Param = param;
-        Option = HLP_OBJECT;
+        Option = HlpObject;
     }
 
     public int Option { get; }

@@ -111,7 +111,7 @@ public sealed class ShellIcon : IDisposable
     {
         var sii = new Win32.SHSTOCKICONINFO
         {
-            cbSize = (uint)Marshal.SizeOf(typeof(Win32.SHSTOCKICONINFO))
+            cbSize = (uint)Marshal.SizeOf<Win32.SHSTOCKICONINFO>()
         };
 
         Marshal.ThrowExceptionForHR(Win32.SHGetStockIconInfo(type, flags, ref sii));

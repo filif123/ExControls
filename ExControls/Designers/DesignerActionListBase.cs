@@ -18,9 +18,17 @@ internal abstract class DesignerActionListBase<T> : DesignerActionList where T :
 
     public T Host { get; }
 
+#if NETFRAMEWORK
     protected ISelectionService SelectionService => (_selectionService ??= (ISelectionService?)GetService(typeof(ISelectionService)))!;
+#else
+    protected ISelectionService SelectionService => (_selectionService ??= GetService<ISelectionService>())!;
+#endif
 
+#if NETFRAMEWORK
     protected DesignerActionUIService DesignerActionService => (_designerActionService ??= (DesignerActionUIService?)GetService(typeof(DesignerActionUIService)))!;
+#else
+    protected DesignerActionUIService DesignerActionService => (_designerActionService ??= GetService<DesignerActionUIService>())!;
+#endif
 
     protected void SetProperty(string propertyName, object? value)
     {

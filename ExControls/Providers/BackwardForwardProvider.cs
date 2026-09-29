@@ -87,8 +87,7 @@ public class BackwardForwardProvider : Component
     {
         if (!ManagerEnabled)
             return;
-        if (cmd is null)
-            throw new ArgumentNullException(nameof(cmd));
+        ArgumentNullException.ThrowIfNull(cmd);
 
         if(CurrentCommand is not null)
             _backwardStack.Push(CurrentCommand);
@@ -141,8 +140,7 @@ public class BackwardForwardProvider : Component
     {
         if (!ManagerEnabled)
             throw new InvalidOperationException("Manager is disabled");
-        if (finalCmd is null)
-            throw new ArgumentNullException(nameof(finalCmd));
+        ArgumentNullException.ThrowIfNull(finalCmd);
         if (!CanBackward)
             throw new InvalidOperationException("Cannot backward because backward stack is empty");
         if (CurrentCommand is null)
@@ -193,8 +191,7 @@ public class BackwardForwardProvider : Component
     {
         if (!ManagerEnabled)
             throw new InvalidOperationException("Manager is disabled");
-        if (finalCmd is null)
-            throw new ArgumentNullException(nameof(finalCmd));
+        ArgumentNullException.ThrowIfNull(finalCmd);
         if (!CanForward)
             throw new InvalidOperationException("Cannot forward because forward stack is empty");
         if (CurrentCommand is null)

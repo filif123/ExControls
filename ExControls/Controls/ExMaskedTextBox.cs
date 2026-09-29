@@ -208,9 +208,9 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl, IThemeable
     }
 
     /// <inheritdoc />
-    protected override void OnMouseEnter(EventArgs eventargs)
+    protected override void OnMouseEnter(EventArgs e)
     {
-        base.OnMouseEnter(eventargs);
+        base.OnMouseEnter(e);
         if (DefaultStyle)
             return;
 
@@ -222,9 +222,9 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl, IThemeable
     }
 
     /// <inheritdoc />
-    protected override void OnMouseLeave(EventArgs eventargs)
+    protected override void OnMouseLeave(EventArgs e)
     {
-        base.OnMouseLeave(eventargs);
+        base.OnMouseLeave(e);
         if (DefaultStyle)
             return;
 

@@ -75,7 +75,7 @@ internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExO
             properties.Remove(prop);
     }
 
-    internal class OptionsPanelActionList : DesignerActionListBase<ExOptionsPanel>
+    internal sealed class OptionsPanelActionList : DesignerActionListBase<ExOptionsPanel>
     {
         public OptionsPanelActionList(ExOptionsPanel host) : base(host)
         {
@@ -93,7 +93,7 @@ internal sealed class ExOptionsPanelDesigner : DesignerScrollableControlBase<ExO
             }
         }
 
-        protected void SelectParent()
+        private void SelectParent()
         {
             Component parent;
             var owner = Host.Owner;

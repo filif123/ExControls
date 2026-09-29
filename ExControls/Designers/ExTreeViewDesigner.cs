@@ -13,7 +13,7 @@ namespace ExControls.Designers;
 /// from the base control designer and adds live hit testing
 /// capabilites for the tree view control. 
 /// </summary>
-internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
+internal sealed class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 {
     private Win32.TVHITTESTINFO _tvhit;
 
@@ -51,7 +51,7 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
             }
             return result;
         }
-    }
+    } = null!;
 #endif
 
 

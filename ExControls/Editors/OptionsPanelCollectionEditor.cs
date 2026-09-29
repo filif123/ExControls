@@ -40,7 +40,11 @@ public class OptionsPanelCollectionEditor : CollectionEditor
         if (!ReferenceEquals(itemType, typeof(ExOptionsPanel))) 
             return base.CreateInstance(itemType);
 
+#if NETFRAMEWORK
         var designerHost = (IDesignerHost)GetService(typeof(IDesignerHost))!;
+#else
+        var designerHost = GetService<IDesignerHost>()!;
+#endif
         var view = (ExOptionsView)Context!.Instance!;
         var panel = ExOptionsPanel.CreatePanel(view, designerHost);
 

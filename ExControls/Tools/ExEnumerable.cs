@@ -2,7 +2,7 @@
 namespace System.Linq;
 
 /// <summary>
-/// Extension methods for <see cref="T:System.Collections.Generic.IEnumerable`1" /> missing in the BCL.
+/// Extension methods for <see cref="System.Collections.Generic.IEnumerable{T}" /> missing in the BCL.
 /// Kept in the <c>System.Linq</c> namespace so existing calls keep compiling, but under its own name -
 /// a second <c>System.Linq.Enumerable</c> made <c>Enumerable.Range</c> and similar calls ambiguous (CS0433).
 /// </summary>
@@ -14,10 +14,8 @@ public static partial class ExEnumerable
     ///<returns>The index of the first matching item, or -1 if no items match.</returns>
     public static int FindIndex<TSource>(this IEnumerable<TSource> items, Func<TSource, bool> predicate)
     {
-        if (items == null)
-            throw new ArgumentNullException(nameof(items));
-        if (predicate == null)
-            throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(items);
+        ArgumentNullException.ThrowIfNull(predicate);
 
         var retVal = 0;
         foreach (var item in items)

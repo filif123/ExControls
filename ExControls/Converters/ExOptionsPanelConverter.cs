@@ -36,7 +36,8 @@ public class ExOptionsPanelConverter : ReferenceConverter
 
         return base.ConvertTo(context, culture, value, destinationType);
     }
-    
+
+    /// <inheritdoc />
     public override bool GetStandardValuesSupported(ITypeDescriptorContext? context) => GetOwnerView(context) is not null;
 
     /// <inheritdoc />

@@ -17,8 +17,7 @@ public static class ExThemer
     /// </summary>
     public static void Register<T>(Action<T, ExTheme> apply) where T : Control
     {
-        if (apply is null)
-            throw new ArgumentNullException(nameof(apply));
+        ArgumentNullException.ThrowIfNull(apply);
         Handlers[typeof(T)] = (control, theme) => apply((T)control, theme);
     }
 
@@ -27,8 +26,7 @@ public static class ExThemer
     /// </summary>
     public static void Apply(IEnumerable controls, ExTheme theme)
     {
-        if (controls is null)
-            throw new ArgumentNullException(nameof(controls));
+        ArgumentNullException.ThrowIfNull(controls);
 
         foreach (Control control in controls)
             Apply(control, theme);
@@ -39,10 +37,8 @@ public static class ExThemer
     /// </summary>
     public static void Apply(Control control, ExTheme theme)
     {
-        if (control is null)
-            throw new ArgumentNullException(nameof(control));
-        if (theme is null)
-            throw new ArgumentNullException(nameof(theme));
+        ArgumentNullException.ThrowIfNull(control);
+        ArgumentNullException.ThrowIfNull(theme);
 
         if (control is IThemeable themeable)
             themeable.ApplyTheme(theme);

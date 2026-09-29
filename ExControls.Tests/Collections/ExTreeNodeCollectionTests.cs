@@ -6,7 +6,7 @@ namespace ExControls.Tests.Collections;
 /// Uzly stromu so skryvanim (vyhladavanie v ExOptionsView) - skryte uzly ostavaju v kolekcii a vracaju sa na svoje miesto.
 /// </summary>
 [TestClass]
-public class ExTreeNodeCollectionTests
+public sealed class ExTreeNodeCollectionTests : IDisposable
 {
     private TreeView _tree = null!;
     private ExTreeNodeCollection _nodes = null!;
@@ -21,8 +21,8 @@ public class ExTreeNodeCollectionTests
         _nodes.Add("c", "C");
     }
 
-    [TestCleanup]
-    public void Cleanup() => _tree.Dispose();
+    // MSTest vola Dispose po kazdom teste
+    public void Dispose() => _tree.Dispose();
 
     private string[] Visible() => _tree.Nodes.Cast<TreeNode>().Select(n => n.Name).ToArray();
 

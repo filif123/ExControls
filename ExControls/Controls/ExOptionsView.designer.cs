@@ -38,7 +38,7 @@ namespace ExControls
         {
             this.split = new System.Windows.Forms.SplitContainer();
             this.tablePanelLeft = new System.Windows.Forms.TableLayoutPanel();
-            this.treeView = new ExControls.ExOptionsView.ExOptionsTreeView();
+            this.optionsTree = new ExControls.ExOptionsView.ExOptionsTreeView();
             this.tbSearch = new ExControls.ExTextBox();
             this.tablePanelRight = new System.Windows.Forms.TableLayoutPanel();
             this.panelsContainer = new ExControls.OptionsPanelContainer();
@@ -75,7 +75,7 @@ namespace ExControls
             this.tablePanelLeft.AutoSize = true;
             this.tablePanelLeft.ColumnCount = 1;
             this.tablePanelLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tablePanelLeft.Controls.Add(this.treeView, 0, 1);
+            this.tablePanelLeft.Controls.Add(this.optionsTree, 0, 1);
             this.tablePanelLeft.Controls.Add(this.tbSearch, 0, 0);
             this.tablePanelLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tablePanelLeft.Location = new System.Drawing.Point(0, 0);
@@ -87,16 +87,16 @@ namespace ExControls
             this.tablePanelLeft.Size = new System.Drawing.Size(202, 476);
             this.tablePanelLeft.TabIndex = 2;
             // 
-            // treeView
+            // optionsTree
             // 
-            this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView.FullRowSelect = true;
-            this.treeView.HideSelection = false;
-            this.treeView.Name = "treeView";
-            this.treeView.PathSeparator = " / ";
-            this.treeView.ShowLines = false;
-            this.treeView.ShowNodeToolTips = true;
-            this.treeView.TabIndex = 0;
+            this.optionsTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.optionsTree.FullRowSelect = true;
+            this.optionsTree.HideSelection = false;
+            this.optionsTree.Name = "optionsTree";
+            this.optionsTree.PathSeparator = " / ";
+            this.optionsTree.ShowLines = false;
+            this.optionsTree.ShowNodeToolTips = true;
+            this.optionsTree.TabIndex = 0;
             // 
             // tbSearch
             // 
@@ -190,7 +190,7 @@ namespace ExControls
         internal Label labelPanelName;
         private ToolStrip toolStripMenu;
         private TableLayoutPanel tablePanelLeft;
-        internal ExOptionsTreeView treeView;
+        internal ExOptionsTreeView optionsTree;
         private ExTextBox tbSearch;
     }
 }

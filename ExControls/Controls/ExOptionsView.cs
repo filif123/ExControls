@@ -29,8 +29,6 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
         HeaderNodeNameBackColor = theme.PanelBackColor;
     }
 
-    private readonly ExOptionsPanel? _onSelectedPanelChangedOldSelection = null;
-
     /// <summary>
     /// 
     /// </summary>
@@ -60,7 +58,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     [ExCategory(CategoryType.Layout)]
-    public ExOptionsTreeView TreeView => treeView;
+    public ExOptionsTreeView TreeView => optionsTree;
 
     /// <summary>
     /// Gets the ToolStrip on this ExOptionsView.
@@ -240,9 +238,6 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
     /// </summary>
     protected virtual void OnSelectedPanelChanged()
     {
-        if (_onSelectedPanelChangedOldSelection != null)
-            _onSelectedPanelChangedOldSelection.Visible = false;
-
         if (SelectedPanel != null)
         {
             // Hide every item except the selected item
@@ -250,11 +245,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
                 item.Visible = ReferenceEquals(item, SelectedPanel);
         }
 
-        bool changed;
-        if (SelectedPanel is null)
-            changed = _onSelectedPanelChangedOldSelection != null;
-        else
-            changed = !SelectedPanel.Equals(_onSelectedPanelChangedOldSelection);
+        // predchadzajuci vyber sa nikdy neuchovaval - udalost ide pri kazdom vybranom paneli
+        var changed = SelectedPanel is not null;
 
         if (DesignMode)
             labelPanelName.Text = SelectedPanel == null ? "" : SelectedPanel.Node.FullPath;

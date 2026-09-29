@@ -2,7 +2,7 @@
 
 namespace ExControls.Designers;
 
-internal class ExPropertyGridDesigner : DesignerControlBase<ExPropertyGrid>
+internal sealed class ExPropertyGridDesigner : DesignerControlBase<ExPropertyGrid>
 {
     /// <inheritdoc />
     protected override void PreFilterProperties(IDictionary properties)

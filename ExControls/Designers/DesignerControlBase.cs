@@ -52,7 +52,11 @@ internal class DesignerControlBase<T> : ControlDesigner where T : Control
     /// <summary>
     /// Creates and returns the IDesignerHost service.
     /// </summary>
+#if NETFRAMEWORK
     public IDesignerHost DesignerHost => (_designerHost ??= (IDesignerHost?)GetService(typeof(IDesignerHost)))!;
+#else
+    public IDesignerHost DesignerHost => (_designerHost ??= GetService<IDesignerHost>())!;
+#endif
 
     protected virtual void OnHostInitialized()
     {

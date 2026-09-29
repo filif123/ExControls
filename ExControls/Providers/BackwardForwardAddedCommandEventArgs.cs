@@ -1,7 +1,7 @@
 ﻿namespace ExControls.Providers;
 
 /// <summary>
-/// Provides data for the <see cref="ExControls.Providers.BackwardForwardProvider.AddedCommand"/> event.
+/// Provides data for the <see cref="BackwardForwardProvider.CommandAdded"/> event.
 /// </summary>
 /// <seealso cref="System.EventArgs" />
 public class BackwardForwardAddedCommandEventArgs : EventArgs

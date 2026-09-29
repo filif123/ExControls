@@ -6,7 +6,7 @@ namespace ExControls.Tests.Providers;
 /// Navigacia spat/dopredu po predchadzajucich vyberoch.
 /// </summary>
 [TestClass]
-public class BackwardForwardProviderTests
+public sealed class BackwardForwardProviderTests : IDisposable
 {
     private sealed class Position(string name, List<string> log) : IBackwardForwardCommand
     {
@@ -27,8 +27,8 @@ public class BackwardForwardProviderTests
             _provider.AddCommand(position);
     }
 
-    [TestCleanup]
-    public void Cleanup() => _provider.Dispose();
+    // MSTest vola Dispose po kazdom teste
+    public void Dispose() => _provider.Dispose();
 
     [TestMethod]
     public void BackwardForward_PresunieSaNaPredchadzajucuADalsiuPoziciu()

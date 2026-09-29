@@ -383,7 +383,7 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     }
 
     /// <inheritdoc />
-    protected override void Paint(Graphics g,
+    protected override void Paint(Graphics graphics,
         Rectangle clipBounds, Rectangle cellBounds,
         int rowIndex,
         DataGridViewElementStates elementState,
@@ -394,14 +394,14 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     {
         if (DefaultStyle)
         {
-            base.Paint(g, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
+            base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
             return;
         }
 
         _drawing = true;
 
         var formattedText = formattedValue?.ToString() ?? string.Empty;
-        var texts = TextRenderer.MeasureText(g, formattedText, cellStyle.Font);
+        var texts = TextRenderer.MeasureText(graphics, formattedText, cellStyle.Font);
         var textStart = new Point(cellBounds.X + 2, cellBounds.Y + (int)Math.Round(cellBounds.Height / 2d - texts.Height / 2d));
         var dropButton = cellBounds with { X = cellBounds.X + cellBounds.Width - 23, Width = 20 };
 
@@ -425,22 +425,22 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
         }
 
         using (var brushBack = new SolidBrush(back))
-            g.FillRectangle(brushBack, cellBounds);
+            graphics.FillRectangle(brushBack, cellBounds);
 
         using var penBorder = new Pen(border);
 
         if (bbfirst)
         {
-            ExButtonRenderer.DrawDropDownButton(g, dropButton, backbut, borbut, arrow);
-            g.DrawRectangle(penBorder, cellBounds.X, cellBounds.Y, cellBounds.Width - 1, cellBounds.Height - 1);
+            ExButtonRenderer.DrawDropDownButton(graphics, dropButton, backbut, borbut, arrow);
+            graphics.DrawRectangle(penBorder, cellBounds.X, cellBounds.Y, cellBounds.Width - 1, cellBounds.Height - 1);
         }
         else
         {
-            g.DrawRectangle(penBorder, cellBounds.X, cellBounds.Y, cellBounds.Width - 1, cellBounds.Height - 1);
-            ExButtonRenderer.DrawDropDownButton(g, dropButton, backbut, borbut, arrow);
+            graphics.DrawRectangle(penBorder, cellBounds.X, cellBounds.Y, cellBounds.Width - 1, cellBounds.Height - 1);
+            ExButtonRenderer.DrawDropDownButton(graphics, dropButton, backbut, borbut, arrow);
         }
 
-        TextRenderer.DrawText(g, formattedText, cellStyle.Font, textStart, fore, back,
+        TextRenderer.DrawText(graphics, formattedText, cellStyle.Font, textStart, fore, back,
             DataGridView.RightToLeft == RightToLeft.Yes ? TextFormatFlags.Right : TextFormatFlags.Default);
 
         _drawing = false;

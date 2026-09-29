@@ -180,7 +180,7 @@ public class ExLineSeparator : Control, IThemeable
                 g.DrawLine(pen, new Point(Width/2, 0), new Point(Width/2, Height));
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new InvalidOperationException($"Unknown {nameof(LineOrientation)}: {LineOrientation}");
         }
     }
 

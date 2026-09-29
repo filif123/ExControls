@@ -82,8 +82,7 @@ public class UndoRedoManager : Component
     {
         if (!ManagerEnabled)
             return;
-        if (cmd is null)
-            throw new ArgumentNullException(nameof(cmd));
+        ArgumentNullException.ThrowIfNull(cmd);
 
         _undoStack.Push((cmd, null));
         if (CanRedo) _redoStack.Clear();
@@ -99,8 +98,7 @@ public class UndoRedoManager : Component
     {
         if (!ManagerEnabled)
             return;
-        if (cmd is null)
-            throw new ArgumentNullException(nameof(cmd));
+        ArgumentNullException.ThrowIfNull(cmd);
 
         _undoStack.Push((cmd, handler));
         if (CanRedo) 

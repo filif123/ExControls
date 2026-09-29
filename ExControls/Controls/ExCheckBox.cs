@@ -217,15 +217,15 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl, IThemeable
     }
 
     /// <inheritdoc />
-    protected override void OnPaint(PaintEventArgs e)
+    protected override void OnPaint(PaintEventArgs pevent)
     {
         if (DefaultStyle)
         {
-            base.OnPaint(e);
+            base.OnPaint(pevent);
             return;
         }
 
-        e.Graphics.Clear(BackColor);
+        pevent.Graphics.Clear(BackColor);
 
         //Colors preparing
         var colorMark = _hover ? HighlightColor : Enabled ? MarkColor : DisabledForeColor;
@@ -237,28 +237,28 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl, IThemeable
         using var penBorder = new Pen(border);
 
         //Positons and Size preparing
-        var rects = ExButtonRenderer.GetBoxAndTextRectangle(e.Graphics, this, BoxSize, BoxOffset);
+        var rects = ExButtonRenderer.GetBoxAndTextRectangle(pevent.Graphics, this, BoxSize, BoxOffset);
         var boxRec = rects.BoxRectangle;
         var textRec = rects.TextRectangle;
         var rectBorder = new Rectangle(boxRec.Location, new Size(boxRec.Width - 1, boxRec.Height - 1));
 
         //Text render
-        TextRenderer.DrawText(e.Graphics, Text, Font, textRec.Location, colorText);
+        TextRenderer.DrawText(pevent.Graphics, Text, Font, textRec.Location, colorText);
 
         //Box background render
-        e.Graphics.FillRectangle(background, boxRec);
+        pevent.Graphics.FillRectangle(background, boxRec);
 
         //Box Border render
-        e.Graphics.DrawRectangle(penBorder, rectBorder);
+        pevent.Graphics.DrawRectangle(penBorder, rectBorder);
 
         //Mark render
         if (CheckState == CheckState.Checked)
         {
-            ExButtonRenderer.DrawCheckMark(e.Graphics, boxRec, colorMark);
+            ExButtonRenderer.DrawCheckMark(pevent.Graphics, boxRec, colorMark);
         }
         else if (CheckState == CheckState.Indeterminate)
         {
-            e.Graphics.FillRectangle(brushMark, boxRec.X + 4, boxRec.Y + 4, boxRec.Width - 8, boxRec.Height - 8);
+            pevent.Graphics.FillRectangle(brushMark, boxRec.X + 4, boxRec.Y + 4, boxRec.Width - 8, boxRec.Height - 8);
         }
     }
 

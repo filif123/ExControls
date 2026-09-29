@@ -219,7 +219,11 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
         }
     }
 
+    // pri vypnuti sa editovatelny zoznam prepne na DropDownList (tmavy vzhlad), pri zapnuti sa vrati
+    private bool _dropDownBeforeDisable;
+
     /// <summary>
+    /// Gets or sets a value indicating whether the control can respond to user interaction.
     /// </summary>
     [DefaultValue(true)]
     public new bool Enabled
@@ -230,11 +234,11 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
             switch (value)
             {
                 case false when !DefaultStyle && DropDownStyle == ComboBoxStyle.DropDown:
-                    field = true;
+                    _dropDownBeforeDisable = true;
                     DropDownStyle = ComboBoxStyle.DropDownList;
                     break;
-                case true when !DefaultStyle && field:
-                    field = false;
+                case true when !DefaultStyle && _dropDownBeforeDisable:
+                    _dropDownBeforeDisable = false;
                     DropDownStyle = ComboBoxStyle.DropDown;
                     break;
             }

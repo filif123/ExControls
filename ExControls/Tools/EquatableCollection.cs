@@ -16,9 +16,9 @@ public class EquatableCollection<T> : Collection<T>
     }
 
     /// <inheritdoc />
-    public override bool Equals(object? other)
+    public override bool Equals(object? obj)
     {
-        return other is IEnumerable<T> otherEnumerable && otherEnumerable.SequenceEqual(this);
+        return obj is IEnumerable<T> otherEnumerable && otherEnumerable.SequenceEqual(this);
     }
 
     /// <inheritdoc />
