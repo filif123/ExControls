@@ -224,14 +224,15 @@ internal sealed class ExOptionsViewDesigner : DesignerParentControlBase<ExOption
 
     internal static partial class ComCtl32
     {
+        // polia plni TreeView cez SendMessage (TVM_HITTEST)
+#pragma warning disable CS0649
         public struct Tvhittestinfo
         {
-#pragma warning disable CS0649 // Field 'xx' is never assigned to, and will always have its default value
             public Point Pt;
             public Tvht Flags;
             public IntPtr HItem;
-#pragma warning restore CS0649
         }
+#pragma warning restore CS0649
 
         [Flags]
         public enum Tvht : uint

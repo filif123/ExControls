@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows.Forms.VisualStyles;
 using ExControls.Controls;
@@ -383,8 +384,7 @@ public class ExDateTimePicker : Control, IExControl, IThemeable
     [Bindable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [EditorBrowsable(EditorBrowsableState.Advanced)]
-    // Control.Text je v BCL [AllowNull]; atribut sa na net48 neda pouzit (CS0122), preto pragma.
-#pragma warning disable CS8765
+    [AllowNull]
     public override string Text
     {
         get
@@ -415,7 +415,6 @@ public class ExDateTimePicker : Control, IExControl, IThemeable
             }
         }
     }
-#pragma warning restore CS8765
 
     /// <inheritdoc />
     protected override Size DefaultSize => new(200, PreferredHeight);

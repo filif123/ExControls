@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 
 // ReSharper disable EventNeverSubscribedTo.Global
@@ -126,12 +127,8 @@ public class ExLineSeparator : Control, IThemeable
 
     /// <inheritdoc />
     [Browsable(false)]
-    // Control.Text is [AllowNull] in the BCL (asymmetric: get is non-null, set accepts null).
-    // [AllowNull] itself can't be used here because it fails on net48 in this multi-targeted project
-    // (CS0122: AllowNullAttribute is inaccessible due to its protection level).
-#pragma warning disable CS8765
+    [AllowNull]
     public override string Text { get; set; } = "";
-#pragma warning restore CS8765
 
     /// <summary>Occurs when the <see cref="LineColor" /> property changes.</summary>
     [ExCategory("Changed Property")]

@@ -241,8 +241,6 @@ public class ExOptionsPanel : Panel
     }
 
     // Tell the designer to serialize the Node and ParentNode properties to the designer file.
-#pragma warning disable S1144  // Unused private types or members should be removed
-#pragma warning disable S3400  // Methods should not return constants
 #pragma warning disable CA1822 // Mark members as static
     
     private bool ShouldSerializeNode() => true;
@@ -251,8 +249,6 @@ public class ExOptionsPanel : Panel
     private bool ShouldSerializeParentNode() => true;
     
 #pragma warning restore CA1822 // Mark members as static
-#pragma warning restore S3400  // Methods should not return constants
-#pragma warning restore S1144  // Unused private types or members should be removed
 
     #endregion
 

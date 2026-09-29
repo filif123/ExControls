@@ -25,6 +25,13 @@ namespace System.Diagnostics.CodeAnalysis
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.ReturnValue)]
     internal sealed class NotNullAttribute : Attribute;
+
+    /// <summary>
+    /// Vlastnost prijima <see langword="null" />, hoci ho nevracia (na .NET Framework chyba; interny atribut z inej zostavy je
+    /// nedostupny - CS0122).
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
+    internal sealed class AllowNullAttribute : Attribute;
 }
 
 // v mennom priestore System - rozsirenie vidi kazdy subor kniznice (aj tie v System.Linq)

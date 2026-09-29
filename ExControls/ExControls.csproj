@@ -62,11 +62,8 @@
 		<Content Include="Controls\ExOptionsView.bmp" />
 	</ItemGroup>
 	<PropertyGroup>
-		<PreBuildEvent>
-			if exist "$(TargetPath).locked" del "$(TargetPath).locked"
-			if exist "$(TargetPath)" if not exist "$(TargetPath).locked" move "$(TargetPath)" "$(TargetPath).locked"
-		</PreBuildEvent>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<!-- balik NuGet len z Release - Debug build ho zbytocne vyraba pri kazdom builde -->
+		<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
 		<Title>ExControls</Title>
 		<Version>2.0.0</Version>
 		<PackageProjectUrl>https://github.com/filif123/ExControls</PackageProjectUrl>
@@ -84,4 +81,10 @@
 		<Reference Include="System.Drawing.Design" />
 		<PackageReference Include="System.Resources.Extensions" Version="9.0.0" />
 	</ItemGroup>
+	<!-- Navrhar VS drzi ExControls.dll otvorenu: zamknuty subor sa neda prepisat, ale da sa premenovat.
+	     Pred kompilaciou sa preto stara DLL odsunie na .locked (len Debug - pri praci s navrharom). -->
+	<Target Name="MoveLockedAssembly" BeforeTargets="CoreCompile" Condition="'$(Configuration)' == 'Debug' And Exists('$(TargetPath)')">
+		<Delete Files="$(TargetPath).locked" ContinueOnError="true" />
+		<Move SourceFiles="$(TargetPath)" DestinationFiles="$(TargetPath).locked" Condition="!Exists('$(TargetPath).locked')" ContinueOnError="true" />
+	</Target>
 </Project>

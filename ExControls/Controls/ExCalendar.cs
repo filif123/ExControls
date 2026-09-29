@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using ExControls.Controls;
 // ReSharper disable ClassWithVirtualMembersNeverInherited.Global
@@ -403,14 +404,12 @@ public class ExCalendar : Control, IExControl, IThemeable
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    // Control.Text je v BCL [AllowNull]; atribut sa na net48 neda pouzit (CS0122), preto pragma.
-#pragma warning disable CS8765
+    [AllowNull]
     public override string Text
     {
         get => base.Text;
         set => base.Text = value;
     }
-#pragma warning restore CS8765
 
     #endregion
 

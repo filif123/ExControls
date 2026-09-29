@@ -84,7 +84,6 @@ public sealed class ShellIcon : IDisposable
     }
 
     // ReSharper disable once UnusedParameter.Local
-#pragma warning disable IDE0060 // Remove unused parameter
     private void Dispose(bool disposing)
     {
         if (Disposed) return;
@@ -93,7 +92,6 @@ public sealed class ShellIcon : IDisposable
         Disposed = true;
         Handle = IntPtr.Zero;
     }
-#pragma warning restore IDE0060 // Remove unused parameter
 
     /// <summary>
     /// </summary>

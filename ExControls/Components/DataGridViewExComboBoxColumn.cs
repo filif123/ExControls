@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 // ReSharper disable UnusedMember.Global
 
 namespace ExControls;
@@ -483,12 +484,10 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
 
     /// <summary>Gets or sets the formatted representation of the current value of the control.</summary>
     /// <returns>An object representing the current value of this control.</returns>
-    // IDataGridViewEditingControl.EditingControlFormattedValue is asymmetric in the BCL ([AllowNull] set, non-null get).
-    // [AllowNull] itself can't be used here because it fails on net48 in this multi-targeted project
-    // (CS0122: AllowNullAttribute is inaccessible due to its protection level).
-#pragma warning disable CS8765, CS8767
+    // IDataGridViewEditingControl.EditingControlFormattedValue je v BCL asymetricka ([AllowNull] set, get nie null)
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [AllowNull]
     public virtual object EditingControlFormattedValue
     {
         get => GetEditingControlFormattedValue(DataGridViewDataErrorContexts.Formatting);
@@ -502,7 +501,6 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
             SelectedIndex = -1;
         }
     }
-#pragma warning restore CS8765, CS8767
 
     /// <summary>Gets or sets the index of the owning cell's parent row.</summary>
     /// <returns>The index of the row that contains the owning cell; -1 if there is no owning row.</returns>
