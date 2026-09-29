@@ -39,6 +39,10 @@ internal static partial class Win32
     public static extern int SendMessage(IntPtr hwnd, uint wMsg, IntPtr wParam, IntPtr lParam);
 
     [DllImport(USER32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool GetComboBoxInfo(IntPtr hwndCombo, ref COMBOBOXINFO pcbi);
+
+    [DllImport(USER32)]
     public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
     [DllImport(USER32)]

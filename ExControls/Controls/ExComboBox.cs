@@ -366,9 +366,8 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
 
     private Win32.COMBOBOXINFO GetComboboxInfo()
     {
-        var info = new Win32.COMBOBOXINFO();
-        info.cbSize = Marshal.SizeOf(info);
-        SendMessageCombo(Handle, 0x164, IntPtr.Zero, out info);
+        var info = new Win32.COMBOBOXINFO { cbSize = Marshal.SizeOf<Win32.COMBOBOXINFO>() };
+        _ = Win32.GetComboBoxInfo(Handle, ref info);
         return info;
     }
 
@@ -385,9 +384,6 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
         var info = GetComboboxInfo();
         ExTools.SetTheme(info.hwndList, WindowsTheme.DarkExplorer);
     }
-
-    [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
-    private static extern IntPtr SendMessageCombo(IntPtr hWnd, int msg, IntPtr wp, out Win32.COMBOBOXINFO lp);
 
     /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)
