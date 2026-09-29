@@ -58,8 +58,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     [ExCategory(CategoryType.Layout)]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public ToolStripButton? ButtonCategorized => field ??= InnerToolStrip?.Items.Cast<ToolStripItem>().FirstOrDefault(i => i.Text == @"Categorized")
-        as ToolStripButton;
+    public ToolStripButton? ButtonCategorized => field ??= SortButton(0);
 
     /// <summary>
     /// Gets an internal Alphabetical button.
@@ -68,8 +67,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     [ExCategory(CategoryType.Layout)]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public ToolStripButton? ButtonAlphabetical => field ??= InnerToolStrip?.Items.Cast<ToolStripItem>().FirstOrDefault(i => i.Text == @"Alphabetical")
-        as ToolStripButton;
+    public ToolStripButton? ButtonAlphabetical => field ??= SortButton(1);
 
     /// <summary>
     /// Gets an internal Separator.
@@ -88,8 +86,14 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     [ExCategory(CategoryType.Layout)]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public ToolStripButton? ButtonPropertyPages => field ??= InnerToolStrip?.Items.Cast<ToolStripItem>().FirstOrDefault(i => i.Text == @"Property Pages")
-        as ToolStripButton;
+    public ToolStripButton? ButtonPropertyPages => field ??= InnerToolStrip?.Items.OfType<ToolStripButton>().Skip(2).LastOrDefault();
+
+    /// <summary>
+    /// Tlacidlo radenia podla poradia na paneli (0 = podla kategorii, 1 = abecedne). Text tlacidiel je
+    /// lokalizovany (v cestine ich WinForms prekladaju), preto sa nehladaju podla textu.
+    /// </summary>
+    private ToolStripButton? SortButton(int index) =>
+        InnerToolStrip?.Items.OfType<ToolStripButton>().ElementAtOrDefault(index);
 
     /// <inheritdoc />
     protected override Bitmap SortByCategoryImage => Resources.PBCategory;
