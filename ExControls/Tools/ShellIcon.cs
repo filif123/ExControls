@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using static ExControls.Win32.SHGSI;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -121,29 +120,29 @@ public sealed class ShellIcon : IDisposable
 
     private void GetStockIcon()
     {
-        var flags = SHGSI_ICON | SHGSI_SYSICONINDEX;
+        var flags = Win32.SHGSI.ICON | Win32.SHGSI.SYSICONINDEX;
         switch (Size)
         {
             case ShellIconSize.Normal:
                 break;
             case ShellIconSize.Large:
-                flags |= SHGSI_LARGEICON;
+                flags |= Win32.SHGSI.LARGEICON;
                 break;
             case ShellIconSize.Small:
-                flags |= SHGSI_SMALLICON;
+                flags |= Win32.SHGSI.SMALLICON;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
 
         if (Selected) 
-            flags |= SHGSI_SELECTED;
+            flags |= Win32.SHGSI.SELECTED;
 
         if (UseShellIconSize) 
-            flags |= SHGSI_SHELLICONSIZE;
+            flags |= Win32.SHGSI.SHELLICONSIZE;
 
         if (LinkOverlay) 
-            flags |= SHGSI_LINKOVERLAY;
+            flags |= Win32.SHGSI.LINKOVERLAY;
 
         var sii = GetStockIconInfo(flags, Type);
 

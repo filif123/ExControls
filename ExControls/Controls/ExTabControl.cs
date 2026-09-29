@@ -13,8 +13,26 @@ namespace ExControls;
 /// </summary>
 [ToolboxBitmap(typeof(TabControl), "TabControl.bmp")]
 [DefaultProperty(nameof(TabPages))]
-public class ExTabControl : TabControl, IExControl
+public class ExTabControl : TabControl, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        ExThemer.Apply(Controls, theme);
+        DefaultStyle = theme.UseSystemStyle;
+        BackColor = theme.PanelBackColor;
+        ForeColor = theme.PanelForeColor;
+        HeaderBackColor = theme.BoxBackColor;
+        HeaderForeColor = theme.BoxForeColor;
+        ActiveHeaderBackColor = theme.PanelBackColor;
+        ActiveHeaderForeColor = theme.PanelForeColor;
+        BorderColor = theme.BorderColor;
+        HighlightBackColor = theme.ButtonBackColor;
+        HighlightForeColor = theme.ButtonForeColor;
+    }
+
     // ReSharper disable InconsistentNaming
     private const int TCN_FIRST = -550;
     private const int TCN_SELCHANGING = TCN_FIRST - 2;

@@ -123,19 +123,19 @@ public static class ExTools
         if (titlebarColor != default)
         {
             var titlebarColorNative = ColorTranslator.ToWin32(titlebarColor);
-            Win32.DwmSetWindowAttribute(handle, DWMWA_CAPTION_COLOR, ref titlebarColorNative, sizeof(int));
+            _ = Win32.DwmSetWindowAttribute(handle, DWMWA_CAPTION_COLOR, ref titlebarColorNative, sizeof(int));
         }
 
         if (textColor != default)
         {
             var textColorNative = ColorTranslator.ToWin32(textColor);
-            Win32.DwmSetWindowAttribute(handle, DWMWA_TEXT_COLOR, ref textColorNative, sizeof(int));
+            _ = Win32.DwmSetWindowAttribute(handle, DWMWA_TEXT_COLOR, ref textColorNative, sizeof(int));
         }
 
         if (borderColor != default)
         {
             var borderColorNative = ColorTranslator.ToWin32(borderColor);
-            Win32.DwmSetWindowAttribute(handle, DWMWA_BORDER_COLOR, ref borderColorNative, sizeof(int));
+            _ = Win32.DwmSetWindowAttribute(handle, DWMWA_BORDER_COLOR, ref borderColorNative, sizeof(int));
         }
 
         return true;
@@ -280,19 +280,19 @@ public static class ExTools
         switch (theme)
         {
             case WindowsTheme.None:
-                Win32.SetWindowTheme(handle, "", "");
+                _ = Win32.SetWindowTheme(handle, "", "");
                 break;
             case WindowsTheme.Explorer:
-                Win32.SetWindowTheme(handle, "Explorer", null);
+                _ = Win32.SetWindowTheme(handle, "Explorer", null);
                 break;
             case WindowsTheme.DarkExplorer:
-                Win32.SetWindowTheme(handle, "DarkMode_Explorer", null);
+                _ = Win32.SetWindowTheme(handle, "DarkMode_Explorer", null);
                 break;
             case WindowsTheme.Other:
-                Win32.SetWindowTheme(handle, customThemeName, null);
+                _ = Win32.SetWindowTheme(handle, customThemeName, null);
                 break;
             case WindowsTheme.Default:
-                Win32.SetWindowTheme(handle, null, null);
+                _ = Win32.SetWindowTheme(handle, null, null);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
@@ -313,13 +313,13 @@ public static class ExTools
         switch (color)
         {
             case ProgressBarColor.Green:
-                Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)1, (IntPtr)0);
+                _ = Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)1, (IntPtr)0);
                 break;
             case ProgressBarColor.Yellow:
-                Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)3, (IntPtr)0);
+                _ = Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)3, (IntPtr)0);
                 break;
             case ProgressBarColor.Red:
-                Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)2, (IntPtr)0);
+                _ = Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)2, (IntPtr)0);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(color), color, null);

@@ -12,8 +12,16 @@ namespace ExControls;
 /// </summary>
 [ToolboxBitmap(typeof(ExLineSeparator), "Controls\\ExLineSeparator.bmp")]
 [Designer("ExControls.Designers.ExLineSeparatorDesigner, ExControls")]
-public class ExLineSeparator : Control
+public class ExLineSeparator : Control, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        LineColor = theme.BorderColor;
+    }
+
     private Color _lineColor;
     private LineOrientation _lineOrientation;
     private DashStyle _lineStyle;

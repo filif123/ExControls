@@ -11,8 +11,32 @@ namespace ExControls;
 /// </summary>
 [ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.ToolStrip | ToolStripItemDesignerAvailability.MenuStrip | ToolStripItemDesignerAvailability.ContextMenuStrip)]
 [DefaultProperty("Items")]
-public class ExToolStripComboBox : ToolStripControlHost
+public class ExToolStripComboBox : ToolStripControlHost, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        ComboBox.DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        // v paneli nastrojov ma pole farby tlacidla
+        ComboBox.BackColor = theme.ButtonBackColor;
+        ComboBox.ForeColor = theme.ButtonForeColor;
+        ComboBox.DropDownSelectedRowBackColor = theme.HighlightBackColor;
+        ComboBox.DropDownBackColor = theme.PanelBackColor;
+        ComboBox.StyleNormal.BorderColor = theme.BorderColor;
+        ComboBox.StyleNormal.ArrowColor = theme.BoxForeColor;
+        ComboBox.StyleSelected.BorderColor = theme.HighlightBackColor;
+        ComboBox.StyleHighlight.BorderColor = theme.HighlightBackColor;
+        ComboBox.StyleSelected.ButtonRenderFirst = false;
+        ComboBox.StyleSelected.ButtonBackColor = theme.HighlightBackColor;
+        ComboBox.StyleSelected.ButtonBorderColor = theme.HighlightBackColor;
+        ComboBox.StyleHighlight.ButtonBorderColor = theme.HighlightBackColor;
+    }
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -131,6 +155,7 @@ public class ExToolStripComboBox : ToolStripControlHost
     /// <see cref="System.Windows.Forms.ToolStripComboBox" />.
     /// </summary>
     /// <returns>The width, in pixels, of the drop-down box.</returns>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public int DropDownWidth
     {
         get => ComboBox.DropDownWidth;

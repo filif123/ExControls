@@ -13,8 +13,21 @@ namespace ExControls;
 /// </summary>
 [ToolboxBitmap(typeof(GroupBox), "GroupBox.bmp")]
 [Designer("ExControls.Designers.ExGroupBoxDesigner, ExControls")]
-public class ExGroupBox : GroupBox, IExControl
+public class ExGroupBox : GroupBox, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        ExThemer.Apply(Controls, theme);
+        DefaultStyle = theme.UseSystemStyle;
+        BackColor = theme.PanelBackColor;
+        ForeColor = theme.PanelForeColor;
+        BorderThickness = 1;
+        BorderColor = theme.BorderColor;
+    }
+
     private Color _borderColor;
     private int _borderThickness;
     private bool _defaultStyle;

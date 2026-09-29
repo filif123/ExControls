@@ -31,6 +31,7 @@ public class BackwardForwardProvider : Component
     /// Represents current command.
     /// </summary>
     [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IBackwardForwardCommand? CurrentCommand
     {
         get;

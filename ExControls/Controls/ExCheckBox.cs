@@ -12,8 +12,23 @@ namespace ExControls;
 /// </summary>
 [ToolboxBitmap(typeof(CheckBox), "CheckBox.bmp")]
 [Designer("ExControls.Designers.ExCheckBoxDesigner, ExControls")]
-public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
+public class ExCheckBox : CheckBox, IExControl, ICheckableExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BorderColor = theme.BorderColor;
+        BoxBackColor = theme.BoxBackColor;
+        MarkColor = theme.MarkColor;
+        HighlightColor = theme.HighlightBackColor;
+    }
+
     private const int BoxSize = 16;
     private const int BoxOffset = 3;
 

@@ -11,8 +11,23 @@ namespace ExControls;
 /// Expanded RadioButton Control.
 /// </summary>
 [ToolboxBitmap(typeof(RadioButton), "RadioButton.bmp")]
-public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
+public class ExRadioButton : RadioButton, IExControl, ICheckableExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BorderColor = theme.MarkColor;
+        BoxBackColor = theme.PanelBackColor;
+        MarkColor = theme.MarkColor;
+        HighlightColor = theme.HighlightBackColor;
+    }
+
     private const int BoxSize = 16;
     private const int BoxOffset = 3;
 

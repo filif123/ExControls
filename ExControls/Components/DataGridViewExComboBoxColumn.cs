@@ -6,8 +6,33 @@ namespace ExControls;
 /// <summary>
 /// Expanded ComboBox Column for DataGridView
 /// </summary>
-public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
+public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        DropDownBackColor = theme.PanelBackColor;
+        DropDownSelectedBackColor = theme.HighlightBackColor;
+        StyleNormal.ForeColor = theme.ButtonForeColor;
+        StyleNormal.BackColor = theme.ButtonBackColor;
+        StyleNormal.BorderColor = theme.BorderColor;
+        StyleNormal.ArrowColor = theme.BoxForeColor;
+        StyleNormal.ButtonBackColor = theme.ButtonBackColor;
+        StyleNormal.ButtonBorderColor = theme.ButtonBackColor;
+        StyleSelected.BorderColor = theme.HighlightBackColor;
+        StyleSelected.ButtonRenderFirst = false;
+        StyleSelected.ButtonBackColor = theme.HighlightBackColor;
+        StyleSelected.ButtonBorderColor = theme.HighlightBackColor;
+        StyleHighlight.BorderColor = theme.HighlightBackColor;
+        StyleHighlight.ButtonBorderColor = theme.HighlightBackColor;
+    }
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -151,6 +176,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     [ExCategory(CategoryType.Appearance)]
     [Description("Normal style of the Control (when is inactive).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBoxStyle StyleNormal
     {
         get => ExComboBoxCellTemplate.StyleNormal;
@@ -170,6 +196,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     [ExCategory(CategoryType.Appearance)]
     [Description("Highlight style of the Control (when mouse is over control).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBoxStyle StyleHighlight
     {
         get => ExComboBoxCellTemplate.StyleHighlight;
@@ -189,6 +216,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     [ExCategory(CategoryType.Appearance)]
     [Description("Selected style of the Control (when control is selected).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBoxStyle StyleSelected
     {
         get => ExComboBoxCellTemplate.StyleSelected;
@@ -208,6 +236,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     [ExCategory(CategoryType.Appearance)]
     [Description("Disabled style of the Control (when control is not Enabled).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBoxStyle StyleDisabled
     {
         get => ExComboBoxCellTemplate.StyleDisabled;
@@ -444,6 +473,8 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
     /// <see cref="System.Windows.Forms.DataGridViewComboBoxCell" /> that contains this control; otherwise,
     /// <see langword="null" /> if there is no associated <see cref="System.Windows.Forms.DataGridView" />.
     /// </returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual DataGridView? EditingControlDataGridView
     {
         get => _dataGridView;
@@ -456,6 +487,8 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
     // [AllowNull] itself can't be used here because it fails on net48 in this multi-targeted project
     // (CS0122: AllowNullAttribute is inaccessible due to its protection level).
 #pragma warning disable CS8765, CS8767
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual object EditingControlFormattedValue
     {
         get => GetEditingControlFormattedValue(DataGridViewDataErrorContexts.Formatting);
@@ -473,12 +506,16 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
 
     /// <summary>Gets or sets the index of the owning cell's parent row.</summary>
     /// <returns>The index of the row that contains the owning cell; -1 if there is no owning row.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual int EditingControlRowIndex { get; set; }
 
     /// <summary>Gets or sets a value indicating whether the current value of the control has changed.</summary>
     /// <returns>
     /// <see langword="true" /> if the value of the control has changed; otherwise, <see langword="false" />.
     /// </returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual bool EditingControlValueChanged
     {
         get => _valueChanged;

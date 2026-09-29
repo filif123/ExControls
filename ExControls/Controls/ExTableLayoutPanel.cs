@@ -9,8 +9,24 @@ namespace ExControls;
 /// Expanded TableLayoutPanel Control
 /// </summary>
 [ToolboxBitmap(typeof(TableLayoutPanel), "TableLayoutPanel.bmp")]
-public class ExTableLayoutPanel : TableLayoutPanel, IExControl
+public class ExTableLayoutPanel : TableLayoutPanel, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        ExThemer.Apply(Controls, theme);
+        BackColor = theme.PanelBackColor;
+        ForeColor = theme.PanelForeColor;
+        DefaultStyle = theme.UseSystemStyle;
+        if (!DefaultStyle && CellBorderStyle == TableLayoutPanelCellBorderStyle.Single)
+        {
+            CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
+            BorderColor = theme.BorderColor;
+        }
+    }
+
     private Color _borderColor;
     private int _borderThickness;
     private bool _defaultStyle;

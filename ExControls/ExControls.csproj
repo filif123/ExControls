@@ -7,10 +7,6 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-		<!-- WFO1000 (chýbajúci DesignerSerializationVisibility) je na net10.0-windows analyzer default=error
-		     (na net8.0-windows/net48 je to len info/warning). Ide o ~60 vlastností naprieč knižnicou -
-		     dočasne potlačené, kým sa TreatWarningsAsErrors politika nedorieši (pozri MIGRATION_PROGRESS.md). -->
-		<NoWarn>$(NoWarn);WFO1000</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<DocumentationFile>bin\Debug\ExControls.xml</DocumentationFile>
@@ -36,7 +32,6 @@
 		<Compile Update="Controls\ExPropertyGrid.cs" />
 		<Compile Update="Controls\ExTableLayoutPanel.cs" />
 		<Compile Update="Controls\ExTreeView.cs" />
-		<Compile Update="Controls\TitleBar.cs" />
 		<Compile Update="Providers\BackwardForwardProvider.cs">
 			<SubType>Component</SubType>
 		</Compile>
@@ -47,7 +42,7 @@
 		<Compile Update="Controls\ExCheckedListBox.cs" />
 		<Compile Update="Controls\ExComboBox.cs" />
 		<Compile Update="Controls\ExDateTimePicker.cs" />
-		<Compile Update="Components\ExFolderBrowserDialog.cs" />
+		<Compile Update="Compat\ExFolderBrowserDialog.cs" />
 		<Compile Update="Controls\ExGroupBox.cs" />
 		<Compile Update="Controls\ExLineSeparator.cs" />
 		<Compile Update="Controls\ExMaskedTextBox.cs" />
@@ -73,6 +68,7 @@
 		</PreBuildEvent>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>ExControls</Title>
+		<Version>2.0.0</Version>
 		<PackageProjectUrl>https://github.com/filif123/ExControls</PackageProjectUrl>
 		<Description>Extended controls for Windows Forms.</Description>
 		<PackageTags>WinForms;Windows Forms</PackageTags>

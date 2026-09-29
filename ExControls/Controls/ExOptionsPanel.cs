@@ -146,6 +146,7 @@ public class ExOptionsPanel : Panel
     /// </summary>
     [ExCategory("Nodes")]
     [Description("The text displayed in the node.")]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string NodeText
     {
         get => Node.Text;

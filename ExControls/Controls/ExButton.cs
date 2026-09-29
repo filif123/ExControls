@@ -9,8 +9,25 @@ namespace ExControls;
 /// Expanded Button Control.
 /// </summary>
 [ToolboxBitmap(typeof(Button), "Button.bmp")]
-public class ExButton : Button, IExControl
+public class ExButton : Button, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BackColor = theme.ButtonBackColor;
+        ForeColor = theme.ButtonForeColor;
+        ExFlatAppearance.BorderColor = theme.BorderColor;
+        ExFlatAppearance.MouseOverBackColor = theme.HighlightBackColor;
+        ExFlatAppearance.MouseDownBackColor = theme.HighlightBackColor;
+        ExFlatAppearance.FocusBorderColor = theme.HighlightBackColor;
+    }
+
     private bool _defaultStyle;
     private ExFlatButtonAppearance? appearance;
     private Color tmpBeforeHoverColor = Color.Empty;
@@ -49,6 +66,7 @@ public class ExButton : Button, IExControl
     /// <summary>
     /// 
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public new FlatStyle FlatStyle
     {
         get => base.FlatStyle;

@@ -76,21 +76,29 @@ public partial class ExMessageBoxForm : Form
     /// <summary>
     /// 
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxIcon MessageIcon { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxButtons Buttons { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxDefaultButton DefaultButton { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int Countdown
     {
         get => _countdown;

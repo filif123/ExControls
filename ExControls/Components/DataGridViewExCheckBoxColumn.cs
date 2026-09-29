@@ -3,8 +3,23 @@
 /// <summary>
 /// Expanded CheckBox Column for DataGridView.
 /// </summary>
-public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
+public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BorderColor = theme.BorderColor;
+        MarkColor = theme.MarkColor;
+        SquareBackColor = theme.PanelBackColor;
+        HighlightColor = theme.HighlightBackColor;
+    }
+
     /// <summary>
     /// Creates new instance of 
     /// </summary>

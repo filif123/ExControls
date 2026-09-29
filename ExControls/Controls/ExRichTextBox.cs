@@ -40,6 +40,7 @@ public class ExRichTextBox : RichTextBox, IExControl
 
     /// <summary>
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public new BorderStyle BorderStyle
     {
         get => base.BorderStyle;

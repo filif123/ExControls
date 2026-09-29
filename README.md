@@ -21,6 +21,20 @@ These controls have been added:
 These components have been extended:
 * FolderBrowserDialog
 
+## Themes
+`ExTheme` is a color palette (panels, boxes, buttons, border, highlight, marks, labels, system look, dark
+scroll bars). Ex* controls implement `IThemeable` and style themselves; `ExThemer.Apply(form.Controls, theme)`
+walks the controls. Controls outside the library (DataGridView, ToolStrip, Panel…) are styled by handlers the
+application registers with `ExThemer.Register<T>` - the handler of the nearest registered base type is used,
+a container handler themes its children by calling `ExThemer.Apply` again.
+
+## Breaking changes in 2.0
+* `System.Linq.Enumerable` extensions renamed to `ExEnumerable` (the second `Enumerable` class caused CS0433).
+* `IsExternalInit` polyfill (.NET Framework) is internal.
+* Removed unused theming experiments `ExStyle`, `ExStyleManager`, `IStylable`, `ISupportsDefaultStyle`,
+  `ExApplication`, `ExAppTheme` and the base class `ExStyleOld` (its members moved to `ExComboBoxStyle`).
+* Removed the unfinished `ExFormDesigner` (work in progress form with custom title bar, kept in `ExControlsTester/WorkInProgress`).
+
 ## How to install?
 ```
 dotnet add package ExControls

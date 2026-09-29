@@ -7,5 +7,6 @@
     <Project Path="ExControls.Designer.Server/ExControls.Designer.Server.csproj" />
   </Folder>
   <Project Path="ExControls/ExControls.csproj" />
+  <Project Path="ExControls.Tests/ExControls.Tests.csproj" />
   <Project Path="ExControlsTester/ExControlsTester.csproj" />
 </Solution>

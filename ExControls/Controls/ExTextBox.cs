@@ -13,8 +13,23 @@ namespace ExControls;
 [Designer("ExControls.Designers.ExTextBoxDesigner, ExControls")]
 [DefaultProperty(nameof(Text))]
 [DefaultEvent(nameof(TextChanged))]
-public class ExTextBox : TextBox, IExControl
+public class ExTextBox : TextBox, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        BackColor = theme.BoxBackColor;
+        ForeColor = theme.BoxForeColor;
+        BorderColor = theme.BorderColor;
+        HighlightColor = theme.HighlightBackColor;
+        DefaultStyle = theme.UseSystemStyle;
+        DisabledBorderColor = theme.ButtonBackColor;
+        DisabledBackColor = theme.PanelBackColor;
+        UseDarkScrollBar = theme.DarkScrollBars;
+    }
+
     private const int RgnDiff = 0x4;
 
     private Color _borderColor;
@@ -167,6 +182,7 @@ public class ExTextBox : TextBox, IExControl
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Hint text for TextBox.")]
+    [DefaultValue(null)]
     public string? HintText
     {
         get => _hintText;
@@ -255,7 +271,7 @@ public class ExTextBox : TextBox, IExControl
         if ((style & (uint)Win32.WindowStyles.WS_BORDER) != 0)
             return;
 
-        Win32.SetWindowLong(Handle, Win32.GWL_STYLE, style | (uint)Win32.WindowStyles.WS_BORDER);
+        _ = Win32.SetWindowLong(Handle, Win32.GWL_STYLE, style | (uint)Win32.WindowStyles.WS_BORDER);
         Win32.SetWindowPos(Handle, IntPtr.Zero, 0, 0, 0, 0,
             Win32.SetWindowPosFlags.FrameChanged | Win32.SetWindowPosFlags.IgnoreMove | Win32.SetWindowPosFlags.IgnoreResize
             | Win32.SetWindowPosFlags.IgnoreZOrder | Win32.SetWindowPosFlags.DoNotActivate);
@@ -357,7 +373,7 @@ public class ExTextBox : TextBox, IExControl
                 var memHdc = buffer.Graphics.GetHdc();
                 try
                 {
-                    Win32.SendMessage(Handle, (uint)Win32.WM.PRINTCLIENT, memHdc, (IntPtr)(PrfClient | PrfEraseBkgnd));
+                    _ = Win32.SendMessage(Handle, (uint)Win32.WM.PRINTCLIENT, memHdc, (IntPtr)(PrfClient | PrfEraseBkgnd));
                 }
                 finally
                 {

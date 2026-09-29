@@ -132,6 +132,8 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     /// <summary>
     /// Get or set the categories to show.
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public new AttributeCollection? BrowsableAttributes
     {
         get => _browsableAttributes;
@@ -147,6 +149,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     /// <summary>
     /// Get or set the categories to hide.
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public AttributeCollection? HiddenAttributes
     {
         get => _hiddenAttributes;
@@ -162,6 +165,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     /// Get or set the properties to show.
     /// </summary>
     /// <exception cref="ArgumentException">if one or several properties don't exist.</exception>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string[]? BrowsableProperties
     {
         get => _browsableProperties;
@@ -177,6 +181,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     /// <summary>
     /// Get or set the properties to hide.
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string[]? HiddenProperties
     {
         get => _hiddenProperties;
@@ -192,6 +197,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     /// <summary>
     /// 
     /// </summary>
+    [DefaultValue(false)]
     public bool FirstHideAllProperties
     {
         get;
@@ -209,6 +215,8 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     /// <remarks>
     /// The object passed to the base PropertyGrid is the wrapper.
     /// </remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public new object? SelectedObject
     {
         get => _wrapper != null ? ((ObjectWrapper)base.SelectedObject!).SelectedObject : null;

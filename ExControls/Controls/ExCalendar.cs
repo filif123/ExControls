@@ -14,8 +14,34 @@ namespace ExControls;
 [ToolboxBitmap(typeof(MonthCalendar), "MonthCalendar.bmp")]
 [DefaultProperty(nameof(SelectionDate))]
 [DefaultEvent(nameof(DateChanged))]
-public class ExCalendar : Control, IExControl
+public class ExCalendar : Control, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        if (theme.TodayText is not null)
+            TodayText = theme.TodayText;
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BackColor = theme.BoxBackColor;
+        ForeColor = theme.BoxForeColor;
+        HeaderForeColor = theme.BoxForeColor;
+        DayOfWeekForeColor = theme.BoxForeColor;
+        ArrowColor = theme.BoxForeColor;
+        BorderColor = theme.BorderColor;
+        TrailingForeColor = theme.MarkColor;
+        WeekNumberForeColor = theme.MarkColor;
+        DisabledForeColor = theme.BorderColor;
+        HoverBackColor = theme.ButtonBackColor;
+        HighlightColor = theme.HighlightBackColor;
+        HighlightForeColor = theme.HighlightForeColor;
+        TodayBorderColor = theme.HighlightBackColor;
+    }
+
     private const int Columns = 7;
     private const int Rows = 6;
     private const int CellCount = Columns * Rows;

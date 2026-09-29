@@ -9,8 +9,30 @@ namespace ExControls;
 /// Expanded CheckListBox Control
 /// </summary>
 [ToolboxBitmap(typeof(CheckedListBox), "CheckedListBox.bmp")]
-public class ExCheckedListBox : CheckedListBox, IExControl
+public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (!theme.UseSystemStyle)
+        {
+            BackColor = theme.BoxBackColor;
+            ForeColor = theme.BoxForeColor;
+            BorderColor = theme.BorderColor;
+            SquareBackColor = theme.BoxBackColor;
+            MarkColor = theme.MarkColor;
+            BorderStyle = BorderStyle.None;
+            FocusedBackColor = theme.BorderColor;
+            HighlightColor = theme.HighlightBackColor;
+        }
+
+        if (theme.DarkScrollBars)
+            this.SetTheme(WindowsTheme.DarkExplorer);
+    }
+
     private Color _borderColor;
 
     private bool _defaultStyle;

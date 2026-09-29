@@ -15,8 +15,20 @@ namespace ExControls;
 [Designer("ExControls.Designers.ExOptionsViewDesigner, ExControls")]
 [DefaultEvent("SelectedPanelChanged")]
 [ToolboxBitmap(typeof(ExOptionsView), "Controls\\ExOptionsView.bmp")]
-public partial class ExOptionsView : UserControl, ISupportInitialize
+public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        ExThemer.Apply(Panels, theme);
+        ExThemer.Apply(new Control[] { TreeView, ToolStripMenu, SearchBox }, theme);
+        LinkToChildrenForeColor = theme.HighlightBackColor;
+        HeaderNodeNameForeColor = theme.LabelForeColor;
+        HeaderNodeNameBackColor = theme.PanelBackColor;
+    }
+
     private readonly ExOptionsPanel? _onSelectedPanelChangedOldSelection = null;
 
     /// <summary>
@@ -131,6 +143,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     /// Gets or sets font of header panel name.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public Font HeaderNodeNameFont
     {
         get => labelPanelName.Font;
@@ -164,6 +177,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     /// </summary>
     [ExDescription("The selected (displayed) ExOptionsPanel.", true)]
     [ExCategory(CategoryType.Behavior)]
+    [DefaultValue(null)]
     public ExOptionsPanel? SelectedPanel
     {
         get;

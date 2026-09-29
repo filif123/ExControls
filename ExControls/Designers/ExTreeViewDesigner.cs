@@ -70,7 +70,7 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
         _tvhit.pt.Y = point.Y;
         fixed (Win32.TVHITTESTINFO* ptr = &_tvhit)
         {
-            Win32.SendMessage(Control.Handle, TVM_HITTEST, IntPtr.Zero, new IntPtr(ptr));
+            _ = Win32.SendMessage(Control.Handle, TVM_HITTEST, IntPtr.Zero, new IntPtr(ptr));
         }
 
         return (_tvhit.flags & TVHT_ONITEMBUTTON) == TVHT_ONITEMBUTTON || (_tvhit.flags & TVHT_ONITEM) == TVHT_ONITEM;

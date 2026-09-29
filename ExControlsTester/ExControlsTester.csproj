@@ -12,6 +12,12 @@
 	<ItemGroup>
 		<ProjectReference Include="..\ExControls\ExControls.csproj" />
 	</ItemGroup>
+	<!-- rozpracovane okno s vlastnym zahlavim - len archiv, nekompiluje sa (pozri WorkInProgress/README.md) -->
+	<ItemGroup>
+		<Compile Remove="WorkInProgress\**" />
+		<EmbeddedResource Remove="WorkInProgress\**" />
+		<None Include="WorkInProgress\**" />
+	</ItemGroup>
 	<!-- ExControls designer extension for VS (collection editor of ExOptionsView.Panels) -->
 	<Import Project="..\ExControls.Designer.targets" />
 </Project>

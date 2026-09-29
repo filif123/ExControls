@@ -18,8 +18,32 @@ namespace ExControls;
 [DefaultEvent(nameof(ValueChanged))]
 [DefaultBindingProperty(nameof(Value))]
 [Designer("ExControls.Designers.ExDateTimePickerDesigner, ExControls")]
-public class ExDateTimePicker : Control, IExControl
+public class ExDateTimePicker : Control, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        if (theme.TodayText is not null)
+            Calendar.TodayText = theme.TodayText;
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BackColor = theme.BoxBackColor;
+        ForeColor = theme.BoxForeColor;
+        BorderColor = theme.BorderColor;
+        ArrowColor = theme.BoxForeColor;
+        ButtonBackColor = theme.BoxBackColor;
+        HighlightColor = theme.HighlightBackColor;
+        SelectedFieldBackColor = theme.HighlightBackColor;
+        SelectedFieldForeColor = theme.HighlightForeColor;
+        DisabledBackColor = theme.BoxBackColor;
+        DisabledForeColor = theme.BorderColor;
+        ExThemer.Apply(Calendar, theme);
+    }
+
     /// <summary>Minimum date the control accepts (same as <see cref="DateTimePicker.MinimumDateTime" />).</summary>
     public static readonly DateTime MinimumDateTime = new(1753, 1, 1);
 

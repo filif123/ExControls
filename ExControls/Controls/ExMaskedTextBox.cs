@@ -9,8 +9,24 @@ namespace ExControls;
 /// Expanded MaskedTextBox Control
 /// </summary>
 [ToolboxBitmap(typeof(MaskedTextBox), "MaskedTextBox.bmp")]
-public class ExMaskedTextBox : MaskedTextBox, IExControl
+public class ExMaskedTextBox : MaskedTextBox, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BackColor = theme.BoxBackColor;
+        ForeColor = theme.BoxForeColor;
+        BorderColor = theme.BorderColor;
+        HighlightColor = theme.HighlightBackColor;
+        DisabledBorderColor = theme.ButtonBackColor;
+    }
+
     private const int RGN_DIFF = 0x4;
 
     private Color _borderColor;
