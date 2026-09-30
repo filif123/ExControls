@@ -15,9 +15,19 @@ namespace ExControls;
 [Designer("ExControls.Designers.ExOptionsViewDesigner, ExControls")]
 [DefaultEvent("SelectedPanelChanged")]
 [ToolboxBitmap(typeof(ExOptionsView), "Controls\\ExOptionsView.bmp")]
-public partial class ExOptionsView : UserControl, ISupportInitialize
+public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
 {
-    private readonly ExOptionsPanel? _onSelectedPanelChangedOldSelection = null;
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        ExThemer.Apply(Panels, theme);
+        ExThemer.Apply(new Control[] { TreeView, ToolStripMenu, SearchBox }, theme);
+        LinkToChildrenForeColor = theme.HighlightBackColor;
+        HeaderNodeNameForeColor = theme.LabelForeColor;
+        HeaderNodeNameBackColor = theme.PanelBackColor;
+    }
 
     /// <summary>
     /// 
@@ -43,15 +53,15 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Gets the TreeView on this ExOptionsView.
+    /// Gets the TreeView on this ExOptionsView.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
     [ExCategory(CategoryType.Layout)]
-    public ExOptionsTreeView TreeView => treeView;
+    public ExOptionsTreeView TreeView => optionsTree;
 
     /// <summary>
-    ///     Gets the ToolStrip on this ExOptionsView.
+    /// Gets the ToolStrip on this ExOptionsView.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -59,14 +69,14 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     public ToolStrip ToolStripMenu => toolStripMenu;
 
     /// <summary>
-    ///     Gets the SearchBox on this ExOptionsView.
+    /// Gets the SearchBox on this ExOptionsView.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Browsable(false)]
     public ExTextBox SearchBox => tbSearch;
 
     /// <summary>
-    ///     Gets or sets visibility of the SearchBox.
+    /// Gets or sets visibility of the SearchBox.
     /// </summary>
     [DefaultValue(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -77,7 +87,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Gets or sets foreground color of generated links for children.
+    /// Gets or sets foreground color of generated links for children.
     /// </summary>
     [DefaultValue(typeof(Color), "Blue")]
     [ExCategory(CategoryType.Appearance)]
@@ -95,7 +105,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Gets or sets foreground color of node name label.
+    /// Gets or sets foreground color of node name label.
     /// </summary>
     [DefaultValue(typeof(Color), "Black")]
     [ExCategory(CategoryType.Appearance)]
@@ -106,7 +116,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Gets or sets background color of node name label.
+    /// Gets or sets background color of node name label.
     /// </summary>
     [DefaultValue(typeof(SystemColors), "Control")]
     [ExCategory(CategoryType.Appearance)]
@@ -131,6 +141,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     /// Gets or sets font of header panel name.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public Font HeaderNodeNameFont
     {
         get => labelPanelName.Font;
@@ -164,6 +175,7 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     /// </summary>
     [ExDescription("The selected (displayed) ExOptionsPanel.", true)]
     [ExCategory(CategoryType.Behavior)]
+    [DefaultValue(null)]
     public ExOptionsPanel? SelectedPanel
     {
         get;
@@ -226,9 +238,6 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     /// </summary>
     protected virtual void OnSelectedPanelChanged()
     {
-        if (_onSelectedPanelChangedOldSelection != null)
-            _onSelectedPanelChangedOldSelection.Visible = false;
-
         if (SelectedPanel != null)
         {
             // Hide every item except the selected item
@@ -236,11 +245,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
                 item.Visible = ReferenceEquals(item, SelectedPanel);
         }
 
-        bool changed;
-        if (SelectedPanel is null)
-            changed = _onSelectedPanelChangedOldSelection != null;
-        else
-            changed = !SelectedPanel.Equals(_onSelectedPanelChangedOldSelection);
+        // predchadzajuci vyber sa nikdy neuchovaval - udalost ide pri kazdom vybranom paneli
+        var changed = SelectedPanel is not null;
 
         if (DesignMode)
             labelPanelName.Text = SelectedPanel == null ? "" : SelectedPanel.Node.FullPath;
@@ -297,8 +303,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize
     }
 
     /// <summary>
-    ///     Search and select specific panel by its name (not NodeText).
-    ///     If panel was not found, do nothing.
+    /// Search and select specific panel by its name (not NodeText).
+    /// If panel was not found, do nothing.
     /// </summary>
     /// <param name="name">name of panel.</param>
     public void ShowPanel(string name)

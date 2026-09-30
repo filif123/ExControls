@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 
 // ReSharper disable EventNeverSubscribedTo.Global
@@ -8,19 +9,27 @@ using System.Drawing.Drawing2D;
 namespace ExControls;
 
 /// <summary>
-///     LineSeparator Control
+/// LineSeparator Control
 /// </summary>
 [ToolboxBitmap(typeof(ExLineSeparator), "Controls\\ExLineSeparator.bmp")]
 [Designer("ExControls.Designers.ExLineSeparatorDesigner, ExControls")]
-public class ExLineSeparator : Control
+public class ExLineSeparator : Control, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        LineColor = theme.BorderColor;
+    }
+
     private Color _lineColor;
     private LineOrientation _lineOrientation;
     private DashStyle _lineStyle;
     private int _lineThickness;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExLineSeparator()
     {
@@ -36,7 +45,7 @@ public class ExLineSeparator : Control
     }
 
     /// <summary>
-    ///     Thickness of the LineSeparator's line
+    /// Thickness of the LineSeparator's line
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -56,7 +65,7 @@ public class ExLineSeparator : Control
     }
 
     /// <summary>
-    ///     Orientation of the LineSeparator's line
+    /// Orientation of the LineSeparator's line
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -77,7 +86,7 @@ public class ExLineSeparator : Control
     }
 
     /// <summary>
-    ///     Orientation of the LineSeparator's line
+    /// Orientation of the LineSeparator's line
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -97,7 +106,7 @@ public class ExLineSeparator : Control
     }
 
     /// <summary>
-    ///     Color of the LineSeparator's line
+    /// Color of the LineSeparator's line
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -118,12 +127,8 @@ public class ExLineSeparator : Control
 
     /// <inheritdoc />
     [Browsable(false)]
-    // Control.Text is [AllowNull] in the BCL (asymmetric: get is non-null, set accepts null).
-    // [AllowNull] itself can't be used here because it fails on net48 in this multi-targeted project
-    // (CS0122: AllowNullAttribute is inaccessible due to its protection level).
-#pragma warning disable CS8765
+    [AllowNull]
     public override string Text { get; set; } = "";
-#pragma warning restore CS8765
 
     /// <summary>Occurs when the <see cref="LineColor" /> property changes.</summary>
     [ExCategory("Changed Property")]
@@ -172,7 +177,7 @@ public class ExLineSeparator : Control
                 g.DrawLine(pen, new Point(Width/2, 0), new Point(Width/2, Height));
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new InvalidOperationException($"Unknown {nameof(LineOrientation)}: {LineOrientation}");
         }
     }
 
@@ -208,17 +213,17 @@ public class ExLineSeparator : Control
 }
 
 /// <summary>
-///     Orientation of the LineSeparator.
+/// Orientation of the LineSeparator.
 /// </summary>
 public enum LineOrientation
 {
     /// <summary>
-    ///     Horizontal orientation.
+    /// Horizontal orientation.
     /// </summary>
     Horizontal,
 
     /// <summary>
-    ///     Vertical orientation.
+    /// Vertical orientation.
     /// </summary>
     Vertical
 }

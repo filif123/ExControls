@@ -5,7 +5,7 @@
 namespace ExControls.Providers;
 
 /// <summary>
-///     Provides backward-forward capability.
+/// Provides backward-forward capability.
 /// </summary>
 public class BackwardForwardProvider : Component
 {
@@ -22,15 +22,16 @@ public class BackwardForwardProvider : Component
     public event EventHandler<BackwardForwardAddedCommandEventArgs>? CommandAdded;
 
     /// <summary>
-    ///     Enables or disables manager to add commands to stacks. Dafault is false.
+    /// Enables or disables manager to add commands to stacks. Dafault is false.
     /// </summary>
     [DefaultValue(false)]
     public bool ManagerEnabled { get; set; }
 
     /// <summary>
-    ///     Represents current command.
+    /// Represents current command.
     /// </summary>
     [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public IBackwardForwardCommand? CurrentCommand
     {
         get;
@@ -38,7 +39,7 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    ///     Check if there is something to undo. Use this method to decide
+    /// Check if there is something to undo. Use this method to decide
     /// whether your application's "Back" menu item should be enabled
     /// or disabled.
     /// </summary>
@@ -46,7 +47,7 @@ public class BackwardForwardProvider : Component
     public bool CanBackward => _backwardStack.Count != 0;
 
     /// <summary>
-    ///     Check if there is something to redo. Use this method to decide
+    /// Check if there is something to redo. Use this method to decide
     /// whether your application's "Forward" menu item should be enabled
     /// or disabled.
     /// </summary>
@@ -54,21 +55,21 @@ public class BackwardForwardProvider : Component
     public bool CanForward => _forwardStack.Count != 0;
 
     /// <summary>
-    ///     Get the next (or newest) undo command. This is like a "Peek"
+    /// Get the next (or newest) undo command. This is like a "Peek"
     /// method. It does not remove the command from the undo list.
     /// </summary>
     [Browsable(false)]
     public IBackwardForwardCommand NextBackwardCommand => _backwardStack.Peek();
 
     /// <summary>
-    ///     Get the next redo command. This is like a "Peek"
+    /// Get the next redo command. This is like a "Peek"
     /// method. It does not remove the command from the redo stack.
     /// </summary>
     [Browsable(false)]
     public IBackwardForwardCommand NextForwardCommand => _forwardStack.Peek();
 
     /// <summary>
-    ///     Constructor which initializes the manager.
+    /// Constructor which initializes the manager.
     /// </summary>
     public BackwardForwardProvider()
     {
@@ -78,7 +79,7 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    ///     Register a new back action command. Use this method after your
+    /// Register a new back action command. Use this method after your
     /// application has performed an operation/command that is
     /// undoable.
     /// </summary>
@@ -86,8 +87,7 @@ public class BackwardForwardProvider : Component
     {
         if (!ManagerEnabled)
             return;
-        if (cmd is null)
-            throw new ArgumentNullException(nameof(cmd));
+        ArgumentNullException.ThrowIfNull(cmd);
 
         if(CurrentCommand is not null)
             _backwardStack.Push(CurrentCommand);
@@ -98,7 +98,7 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    ///     Clear the internal back/forward data structures. Use this method
+    /// Clear the internal back/forward data structures. Use this method
     /// when your application performs an operation that cannot be undone.
     /// For example, when the user "saves" or "commits" all the changes in
     /// the application, or when a form is closed.
@@ -111,7 +111,7 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    ///     Perform the back operation.
+    /// Perform the back operation.
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the undo.
     /// </summary>
@@ -132,7 +132,7 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    ///     Perform the forward operation.
+    /// Perform the forward operation.
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the undo.
     /// </summary>
@@ -140,8 +140,7 @@ public class BackwardForwardProvider : Component
     {
         if (!ManagerEnabled)
             throw new InvalidOperationException("Manager is disabled");
-        if (finalCmd is null)
-            throw new ArgumentNullException(nameof(finalCmd));
+        ArgumentNullException.ThrowIfNull(finalCmd);
         if (!CanBackward)
             throw new InvalidOperationException("Cannot backward because backward stack is empty");
         if (CurrentCommand is null)
@@ -163,7 +162,7 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    ///     Perform the forward operation.
+    /// Perform the forward operation.
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the redo.
     /// </summary>
@@ -184,7 +183,7 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    ///     Perform the forward operation.
+    /// Perform the forward operation.
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the redo.
     /// </summary>
@@ -192,8 +191,7 @@ public class BackwardForwardProvider : Component
     {
         if (!ManagerEnabled)
             throw new InvalidOperationException("Manager is disabled");
-        if (finalCmd is null)
-            throw new ArgumentNullException(nameof(finalCmd));
+        ArgumentNullException.ThrowIfNull(finalCmd);
         if (!CanForward)
             throw new InvalidOperationException("Cannot forward because forward stack is empty");
         if (CurrentCommand is null)
@@ -215,14 +213,14 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    ///     Get the text value of the next back command. Use this method
+    /// Get the text value of the next back command. Use this method
     /// to update the Text property of your "Back" menu item if
     /// desired. For example, the text value for a command might be "Draw Circle".
     /// </summary>
     public string GetBackwardText() => CanBackward ? NextBackwardCommand.CommandName : "";
 
     /// <summary>
-    ///     Get the text value of the next forward command. Use this method
+    /// Get the text value of the next forward command. Use this method
     /// to update the Text property of your "Forward" menu item if desired.
     /// For example, the text value for a command might be "Draw Line".
     /// </summary>

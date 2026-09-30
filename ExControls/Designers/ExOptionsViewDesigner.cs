@@ -12,7 +12,7 @@ namespace ExControls.Designers;
 /// <summary>
 /// Provides a ParentControlDesigner for the ExOptionsView to enhance design-time experience.
 /// </summary>
-internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
+internal sealed class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
 {
     private readonly string[] _invisibleProperties;
     private DesignerActionListCollection? _actionLists;
@@ -224,30 +224,31 @@ internal class ExOptionsViewDesigner : DesignerParentControlBase<ExOptionsView>
 
     internal static partial class ComCtl32
     {
-        public struct TVHITTESTINFO
+        // polia plni TreeView cez SendMessage (TVM_HITTEST)
+#pragma warning disable CS0649
+        public struct Tvhittestinfo
         {
-#pragma warning disable CS0649 // Field 'xx' is never assigned to, and will always have its default value
-            public Point pt;
-            public TVHT flags;
-            public IntPtr hItem;
-#pragma warning restore CS0649
+            public Point Pt;
+            public Tvht Flags;
+            public IntPtr HItem;
         }
+#pragma warning restore CS0649
 
         [Flags]
-        public enum TVHT : uint
+        public enum Tvht : uint
         {
-            NOWHERE = 0x0001,
-            ONITEMICON = 0x0002,
-            ONITEMLABEL = 0x0004,
-            ONITEM = ONITEMICON | ONITEMLABEL | ONITEMSTATEICON,
-            ONITEMINDENT = 0x0008,
-            ONITEMBUTTON = 0x0010,
-            ONITEMRIGHT = 0x0020,
-            ONITEMSTATEICON = 0x0040,
-            ABOVE = 0x0100,
-            BELOW = 0x0200,
-            TORIGHT = 0x0400,
-            TOLEFT = 0x0800
+            Nowhere = 0x0001,
+            Onitemicon = 0x0002,
+            Onitemlabel = 0x0004,
+            Onitem = Onitemicon | Onitemlabel | Onitemstateicon,
+            Onitemindent = 0x0008,
+            Onitembutton = 0x0010,
+            Onitemright = 0x0020,
+            Onitemstateicon = 0x0040,
+            Above = 0x0100,
+            Below = 0x0200,
+            Toright = 0x0400,
+            Toleft = 0x0800
         }
     }
 }

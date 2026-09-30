@@ -6,11 +6,33 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded CheckListBox Control
+/// Expanded CheckListBox Control
 /// </summary>
 [ToolboxBitmap(typeof(CheckedListBox), "CheckedListBox.bmp")]
-public class ExCheckedListBox : CheckedListBox, IExControl
+public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (!theme.UseSystemStyle)
+        {
+            BackColor = theme.BoxBackColor;
+            ForeColor = theme.BoxForeColor;
+            BorderColor = theme.BorderColor;
+            SquareBackColor = theme.BoxBackColor;
+            MarkColor = theme.MarkColor;
+            BorderStyle = BorderStyle.None;
+            FocusedBackColor = theme.BorderColor;
+            HighlightColor = theme.HighlightBackColor;
+        }
+
+        if (theme.DarkScrollBars)
+            this.SetTheme(WindowsTheme.DarkExplorer);
+    }
+
     private Color _borderColor;
 
     private bool _defaultStyle;
@@ -22,7 +44,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     private Color _squareBackColor;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExCheckedListBox()
     {
@@ -38,7 +60,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's border
+    /// Color of the CheckBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -55,7 +77,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's mark
+    /// Color of the CheckBox's mark
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -72,7 +94,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     }
 
     /// <summary>
-    ///     Background color of CheckBox's square
+    /// Background color of CheckBox's square
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -89,7 +111,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the border and mark of CheckBox when mouse is over the Control
+    /// Color of the border and mark of CheckBox when mouse is over the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -106,7 +128,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of text if Control is disabled
+    /// Foreground color of text if Control is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -123,7 +145,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl
     }
 
     /// <summary>
-    ///     Background color of focused row in ListBox
+    /// Background color of focused row in ListBox
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

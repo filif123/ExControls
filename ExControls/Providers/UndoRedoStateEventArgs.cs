@@ -12,7 +12,7 @@ public class UndoRedoStateEventArgs : EventArgs
     }
 
     /// <summary>
-    ///     New state of manager.
+    /// New state of manager.
     /// </summary>
     public UndoRedoState NewState { get; }
 }

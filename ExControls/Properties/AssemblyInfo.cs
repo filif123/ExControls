@@ -13,6 +13,7 @@ using System.Runtime.Versioning;
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: System.Resources.NeutralResourcesLanguage("en")]
 
 #if !NETFRAMEWORK
 [assembly: SupportedOSPlatform("windows7.0")]
@@ -36,5 +37,5 @@ using System.Runtime.Versioning;
 // Můžete zadat všechny hodnoty nebo nastavit výchozí číslo buildu a revize
 // pomocí zástupného znaku * takto:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]

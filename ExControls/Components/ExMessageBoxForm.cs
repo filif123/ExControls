@@ -76,21 +76,29 @@ public partial class ExMessageBoxForm : Form
     /// <summary>
     /// 
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxIcon MessageIcon { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxButtons Buttons { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxDefaultButton DefaultButton { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int Countdown
     {
         get => _countdown;
@@ -113,8 +121,8 @@ public partial class ExMessageBoxForm : Form
 
     /// <summary>Gets the required creation parameters when the control handle is created.</summary>
     /// <returns>
-    ///     A <see cref="T:System.Windows.Forms.CreateParams" /> that contains the required creation parameters when the
-    ///     handle to the control is created.
+    /// A <see cref="System.Windows.Forms.CreateParams" /> that contains the required creation parameters when the
+    /// handle to the control is created.
     /// </returns>
     protected override CreateParams CreateParams
     {
@@ -169,12 +177,12 @@ public partial class ExMessageBoxForm : Form
                 ExTools.Beep(BeepType.Asterisk);
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new InvalidOperationException($"Unknown {nameof(MessageIcon)}: {MessageIcon}");
         }
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.HelpRequested" /> event.</summary>
-    /// <param name="hevent">A <see cref="T:System.Windows.Forms.HelpEventArgs" /> that contains the event data. </param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.HelpRequested" /> event.</summary>
+    /// <param name="hevent">A <see cref="System.Windows.Forms.HelpEventArgs" /> that contains the event data. </param>
     protected override void OnHelpRequested(HelpEventArgs hevent)
     {
         base.OnHelpRequested(hevent);
@@ -184,20 +192,20 @@ public partial class ExMessageBoxForm : Form
 
         switch (HelpInfo.Option)
         {
-            case HelpInfo.HLP_FILE:
+            case HelpInfo.HlpFile:
                 Help.ShowHelp(this, HelpInfo.HelpFilePath);
                 break;
-            case HelpInfo.HLP_KEYWORD:
+            case HelpInfo.HlpKeyword:
                 Help.ShowHelp(this, HelpInfo.HelpFilePath, HelpInfo.Keyword);
                 break;
-            case HelpInfo.HLP_NAVIGATOR:
+            case HelpInfo.HlpNavigator:
                 Help.ShowHelp(this, HelpInfo.HelpFilePath, HelpInfo.Navigator);
                 break;
-            case HelpInfo.HLP_OBJECT:
+            case HelpInfo.HlpObject:
                 Help.ShowHelp(this, HelpInfo.HelpFilePath, HelpInfo.Navigator, HelpInfo.Param);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(HelpInfo));
+                throw new InvalidOperationException($"Unknown {nameof(HelpInfo.Option)}: {HelpInfo.Option}");
         }
     }
 

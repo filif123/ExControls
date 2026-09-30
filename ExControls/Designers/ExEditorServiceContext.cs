@@ -12,7 +12,7 @@ using Microsoft.DotNet.DesignTools.Editors;
 
 namespace ExControls.Designers;
 
-internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEditorService
+internal sealed class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEditorService
 {
     private readonly ComponentDesigner _designer;
     private IComponentChangeService? _componentChangeSvc;
@@ -78,7 +78,7 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
     }
 
     /// <summary>Gets the container representing this <see cref="System.ComponentModel.TypeDescriptor" /> request.</summary>
-    /// <returns>An <see cref="System.ComponentModel.IContainer" /> with the set of objects for this <see cref="System.ComponentModel.TypeDescriptor" />; otherwise, <see langword="null" /> if there is no container or if the <see cref="T:System.ComponentModel.TypeDescriptor" /> does not use outside objects.</returns>
+    /// <returns>An <see cref="System.ComponentModel.IContainer" /> with the set of objects for this <see cref="System.ComponentModel.TypeDescriptor" />; otherwise, <see langword="null" /> if there is no container or if the <see cref="System.ComponentModel.TypeDescriptor" /> does not use outside objects.</returns>
     public IContainer? Container => _designer.Component.Site?.Container;
 
     /// <summary>Gets the object that is connected with this type descriptor request.</summary>
@@ -86,7 +86,7 @@ internal class ExEditorServiceContext : ITypeDescriptorContext, IWindowsFormsEdi
     public object Instance => _designer.Component;
 
     /// <summary>Gets the <see cref="System.ComponentModel.PropertyDescriptor" /> that is associated with the given context item.</summary>
-    /// <returns>The <see cref="System.ComponentModel.PropertyDescriptor" /> that describes the given context item; otherwise, <see langword="null" /> if there is no <see cref="T:System.ComponentModel.PropertyDescriptor" /> responsible for the call.</returns>
+    /// <returns>The <see cref="System.ComponentModel.PropertyDescriptor" /> that describes the given context item; otherwise, <see langword="null" /> if there is no <see cref="System.ComponentModel.PropertyDescriptor" /> responsible for the call.</returns>
     PropertyDescriptor? ITypeDescriptorContext.PropertyDescriptor => _targetProperty;
 
     private IComponentChangeService ChangeService =>

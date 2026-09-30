@@ -9,23 +9,23 @@
 namespace ExControls;
 
 /// <summary>
-///     Displays a message window, also known as a dialog box, which presents a message to the user.<br></br>
-///     It is a modal window, blocking other actions in the application until the user closes it.<br></br>
-///     A MessageBox can contain text, buttons, and symbols that inform and instruct the user.
+/// Displays a message window, also known as a dialog box, which presents a message to the user.<br></br>
+/// It is a modal window, blocking other actions in the application until the user closes it.<br></br>
+/// A MessageBox can contain text, buttons, and symbols that inform and instruct the user.
 /// </summary>
 public sealed class ExMessageBox
 {
     private MessageBoxButtons _buttons;
 
     /// <summary>
-    ///     Initializes a new instance of the ExMessageBox class.
+    /// Initializes a new instance of the ExMessageBox class.
     /// </summary>
     public ExMessageBox() : this((IWin32Window?) null)
     {
     }
 
     /// <summary>
-    ///     Initializes a new instance of the ExMessageBox class with specified owner.
+    /// Initializes a new instance of the ExMessageBox class with specified owner.
     /// </summary>
     /// <param name="owner">owner of this MessageBox</param>
     public ExMessageBox(IWin32Window? owner)
@@ -36,7 +36,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Initializes a new instance of the ExMessageBox class with text.
+    /// Initializes a new instance of the ExMessageBox class with text.
     /// </summary>
     /// <param name="text">text in MessageBox's message</param>
     public ExMessageBox([Localizable(true)] string text) : this((IWin32Window?) null)
@@ -45,7 +45,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Initializes a new instance of the ExMessageBox class with text and caption.
+    /// Initializes a new instance of the ExMessageBox class with text and caption.
     /// </summary>
     /// <param name="text">text in MessageBox's message</param>
     /// <param name="caption">caption of the MessageBox</param>
@@ -56,7 +56,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Initializes a new instance of the ExMessageBox class with specified owner and text.
+    /// Initializes a new instance of the ExMessageBox class with specified owner and text.
     /// </summary>
     /// <param name="owner"></param>
     /// <param name="text"></param>
@@ -66,7 +66,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Initializes a new instance of the ExMessageBox class with specified owner, text and caption.
+    /// Initializes a new instance of the ExMessageBox class with specified owner, text and caption.
     /// </summary>
     /// <param name="owner"></param>
     /// <param name="text"></param>
@@ -78,62 +78,62 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Gets or sets text of OK button in MessageBox.
+    /// Gets or sets text of OK button in MessageBox.
     /// </summary>
     public static string ButtonOKText { get; set; } = MessageBoxStrings.GetLocalizedString(MessageBoxCmdType.OK);
 
     /// <summary>
-    ///     Gets or sets text of Cancel button in MessageBox.
+    /// Gets or sets text of Cancel button in MessageBox.
     /// </summary>
     public static string ButtonCancelText { get; set; } = MessageBoxStrings.GetLocalizedString(MessageBoxCmdType.Cancel);
 
     /// <summary>
-    ///     Gets or sets text of Yes button in MessageBox.
+    /// Gets or sets text of Yes button in MessageBox.
     /// </summary>
     public static string ButtonYesText { get; set; } = MessageBoxStrings.GetLocalizedString(MessageBoxCmdType.Yes);
 
     /// <summary>
-    ///     Gets or sets text of No button in MessageBox.
+    /// Gets or sets text of No button in MessageBox.
     /// </summary>
     public static string ButtonNoText { get; set; } = MessageBoxStrings.GetLocalizedString(MessageBoxCmdType.No);
 
     /// <summary>
-    ///     Gets or sets text of Abort button in MessageBox.
+    /// Gets or sets text of Abort button in MessageBox.
     /// </summary>
     public static string ButtonAbortText { get; set; } = MessageBoxStrings.GetLocalizedString(MessageBoxCmdType.Abort);
 
     /// <summary>
-    ///     Gets or sets text of Retry button in MessageBox.
+    /// Gets or sets text of Retry button in MessageBox.
     /// </summary>
     public static string ButtonRetryText { get; set; } = MessageBoxStrings.GetLocalizedString(MessageBoxCmdType.Retry);
 
     /// <summary>
-    ///     Gets or sets text of Ignore button in MessageBox.
+    /// Gets or sets text of Ignore button in MessageBox.
     /// </summary>
     public static string ButtonIgnoreText { get; set; } = MessageBoxStrings.GetLocalizedString(MessageBoxCmdType.Ignore);
 
     /// <summary>
-    ///     Gets or sets text of Help button in MessageBox.
+    /// Gets or sets text of Help button in MessageBox.
     /// </summary>
     public static string ButtonHelpText { get; set; } = MessageBoxStrings.GetLocalizedString(MessageBoxCmdType.Help);
 
     /// <summary>
-    ///     Gets or sets style of components in MessageBox.
+    /// Gets or sets style of components in MessageBox.
     /// </summary>
     public static ExMessageBoxStyle Style { get; set; } = new();
 
     /// <summary>
-    ///     Gets form of this MessageBox.
+    /// Gets form of this MessageBox.
     /// </summary>
     public ExMessageBoxForm Form { get; }
 
     /// <summary>
-    ///     Gets owner of this MessageBox.
+    /// Gets owner of this MessageBox.
     /// </summary>
     public IWin32Window? Owner { get; }
 
     /// <summary>
-    ///     Gets or sets the text associated with this control.
+    /// Gets or sets the text associated with this control.
     /// </summary>
     [Localizable(true)]
     public string Text
@@ -143,7 +143,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Gets or sets the caption of the MessageBox.
+    /// Gets or sets the caption of the MessageBox.
     /// </summary>
     [Localizable(true)]
     public string Caption
@@ -153,7 +153,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Gets or sets buttons visible in MessageBox.
+    /// Gets or sets buttons visible in MessageBox.
     /// </summary>
     public MessageBoxButtons Buttons
     {
@@ -166,7 +166,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Gets or sets the icon showing in the MessageBox.
+    /// Gets or sets the icon showing in the MessageBox.
     /// </summary>
     public MessageBoxIcon Icon
     {
@@ -179,7 +179,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Gets or sets default button in MessageBox.
+    /// Gets or sets default button in MessageBox.
     /// </summary>
     public MessageBoxDefaultButton DefaultButton
     {
@@ -192,7 +192,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Gets or sets options for MessageBox.
+    /// Gets or sets options for MessageBox.
     /// </summary>
     public MessageBoxOptions Options
     {
@@ -205,7 +205,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Gets or sets visibility of Help button in MessageBox.
+    /// Gets or sets visibility of Help button in MessageBox.
     /// </summary>
     public bool ShowHelp
     {
@@ -214,7 +214,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Gets or sets an interval in seconds. After exceeding the limit the MessageBox closes itself
+    /// Gets or sets an interval in seconds. After exceeding the limit the MessageBox closes itself
     /// </summary>
     public int Countdown
     {
@@ -223,13 +223,13 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Occurs when the user requests help for a control.
+    /// Occurs when the user requests help for a control.
     /// </summary>
     public event HelpEventHandler? HelpRequested;
 
     /// <summary>
-    ///     Displays a message window, also known as a dialog box, which presents a message to the user.
-    ///     It is a modal window, blocking other actions in the application until the user closes it.
+    /// Displays a message window, also known as a dialog box, which presents a message to the user.
+    /// It is a modal window, blocking other actions in the application until the user closes it.
     /// </summary>
     /// <returns>One of the DialogResult values.</returns>
     /// <exception cref="ArgumentException">when Form is null</exception>
@@ -440,7 +440,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///         Displays a message box with specified text, caption, and style with Help Button.
+    /// Displays a message box with specified text, caption, and style with Help Button.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -457,7 +457,7 @@ public sealed class ExMessageBox
 
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, style and Help file Path .
+    /// Displays a message box with specified text, caption, style and Help file Path .
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -475,7 +475,7 @@ public sealed class ExMessageBox
 
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, style and Help file Path for a IWin32Window.
+    /// Displays a message box with specified text, caption, style and Help file Path for a IWin32Window.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -494,7 +494,7 @@ public sealed class ExMessageBox
 
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, style, Help file Path and keyword.
+    /// Displays a message box with specified text, caption, style, Help file Path and keyword.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -513,7 +513,7 @@ public sealed class ExMessageBox
 
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, style, Help file Path and keyword for a IWin32Window.
+    /// Displays a message box with specified text, caption, style, Help file Path and keyword for a IWin32Window.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -533,7 +533,7 @@ public sealed class ExMessageBox
 
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, style, Help file Path and HelpNavigator.
+    /// Displays a message box with specified text, caption, style, Help file Path and HelpNavigator.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -551,7 +551,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, style, Help file Path and HelpNavigator for IWin32Window.
+    /// Displays a message box with specified text, caption, style, Help file Path and HelpNavigator for IWin32Window.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -570,7 +570,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, style, Help file Path ,HelpNavigator and object.
+    /// Displays a message box with specified text, caption, style, Help file Path ,HelpNavigator and object.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -590,7 +590,7 @@ public sealed class ExMessageBox
 
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, style, Help file Path ,HelpNavigator and object for a IWin32Window.
+    /// Displays a message box with specified text, caption, style, Help file Path ,HelpNavigator and object for a IWin32Window.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -610,7 +610,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, and style.
+    /// Displays a message box with specified text, caption, and style.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -625,7 +625,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, and style.
+    /// Displays a message box with specified text, caption, and style.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -639,7 +639,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, and style.
+    /// Displays a message box with specified text, caption, and style.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -652,7 +652,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, and style.
+    /// Displays a message box with specified text, caption, and style.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -664,7 +664,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text and caption.
+    /// Displays a message box with specified text and caption.
     /// </summary>
     public static DialogResult Show(
         [Localizable(true)] string text,
@@ -675,7 +675,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text.
+    /// Displays a message box with specified text.
     /// </summary>
     public static DialogResult Show([Localizable(true)] string text, int countdown = -1)
     {
@@ -683,7 +683,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, and style.
+    /// Displays a message box with specified text, caption, and style.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -699,7 +699,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, and style.
+    /// Displays a message box with specified text, caption, and style.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -714,7 +714,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, and style.
+    /// Displays a message box with specified text, caption, and style.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -728,7 +728,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text, caption, and style.
+    /// Displays a message box with specified text, caption, and style.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -741,7 +741,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text and caption.
+    /// Displays a message box with specified text and caption.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -753,7 +753,7 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Displays a message box with specified text.
+    /// Displays a message box with specified text.
     /// </summary>
     public static DialogResult Show(
         IWin32Window owner,
@@ -764,86 +764,86 @@ public sealed class ExMessageBox
     }
 
     /// <summary>
-    ///     Raises the <see cref="HelpRequested" /> event.
+    /// Raises the <see cref="HelpRequested" /> event.
     /// </summary>
     /// <param name="hlpevent"></param>
     private void OnHelpRequested(HelpEventArgs hlpevent) => HelpRequested?.Invoke(this, hlpevent);
 }
 
 /// <summary>
-///     Specifies style of ExMessageBox.
+/// Specifies style of ExMessageBox.
 /// </summary>
 public class ExMessageBoxStyle
 {
     /// <summary>
-    ///     Gets or sets the Font of label in MessageBox.
+    /// Gets or sets the Font of label in MessageBox.
     /// </summary>
     public Font? LabelFont { get; set; }
 
     /// <summary>
-    ///     Gets or sets the Font of buttons in MessageBox.
+    /// Gets or sets the Font of buttons in MessageBox.
     /// </summary>
     public Font? ButtonsFont { get; set; }
 
     /// <summary>
-    ///     Gets or sets whether default style of components in MessageBox is used.
+    /// Gets or sets whether default style of components in MessageBox is used.
     /// </summary>
     public bool? DefaultStyle { get; set; }
 
     /// <summary>
-    ///     Gets or sets whether MessageBox's caption should be dark or with default color (dark caption works only in Windows 10).
+    /// Gets or sets whether MessageBox's caption should be dark or with default color (dark caption works only in Windows 10).
     /// </summary>
     public bool? UseDarkTitleBar { get; set; }
 
     /// <summary>
-    ///     Gets or sets background color of MessageBox.
+    /// Gets or sets background color of MessageBox.
     /// </summary>
     public Color? BackColor { get; set; }
 
     /// <summary>
-    ///     Gets or sets foreground color of MessageBox.
+    /// Gets or sets foreground color of MessageBox.
     /// </summary>
     public Color? ForeColor { get; set; }
 
     /// <summary>
-    ///     Gets or sets background color of MessageBox's footer.
+    /// Gets or sets background color of MessageBox's footer.
     /// </summary>
     public Color? FooterBackColor { get; set; }
 
     /// <summary>
-    ///     Gets or sets background color of MessageBox's buttons.
+    /// Gets or sets background color of MessageBox's buttons.
     /// </summary>
     public Color? ButtonBackColor { get; set; }
 
     /// <summary>
-    ///     Gets or sets foreground color of MessageBox's buttons.
+    /// Gets or sets foreground color of MessageBox's buttons.
     /// </summary>
     public Color? ButtonForeColor { get; set; }
 
     /// <summary>
-    ///     Gets or sets border color of MessageBox's buttons.
+    /// Gets or sets border color of MessageBox's buttons.
     /// </summary>
     public Color? ButtonBorderColor { get; set; }
 
     /// <summary>
-    ///     Gets or sets border size of MessageBox's buttons.
+    /// Gets or sets border size of MessageBox's buttons.
     /// </summary>
     public int? ButtonBorderSize { get; set; }
 
     /// <summary>
-    ///     Gets or sets mouse-down color color of MessageBox's buttons.
+    /// Gets or sets mouse-down color color of MessageBox's buttons.
     /// </summary>
     public Color? ButtonMouseDownColor { get; set; }
 
     /// <summary>
-    ///     Gets or sets mouse-over color color of MessageBox's buttons.
+    /// Gets or sets mouse-over color color of MessageBox's buttons.
     /// </summary>
     public Color? ButtonMouseOverColor { get; set; }
 }
 
-internal class HelpInfo
+internal sealed class HelpInfo
 {
-    public const int HLP_FILE = 1, HLP_KEYWORD = 2, HLP_NAVIGATOR = 3, HLP_OBJECT = 4;
+    public const int HlpFile = 1, HlpKeyword = 2, HlpNavigator = 3, HlpObject = 4;
 
     public HelpInfo(string helpfilepath)
     {
@@ -851,7 +851,7 @@ internal class HelpInfo
         Keyword = "";
         Navigator = HelpNavigator.TableOfContents;
         Param = null;
-        Option = HLP_FILE;
+        Option = HlpFile;
     }
 
     public HelpInfo(string helpfilepath, string keyword)
@@ -860,7 +860,7 @@ internal class HelpInfo
         Keyword = keyword;
         Navigator = HelpNavigator.TableOfContents;
         Param = null;
-        Option = HLP_KEYWORD;
+        Option = HlpKeyword;
     }
 
     public HelpInfo(string helpfilepath, HelpNavigator navigator)
@@ -869,7 +869,7 @@ internal class HelpInfo
         Keyword = "";
         Navigator = navigator;
         Param = null;
-        Option = HLP_NAVIGATOR;
+        Option = HlpNavigator;
     }
 
 
@@ -879,7 +879,7 @@ internal class HelpInfo
         Keyword = "";
         Navigator = navigator;
         Param = param;
-        Option = HLP_OBJECT;
+        Option = HlpObject;
     }
 
     public int Option { get; }

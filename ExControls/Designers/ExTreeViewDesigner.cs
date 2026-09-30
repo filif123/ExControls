@@ -9,11 +9,11 @@ using Microsoft.DotNet.DesignTools.Designers.Actions;
 namespace ExControls.Designers;
 
 /// <summary>
-///     This is the designer for tree view controls.  It inherits 
+/// This is the designer for tree view controls.  It inherits 
 /// from the base control designer and adds live hit testing
 /// capabilites for the tree view control. 
 /// </summary>
-internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
+internal sealed class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 {
     private Win32.TVHITTESTINFO _tvhit;
 
@@ -51,12 +51,12 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
             }
             return result;
         }
-    }
+    } = null!;
 #endif
 
 
     /// <summary>
-    ///     Allows your component to support a design time user interface. A TabStrip
+    /// Allows your component to support a design time user interface. A TabStrip
     /// control, for example, has a design time user interface that allows the user 
     /// to click the tabs to change tabs. To implement this, TabStrip returns
     /// true whenever the given point is within its tabs. 
@@ -70,7 +70,7 @@ internal class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
         _tvhit.pt.Y = point.Y;
         fixed (Win32.TVHITTESTINFO* ptr = &_tvhit)
         {
-            Win32.SendMessage(Control.Handle, TVM_HITTEST, IntPtr.Zero, new IntPtr(ptr));
+            _ = Win32.SendMessage(Control.Handle, TVM_HITTEST, IntPtr.Zero, new IntPtr(ptr));
         }
 
         return (_tvhit.flags & TVHT_ONITEMBUTTON) == TVHT_ONITEMBUTTON || (_tvhit.flags & TVHT_ONITEM) == TVHT_ONITEM;

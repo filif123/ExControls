@@ -8,12 +8,12 @@ using Microsoft.DotNet.DesignTools.Designers.Actions;
 
 namespace ExControls.Designers;
 
-internal class ExLineSeparatorDesigner : DesignerControlBase<ExLineSeparator>
+internal sealed class ExLineSeparatorDesigner : DesignerControlBase<ExLineSeparator>
 {
     private DesignerActionListCollection? _actionLists;
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExLineSeparatorActionList(ControlHost, this)};
 
-    private class ExLineSeparatorActionList : DesignerActionListBase<ExLineSeparator>
+    private sealed class ExLineSeparatorActionList : DesignerActionListBase<ExLineSeparator>
     {
         private readonly ExLineSeparatorDesigner _designer;
 

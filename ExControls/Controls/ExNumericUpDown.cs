@@ -5,11 +5,28 @@
 namespace ExControls;
 
 /// <summary>
-///     Expanded NumericUpDown Control
+/// Expanded NumericUpDown Control
 /// </summary>
 [ToolboxBitmap(typeof(NumericUpDown), "NumericUpDown.bmp")]
-public class ExNumericUpDown : NumericUpDown, IExControl
+public class ExNumericUpDown : NumericUpDown, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BackColor = theme.BoxBackColor;
+        ForeColor = theme.BoxForeColor;
+        ArrowsColor = theme.ButtonForeColor;
+        BorderColor = theme.BorderColor;
+        HighlightColor = theme.HighlightBackColor;
+        SelectedButtonColor = theme.HighlightBackColor;
+    }
+
     private readonly UpDownButtons _newButtonUpDown;
     private readonly Control _originalButtonUpDown;
     private Color _arrowsColor;
@@ -22,7 +39,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     private Color _selectedButtonColor;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExNumericUpDown()
     {
@@ -50,7 +67,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     }
 
     /// <summary>
-    ///     Color of the Control's border when mouse is over the Control
+    /// Color of the Control's border when mouse is over the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -67,7 +84,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     }
 
     /// <summary>
-    ///     Color of the arrows which is in this Control on the Up and Down buttons
+    /// Color of the arrows which is in this Control on the Up and Down buttons
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -84,7 +101,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     }
 
     /// <summary>
-    ///     Color of the Control's border
+    /// Color of the Control's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -101,7 +118,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     }
 
     /// <summary>
-    ///     Color the Up and Down buttons when they are selected
+    /// Color the Up and Down buttons when they are selected
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -171,9 +188,9 @@ public class ExNumericUpDown : NumericUpDown, IExControl
     private void TextBox_MouseLeave(object? sender, EventArgs e) => UpdateHover();
 
     /// <summary>
-    ///     Nastavi hover podla skutocnej polohy kurzora nad celym prvkom (textbox aj tlacidla su samostatne okna,
-    ///     takze Enter/Leave jednotlivych casti neurcuju, ci kurzor prvok naozaj opustil) a prekresli aj deti -
-    ///     tlacidla kreslia zvyrazneny obrys podla _hover.
+    /// Nastavi hover podla skutocnej polohy kurzora nad celym prvkom (textbox aj tlacidla su samostatne okna,
+    /// takze Enter/Leave jednotlivych casti neurcuju, ci kurzor prvok naozaj opustil) a prekresli aj deti -
+    /// tlacidla kreslia zvyrazneny obrys podla _hover.
     /// </summary>
     private void UpdateHover()
     {
@@ -427,7 +444,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
         }
 
         /// <summary>
-        ///     Nastavi zvyraznene tlacidlo podla aktualnej polohy kurzora (nie podla suradnic zo spravy).
+        /// Nastavi zvyraznene tlacidlo podla aktualnej polohy kurzora (nie podla suradnic zo spravy).
         /// </summary>
         private void UpdateMouseOver()
         {
@@ -483,7 +500,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl
             if (child == null || !IsHandleCreated || !_parent.IsHandleCreated)
                 return e;
             var pt = new Win32.POINT(e.X, e.Y);
-            Win32.MapWindowPoints(child.Handle, _parent.Handle, ref pt, 1);
+            _ = Win32.MapWindowPoints(child.Handle, _parent.Handle, ref pt, 1);
             return new MouseEventArgs(e.Button, e.Clicks, pt.X, pt.Y, e.Delta);
         }
 

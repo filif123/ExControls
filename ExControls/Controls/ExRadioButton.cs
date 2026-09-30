@@ -8,11 +8,26 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded RadioButton Control.
+/// Expanded RadioButton Control.
 /// </summary>
 [ToolboxBitmap(typeof(RadioButton), "RadioButton.bmp")]
-public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
+public class ExRadioButton : RadioButton, IExControl, ICheckableExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BorderColor = theme.MarkColor;
+        BoxBackColor = theme.PanelBackColor;
+        MarkColor = theme.MarkColor;
+        HighlightColor = theme.HighlightBackColor;
+    }
+
     private const int BoxSize = 16;
     private const int BoxOffset = 3;
 
@@ -26,7 +41,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
     private Color _markColor;
 
     /// <summary>
-    ///     Creates a new instance of the <see cref="ExRadioButton"/> class.
+    /// Creates a new instance of the <see cref="ExRadioButton"/> class.
     /// </summary>
     public ExRadioButton()
     {
@@ -41,7 +56,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's text and box when the Control is disabled.
+    /// Color of the CheckBox's text and box when the Control is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -61,7 +76,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the RadioButton's border.
+    /// Color of the RadioButton's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -81,7 +96,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the RadioButton's mark.
+    /// Color of the RadioButton's mark.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -101,7 +116,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Background color of RadioButton's circle.
+    /// Background color of RadioButton's circle.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -122,7 +137,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl
 
 
     /// <summary>
-    ///     Color of the border and mark of RadioButton when mouse is over the Control.
+    /// Color of the border and mark of RadioButton when mouse is over the Control.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

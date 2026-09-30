@@ -9,11 +9,39 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded ComboBox Control
+/// Expanded ComboBox Control
 /// </summary>
 [ToolboxBitmap(typeof(ComboBox), "ComboBox.bmp")]
-public class ExComboBox : ComboBox, IExControl
+public class ExComboBox : ComboBox, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        // prvok s vlastnym vzhladom ho ponecha aj pri systemovom vzhlade temy
+        DefaultStyle = DefaultStyle && theme.UseSystemStyle;
+        UseDarkScrollBar = theme.DarkScrollBars;
+        if (DefaultStyle)
+            return;
+
+        BackColor = theme.BoxBackColor;
+        ForeColor = theme.BoxForeColor;
+        DropDownSelectedRowBackColor = theme.HighlightBackColor;
+        DropDownBackColor = theme.PanelBackColor;
+        StyleNormal.BorderColor = theme.BorderColor;
+        StyleNormal.ArrowColor = theme.BoxForeColor;
+        StyleNormal.ButtonBorderColor = theme.BoxBackColor;
+        StyleSelected.BorderColor = theme.HighlightBackColor;
+        StyleSelected.ButtonRenderFirst = false;
+        StyleSelected.ButtonBackColor = theme.HighlightBackColor;
+        StyleSelected.ButtonBorderColor = theme.HighlightBackColor;
+        StyleHighlight.BorderColor = theme.HighlightBackColor;
+        StyleHighlight.ButtonBorderColor = theme.HighlightBackColor;
+        StyleDisabled.BackColor = theme.BoxBackColor;
+        StyleDisabled.ForeColor = theme.BorderColor;
+    }
+
     private bool _defaultStyle;
     private bool _drawing;
     private Color _dropDownBackColor;
@@ -26,7 +54,7 @@ public class ExComboBox : ComboBox, IExControl
     private ComboBoxEdit? _editControl;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExComboBox()
     {
@@ -53,19 +81,19 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <summary>
-    ///     Don't use directly in the code.
+    /// Don't use directly in the code.
     /// </summary>
     [Browsable(false)]
     public Color ActualBackColor { get; private set; }
 
     /// <summary>
-    ///     Don't use directly in code.
+    /// Don't use directly in code.
     /// </summary>
     [Browsable(false)]
     public Color ActualForeColor { get; private set; }
 
     /// <summary>
-    ///     Normal style of the Control (when is inactive).
+    /// Normal style of the Control (when is inactive).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -77,7 +105,7 @@ public class ExComboBox : ComboBox, IExControl
     public ExComboBoxStyle StyleNormal { get; set; }
 
     /// <summary>
-    ///     Highlight style of the Control (when mouse is over control).
+    /// Highlight style of the Control (when mouse is over control).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -89,7 +117,7 @@ public class ExComboBox : ComboBox, IExControl
     public ExComboBoxStyle StyleHighlight { get; set; }
 
     /// <summary>
-    ///     Selected style of the Control (when control is selected).
+    /// Selected style of the Control (when control is selected).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -101,7 +129,7 @@ public class ExComboBox : ComboBox, IExControl
     public ExComboBoxStyle StyleSelected { get; set; }
 
     /// <summary>
-    ///     Disabled style of the Control (when control is not Enabled).
+    /// Disabled style of the Control (when control is not Enabled).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -113,7 +141,7 @@ public class ExComboBox : ComboBox, IExControl
     public ExComboBoxStyle StyleDisabled { get; set; }
 
     /// <summary>
-    ///     Color of the selected row in drop down menu
+    /// Color of the selected row in drop down menu
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -133,7 +161,7 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <summary>
-    ///     Background color of the drop down menu.
+    /// Background color of the drop down menu.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -153,8 +181,9 @@ public class ExComboBox : ComboBox, IExControl
     }
 
     /// <summary>
-    ///     Draw mode of ComboBox
+    /// Draw mode of ComboBox
     /// </summary>
+    [DefaultValue(DrawMode.Normal)]
     public new DrawMode DrawMode
     {
         get => base.DrawMode;
@@ -190,8 +219,13 @@ public class ExComboBox : ComboBox, IExControl
         }
     }
 
+    // pri vypnuti sa editovatelny zoznam prepne na DropDownList (tmavy vzhlad), pri zapnuti sa vrati
+    private bool _dropDownBeforeDisable;
+
     /// <summary>
+    /// Gets or sets a value indicating whether the control can respond to user interaction.
     /// </summary>
+    [DefaultValue(true)]
     public new bool Enabled
     {
         get => base.Enabled;
@@ -200,11 +234,11 @@ public class ExComboBox : ComboBox, IExControl
             switch (value)
             {
                 case false when !DefaultStyle && DropDownStyle == ComboBoxStyle.DropDown:
-                    field = true;
+                    _dropDownBeforeDisable = true;
                     DropDownStyle = ComboBoxStyle.DropDownList;
                     break;
-                case true when !DefaultStyle && field:
-                    field = false;
+                case true when !DefaultStyle && _dropDownBeforeDisable:
+                    _dropDownBeforeDisable = false;
                     DropDownStyle = ComboBoxStyle.DropDown;
                     break;
             }
@@ -216,6 +250,7 @@ public class ExComboBox : ComboBox, IExControl
     /// <summary>
     /// 
     /// </summary>
+    [DefaultValue(false)]
     public bool UseDarkScrollBar { get; set; }
 
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
@@ -335,9 +370,8 @@ public class ExComboBox : ComboBox, IExControl
 
     private Win32.COMBOBOXINFO GetComboboxInfo()
     {
-        var info = new Win32.COMBOBOXINFO();
-        info.cbSize = Marshal.SizeOf(info);
-        SendMessageCombo(Handle, 0x164, IntPtr.Zero, out info);
+        var info = new Win32.COMBOBOXINFO { cbSize = Marshal.SizeOf<Win32.COMBOBOXINFO>() };
+        _ = Win32.GetComboBoxInfo(Handle, ref info);
         return info;
     }
 
@@ -354,9 +388,6 @@ public class ExComboBox : ComboBox, IExControl
         var info = GetComboboxInfo();
         ExTools.SetTheme(info.hwndList, WindowsTheme.DarkExplorer);
     }
-
-    [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode)]
-    private static extern IntPtr SendMessageCombo(IntPtr hWnd, int msg, IntPtr wp, out Win32.COMBOBOXINFO lp);
 
     /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)
@@ -650,27 +681,42 @@ public class ExComboBox : ComboBox, IExControl
 }
 
 /// <summary>
-///     Class for definition styles for ExComboBox
+/// Class for definition styles for ExComboBox
 /// </summary>
-public class ExComboBoxStyle : ExStyleOld
+[DisplayName("(Collection)")]
+public class ExComboBoxStyle : IExNotifyPropertyChanged, ICloneable
 {
+    private Color? _backColor;
+    private Color? _borderColor;
+    private Color? _foreColor;
     private Color? _arrowColor;
     private Color? _buttonBackColor;
     private Color? _buttonBorderColor;
 
-    /// <inheritdoc />
-    public ExComboBoxStyle()
+    /// <summary>
+    /// Constructor for designer.
+    /// </summary>
+    public ExComboBoxStyle() : this(StyleType.Normal)
     {
     }
 
-    /// <inheritdoc />
-    public ExComboBoxStyle(StyleType type) : base(type)
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    public ExComboBoxStyle(StyleType type)
     {
+        Type = type;
     }
 
-    /// <inheritdoc />
-    protected ExComboBoxStyle(ExComboBoxStyle copy) : base(copy)
+    /// <summary>
+    /// Copy constructor.
+    /// </summary>
+    protected ExComboBoxStyle(ExComboBoxStyle copy)
     {
+        Type = copy.Type;
+        BackColor = copy.BackColor;
+        ForeColor = copy.ForeColor;
+        BorderColor = copy.BorderColor;
         ArrowColor = copy.ArrowColor;
         ButtonBackColor = copy.ButtonBackColor;
         ButtonBorderColor = copy.ButtonBorderColor;
@@ -678,7 +724,80 @@ public class ExComboBoxStyle : ExStyleOld
     }
 
     /// <summary>
-    ///     Color of the arrow which is in this Control as the dropdown button
+    /// Type of style.
+    /// </summary>
+    public StyleType Type { get; }
+
+    /// <summary>
+    /// Foreground color of the Control.
+    /// </summary>
+    [Browsable(true)]
+    [ExCategory(CategoryType.Appearance)]
+    [DefaultValue(typeof(Color), "White")]
+    [Description("Foreground color of the Control.")]
+#if NETFRAMEWORK
+    [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
+    public Color? BackColor
+    {
+        get => _backColor;
+        set
+        {
+            if (_backColor == value)
+                return;
+            _backColor = value;
+            OnPropertyChanged(new ExPropertyChangedEventArgs(nameof(BackColor), value));
+        }
+    }
+
+    /// <summary>
+    /// Background color of the Control.
+    /// </summary>
+    [Browsable(true)]
+    [ExCategory(CategoryType.Appearance)]
+    [DefaultValue(typeof(Color), "Black")]
+    [Description("Background color of the Control.")]
+#if NETFRAMEWORK
+    [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
+    public Color? ForeColor
+    {
+        get => _foreColor;
+        set
+        {
+            if (_foreColor == value)
+                return;
+
+            _foreColor = value;
+            OnPropertyChanged(new ExPropertyChangedEventArgs(nameof(ForeColor), value));
+        }
+    }
+
+    /// <summary>
+    /// Color of the Controls's border.
+    /// </summary>
+    [Browsable(true)]
+    [ExCategory(CategoryType.Appearance)]
+    [DefaultValue(typeof(Color), "DimGray")]
+    [Description("Color of the Controls's border.")]
+#if NETFRAMEWORK
+    [Editor(typeof(ColorEditor), typeof(UITypeEditor))]
+#endif
+    public Color? BorderColor
+    {
+        get => _borderColor;
+        set
+        {
+            if (_borderColor == value)
+                return;
+
+            _borderColor = value;
+            OnPropertyChanged(new ExPropertyChangedEventArgs(nameof(BorderColor), BorderColor));
+        }
+    }
+
+    /// <summary>
+    /// Color of the arrow which is in this Control as the dropdown button
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
@@ -700,7 +819,7 @@ public class ExComboBoxStyle : ExStyleOld
     }
 
     /// <summary>
-    ///     Background color of the dropdown button
+    /// Background color of the dropdown button
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
@@ -722,7 +841,7 @@ public class ExComboBoxStyle : ExStyleOld
     }
 
     /// <summary>
-    ///     Border color of the dropdown button
+    /// Border color of the dropdown button
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [NotifyParentProperty(true)]
@@ -744,7 +863,7 @@ public class ExComboBoxStyle : ExStyleOld
     }
 
     /// <summary>
-    ///     Gets or sets whether DropDown button has to draw first
+    /// Gets or sets whether DropDown button has to draw first
     /// </summary>
     [DefaultValue(false)]
     [ExCategory(CategoryType.Appearance)]
@@ -762,6 +881,19 @@ public class ExComboBoxStyle : ExStyleOld
         }
     }
 
-    /// <inheritdoc />
-    public override object Clone() => new ExComboBoxStyle(this);
+    /// <summary>Creates a new object that is a copy of the current instance.</summary>
+    /// <returns>A new object that is a copy of this instance.</returns>
+    public virtual object Clone() => new ExComboBoxStyle(this);
+
+    /// <summary>Occurs when a property value changes.</summary>
+    public event EventHandler<ExPropertyChangedEventArgs>? PropertyChanged;
+
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged" /> event.
+    /// </summary>
+    /// <param name="e"></param>
+    protected void OnPropertyChanged(ExPropertyChangedEventArgs e)
+    {
+        PropertyChanged?.Invoke(this, e);
+    }
 }

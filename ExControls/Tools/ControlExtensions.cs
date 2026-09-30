@@ -16,10 +16,8 @@ public static class ControlExtensions
     /// <exception cref="ArgumentNullException"></exception>
     public static void BindEnum<T>(this ComboBox cb, Dictionary<T, string> dictionary) where T : Enum
     {
-        if (dictionary == null)
-            throw new ArgumentNullException(nameof(dictionary));
-        if (cb == null)
-            throw new ArgumentNullException(nameof(cb));
+        ArgumentNullException.ThrowIfNull(dictionary);
+        ArgumentNullException.ThrowIfNull(cb);
 
         cb.DataSource = dictionary.ToList();
         cb.DisplayMember = "Value";

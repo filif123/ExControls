@@ -8,12 +8,27 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded CheckBox Control
+/// Expanded CheckBox Control
 /// </summary>
 [ToolboxBitmap(typeof(CheckBox), "CheckBox.bmp")]
 [Designer("ExControls.Designers.ExCheckBoxDesigner, ExControls")]
-public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
+public class ExCheckBox : CheckBox, IExControl, ICheckableExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BorderColor = theme.BorderColor;
+        BoxBackColor = theme.BoxBackColor;
+        MarkColor = theme.MarkColor;
+        HighlightColor = theme.HighlightBackColor;
+    }
+
     private const int BoxSize = 16;
     private const int BoxOffset = 3;
 
@@ -27,7 +42,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     private Color _markColor;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExCheckBox()
     {
@@ -42,7 +57,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's text and box when the Control is disabled
+    /// Color of the CheckBox's text and box when the Control is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -62,7 +77,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's border
+    /// Color of the CheckBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -82,7 +97,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Color of the CheckBox's mark
+    /// Color of the CheckBox's mark
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -102,7 +117,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Background color of CheckBox's square
+    /// Background color of CheckBox's square
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -122,7 +137,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <summary>
-    ///     Foreground color of text if Control is disabled
+    /// Foreground color of text if Control is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -202,15 +217,15 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
     }
 
     /// <inheritdoc />
-    protected override void OnPaint(PaintEventArgs e)
+    protected override void OnPaint(PaintEventArgs pevent)
     {
         if (DefaultStyle)
         {
-            base.OnPaint(e);
+            base.OnPaint(pevent);
             return;
         }
 
-        e.Graphics.Clear(BackColor);
+        pevent.Graphics.Clear(BackColor);
 
         //Colors preparing
         var colorMark = _hover ? HighlightColor : Enabled ? MarkColor : DisabledForeColor;
@@ -222,28 +237,28 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl
         using var penBorder = new Pen(border);
 
         //Positons and Size preparing
-        var rects = ExButtonRenderer.GetBoxAndTextRectangle(e.Graphics, this, BoxSize, BoxOffset);
+        var rects = ExButtonRenderer.GetBoxAndTextRectangle(pevent.Graphics, this, BoxSize, BoxOffset);
         var boxRec = rects.BoxRectangle;
         var textRec = rects.TextRectangle;
         var rectBorder = new Rectangle(boxRec.Location, new Size(boxRec.Width - 1, boxRec.Height - 1));
 
         //Text render
-        TextRenderer.DrawText(e.Graphics, Text, Font, textRec.Location, colorText);
+        TextRenderer.DrawText(pevent.Graphics, Text, Font, textRec.Location, colorText);
 
         //Box background render
-        e.Graphics.FillRectangle(background, boxRec);
+        pevent.Graphics.FillRectangle(background, boxRec);
 
         //Box Border render
-        e.Graphics.DrawRectangle(penBorder, rectBorder);
+        pevent.Graphics.DrawRectangle(penBorder, rectBorder);
 
         //Mark render
         if (CheckState == CheckState.Checked)
         {
-            ExButtonRenderer.DrawCheckMark(e.Graphics, boxRec, colorMark);
+            ExButtonRenderer.DrawCheckMark(pevent.Graphics, boxRec, colorMark);
         }
         else if (CheckState == CheckState.Indeterminate)
         {
-            e.Graphics.FillRectangle(brushMark, boxRec.X + 4, boxRec.Y + 4, boxRec.Width - 8, boxRec.Height - 8);
+            pevent.Graphics.FillRectangle(brushMark, boxRec.X + 4, boxRec.Y + 4, boxRec.Width - 8, boxRec.Height - 8);
         }
     }
 

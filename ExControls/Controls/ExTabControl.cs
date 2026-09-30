@@ -9,12 +9,30 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded TabControl Control
+/// Expanded TabControl Control
 /// </summary>
 [ToolboxBitmap(typeof(TabControl), "TabControl.bmp")]
 [DefaultProperty(nameof(TabPages))]
-public class ExTabControl : TabControl, IExControl
+public class ExTabControl : TabControl, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        ExThemer.Apply(Controls, theme);
+        DefaultStyle = theme.UseSystemStyle;
+        BackColor = theme.PanelBackColor;
+        ForeColor = theme.PanelForeColor;
+        HeaderBackColor = theme.BoxBackColor;
+        HeaderForeColor = theme.BoxForeColor;
+        ActiveHeaderBackColor = theme.PanelBackColor;
+        ActiveHeaderForeColor = theme.PanelForeColor;
+        BorderColor = theme.BorderColor;
+        HighlightBackColor = theme.ButtonBackColor;
+        HighlightForeColor = theme.ButtonForeColor;
+    }
+
     // ReSharper disable InconsistentNaming
     private const int TCN_FIRST = -550;
     private const int TCN_SELCHANGING = TCN_FIRST - 2;
@@ -36,7 +54,7 @@ public class ExTabControl : TabControl, IExControl
     private int _hoverIndex = -1;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExTabControl()
     {
@@ -54,7 +72,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Color of the TabControl's border.
+    /// Color of the TabControl's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -73,7 +91,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the Tab header.
+    /// Foreground color of the Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -92,7 +110,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Background color of the Tab header.
+    /// Background color of the Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -111,7 +129,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the active Tab header.
+    /// Foreground color of the active Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -130,7 +148,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the active Tab header.
+    /// Foreground color of the active Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -149,7 +167,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Background color of the hovered Tab header.
+    /// Background color of the hovered Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -168,7 +186,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Foreground color of the hovered Tab header.
+    /// Foreground color of the hovered Tab header.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -187,7 +205,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Width of the TabControl's border.
+    /// Width of the TabControl's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -206,7 +224,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     The background color used to display text and graphics in a control.
+    /// The background color used to display text and graphics in a control.
     /// </summary>
     [Browsable(true)]
     [ExDescription("The background color used to display text and graphics in a control.")]
@@ -252,7 +270,7 @@ public class ExTabControl : TabControl, IExControl
     }
 
     /// <summary>
-    ///     Occurs as a tab is being changed
+    /// Occurs as a tab is being changed
     /// </summary>
     [ExDescription("Occurs as a tab is being changed.")]
     public event EventHandler<TabPageChangeEventArgs>? SelectedIndexChanging;
@@ -449,7 +467,7 @@ public class ExTabControl : TabControl, IExControl
     {
         if (m.Msg == (int)(WM_REFLECT + Win32.WM.NOTIFY))
         {
-            var hdr = (Win32.NMHDR)Marshal.PtrToStructure(m.LParam, typeof(Win32.NMHDR))!;
+            var hdr = Marshal.PtrToStructure<Win32.NMHDR>(m.LParam)!;
             if (hdr.code == TCN_SELCHANGING)
             {
                 var tp = TestTab(PointToClient(Cursor.Position));
@@ -482,17 +500,17 @@ public class ExTabControl : TabControl, IExControl
 }
 
 /// <summary>
-///     Event arguments for the <see cref="ExTabControl.SelectedIndexChanging"/> event.
+/// Event arguments for the <see cref="ExTabControl.SelectedIndexChanging"/> event.
 /// </summary>
 public class TabPageChangeEventArgs : EventArgs
 {
     /// <summary>
-    ///     Gets or sets whether the event should be canceled.
+    /// Gets or sets whether the event should be canceled.
     /// </summary>
     public bool Cancel { get; set; }
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="currentTab">current Tab</param>
     /// <param name="newTab">new tab</param>
@@ -503,13 +521,13 @@ public class TabPageChangeEventArgs : EventArgs
     }
 
     /// <summary>
-    ///     Gets the current selected Tab.
+    /// Gets the current selected Tab.
     /// </summary>
     public TabPage? CurrentTab { get; }
 
 
     /// <summary>
-    ///     Gets the Tab that is to become current.
+    /// Gets the Tab that is to become current.
     /// </summary>
     public TabPage NewTab { get; }
 }

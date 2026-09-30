@@ -5,7 +5,7 @@ using Microsoft.DotNet.DesignTools.Designers.Actions;
 #endif
 namespace ExControls.Designers;
 
-internal class ExGroupBoxDesigner : DesignerParentControlBase<ExGroupBox>
+internal sealed class ExGroupBoxDesigner : DesignerParentControlBase<ExGroupBox>
 {
     private DesignerActionListCollection? _actionLists;
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection { new ExGroupBoxActionList(ControlHost) };

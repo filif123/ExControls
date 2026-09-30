@@ -6,20 +6,37 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded Button Control.
+/// Expanded Button Control.
 /// </summary>
 [ToolboxBitmap(typeof(Button), "Button.bmp")]
-public class ExButton : Button, IExControl
+public class ExButton : Button, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BackColor = theme.ButtonBackColor;
+        ForeColor = theme.ButtonForeColor;
+        ExFlatAppearance.BorderColor = theme.BorderColor;
+        ExFlatAppearance.MouseOverBackColor = theme.HighlightBackColor;
+        ExFlatAppearance.MouseDownBackColor = theme.HighlightBackColor;
+        ExFlatAppearance.FocusBorderColor = theme.HighlightBackColor;
+    }
+
     private bool _defaultStyle;
-    private ExFlatButtonAppearance? appearance;
-    private Color tmpBeforeHoverColor = Color.Empty;
-    private Color tmpBeforeClickColor = Color.Empty;
-    private Color tmpBeforeFocusColor = Color.Empty;
-    private bool focused;
+    private ExFlatButtonAppearance? _appearance;
+    private Color _tmpBeforeHoverColor = Color.Empty;
+    private Color _tmpBeforeClickColor = Color.Empty;
+    private Color _tmpBeforeFocusColor = Color.Empty;
+    private bool _focused;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExButton()
     {
@@ -49,6 +66,7 @@ public class ExButton : Button, IExControl
     /// <summary>
     /// 
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public new FlatStyle FlatStyle
     {
         get => base.FlatStyle;
@@ -61,10 +79,10 @@ public class ExButton : Button, IExControl
     }
 
     /// <summary>
-    ///     Dont use.
+    /// Dont use.
     /// </summary>
     [Browsable(false)]
-    [Obsolete]
+    [Obsolete("ExButton does not use FlatAppearance - the appearance is set by its style.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public new FlatButtonAppearance FlatAppearance => base.FlatAppearance;
@@ -80,8 +98,8 @@ public class ExButton : Button, IExControl
     {
         get
         {
-            appearance ??= new ExFlatButtonAppearance(this);
-            return appearance;
+            _appearance ??= new ExFlatButtonAppearance(this);
+            return _appearance;
         }
     }
 
@@ -93,75 +111,75 @@ public class ExButton : Button, IExControl
     /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
     protected virtual void OnDefaultStyleChanged() => DefaultStyleChanged?.Invoke(this, EventArgs.Empty);
 
-    /// <summary>Raises the <see cref="M:System.Windows.Forms.Control.OnMouseDown(System.Windows.Forms.MouseEventArgs)" /> event.</summary>
-    /// <param name="mevent">A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.OnMouseDown(System.Windows.Forms.MouseEventArgs)" /> event.</summary>
+    /// <param name="mevent">A <see cref="System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
     protected override void OnMouseDown(MouseEventArgs mevent)
     {
         base.OnMouseDown(mevent);
         if (_defaultStyle || ExFlatAppearance.MouseDownBorderColor == Color.Empty)
             return;
-        tmpBeforeClickColor = ExFlatAppearance.BorderColor;
-        ExFlatAppearance.SetTmpBeforeClickColor(tmpBeforeClickColor);
+        _tmpBeforeClickColor = ExFlatAppearance.BorderColor;
+        ExFlatAppearance.SetTmpBeforeClickColor(_tmpBeforeClickColor);
         ExFlatAppearance.BorderColor = ExFlatAppearance.MouseDownBorderColor;
     }
 
-    /// <summary>Raises the <see cref="M:System.Windows.Forms.ButtonBase.OnMouseUp(System.Windows.Forms.MouseEventArgs)" /> event.</summary>
-    /// <param name="mevent">A <see cref="T:System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.ButtonBase.OnMouseUp(System.Windows.Forms.MouseEventArgs)" /> event.</summary>
+    /// <param name="mevent">A <see cref="System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
     protected override void OnMouseUp(MouseEventArgs mevent)
     {
         base.OnMouseUp(mevent);
         if (_defaultStyle || ExFlatAppearance.MouseDownBorderColor == Color.Empty)
             return;
-        ExFlatAppearance.BorderColor = tmpBeforeClickColor;
+        ExFlatAppearance.BorderColor = _tmpBeforeClickColor;
         ExFlatAppearance.UnsetTmpBeforeClickColor();
-        tmpBeforeClickColor = Color.Empty;
-        if (focused)
+        _tmpBeforeClickColor = Color.Empty;
+        if (_focused)
             SetFocusColor();
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.Enter" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.Enter" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnMouseEnter(EventArgs e)
     {
         base.OnMouseEnter(e);
         if (_defaultStyle || ExFlatAppearance.MouseOverBorderColor == Color.Empty)
             return;
-        tmpBeforeHoverColor = ExFlatAppearance.BorderColor;
-        ExFlatAppearance.SetTmpBeforeHoverColor(tmpBeforeHoverColor);
+        _tmpBeforeHoverColor = ExFlatAppearance.BorderColor;
+        ExFlatAppearance.SetTmpBeforeHoverColor(_tmpBeforeHoverColor);
         ExFlatAppearance.BorderColor = ExFlatAppearance.MouseOverBorderColor;
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.Leave" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.Leave" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnMouseLeave(EventArgs e)
     {
         base.OnMouseLeave(e);
         if (_defaultStyle || ExFlatAppearance.MouseOverBorderColor == Color.Empty)
             return;
-        ExFlatAppearance.BorderColor = tmpBeforeHoverColor;
+        ExFlatAppearance.BorderColor = _tmpBeforeHoverColor;
         ExFlatAppearance.UnsetTmpBeforeHoverColor();
-        tmpBeforeHoverColor = Color.Empty;
-        if (focused) 
+        _tmpBeforeHoverColor = Color.Empty;
+        if (_focused) 
             SetFocusColor();
     }
 
-    /// <summary>Raises the <see cref="E:System.Windows.Forms.Control.GotFocus" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.GotFocus" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnGotFocus(EventArgs e)
     {
         base.OnGotFocus(e);
-        focused = true;
+        _focused = true;
         if (_defaultStyle || ExFlatAppearance.FocusBorderColor == Color.Empty)
             return;
         SetFocusColor();
     }
 
-    /// <summary>Raises the <see cref="M:System.Windows.Forms.ButtonBase.OnLostFocus(System.EventArgs)" /> event.</summary>
-    /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data.</param>
+    /// <summary>Raises the <see cref="System.Windows.Forms.ButtonBase.OnLostFocus(System.EventArgs)" /> event.</summary>
+    /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnLostFocus(EventArgs e)
     {
         base.OnLostFocus(e);
-        focused = false;
+        _focused = false;
         if (_defaultStyle || ExFlatAppearance.FocusBorderColor == Color.Empty)
             return;
         UnsetFocusColor();
@@ -169,27 +187,27 @@ public class ExButton : Button, IExControl
 
     private void SetFocusColor()
     {
-        tmpBeforeFocusColor = ExFlatAppearance.BorderColor;
-        ExFlatAppearance.SetTmpBeforeFocusColor(tmpBeforeFocusColor);
+        _tmpBeforeFocusColor = ExFlatAppearance.BorderColor;
+        ExFlatAppearance.SetTmpBeforeFocusColor(_tmpBeforeFocusColor);
         ExFlatAppearance.BorderColor = ExFlatAppearance.FocusBorderColor;
     }
 
     private void UnsetFocusColor()
     {
-        ExFlatAppearance.BorderColor = tmpBeforeFocusColor;
+        ExFlatAppearance.BorderColor = _tmpBeforeFocusColor;
         ExFlatAppearance.UnsetTmpBeforeFocusColor();
-        tmpBeforeFocusColor = Color.Empty;
+        _tmpBeforeFocusColor = Color.Empty;
     }
 }
 
 
 /// <summary>
-///     ....
+/// ....
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
 public class ExFlatButtonAppearance
 {
-    private readonly ButtonBase owner;
+    private readonly ButtonBase _owner;
     private Color _mouseDownBorderColor = Color.Empty;
     private Color _mouseOverBorderColor = Color.Empty;
     private Color _focusBorderColor = Color.Empty;
@@ -202,10 +220,10 @@ public class ExFlatButtonAppearance
     private bool _inFocusMode;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     /// <param name="owner"></param>
-    public ExFlatButtonAppearance(ButtonBase owner) => this.owner = owner;
+    public ExFlatButtonAppearance(ButtonBase owner) => this._owner = owner;
 
     /// <summary>
     /// ...
@@ -218,8 +236,8 @@ public class ExFlatButtonAppearance
     [DefaultValue(1)]
     public int BorderSize
     {
-        get => owner.FlatAppearance.BorderSize;
-        set => owner.FlatAppearance.BorderSize = value;
+        get => _owner.FlatAppearance.BorderSize;
+        set => _owner.FlatAppearance.BorderSize = value;
     }
 
     /// <summary>
@@ -242,9 +260,9 @@ public class ExFlatButtonAppearance
             if (_inClickMode)
                 return _tmpBeforeClickColor;
 
-            return owner.FlatAppearance.BorderColor;
+            return _owner.FlatAppearance.BorderColor;
         }
-        set => owner.FlatAppearance.BorderColor = value;
+        set => _owner.FlatAppearance.BorderColor = value;
     }
 
     /// <summary>
@@ -258,8 +276,8 @@ public class ExFlatButtonAppearance
     [DefaultValue(typeof(Color), "")]
     public Color CheckedBackColor
     {
-        get => owner.FlatAppearance.CheckedBackColor;
-        set => owner.FlatAppearance.CheckedBackColor = value;
+        get => _owner.FlatAppearance.CheckedBackColor;
+        set => _owner.FlatAppearance.CheckedBackColor = value;
     }
 
     /// <summary>
@@ -273,8 +291,8 @@ public class ExFlatButtonAppearance
     [DefaultValue(typeof(Color), "")]
     public Color MouseDownBackColor
     {
-        get => owner.FlatAppearance.MouseDownBackColor;
-        set => owner.FlatAppearance.MouseDownBackColor = value;
+        get => _owner.FlatAppearance.MouseDownBackColor;
+        set => _owner.FlatAppearance.MouseDownBackColor = value;
     }
 
     /// <summary>
@@ -288,8 +306,8 @@ public class ExFlatButtonAppearance
     [DefaultValue(typeof(Color), "")]
     public Color MouseOverBackColor
     {
-        get => owner.FlatAppearance.MouseOverBackColor;
-        set => owner.FlatAppearance.MouseOverBackColor = value;
+        get => _owner.FlatAppearance.MouseOverBackColor;
+        set => _owner.FlatAppearance.MouseOverBackColor = value;
     }
 
     /// <summary>
@@ -309,7 +327,7 @@ public class ExFlatButtonAppearance
             if (_mouseDownBorderColor == value)
                 return;
             _mouseDownBorderColor = value;
-            owner.Invalidate();
+            _owner.Invalidate();
         }
     }
 
@@ -330,7 +348,7 @@ public class ExFlatButtonAppearance
             if (_mouseOverBorderColor == value)
                 return;
             _mouseOverBorderColor = value;
-            owner.Invalidate();
+            _owner.Invalidate();
         }
     }
 
@@ -351,7 +369,7 @@ public class ExFlatButtonAppearance
             if (_focusBorderColor == value)
                 return;
             _focusBorderColor = value;
-            owner.Invalidate();
+            _owner.Invalidate();
         }
     }
 

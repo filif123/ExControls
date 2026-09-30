@@ -3,7 +3,7 @@
 namespace ExControls;
 
 /// <summary>
-///     Provides the base class for a generic collection that support equality.
+/// Provides the base class for a generic collection that support equality.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class EquatableCollection<T> : Collection<T>
@@ -16,9 +16,9 @@ public class EquatableCollection<T> : Collection<T>
     }
 
     /// <inheritdoc />
-    public override bool Equals(object? other)
+    public override bool Equals(object? obj)
     {
-        return other is IEnumerable<T> otherEnumerable && otherEnumerable.SequenceEqual(this);
+        return obj is IEnumerable<T> otherEnumerable && otherEnumerable.SequenceEqual(this);
     }
 
     /// <inheritdoc />

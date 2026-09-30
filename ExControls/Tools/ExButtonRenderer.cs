@@ -3,13 +3,13 @@
 namespace ExControls;
 
 /// <summary>
-///     This class contains static methods to measure and draw buttons and text into the control graphics. This class
-///     cannot be inherited.
+/// This class contains static methods to measure and draw buttons and text into the control graphics. This class
+/// cannot be inherited.
 /// </summary>
 public static class ExButtonRenderer
 {
     /// <summary>
-    ///     Draws a Drop-down button at the specific relative position with custom colors.
+    /// Draws a Drop-down button at the specific relative position with custom colors.
     /// </summary>
     /// <param name="g">Graphics, where button will be drawn.</param>
     /// <param name="rec">Relative bounds of drop-down button.</param>
@@ -34,8 +34,8 @@ public static class ExButtonRenderer
     }
 
     /// <summary>
-    ///     Draws the check mark used by <see cref="ExCheckBox" /> into the box, scaled to the box size
-    ///     (the shape is designed for a 16 px box).
+    /// Draws the check mark used by <see cref="ExCheckBox" /> into the box, scaled to the box size
+    /// (the shape is designed for a 16 px box).
     /// </summary>
     /// <param name="g">Graphics.</param>
     /// <param name="box">Bounds of the check box.</param>
@@ -52,9 +52,9 @@ public static class ExButtonRenderer
     }
 
     /// <summary>
-    ///     Draws a pixel-exact filled triangle (row by row, no anti-aliasing) pointing in the given direction.
-    ///     <paramref name="center" /> is the center of the triangle's bounding box, <paramref name="size" /> its height
-    ///     (number of rows/columns from the base to the tip); the base is 2 * size - 1 pixels long.
+    /// Draws a pixel-exact filled triangle (row by row, no anti-aliasing) pointing in the given direction.
+    /// <paramref name="center" /> is the center of the triangle's bounding box, <paramref name="size" /> its height
+    /// (number of rows/columns from the base to the tip); the base is 2 * size - 1 pixels long.
     /// </summary>
     /// <param name="g">Graphics.</param>
     /// <param name="color">Fill color.</param>
@@ -90,8 +90,8 @@ public static class ExButtonRenderer
     }
 
     /// <summary>
-    ///     Draws the drop-down button of a date picker: a small calendar glyph followed by a down arrow
-    ///     (the same shape as the DATEPICKER visual style glyph), all in <paramref name="glyphColor" />.
+    /// Draws the drop-down button of a date picker: a small calendar glyph followed by a down arrow
+    /// (the same shape as the DATEPICKER visual style glyph), all in <paramref name="glyphColor" />.
     /// </summary>
     /// <param name="g">Graphics.</param>
     /// <param name="rec">Bounds of the button.</param>
@@ -136,7 +136,7 @@ public static class ExButtonRenderer
     }
 
     /// <summary>
-    ///     Measures and returns bounds of the Text and Box of the <see cref="ExCheckBox" /> or <see cref="ExRadioButton" />.
+    /// Measures and returns bounds of the Text and Box of the <see cref="ExCheckBox" /> or <see cref="ExRadioButton" />.
     /// </summary>
     /// <param name="g">Graphics ot the control.</param>
     /// <param name="c">Control (<see cref="ExCheckBox" /> or <see cref="ExRadioButton" />).</param>
@@ -295,17 +295,17 @@ public static class ExButtonRenderer
 }
 
 /// <summary>
-///     Represents rectangles of the box and text of the <see cref="ICheckableExControl" />.
+/// Represents rectangles of the box and text of the <see cref="ICheckableExControl" />.
 /// </summary>
 public class BoxAndTextRectangle
 {
     /// <summary>
-    ///     Bounds of box
+    /// Bounds of box
     /// </summary>
     public Rectangle BoxRectangle { get; set; }
 
     /// <summary>
-    ///     Bounds of text
+    /// Bounds of text
     /// </summary>
     public Rectangle TextRectangle { get; set; }
 }

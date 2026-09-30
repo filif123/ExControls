@@ -6,17 +6,33 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded TableLayoutPanel Control
+/// Expanded TableLayoutPanel Control
 /// </summary>
 [ToolboxBitmap(typeof(TableLayoutPanel), "TableLayoutPanel.bmp")]
-public class ExTableLayoutPanel : TableLayoutPanel, IExControl
+public class ExTableLayoutPanel : TableLayoutPanel, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        ExThemer.Apply(Controls, theme);
+        BackColor = theme.PanelBackColor;
+        ForeColor = theme.PanelForeColor;
+        DefaultStyle = theme.UseSystemStyle;
+        if (!DefaultStyle && CellBorderStyle == TableLayoutPanelCellBorderStyle.Single)
+        {
+            CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
+            BorderColor = theme.BorderColor;
+        }
+    }
+
     private Color _borderColor;
     private int _borderThickness;
     private bool _defaultStyle;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExTableLayoutPanel()
     {
@@ -26,7 +42,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     }
 
     /// <summary>
-    ///     Color of the TableLayoutPanel's border
+    /// Color of the TableLayoutPanel's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -46,7 +62,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl
     }
 
     /// <summary>
-    ///     Thickness of the TableLayoutPanel's border
+    /// Thickness of the TableLayoutPanel's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

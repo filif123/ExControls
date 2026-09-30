@@ -5,7 +5,7 @@ using Microsoft.DotNet.DesignTools.Designers.Actions;
 
 namespace ExControls.Designers;
 
-internal class ExCheckBoxDesigner : DesignerControlBase<ExCheckBox>
+internal sealed class ExCheckBoxDesigner : DesignerControlBase<ExCheckBox>
 {
     private DesignerActionListCollection? _actionLists;
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExCheckBoxActionList(ControlHost)};

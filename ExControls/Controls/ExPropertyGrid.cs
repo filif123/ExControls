@@ -8,7 +8,7 @@ using ExControls.Properties;
 namespace ExControls;
 
 /// <summary>
-///     Extended PropertyGrid.
+/// Extended PropertyGrid.
 /// Part of this code is from: https://www.codeproject.com/Articles/13342/Filtering-properties-in-a-PropertyGrid
 /// </summary>
 [Designer("ExControls.Designers.ExPropertyGridDesigner, ExControls")]
@@ -44,7 +44,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     }
 
     /// <summary>
-    ///     Gets internal ToolStrip control.
+    /// Gets internal ToolStrip control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -52,27 +52,25 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     public ToolStrip? InnerToolStrip => _innerToolStrip;
 
     /// <summary>
-    ///     Gets an internal Categorized button.
+    /// Gets an internal Categorized button.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Layout)]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public ToolStripButton? ButtonCategorized => field ??= InnerToolStrip?.Items.Cast<ToolStripItem>().FirstOrDefault(i => i.Text == @"Categorized")
-        as ToolStripButton;
+    public ToolStripButton? ButtonCategorized => field ??= SortButton(0);
 
     /// <summary>
-    ///     Gets an internal Alphabetical button.
+    /// Gets an internal Alphabetical button.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Layout)]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public ToolStripButton? ButtonAlphabetical => field ??= InnerToolStrip?.Items.Cast<ToolStripItem>().FirstOrDefault(i => i.Text == @"Alphabetical")
-        as ToolStripButton;
+    public ToolStripButton? ButtonAlphabetical => field ??= SortButton(1);
 
     /// <summary>
-    ///     Gets an internal Separator.
+    /// Gets an internal Separator.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Layout)]
@@ -82,14 +80,20 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
         as ToolStripSeparator;
 
     /// <summary>
-    ///     Gets an internal Property Pages button.
+    /// Gets an internal Property Pages button.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Layout)]
     [EditorBrowsable(EditorBrowsableState.Always)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public ToolStripButton? ButtonPropertyPages => field ??= InnerToolStrip?.Items.Cast<ToolStripItem>().FirstOrDefault(i => i.Text == @"Property Pages")
-        as ToolStripButton;
+    public ToolStripButton? ButtonPropertyPages => field ??= InnerToolStrip?.Items.OfType<ToolStripButton>().Skip(2).LastOrDefault();
+
+    /// <summary>
+    /// Tlacidlo radenia podla poradia na paneli (0 = podla kategorii, 1 = abecedne). Text tlacidiel je
+    /// lokalizovany (v cestine ich WinForms prekladaju), preto sa nehladaju podla textu.
+    /// </summary>
+    private ToolStripButton? SortButton(int index) =>
+        InnerToolStrip?.Items.OfType<ToolStripButton>().ElementAtOrDefault(index);
 
     /// <inheritdoc />
     protected override Bitmap SortByCategoryImage => Resources.PBCategory;
@@ -130,8 +134,10 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     }
 
     /// <summary>
-    ///     Get or set the categories to show.
+    /// Get or set the categories to show.
     /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public new AttributeCollection? BrowsableAttributes
     {
         get => _browsableAttributes;
@@ -145,8 +151,9 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     }
 
     /// <summary>
-    ///     Get or set the categories to hide.
+    /// Get or set the categories to hide.
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public AttributeCollection? HiddenAttributes
     {
         get => _hiddenAttributes;
@@ -159,9 +166,10 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
         }
     }
     /// <summary>
-    ///     Get or set the properties to show.
+    /// Get or set the properties to show.
     /// </summary>
     /// <exception cref="ArgumentException">if one or several properties don't exist.</exception>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string[]? BrowsableProperties
     {
         get => _browsableProperties;
@@ -175,8 +183,9 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     }
 
     /// <summary>
-    ///     Get or set the properties to hide.
+    /// Get or set the properties to hide.
     /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string[]? HiddenProperties
     {
         get => _hiddenProperties;
@@ -192,6 +201,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     /// <summary>
     /// 
     /// </summary>
+    [DefaultValue(false)]
     public bool FirstHideAllProperties
     {
         get;
@@ -204,11 +214,13 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     }
 
     /// <summary>
-    ///     Overwrite the PropertyGrid.SelectedObject property.
+    /// Overwrite the PropertyGrid.SelectedObject property.
     /// </summary>
     /// <remarks>
-    ///     The object passed to the base PropertyGrid is the wrapper.
+    /// The object passed to the base PropertyGrid is the wrapper.
     /// </remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public new object? SelectedObject
     {
         get => _wrapper != null ? ((ObjectWrapper)base.SelectedObject!).SelectedObject : null;
@@ -240,7 +252,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     }
 
     /// <summary>
-    ///     Build the list of the properties to be displayed in the PropertyGrid, following the filters defined the Browsable and Hidden properties.
+    /// Build the list of the properties to be displayed in the PropertyGrid, following the filters defined the Browsable and Hidden properties.
     /// </summary>
     private void RefreshProperties()
     {
@@ -310,7 +322,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     }
     
     /// <summary>
-    ///     Allows to hide a set of properties to the parent PropertyGrid.
+    /// Allows to hide a set of properties to the parent PropertyGrid.
     /// </summary>
     /// <param name="attribute">A set of attributes that filter the original collection of properties.</param>
     /// <remarks>For better performance, include the BrowsableAttribute with true value.</remarks>
@@ -324,7 +336,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
             HideProperty(propertydescriptor);
     }
     /// <summary>
-    ///     Add all the properties that match an attribute to the list of properties to be displayed in the PropertyGrid.
+    /// Add all the properties that match an attribute to the list of properties to be displayed in the PropertyGrid.
     /// </summary>
     /// <param name="attribute">The attribute to be added.</param>
     private void ShowAttribute(Attribute attribute)
@@ -337,7 +349,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
             ShowProperty(propertydescriptor);
     }
     /// <summary>
-    ///     Add a property to the list of properties to be displayed in the PropertyGrid.
+    /// Add a property to the list of properties to be displayed in the PropertyGrid.
     /// </summary>
     /// <param name="property">The property to be added.</param>
     private void ShowProperty(PropertyDescriptor? property)
@@ -346,7 +358,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
             _propertyDescriptors.Add(property);
     }
     /// <summary>
-    ///     Allows to hide a property to the parent PropertyGrid.
+    /// Allows to hide a property to the parent PropertyGrid.
     /// </summary>
     /// <param name="property">The name of the property to be hidden.</param>
     private void HideProperty(PropertyDescriptor? property)

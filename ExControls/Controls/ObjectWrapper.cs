@@ -1,7 +1,7 @@
 ﻿namespace ExControls;
 
 /// <summary>This class is a wrapper. It contains the object the propertyGrid has to display.</summary>
-internal class ObjectWrapper : ICustomTypeDescriptor
+internal sealed class ObjectWrapper : ICustomTypeDescriptor
 {
     /// <summary>Simple constructor.</summary>
     /// <param name="obj">A reference to the selected object that will linked to the parent PropertyGrid.</param>
@@ -14,7 +14,7 @@ internal class ObjectWrapper : ICustomTypeDescriptor
     public object? SelectedObject { get; set; }
 
     /// <summary>
-    ///     Get or set a reference to the collection of properties to show in the parent PropertyGrid.
+    /// Get or set a reference to the collection of properties to show in the parent PropertyGrid.
     /// By default, PropertyDescriptors contain all the properties of the object.
     /// </summary>
     public List<PropertyDescriptor> PropertyDescriptors { get; set; } = new();

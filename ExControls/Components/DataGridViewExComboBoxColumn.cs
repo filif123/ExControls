@@ -1,15 +1,41 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 // ReSharper disable UnusedMember.Global
 
 namespace ExControls;
 
 /// <summary>
-///     Expanded ComboBox Column for DataGridView
+/// Expanded ComboBox Column for DataGridView
 /// </summary>
-public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
+public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn, IThemeable
 {
     /// <summary>
-    ///     Constructor
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        DropDownBackColor = theme.PanelBackColor;
+        DropDownSelectedBackColor = theme.HighlightBackColor;
+        StyleNormal.ForeColor = theme.ButtonForeColor;
+        StyleNormal.BackColor = theme.ButtonBackColor;
+        StyleNormal.BorderColor = theme.BorderColor;
+        StyleNormal.ArrowColor = theme.BoxForeColor;
+        StyleNormal.ButtonBackColor = theme.ButtonBackColor;
+        StyleNormal.ButtonBorderColor = theme.ButtonBackColor;
+        StyleSelected.BorderColor = theme.HighlightBackColor;
+        StyleSelected.ButtonRenderFirst = false;
+        StyleSelected.ButtonBackColor = theme.HighlightBackColor;
+        StyleSelected.ButtonBorderColor = theme.HighlightBackColor;
+        StyleHighlight.BorderColor = theme.HighlightBackColor;
+        StyleHighlight.ButtonBorderColor = theme.HighlightBackColor;
+    }
+
+    /// <summary>
+    /// Constructor
     /// </summary>
     public DataGridViewExComboBoxColumn()
     {
@@ -88,7 +114,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     private DataGridViewExComboBoxCell ExComboBoxCellTemplate => (DataGridViewExComboBoxCell)CellTemplate!;
 
     /// <summary>
-    ///     Default style of the Control
+    /// Default style of the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -107,7 +133,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     }
 
     /// <summary>
-    ///     Color of the selected row in drop down menu
+    /// Color of the selected row in drop down menu
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -126,7 +152,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     }
 
     /// <summary>
-    ///     Background color of the drop down menu.
+    /// Background color of the drop down menu.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -145,12 +171,13 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     }
 
     /// <summary>
-    ///     Normal style of the Control (when is inactive).
+    /// Normal style of the Control (when is inactive).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [Description("Normal style of the Control (when is inactive).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBoxStyle StyleNormal
     {
         get => ExComboBoxCellTemplate.StyleNormal;
@@ -164,12 +191,13 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     }
 
     /// <summary>
-    ///     Highlight style of the Control (when mouse is over control).
+    /// Highlight style of the Control (when mouse is over control).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [Description("Highlight style of the Control (when mouse is over control).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBoxStyle StyleHighlight
     {
         get => ExComboBoxCellTemplate.StyleHighlight;
@@ -183,12 +211,13 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     }
 
     /// <summary>
-    ///     Selected style of the Control (when control is selected).
+    /// Selected style of the Control (when control is selected).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [Description("Selected style of the Control (when control is selected).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBoxStyle StyleSelected
     {
         get => ExComboBoxCellTemplate.StyleSelected;
@@ -202,12 +231,13 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
     }
 
     /// <summary>
-    ///     Disabled style of the Control (when control is not Enabled).
+    /// Disabled style of the Control (when control is not Enabled).
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
     [Description("Disabled style of the Control (when control is not Enabled).")]
     [TypeConverter(typeof(ExpandableObjectConverter))]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public ExComboBoxStyle StyleDisabled
     {
         get => ExComboBoxCellTemplate.StyleDisabled;
@@ -222,14 +252,14 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn
 }
 
 /// <summary>
-///     Expanded ComboBox Cell for DataGridView
+/// Expanded ComboBox Cell for DataGridView
 /// </summary>
 public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
 {
     private bool _drawing;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public DataGridViewExComboBoxCell()
     {
@@ -252,7 +282,7 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     public override Type EditType => typeof(DataGridViewExComboBoxEditingControl);
 
     /// <summary>
-    ///     Default style of the Control
+    /// Default style of the Control
     /// </summary>
     public bool DefaultStyle
     {
@@ -265,7 +295,7 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     }
 
     /// <summary>
-    ///     Color of the selected row in drop down menu
+    /// Color of the selected row in drop down menu
     /// </summary>
     public Color DropDownSelectedBackColor
     {
@@ -278,7 +308,7 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     }
 
     /// <summary>
-    ///     Color of the selected row in drop down menu
+    /// Color of the selected row in drop down menu
     /// </summary>
     public Color DropDownBackColor
     {
@@ -291,22 +321,22 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     }
 
     /// <summary>
-    ///     Normal style of the Control (when is inactive).
+    /// Normal style of the Control (when is inactive).
     /// </summary>
     public ExComboBoxStyle StyleNormal { get; set; }
 
     /// <summary>
-    ///     Highlight style of the Control (when mouse is over control).
+    /// Highlight style of the Control (when mouse is over control).
     /// </summary>
     public ExComboBoxStyle StyleHighlight { get; set; }
 
     /// <summary>
-    ///     Selected style of the Control (when control is selected).
+    /// Selected style of the Control (when control is selected).
     /// </summary>
     public ExComboBoxStyle StyleSelected { get; set; }
 
     /// <summary>
-    ///     Disabled style of the Control (when control is not Enabled).
+    /// Disabled style of the Control (when control is not Enabled).
     /// </summary>
     public ExComboBoxStyle StyleDisabled { get; set; }
 
@@ -333,8 +363,8 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     /// <param name="rowIndex">The index of the cell's parent row.</param>
     /// <param name="initialFormattedValue">The initial value to be displayed in the control.</param>
     /// <param name="dataGridViewCellStyle">
-    ///     A <see cref="System.Windows.Forms.DataGridViewCellStyle" /> that determines the
-    ///     appearance of the hosted control.
+    /// A <see cref="System.Windows.Forms.DataGridViewCellStyle" /> that determines the
+    /// appearance of the hosted control.
     /// </param>
     public override void InitializeEditingControl(int rowIndex, object? initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle)
     {
@@ -354,7 +384,7 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     }
 
     /// <inheritdoc />
-    protected override void Paint(Graphics g,
+    protected override void Paint(Graphics graphics,
         Rectangle clipBounds, Rectangle cellBounds,
         int rowIndex,
         DataGridViewElementStates elementState,
@@ -365,14 +395,14 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
     {
         if (DefaultStyle)
         {
-            base.Paint(g, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
+            base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
             return;
         }
 
         _drawing = true;
 
         var formattedText = formattedValue?.ToString() ?? string.Empty;
-        var texts = TextRenderer.MeasureText(g, formattedText, cellStyle.Font);
+        var texts = TextRenderer.MeasureText(graphics, formattedText, cellStyle.Font);
         var textStart = new Point(cellBounds.X + 2, cellBounds.Y + (int)Math.Round(cellBounds.Height / 2d - texts.Height / 2d));
         var dropButton = cellBounds with { X = cellBounds.X + cellBounds.Width - 23, Width = 20 };
 
@@ -396,22 +426,22 @@ public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
         }
 
         using (var brushBack = new SolidBrush(back))
-            g.FillRectangle(brushBack, cellBounds);
+            graphics.FillRectangle(brushBack, cellBounds);
 
         using var penBorder = new Pen(border);
 
         if (bbfirst)
         {
-            ExButtonRenderer.DrawDropDownButton(g, dropButton, backbut, borbut, arrow);
-            g.DrawRectangle(penBorder, cellBounds.X, cellBounds.Y, cellBounds.Width - 1, cellBounds.Height - 1);
+            ExButtonRenderer.DrawDropDownButton(graphics, dropButton, backbut, borbut, arrow);
+            graphics.DrawRectangle(penBorder, cellBounds.X, cellBounds.Y, cellBounds.Width - 1, cellBounds.Height - 1);
         }
         else
         {
-            g.DrawRectangle(penBorder, cellBounds.X, cellBounds.Y, cellBounds.Width - 1, cellBounds.Height - 1);
-            ExButtonRenderer.DrawDropDownButton(g, dropButton, backbut, borbut, arrow);
+            graphics.DrawRectangle(penBorder, cellBounds.X, cellBounds.Y, cellBounds.Width - 1, cellBounds.Height - 1);
+            ExButtonRenderer.DrawDropDownButton(graphics, dropButton, backbut, borbut, arrow);
         }
 
-        TextRenderer.DrawText(g, formattedText, cellStyle.Font, textStart, fore, back,
+        TextRenderer.DrawText(graphics, formattedText, cellStyle.Font, textStart, fore, back,
             DataGridView.RightToLeft == RightToLeft.Yes ? TextFormatFlags.Right : TextFormatFlags.Default);
 
         _drawing = false;
@@ -430,8 +460,8 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
     private bool _valueChanged;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="System.Windows.Forms.DataGridViewComboBoxEditingControl" />
-    ///     class.
+    /// Initializes a new instance of the <see cref="System.Windows.Forms.DataGridViewComboBoxEditingControl" />
+    /// class.
     /// </summary>
     public DataGridViewExComboBoxEditingControl()
     {
@@ -440,10 +470,12 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
 
     /// <summary>Gets or sets the <see cref="System.Windows.Forms.DataGridView" /> that contains the combo box control.</summary>
     /// <returns>
-    ///     The <see cref="System.Windows.Forms.DataGridView" /> that contains the
-    ///     <see cref="System.Windows.Forms.DataGridViewComboBoxCell" /> that contains this control; otherwise,
-    ///     <see langword="null" /> if there is no associated <see cref="System.Windows.Forms.DataGridView" />.
+    /// The <see cref="System.Windows.Forms.DataGridView" /> that contains the
+    /// <see cref="System.Windows.Forms.DataGridViewComboBoxCell" /> that contains this control; otherwise,
+    /// <see langword="null" /> if there is no associated <see cref="System.Windows.Forms.DataGridView" />.
     /// </returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual DataGridView? EditingControlDataGridView
     {
         get => _dataGridView;
@@ -452,10 +484,10 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
 
     /// <summary>Gets or sets the formatted representation of the current value of the control.</summary>
     /// <returns>An object representing the current value of this control.</returns>
-    // IDataGridViewEditingControl.EditingControlFormattedValue is asymmetric in the BCL ([AllowNull] set, non-null get).
-    // [AllowNull] itself can't be used here because it fails on net48 in this multi-targeted project
-    // (CS0122: AllowNullAttribute is inaccessible due to its protection level).
-#pragma warning disable CS8765, CS8767
+    // IDataGridViewEditingControl.EditingControlFormattedValue je v BCL asymetricka ([AllowNull] set, get nie null)
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [AllowNull]
     public virtual object EditingControlFormattedValue
     {
         get => GetEditingControlFormattedValue(DataGridViewDataErrorContexts.Formatting);
@@ -469,16 +501,19 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
             SelectedIndex = -1;
         }
     }
-#pragma warning restore CS8765, CS8767
 
     /// <summary>Gets or sets the index of the owning cell's parent row.</summary>
     /// <returns>The index of the row that contains the owning cell; -1 if there is no owning row.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual int EditingControlRowIndex { get; set; }
 
     /// <summary>Gets or sets a value indicating whether the current value of the control has changed.</summary>
     /// <returns>
-    ///     <see langword="true" /> if the value of the control has changed; otherwise, <see langword="false" />.
+    /// <see langword="true" /> if the value of the control has changed; otherwise, <see langword="false" />.
     /// </returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public virtual bool EditingControlValueChanged
     {
         get => _valueChanged;
@@ -487,21 +522,21 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
 
     /// <summary>Gets the cursor used during editing.</summary>
     /// <returns>
-    ///     A <see cref="System.Windows.Forms.Cursor" /> that represents the cursor image used by the mouse pointer
-    ///     during editing.
+    /// A <see cref="System.Windows.Forms.Cursor" /> that represents the cursor image used by the mouse pointer
+    /// during editing.
     /// </returns>
     public virtual Cursor EditingPanelCursor => Cursors.Default;
 
     /// <summary>Gets a value indicating whether the cell contents need to be repositioned whenever the value changes.</summary>
     /// <returns>
-    ///     <see langword="false" /> in all cases.
+    /// <see langword="false" /> in all cases.
     /// </returns>
     public virtual bool RepositionEditingControlOnValueChange => false;
 
     /// <summary>Changes the control's user interface (UI) to be consistent with the specified cell style.</summary>
     /// <param name="dataGridViewCellStyle">
-    ///     The <see cref="System.Windows.Forms.DataGridViewCellStyle" /> to use as a pattern
-    ///     for the UI.
+    /// The <see cref="System.Windows.Forms.DataGridViewCellStyle" /> to use as a pattern
+    /// for the UI.
     /// </param>
     public virtual void ApplyCellStyleToEditingControl(DataGridViewCellStyle dataGridViewCellStyle)
     {
@@ -524,20 +559,20 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
     }
 
     /// <summary>
-    ///     Determines whether the specified key is a regular input key that the editing control should process or a
-    ///     special key that the <see cref="System.Windows.Forms.DataGridView" /> should process.
+    /// Determines whether the specified key is a regular input key that the editing control should process or a
+    /// special key that the <see cref="System.Windows.Forms.DataGridView" /> should process.
     /// </summary>
     /// <param name="keyData">
-    ///     A bitwise combination of <see cref="System.Windows.Forms.Keys" /> values that represents the
-    ///     key that was pressed.
+    /// A bitwise combination of <see cref="System.Windows.Forms.Keys" /> values that represents the
+    /// key that was pressed.
     /// </param>
     /// <param name="dataGridViewWantsInputKey">
-    ///     <see langword="true" /> to indicate that the <see cref="System.Windows.Forms.DataGridView" /> control can process
-    ///     the key; otherwise, <see langword="false" />.
+    /// <see langword="true" /> to indicate that the <see cref="System.Windows.Forms.DataGridView" /> control can process
+    /// the key; otherwise, <see langword="false" />.
     /// </param>
     /// <returns>
-    ///     <see langword="true" /> if the specified key is a regular input key that should be handled by the editing control;
-    ///     otherwise, <see langword="false" />.
+    /// <see langword="true" /> if the specified key is a regular input key that should be handled by the editing control;
+    /// otherwise, <see langword="false" />.
     /// </returns>
     public virtual bool EditingControlWantsInputKey(Keys keyData, bool dataGridViewWantsInputKey)
     {
@@ -547,8 +582,8 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
 
     /// <summary>Retrieves the formatted value of the cell.</summary>
     /// <param name="context">
-    ///     A bitwise combination of <see cref="System.Windows.Forms.DataGridViewDataErrorContexts" />
-    ///     values that specifies the data error context.
+    /// A bitwise combination of <see cref="System.Windows.Forms.DataGridViewDataErrorContexts" />
+    /// values that specifies the data error context.
     /// </param>
     /// <returns>An <see cref="System.Object" /> that represents the formatted version of the cell contents.</returns>
     public virtual object GetEditingControlFormattedValue(DataGridViewDataErrorContexts context)
@@ -558,7 +593,7 @@ public class DataGridViewExComboBoxEditingControl : ExComboBox, IDataGridViewEdi
 
     /// <summary>Prepares the currently selected cell for editing.</summary>
     /// <param name="selectAll">
-    ///     <see langword="true" /> to select all of the cell's content; otherwise, <see langword="false" />.
+    /// <see langword="true" /> to select all of the cell's content; otherwise, <see langword="false" />.
     /// </param>
     public virtual void PrepareEditingControlForEdit(bool selectAll)
     {

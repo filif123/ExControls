@@ -6,11 +6,27 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-///     Expanded MaskedTextBox Control
+/// Expanded MaskedTextBox Control
 /// </summary>
 [ToolboxBitmap(typeof(MaskedTextBox), "MaskedTextBox.bmp")]
-public class ExMaskedTextBox : MaskedTextBox, IExControl
+public class ExMaskedTextBox : MaskedTextBox, IExControl, IThemeable
 {
+    /// <summary>
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BackColor = theme.BoxBackColor;
+        ForeColor = theme.BoxForeColor;
+        BorderColor = theme.BorderColor;
+        HighlightColor = theme.HighlightBackColor;
+        DisabledBorderColor = theme.ButtonBackColor;
+    }
+
     private const int RGN_DIFF = 0x4;
 
     private Color _borderColor;
@@ -23,7 +39,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     private bool _selected;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public ExMaskedTextBox()
     {
@@ -38,7 +54,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border
+    /// Color of the TextBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -57,7 +73,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the TextBox's border when it is disabled
+    /// Color of the TextBox's border when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -76,7 +92,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <summary>
-    ///     Color of the border of TextBox when mouse is over the Control
+    /// Color of the border of TextBox when mouse is over the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -95,7 +111,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <summary>
-    ///     Width of the TextBox's border
+    /// Width of the TextBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -192,9 +208,9 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseEnter(EventArgs eventargs)
+    protected override void OnMouseEnter(EventArgs e)
     {
-        base.OnMouseEnter(eventargs);
+        base.OnMouseEnter(e);
         if (DefaultStyle)
             return;
 
@@ -206,9 +222,9 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl
     }
 
     /// <inheritdoc />
-    protected override void OnMouseLeave(EventArgs eventargs)
+    protected override void OnMouseLeave(EventArgs e)
     {
-        base.OnMouseLeave(eventargs);
+        base.OnMouseLeave(e);
         if (DefaultStyle)
             return;
 

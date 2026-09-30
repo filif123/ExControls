@@ -6,7 +6,7 @@ using ExControls.Editors;
 namespace ExControls;
 
 /// <summary>
-///     Represents a panel in the ExOptionsView containing one set of options.
+/// Represents a panel in the ExOptionsView containing one set of options.
 /// </summary>
 [ToolboxItem(false)]
 [Designer("ExControls.Designers.ExOptionsPanelDesigner, ExControls")]
@@ -55,7 +55,7 @@ public class ExOptionsPanel : Panel
     #region  Properties
 
     /// <summary>
-    ///     Gets the ExOptionsView to which this panel belongs
+    /// Gets the ExOptionsView to which this panel belongs
     /// </summary>
     /// <value></value>
     /// <returns></returns>
@@ -68,7 +68,7 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    ///     Gets or sets the node corresponding to this panel. Should not be used during run-time.
+    /// Gets or sets the node corresponding to this panel. Should not be used during run-time.
     /// </summary>
     [ExCategory("Nodes")]
     [ExDescription("The OptionsNode that corresponds to this panel.")]
@@ -85,7 +85,7 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    ///     Gets or sets the parent OptionsNode. Set this to create child option panels.
+    /// Gets or sets the parent OptionsNode. Set this to create child option panels.
     /// </summary>
     [ExCategory("Nodes")]
     [ExDescription("The parent node for the node corresponding to this panel. Set to create child option panels.")]
@@ -121,7 +121,7 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    ///     Gets or sets
+    /// Gets or sets
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("", true)]
@@ -146,6 +146,7 @@ public class ExOptionsPanel : Panel
     /// </summary>
     [ExCategory("Nodes")]
     [Description("The text displayed in the node.")]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public string NodeText
     {
         get => Node.Text;
@@ -163,7 +164,7 @@ public class ExOptionsPanel : Panel
     #region  Methods
 
     /// <summary>
-    ///     Generates link to panel if GenerateLinksToChildren is true.
+    /// Generates link to panel if GenerateLinksToChildren is true.
     /// </summary>
     public virtual void GenerateLinks()
     {
@@ -197,7 +198,7 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    ///     Removes links in panel if GenerateLinksToChildren is true.
+    /// Removes links in panel if GenerateLinksToChildren is true.
     /// </summary>
     public virtual void RemoveLinks()
     {
@@ -240,8 +241,6 @@ public class ExOptionsPanel : Panel
     }
 
     // Tell the designer to serialize the Node and ParentNode properties to the designer file.
-#pragma warning disable S1144  // Unused private types or members should be removed
-#pragma warning disable S3400  // Methods should not return constants
 #pragma warning disable CA1822 // Mark members as static
     
     private bool ShouldSerializeNode() => true;
@@ -250,13 +249,11 @@ public class ExOptionsPanel : Panel
     private bool ShouldSerializeParentNode() => true;
     
 #pragma warning restore CA1822 // Mark members as static
-#pragma warning restore S3400  // Methods should not return constants
-#pragma warning restore S1144  // Unused private types or members should be removed
 
     #endregion
 
     /// <summary>
-    ///     Detects if there is a control in the panel with the specified text.
+    /// Detects if there is a control in the panel with the specified text.
     /// </summary>
     /// <param name="text"></param>
     /// <returns></returns>

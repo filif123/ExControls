@@ -13,8 +13,10 @@ namespace ExControls.Collections;
 
 //, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a
 [Editor("System.Windows.Forms.Design.TreeNodeCollectionEditor", typeof(UITypeEditor))]
-public class ExTreeNodeCollection : IList
+public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
 {
+    private const string NotTreeNode = "Value must be a TreeNode.";
+
     private readonly List<TreeNode> _nodes;
     private readonly TreeNodeCollection _visibleNodes;
 
@@ -29,12 +31,12 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
+    /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
     /// </summary>
     public event EventHandler<ExTreeViewNodeAddedEventArgs>? TreeNodeAdded;
 
     /// <summary>
-    ///     Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
+    /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
     /// </summary>
     public event EventHandler<ExTreeViewNodeRemovedEventArgs>? TreeNodeRemoved;
 
@@ -135,8 +137,7 @@ public class ExTreeNodeCollection : IList
     /// <paramref name="nodes" /> is the child of another <see cref="System.Windows.Forms.TreeView" />.</exception>
     public virtual void AddRange(TreeNode[] nodes)
     {
-        if (nodes == null)
-            throw new ArgumentNullException(nameof(nodes));
+        ArgumentNullException.ThrowIfNull(nodes);
         if (nodes.Length == 0)
             return;
 
@@ -153,10 +154,7 @@ public class ExTreeNodeCollection : IList
     public virtual void Insert(int index, TreeNode node)
     {
         _nodes.Insert(index, node);
-        if (index < _visibleNodes.Count)
-            _visibleNodes.Insert(index, node);
-        else
-            _visibleNodes.Add(node);
+        ShowAt(index, node);
         OnTreeNodeAdded(new ExTreeViewNodeAddedEventArgs(node, index, 1));
     }
 
@@ -168,10 +166,7 @@ public class ExTreeNodeCollection : IList
     {
         var node = new TreeNode(text);
         _nodes.Insert(index, node);
-        if (index < _visibleNodes.Count)
-            _visibleNodes.Insert(index, node);
-        else
-            _visibleNodes.Add(node);
+        ShowAt(index, node);
         OnTreeNodeAdded(new ExTreeViewNodeAddedEventArgs(node, index, 1));
         return node;
     }
@@ -185,10 +180,7 @@ public class ExTreeNodeCollection : IList
     {
         var node = new TreeNode(text) {Name = key};
         _nodes.Insert(index, node);
-        if (index < _visibleNodes.Count)
-            _visibleNodes.Insert(index, node);
-        else
-            _visibleNodes.Add(node);
+        ShowAt(index, node);
         OnTreeNodeAdded(new ExTreeViewNodeAddedEventArgs(node, index, 1));
         return node;
     }
@@ -203,10 +195,7 @@ public class ExTreeNodeCollection : IList
     {
         var node = new TreeNode(text) {Name = key, ImageIndex = imageIndex};
         _nodes.Insert(index, node);
-        if (index < _visibleNodes.Count)
-            _visibleNodes.Insert(index, node);
-        else
-            _visibleNodes.Add(node);
+        ShowAt(index, node);
         OnTreeNodeAdded(new ExTreeViewNodeAddedEventArgs(node, index, 1));
         return node;
     }
@@ -221,10 +210,7 @@ public class ExTreeNodeCollection : IList
     {
         var node = new TreeNode(text) {Name = key, ImageKey = imageKey};
         _nodes.Insert(index, node);
-        if (index < _visibleNodes.Count)
-            _visibleNodes.Insert(index, node);
-        else
-            _visibleNodes.Add(node);
+        ShowAt(index, node);
         OnTreeNodeAdded(new ExTreeViewNodeAddedEventArgs(node, index, 1));
         return node;
     }
@@ -240,10 +226,7 @@ public class ExTreeNodeCollection : IList
     {
         var node = new TreeNode(text, imageIndex, selectedImageIndex){Name = key};
         _nodes.Insert(index, node);
-        if (index < _visibleNodes.Count)
-            _visibleNodes.Insert(index, node);
-        else
-            _visibleNodes.Add(node);
+        ShowAt(index, node);
         OnTreeNodeAdded(new ExTreeViewNodeAddedEventArgs(node, index, 1));
         return node;
     }
@@ -259,10 +242,7 @@ public class ExTreeNodeCollection : IList
     {
         var node = new TreeNode(text){Name = key, ImageKey = imageKey, SelectedImageKey = selectedImageKey};
         _nodes.Insert(index, node);
-        if (index < _visibleNodes.Count)
-            _visibleNodes.Insert(index, node);
-        else
-            _visibleNodes.Add(node);
+        ShowAt(index, node);
         OnTreeNodeAdded(new ExTreeViewNodeAddedEventArgs(node, index, 1));
         return node;
     }
@@ -308,12 +288,30 @@ public class ExTreeNodeCollection : IList
     {
         var node = _nodes[index];
         _nodes.RemoveAt(index);
-        _visibleNodes.RemoveAt(index);
-        OnTreeNodeRemoved(new ExTreeViewNodeRemovedEventArgs(node, 0, 1));
+        // index je poradie medzi vsetkymi uzlami - pri skrytych uzloch by v strome ukazoval na iny uzol
+        _visibleNodes.Remove(node);
+        OnTreeNodeRemoved(new ExTreeViewNodeRemovedEventArgs(node, index, 1));
     }
 
     /// <summary>
-    ///     Sets the visibility of the tree node.
+    /// Zobrazi uzol <paramref name="node" /> na mieste, ktore mu patri podla poradia vsetkych uzlov
+    /// (<paramref name="index" />) - skryte uzly pred nim sa nerataju.
+    /// </summary>
+    private void ShowAt(int index, TreeNode node)
+    {
+        var visibleIndex = 0;
+        for (var i = 0; i < index && i < _nodes.Count; i++)
+            if (!ReferenceEquals(_nodes[i], node) && _visibleNodes.Contains(_nodes[i]))
+                visibleIndex++;
+
+        if (visibleIndex >= _visibleNodes.Count)
+            _visibleNodes.Add(node);
+        else
+            _visibleNodes.Insert(visibleIndex, node);
+    }
+
+    /// <summary>
+    /// Sets the visibility of the tree node.
     /// </summary>
     /// <param name="node">treenode</param>
     /// <param name="visible">whether node should be visible</param>
@@ -344,17 +342,14 @@ public class ExTreeNodeCollection : IList
 
         if (visible)
         {
-            if (index >= _visibleNodes.Count)
-                _visibleNodes.Add(node);
-            else
-                _visibleNodes.Insert(index, node);
+            ShowAt(index, node);
         }
         else
             _visibleNodes.Remove(node);
     }
 
     /// <summary>
-    ///     Sets the visibility of the tree node by index.
+    /// Sets the visibility of the tree node by index.
     /// </summary>
     /// <param name="index">index of treenode</param>
     /// <param name="visible">whether node should be visible</param>
@@ -371,10 +366,7 @@ public class ExTreeNodeCollection : IList
 
         if (visible)
         {
-            if (index >= _visibleNodes.Count)
-                _visibleNodes.Add(node);
-            else
-                _visibleNodes.Insert(index, node);
+            ShowAt(index, node);
 
             SetVisibility(node.Parent, true);
         }
@@ -385,47 +377,34 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Sets the visibility of the tree node by key.
+    /// Sets the visibility of the tree node by key.
     /// </summary>
     /// <param name="key">key of treenode</param>
     /// <param name="visible">whether node should be visible</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public void SetVisibility(string? key, bool visible)         //BUG setting visibility does not work for inner nodes
+    public void SetVisibility(string? key, bool visible)
     {
         if (key == null || GetVisibility(key) == visible)
             return;
-        
-        var node = _nodes.FirstOrDefault(n => n.Name.Equals(key,StringComparison.OrdinalIgnoreCase));
+
+        // vnoreny uzol - viditelnost sa riadi jeho vetvou na najvyssej urovni (ako pri SetVisibility(TreeNode))
+        var node = _nodes.FirstOrDefault(n => n.Name.Equals(key, StringComparison.OrdinalIgnoreCase))
+                   ?? _nodes.SelectMany(n => n.Nodes.Find(key, true)).FirstOrDefault();
         if (node is null)
             throw new ArgumentOutOfRangeException(nameof(key));
-        var index = _nodes.IndexOf(node);
-        if (index == -1)
-            throw new ArgumentOutOfRangeException(nameof(key));
 
-        if (visible)
-        {
-            if (index >= _visibleNodes.Count)
-                _visibleNodes.Add(node);
-            else
-                _visibleNodes.Insert(index, node);
-
-            SetVisibility(node.Parent, true);
-        }
-        else
-        {
-            _visibleNodes.Remove(node);
-        }
+        SetVisibility(node, visible);
     }
 
     /// <summary>
-    ///     Gets the visibility of the tree node by node.
+    /// Gets the visibility of the tree node by node.
     /// </summary>
     /// <param name="node">tree node</param>
     /// <returns></returns>
     public bool GetVisibility(TreeNode node) => _visibleNodes.Contains(node);
 
     /// <summary>
-    ///    Gets the visibility of the tree node by index.
+    /// Gets the visibility of the tree node by index.
     /// </summary>
     /// <param name="index"></param>
     /// <returns></returns>
@@ -438,14 +417,14 @@ public class ExTreeNodeCollection : IList
     }
 
     /// <summary>
-    ///     Gets the visibility of the tree node by key.
+    /// Gets the visibility of the tree node by key.
     /// </summary>
     /// <param name="key">tree node key</param>
     /// <returns></returns>
     public bool GetVisibility(string key) => _visibleNodes.ContainsKey(key);
 
     /// <summary>
-    ///     Sets the visibility of all tree nodes.
+    /// Sets the visibility of all tree nodes.
     /// </summary>
     /// <param name="visible">whether node should be visible</param>
     public void SetVisibilityForAll(bool visible)
@@ -511,7 +490,7 @@ public class ExTreeNodeCollection : IList
     object? IList.this[int index]
     {
         get => _visibleNodes[index];
-        set => _visibleNodes[index] = value as TreeNode ?? throw new ArgumentException(nameof(value));
+        set => _visibleNodes[index] = value as TreeNode ?? throw new ArgumentException(NotTreeNode, nameof(value));
     }
 
     /// <summary>Gets or sets the element at the specified index.</summary>
@@ -560,8 +539,7 @@ public class ExTreeNodeCollection : IList
     /// The <see cref="System.Collections.IList" /> has a fixed size.</exception>
     public virtual int Add(object? value)
     {
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
         return value is TreeNode node ? Add(node) : Add(value.ToString()!).Index;
     }
 
@@ -583,7 +561,7 @@ public class ExTreeNodeCollection : IList
     void IList.Insert(int index, object? value)
     {
         if (value is not TreeNode node)
-            throw new ArgumentException(nameof(value));
+            throw new ArgumentException(NotTreeNode, nameof(value));
         Insert(index, node);
     }
 
@@ -603,7 +581,15 @@ public class ExTreeNodeCollection : IList
     /// 
     /// </summary>
     /// <param name="node"></param>
-    public virtual void Remove(TreeNode node) => node.Remove();
+    public virtual void Remove(TreeNode node)
+    {
+        // odstraneny uzol sa nesmie vratit pri zobrazeni vsetkych uzlov
+        var index = _nodes.IndexOf(node);
+        if (index != -1)
+            _nodes.RemoveAt(index);
+        node.Remove();
+        OnTreeNodeRemoved(new ExTreeViewNodeRemovedEventArgs(node, Math.Max(index, 0), 1));
+    }
 
     /// <summary>Determines whether the <see cref="System.Collections.IList" /> contains a specific value.</summary>
     /// <param name="value">The object to locate in the <see cref="System.Collections.IList" />.</param>
@@ -616,6 +602,9 @@ public class ExTreeNodeCollection : IList
     /// <returns>An <see cref="System.Collections.IEnumerator" /> object that can be used to iterate through the collection.</returns>
     public IEnumerator GetEnumerator() => _visibleNodes.GetEnumerator();
 
+    /// <inheritdoc />
+    IEnumerator<TreeNode> IEnumerable<TreeNode>.GetEnumerator() => _visibleNodes.Cast<TreeNode>().GetEnumerator();
+
     /// <summary>Copies the elements of the <see cref="System.Collections.ICollection" /> to an <see cref="System.Array" />, starting at a particular <see cref="System.Array" /> index.</summary>
     /// <param name="array">The one-dimensional <see cref="System.Array" /> that is the destination of the elements copied from <see cref="System.Collections.ICollection" />. The <see cref="System.Array" /> must have zero-based indexing.</param>
     /// <param name="index">The zero-based index in <paramref name="array" /> at which copying begins.</param>
@@ -624,7 +613,7 @@ public class ExTreeNodeCollection : IList
     /// <exception cref="System.ArgumentOutOfRangeException">
     /// <paramref name="index" /> is less than zero.</exception>
     /// <exception cref="System.ArgumentException">
-    ///         <paramref name="array" /> is multidimensional.
+    /// <paramref name="array" /> is multidimensional.
     /// -or-
     /// The number of elements in the source <see cref="System.Collections.ICollection" /> is greater than the available space from <paramref name="index" /> to the end of the destination <paramref name="array" />.
     /// -or-

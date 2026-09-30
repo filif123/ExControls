@@ -11,7 +11,7 @@ public class LinePenEventArgs : EventArgs
     }
 
     /// <summary>
-    ///     Pen of the line
+    /// Pen of the line
     /// </summary>
     public Pen Pen { get; }
 }
@@ -21,7 +21,7 @@ public class LinePenEventArgs : EventArgs
 public class ExPropertyChangedEventArgs : EventArgs
 {
     /// <summary>
-    ///     Creates new instance of <see cref="ExPropertyChangedEventArgs" />.
+    /// Creates new instance of <see cref="ExPropertyChangedEventArgs" />.
     /// </summary>
     /// <param name="name">name of changed property</param>
     /// <param name="value">new value of changed property</param>
@@ -32,12 +32,12 @@ public class ExPropertyChangedEventArgs : EventArgs
     }
 
     /// <summary>
-    ///     New value of changed property
+    /// New value of changed property
     /// </summary>
     public object? Value { get; }
 
     /// <summary>
-    ///     Name of changed property
+    /// Name of changed property
     /// </summary>
     public string PropertyName { get; }
 }

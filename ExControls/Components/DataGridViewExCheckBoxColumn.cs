@@ -1,12 +1,27 @@
 ﻿namespace ExControls;
 
 /// <summary>
-///     Expanded CheckBox Column for DataGridView.
+/// Expanded CheckBox Column for DataGridView.
 /// </summary>
-public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
+public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn, IThemeable
 {
     /// <summary>
-    ///     Creates new instance of 
+    /// Nastavi farby a vzhlad prvku podla temy.
+    /// </summary>
+    public void ApplyTheme(ExTheme theme)
+    {
+        DefaultStyle = theme.UseSystemStyle;
+        if (theme.UseSystemStyle)
+            return;
+
+        BorderColor = theme.BorderColor;
+        MarkColor = theme.MarkColor;
+        SquareBackColor = theme.PanelBackColor;
+        HighlightColor = theme.HighlightBackColor;
+    }
+
+    /// <summary>
+    /// Creates new instance of 
     /// </summary>
     public DataGridViewExCheckBoxColumn()
     {
@@ -35,7 +50,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     private DataGridViewExCheckBoxCell DynCheckBoxCellTemplate => (DataGridViewExCheckBoxCell)CellTemplate!;
 
     /// <summary>
-    ///     Default style of the Control
+    /// Default style of the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -60,7 +75,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <summary>
-    ///     Color of the CheckBox's border
+    /// Color of the CheckBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -85,7 +100,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <summary>
-    ///     Color of the CheckBox's mark
+    /// Color of the CheckBox's mark
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -110,7 +125,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <summary>
-    ///     Background color of CheckBox's square
+    /// Background color of CheckBox's square
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -135,7 +150,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
     }
 
     /// <summary>
-    ///     Color of the border and mark of CheckBox when mouse is over the Control
+    /// Color of the border and mark of CheckBox when mouse is over the Control
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -161,14 +176,14 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn
 }
 
 /// <summary>
-///     Expanded CheckBox Cell for DataGridView
+/// Expanded CheckBox Cell for DataGridView
 /// </summary>
 public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
 {
     private bool _hover;
 
     /// <summary>
-    ///     Constructor
+    /// Constructor
     /// </summary>
     public DataGridViewExCheckBoxCell()
     {
@@ -180,7 +195,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Default style of the Control
+    /// Default style of the Control
     /// </summary>
     public bool DefaultStyle
     {
@@ -193,7 +208,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Color of the CheckBox's border
+    /// Color of the CheckBox's border
     /// </summary>
     public Color BorderColor
     {
@@ -206,7 +221,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Color of the CheckBox's mark
+    /// Color of the CheckBox's mark
     /// </summary>
     public Color MarkColor
     {
@@ -219,7 +234,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Background color of CheckBox's square
+    /// Background color of CheckBox's square
     /// </summary>
     public Color SquareBackColor
     {
@@ -232,7 +247,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <summary>
-    ///     Color of the border and mark of CheckBox when mouse is over the Control
+    /// Color of the border and mark of CheckBox when mouse is over the Control
     /// </summary>
     public Color HighlightColor
     {
@@ -257,7 +272,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     }
 
     /// <inheritdoc />
-    protected override void Paint(Graphics g,
+    protected override void Paint(Graphics graphics,
         Rectangle clipBounds, Rectangle cellBounds,
         int rowIndex, DataGridViewElementStates elementState,
         object? value, object? formattedValue, string? errorText,
@@ -267,7 +282,7 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
     {
         if (DefaultStyle)
         {
-            base.Paint(g, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
+            base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
             return;
         }
 
@@ -276,17 +291,17 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
         {
             var selected = (elementState & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected;
             using var cellBackground = selected ? new SolidBrush(cellStyle.SelectionBackColor) : new SolidBrush(cellStyle.BackColor);
-            g.FillRectangle(cellBackground, cellBounds);
+            graphics.FillRectangle(cellBackground, cellBounds);
         }
 
         // Draw the cell borders, if specified.
         if ((paintParts & DataGridViewPaintParts.Border) == DataGridViewPaintParts.Border)
-            PaintBorder(g, clipBounds, cellBounds, cellStyle, advancedBorderStyle);
+            PaintBorder(graphics, clipBounds, cellBounds, cellStyle, advancedBorderStyle);
 
         var pt = GetCheckBoxPoint(cellBounds);
         var rect = new Rectangle(pt, new Size(16, 16));
         using var background = new SolidBrush(SquareBackColor);
-        g.FillRectangle(background, rect);
+        graphics.FillRectangle(background, rect);
 
         Color colorMark;
         if (_hover)
@@ -310,16 +325,16 @@ public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
         {
             using var brushMark = new SolidBrush(colorMark);
             using var penMark = new Pen(brushMark, 2);
-            g.DrawLine(penMark, pt.X + 3, pt.Y + 8, pt.X + 6, pt.Y + 11);
-            g.DrawLine(penMark, pt.X + 6, pt.Y + 11, pt.X + 12, pt.Y + 5);
-            g.FillRectangle(brushMark, pt.X + 6, pt.Y + 12, 1, 1);
+            graphics.DrawLine(penMark, pt.X + 3, pt.Y + 8, pt.X + 6, pt.Y + 11);
+            graphics.DrawLine(penMark, pt.X + 6, pt.Y + 11, pt.X + 12, pt.Y + 5);
+            graphics.FillRectangle(brushMark, pt.X + 6, pt.Y + 12, 1, 1);
         }
 
         //border
         using var border = new SolidBrush(colorBorder);
         using var penborder = new Pen(border);
         var rectb = new Rectangle(pt, new Size(15, 15));
-        g.DrawRectangle(penborder, rectb);
+        graphics.DrawRectangle(penborder, rectb);
     }
 
     private static Point GetCheckBoxPoint(Rectangle cellBounds)

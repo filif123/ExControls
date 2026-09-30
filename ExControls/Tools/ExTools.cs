@@ -7,7 +7,7 @@ using Microsoft.Win32;
 namespace ExControls;
 
 /// <summary>
-///     Contains various stuff for controls and forms.
+/// Contains various stuff for controls and forms.
 /// </summary>
 public static class ExTools
 {
@@ -23,17 +23,17 @@ public static class ExTools
     private const int DWMWA_MICA_EFFECT = 1029;
 
     /// <summary>
-    ///  Gets 
+    /// Gets 
     /// </summary>
     public static bool IsWin11Build22000 { get; } = IsWindows10OrGreater(22000);
 
     /// <summary>
-    ///     Gets whether apps in system using light or dark mode. Works only in Windows 10+ (In previous versions always returns true).
+    /// Gets whether apps in system using light or dark mode. Works only in Windows 10+ (In previous versions always returns true).
     /// </summary>
     public static bool AppsUseLightMode { get; } = GetThemeInfo(false);
 
     /// <summary>
-    ///     Gets whether system using light or dark mode. Works only in Windows 10+ (In previous versions always returns true).
+    /// Gets whether system using light or dark mode. Works only in Windows 10+ (In previous versions always returns true).
     /// </summary>
     public static bool SystemUseLightMode { get; } = GetThemeInfo(true);
 
@@ -56,7 +56,7 @@ public static class ExTools
     {
         var ver = HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
         if (int.TryParse(HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CurrentBuild"), out var cb))
-            return ver.StartsWith("Windows 10") && cb >= build;
+            return ver.StartsWith("Windows 10", StringComparison.Ordinal) && cb >= build;
         return false;
     }
 
@@ -75,8 +75,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Changes background color of window's caption (immersive dark mode). <br></br>
-    ///     Works only in Windows 10+.
+    /// Changes background color of window's caption (immersive dark mode). <br></br>
+    /// Works only in Windows 10+.
     /// </summary>
     /// <param name="form">form where dark mode is applying</param>
     /// <param name="enabled">whether to turn dark mode on or off</param>
@@ -87,8 +87,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Changes background color of window's caption (immersive dark mode). <br></br>
-    ///     Works only in Windows 10+.
+    /// Changes background color of window's caption (immersive dark mode). <br></br>
+    /// Works only in Windows 10+.
     /// </summary>
     /// <param name="handle">handle to form where dark mode is applying</param>
     /// <param name="enabled">whether to turn dark mode on or off</param>
@@ -107,8 +107,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Changes background color of window's caption and border color. <br></br>
-    ///     Works only in Windows 11+.
+    /// Changes background color of window's caption and border color. <br></br>
+    /// Works only in Windows 11+.
     /// </summary>
     /// <param name="handle">handle to form where the change is applying</param>
     /// <param name="titlebarColor">color of caption</param>
@@ -123,27 +123,27 @@ public static class ExTools
         if (titlebarColor != default)
         {
             var titlebarColorNative = ColorTranslator.ToWin32(titlebarColor);
-            Win32.DwmSetWindowAttribute(handle, DWMWA_CAPTION_COLOR, ref titlebarColorNative, sizeof(int));
+            _ = Win32.DwmSetWindowAttribute(handle, DWMWA_CAPTION_COLOR, ref titlebarColorNative, sizeof(int));
         }
 
         if (textColor != default)
         {
             var textColorNative = ColorTranslator.ToWin32(textColor);
-            Win32.DwmSetWindowAttribute(handle, DWMWA_TEXT_COLOR, ref textColorNative, sizeof(int));
+            _ = Win32.DwmSetWindowAttribute(handle, DWMWA_TEXT_COLOR, ref textColorNative, sizeof(int));
         }
 
         if (borderColor != default)
         {
             var borderColorNative = ColorTranslator.ToWin32(borderColor);
-            Win32.DwmSetWindowAttribute(handle, DWMWA_BORDER_COLOR, ref borderColorNative, sizeof(int));
+            _ = Win32.DwmSetWindowAttribute(handle, DWMWA_BORDER_COLOR, ref borderColorNative, sizeof(int));
         }
 
         return true;
     }
 
     /// <summary>
-    ///     Changes background color of window's caption and border color. <br></br>
-    ///     Works only in Windows 11+.
+    /// Changes background color of window's caption and border color. <br></br>
+    /// Works only in Windows 11+.
     /// </summary>
     /// <param name="form">form where the change is applying</param>
     /// <param name="titlebarColor">color of caption</param>
@@ -156,8 +156,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Enables or disables Mica effect to the form.
-    ///     Works only in Windows 11+.
+    /// Enables or disables Mica effect to the form.
+    /// Works only in Windows 11+.
     /// </summary>
     /// <param name="handle">handle to form where change is applying</param>
     /// <param name="style">style of form (between builds 22000 and 22523 works only Default and Mica style).</param>
@@ -179,8 +179,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Enables or disables Mica effect to the form.
-    ///     Works only in Windows 11+.
+    /// Enables or disables Mica effect to the form.
+    /// Works only in Windows 11+.
     /// </summary>
     /// <param name="form">form where the change is applying</param>
     /// <param name="style">whether to turn Mica effect on or off</param>
@@ -191,8 +191,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Sets type of form's corners.
-    ///     Works only in Windows 11+.
+    /// Sets type of form's corners.
+    /// Works only in Windows 11+.
     /// </summary>
     /// <param name="handle">handle to form where change is applying</param>
     /// <param name="type">type of corners</param>
@@ -207,8 +207,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Sets type of form's corners.
-    ///     Works only in Windows 11+.
+    /// Sets type of form's corners.
+    /// Works only in Windows 11+.
     /// </summary>
     /// <param name="form">form where the change is applying</param>
     /// <param name="type">type of corners</param>
@@ -219,8 +219,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Gets width of the form's border in points.
-    ///     Works only in Windows 11+.
+    /// Gets width of the form's border in points.
+    /// Works only in Windows 11+.
     /// </summary>
     /// <param name="handle">handle to form where change is applying</param>
     /// <param name="sizeInPoints">width of border in points</param>
@@ -235,8 +235,8 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Gets width of the form's border in points.
-    ///     Works only in Windows 11+.
+    /// Gets width of the form's border in points.
+    /// Works only in Windows 11+.
     /// </summary>
     /// <param name="form">form where the change is applying</param>
     /// <param name="sizeInPoints">width of border in points</param>
@@ -247,30 +247,29 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Sets theme for the control. Works only on some controls.
+    /// Sets theme for the control. Works only on some controls.
     /// </summary>
     /// <param name="control">editing control</param>
     /// <param name="theme">theme that will be used</param>
     /// <param name="customThemeName">
-    ///     used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" /> and
-    ///     specify theme name.
+    /// used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" /> and
+    /// specify theme name.
     /// </param>
     public static void SetTheme(this Control control, WindowsTheme theme, string customThemeName = "")
     {
-        if (control is null)
-            throw new ArgumentNullException(nameof(control));
+        ArgumentNullException.ThrowIfNull(control);
 
         SetTheme(control.Handle, theme, customThemeName);
     }
 
     /// <summary>
-    ///     Sets theme for the control. Works only on some controls.
+    /// Sets theme for the control. Works only on some controls.
     /// </summary>
     /// <param name="handle">editing control handle</param>
     /// <param name="theme">theme that will be used</param>
     /// <param name="customThemeName">
-    ///     used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" /> and
-    ///     specifify theme name
+    /// used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" /> and
+    /// specifify theme name
     /// </param>
     public static void SetTheme(IntPtr handle, WindowsTheme theme, string customThemeName = "")
     {
@@ -280,19 +279,19 @@ public static class ExTools
         switch (theme)
         {
             case WindowsTheme.None:
-                Win32.SetWindowTheme(handle, "", "");
+                _ = Win32.SetWindowTheme(handle, "", "");
                 break;
             case WindowsTheme.Explorer:
-                Win32.SetWindowTheme(handle, "Explorer", null);
+                _ = Win32.SetWindowTheme(handle, "Explorer", null);
                 break;
             case WindowsTheme.DarkExplorer:
-                Win32.SetWindowTheme(handle, "DarkMode_Explorer", null);
+                _ = Win32.SetWindowTheme(handle, "DarkMode_Explorer", null);
                 break;
             case WindowsTheme.Other:
-                Win32.SetWindowTheme(handle, customThemeName, null);
+                _ = Win32.SetWindowTheme(handle, customThemeName, null);
                 break;
             case WindowsTheme.Default:
-                Win32.SetWindowTheme(handle, null, null);
+                _ = Win32.SetWindowTheme(handle, null, null);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
@@ -300,26 +299,25 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Sets a color of Progress bar.
+    /// Sets a color of Progress bar.
     /// </summary>
     /// <param name="bar">editing ProgressBar</param>
     /// <param name="color">style for this ProgressBar</param>
     /// <exception cref="ArgumentOutOfRangeException">when <paramref name="color" /> is invalid.</exception>
     public static void SetProgressBarColor(this ProgressBar bar, ProgressBarColor color)
     {
-        if (bar is null)
-            throw new ArgumentNullException(nameof(bar));
+        ArgumentNullException.ThrowIfNull(bar);
 
         switch (color)
         {
             case ProgressBarColor.Green:
-                Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)1, (IntPtr)0);
+                _ = Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)1, (IntPtr)0);
                 break;
             case ProgressBarColor.Yellow:
-                Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)3, (IntPtr)0);
+                _ = Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)3, (IntPtr)0);
                 break;
             case ProgressBarColor.Red:
-                Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)2, (IntPtr)0);
+                _ = Win32.SendMessage(bar.Handle, 0x400 + 16, (IntPtr)2, (IntPtr)0);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(color), color, null);
@@ -343,7 +341,7 @@ public static class ExTools
     }
 
     /// <summary>
-    ///     Method to call interop for system beep.
+    /// Method to call interop for system beep.
     /// </summary>
     /// <remarks>Calls Windows to make computer beep</remarks>
     /// <param name="type">The kind of beep you would like to hear</param>
@@ -351,159 +349,159 @@ public static class ExTools
 }
 
 /// <summary>
-///     Enum type that enables intellisense on the private Beep method.
+/// Enum type that enables intellisense on the private Beep method.
 /// </summary>
 /// <remarks>
-///     Used by the public Beep
+/// Used by the public Beep
 /// </remarks>
 public enum BeepType : uint
 {
     /// <summary>
-    ///     A simple windows beep.
+    /// A simple windows beep.
     /// </summary>
     SimpleBeep = 0xFFFFFFFF,
 
     /// <summary>
-    ///     A standard windows OK beep.
+    /// A standard windows OK beep.
     /// </summary>
     OK = 0x00,
 
     /// <summary>
-    ///     A standard windows Question beep.
+    /// A standard windows Question beep.
     /// </summary>
     Question = 0x20,
 
     /// <summary>
-    ///     A standard windows Exclamation beep.
+    /// A standard windows Exclamation beep.
     /// </summary>
     Exclamation = 0x30,
 
     /// <summary>
-    ///     A standard windows Asterisk beep.
+    /// A standard windows Asterisk beep.
     /// </summary>
     Asterisk = 0x40
 }
 
 /// <summary>
-///     Specify theme for Windows controls.
+/// Specify theme for Windows controls.
 /// </summary>
 public enum WindowsTheme
 {
     /// <summary>
-    ///     No style will be used.
+    /// No style will be used.
     /// </summary>
     None,
 
     /// <summary>
-    ///     Default style will be used.
+    /// Default style will be used.
     /// </summary>
     Default,
 
     /// <summary>
-    ///     Style of Windows Explorer in current Windows version.
+    /// Style of Windows Explorer in current Windows version.
     /// </summary>
     Explorer,
 
     /// <summary>
-    ///     Style of Windows Explorer (dark mode) in current Windows version. Works only in Windows 10.
+    /// Style of Windows Explorer (dark mode) in current Windows version. Works only in Windows 10.
     /// </summary>
     DarkExplorer,
 
     /// <summary>
-    ///     Other style will be used.
+    /// Other style will be used.
     /// </summary>
     Other
 }
 
 /// <summary>
-///     Specify style of ProgressBar.
+/// Specify style of ProgressBar.
 /// </summary>
 public enum ProgressBarColor
 {
     /// <summary>
-    ///     Green ProgressBar (Normal style)
+    /// Green ProgressBar (Normal style)
     /// </summary>
     Green,
 
     /// <summary>
-    ///     Yellow ProgressBar (Warning style)
+    /// Yellow ProgressBar (Warning style)
     /// </summary>
     Yellow,
 
     /// <summary>
-    ///     Red ProgressBar (Error style)
+    /// Red ProgressBar (Error style)
     /// </summary>
     Red,
 
     /// <summary>
-    ///     Green ProgressBar (Normal style)
+    /// Green ProgressBar (Normal style)
     /// </summary>
     Normal = Green,
 
     /// <summary>
-    ///     Yellow ProgressBar (Warning style)
+    /// Yellow ProgressBar (Warning style)
     /// </summary>
     Warning = Yellow,
 
     /// <summary>
-    ///     Red ProgressBar (Error style)
+    /// Red ProgressBar (Error style)
     /// </summary>
     Error = Red
 }
 
 /// <summary>
-///     Defines form's type of style. Works only in Windows 11+.
+/// Defines form's type of style. Works only in Windows 11+.
 /// </summary>
 public enum FormStyle
 {
     /// <summary>
-    ///     Auto style. Does not work in build lower than 22523.
+    /// Auto style. Does not work in build lower than 22523.
     /// </summary>
     Auto,
 
     /// <summary>
-    ///     Default style. Does not work in build lower than 22000.
+    /// Default style. Does not work in build lower than 22000.
     /// </summary>
     Default,
 
     /// <summary>
-    ///     Mica style. Does not work in build lower than 22000.
+    /// Mica style. Does not work in build lower than 22000.
     /// </summary>
     Mica,
 
     /// <summary>
-    ///     Acrylic style. Does not work in build lower than 22523.
+    /// Acrylic style. Does not work in build lower than 22523.
     /// </summary>
     Acrylic,
 
     /// <summary>
-    ///     Tabbed style. Does not work in build lower than 22523. 
+    /// Tabbed style. Does not work in build lower than 22523. 
     /// </summary>
     Tabbed
 }
 
 /// <summary>
-///     Defines type of form's corner. Works only in Windows 11+.
+/// Defines type of form's corner. Works only in Windows 11+.
 /// </summary>
 public enum FormCornersType
 {
     /// <summary>
-    ///     Default type corner of the form.
+    /// Default type corner of the form.
     /// </summary>
     Default,
 
     /// <summary>
-    ///     Rectangular corner of the form.
+    /// Rectangular corner of the form.
     /// </summary>
     Rectangular,
 
     /// <summary>
-    ///     Round corner of the form.
+    /// Round corner of the form.
     /// </summary>
     Round,
 
     /// <summary>
-    ///     Semi-round corner of the form.
+    /// Semi-round corner of the form.
     /// </summary>
     SmallRound
 }

@@ -7,7 +7,7 @@ using Microsoft.DotNet.DesignTools.Designers.Actions;
 
 namespace ExControls.Designers;
 
-internal class ExColorSelectorDesigner : DesignerControlBase<ExColorSelector>
+internal sealed class ExColorSelectorDesigner : DesignerControlBase<ExColorSelector>
 {
     private DesignerActionListCollection? _actionLists;
     public override DesignerActionListCollection ActionLists => _actionLists ??= new DesignerActionListCollection {new ExColorSelectorActionList(ControlHost)};

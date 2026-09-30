@@ -49,13 +49,17 @@ internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner wher
 #if NETFRAMEWORK
     public ISelectionService SelectionService => (_selectionService ??= (ISelectionService?)GetService(typeof(ISelectionService)))!;
 #else
-    public new ISelectionService SelectionService => (_selectionService ??= (ISelectionService?)GetService(typeof(ISelectionService)))!;
+    public new ISelectionService SelectionService => (_selectionService ??= GetService<ISelectionService>())!;
 #endif
 
     /// <summary>
     /// Creates and returns the IDesignerHost service.
     /// </summary>
+#if NETFRAMEWORK
     public IDesignerHost DesignerHost => (_designerHost ??= (IDesignerHost?)GetService(typeof(IDesignerHost)))!;
+#else
+    public IDesignerHost DesignerHost => (_designerHost ??= GetService<IDesignerHost>())!;
+#endif
 
     protected virtual void OnHostInitialized()
     {
