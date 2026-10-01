@@ -46,6 +46,7 @@ The .NET WinForms designer runs out of process and loads custom type editors onl
 (client part for Visual Studio, server part for DesignToolsServer); projects that design forms with
 ExControls import `ExControls.Designer.targets` next to their `ExControls` project reference.
 
-After changing `ExControls.Designer.Client/Server/Protocol`, increase `ExControlsDesignerVersion`
+After changing `ExControls.Designer.Client/Server/Protocol` or the `Version` of `ExControls`
+(the server part is compiled against it), increase `ExControlsDesignerVersion`
 in `ExControls.Designer.targets`, rebuild the package and restart Visual Studio -
 NuGet and the designer cache packages by version.

@@ -65,6 +65,7 @@
 		<!-- balik NuGet len z Release - Debug build ho zbytocne vyraba pri kazdom builde -->
 		<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
 		<Title>ExControls</Title>
+		<!-- po zmene zvysit aj ExControlsDesignerVersion v ..\ExControls.Designer.targets -->
 		<Version>2.0.0</Version>
 		<PackageProjectUrl>https://github.com/filif123/ExControls</PackageProjectUrl>
 		<Description>Extended controls for Windows Forms.</Description>

@@ -7,7 +7,9 @@
 	  The assembly is not copied to the output (ExcludeAssets=runtime) and does not flow to dependent projects.
 	-->
 	<PropertyGroup>
-		<ExControlsDesignerVersion>1.0.0</ExControlsDesignerVersion>
+		<!-- Increase also after changing <Version> of ExControls: the server part references ExControls by version
+		     and a package cached with the old one fails in DesignToolsServer ("Could not load ExControls, Version=..."). -->
+		<ExControlsDesignerVersion>1.0.1</ExControlsDesignerVersion>
 		<ExControlsDesignerFeed>$(MSBuildThisFileDirectory)artifacts\packages</ExControlsDesignerFeed>
 		<_ExControlsDesignerAvailable Condition="'$(ExControlsDesignerIsPackageProject)' != 'true' And Exists('$(ExControlsDesignerFeed)\ExControls.Designer.$(ExControlsDesignerVersion).nupkg')">true</_ExControlsDesignerAvailable>
 		<RestoreAdditionalProjectSources Condition="'$(_ExControlsDesignerAvailable)' == 'true'">$(RestoreAdditionalProjectSources);$(ExControlsDesignerFeed)</RestoreAdditionalProjectSources>
