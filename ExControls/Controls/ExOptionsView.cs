@@ -87,6 +87,17 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
     }
 
     /// <summary>
+    /// Gets or sets width of the tree with the search box (left part of the view).
+    /// </summary>
+    [DefaultValue(202)]
+    [ExCategory(CategoryType.Layout)]
+    public int TreeWidth
+    {
+        get => split.SplitterDistance;
+        set => split.SplitterDistance = value;
+    }
+
+    /// <summary>
     /// Gets or sets foreground color of generated links for children.
     /// </summary>
     [DefaultValue(typeof(Color), "Blue")]
