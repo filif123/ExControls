@@ -33,7 +33,8 @@ Panel…) are styled by handlers registered with `ExThemer.Register<T>`.
 ## Custom title bar
 
 `ExTitleBar` placed directly on an `ExForm` (docked to the top) replaces the system caption: the window icon on the left,
-the window buttons on the right and controls such as the main `MenuStrip` in between. The system frame stays (shadow,
+the window buttons on the right and controls such as the main `MenuStrip` in between (in a narrow window it collapses
+into ☰). The system frame stays (shadow,
 Aero Snap, Snap Layouts, animations); the free space of the title bar and empty parts of its tool strips drag the window.
 It works on Windows 10+ with any `FormBorderStyle` except `None`; `TitleBarBackColor` and `TitleBarForeColor` of the
 form color the title bar (an active window otherwise follows the Windows accent color on title bars), `FormStyle`

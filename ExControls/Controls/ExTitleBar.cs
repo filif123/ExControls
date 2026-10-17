@@ -16,6 +16,8 @@ namespace ExControls;
 /// Farby titulku formulara (<see cref="ExForm.TitleBarBackColor" />, <see cref="ExForm.TitleBarForeColor" />) a v aktivnom okne
 /// farba motivu Windows (ak ju system zobrazuje na zahlaviach) maju prednost pred vlastnymi farbami zahlavia; panely nastrojov
 /// v zahlavi maju vtedy priehladne pozadie a text farbou zahlavia, ostatne prvky si nechavaju svoje farby.
+/// Ponuka (<see cref="MenuStrip" />), ktorej polozky sa do zahlavia nezmestia, sa za behu zbali do tlacidla ☰
+/// (<see cref="CollapseMenu" />).
 /// Ked okno vlastne zahlavie nepouziva (<see cref="ExForm.UsesCustomTitleBar" />), je to obycajny panel bez ikony, textu a tlacidiel.
 /// </remarks>
 [Designer("ExControls.Designers.ExTitleBarDesigner, ExControls")]
@@ -31,6 +33,7 @@ public class ExTitleBar : Panel, IThemeable
     private const string HelpGlyph = "?";
     private const string HelpGlyphFamily = "Segoe UI";
     private const int HelpGlyphSize = 14;
+    private const int MenuGlyphSize = 16;
     private const int TitleMargin = 8;
     private const int MinTitleWidth = 40;
 
@@ -44,6 +47,10 @@ public class ExTitleBar : Panel, IThemeable
     private readonly List<ColorOverride> _colorOverrides = [];
     private Color? _accent = ExTools.CaptionAccentColor();
     private bool _applyingTheme;
+    private readonly Dictionary<MenuStrip, CollapsedMenu> _collapsedMenus = [];
+    private bool _collapseMenu = true;
+    private bool _updatingMenus;
+    private Font? _menuGlyphFont;
     private bool _shown = true;
     private bool _showTitle = true;
     private bool _formActive = true;
@@ -109,6 +116,25 @@ public class ExTitleBar : Panel, IThemeable
                 return;
             _showTitle = value;
             Invalidate();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets whether a menu in the title bar collapses into one button (☰) when the title bar is too narrow
+    /// for all its menu items (only at runtime).
+    /// </summary>
+    [ExCategory(CategoryType.Behavior)]
+    [ExDescription("Gets or sets whether a menu in the title bar collapses into one button when the title bar is too narrow for its items.", true)]
+    [DefaultValue(true)]
+    public bool CollapseMenu
+    {
+        get => _collapseMenu;
+        set
+        {
+            if (_collapseMenu == value)
+                return;
+            _collapseMenu = value;
+            PerformLayout();
         }
     }
 
@@ -447,6 +473,136 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <inheritdoc />
+    protected override void OnLayout(LayoutEventArgs levent)
+    {
+        base.OnLayout(levent);
+        UpdateCollapsedMenus();
+    }
+
+    /// <summary>
+    /// Zbali ponuky v zahlavi, na ktore nestaci miesto, a rozbali tie, ktore sa uz zmestia (len za behu - navrhar by
+    /// presunute polozky ulozil).
+    /// </summary>
+    private void UpdateCollapsedMenus()
+    {
+        if (_updatingMenus)
+            return;
+
+        _updatingMenus = true;
+        try
+        {
+            var changed = false;
+            foreach (var menu in _hooks.Keys.OfType<MenuStrip>().ToList())
+            {
+                var collapse = _collapseMenu && !DesignMode && ExpandedWidth(menu) > SpaceFor(menu);
+                changed |= collapse ? Collapse(menu) : Expand(menu);
+            }
+
+            if (changed)
+                UpdateStripColors();
+        }
+        finally
+        {
+            _updatingMenus = false;
+        }
+    }
+
+    /// <summary>
+    /// Sirka ponuky so vsetkymi polozkami - zbalena ma namiesto tlacidla ☰ polozky v sirke pred zbalenim.
+    /// </summary>
+    private int ExpandedWidth(MenuStrip menu)
+    {
+        var width = menu.GetPreferredSize(Size.Empty).Width;
+        return _collapsedMenus.TryGetValue(menu, out var collapsed)
+            ? width - ItemWidth(collapsed.Button) + collapsed.ItemsWidth
+            : width;
+    }
+
+    private static int ItemWidth(ToolStripItem item) => item.GetPreferredSize(Size.Empty).Width + item.Margin.Horizontal;
+
+    /// <summary>
+    /// Miesto pre ponuku: obsah zahlavia bez ostatnych prvkov ukotvenych vlavo a vpravo; ponuka s pevnou sirkou viac nema.
+    /// </summary>
+    private int SpaceFor(MenuStrip menu)
+    {
+        var others = Controls.Cast<Control>()
+            .Where(c => c != menu && c.Visible && c.Dock is DockStyle.Left or DockStyle.Right)
+            .Sum(c => c.Width);
+        var space = DisplayRectangle.Width - others;
+        return menu.AutoSize ? space : Math.Min(space, menu.Width);
+    }
+
+    /// <summary>
+    /// Presunie polozky ponuky pod tlacidlo ☰ na zaciatku ponuky (ostatne prvky ponuky ostavaju) - polozky sa presuvaju,
+    /// takze prikazy, udalosti aj klavesove skratky aplikacie platia dalej.
+    /// </summary>
+    /// <returns>ponuka sa zbalila</returns>
+    private bool Collapse(MenuStrip menu)
+    {
+        if (_collapsedMenus.ContainsKey(menu))
+            return false;
+        var items = menu.Items.OfType<ToolStripMenuItem>().Select(item => (Item: item, Index: menu.Items.IndexOf(item))).ToList();
+        if (items.Count == 0)
+            return false;
+
+        var button = new ToolStripMenuItem(Glyphs.Menu)
+        {
+            Font = MenuGlyphFont(),
+            AccessibleName = "Menu",
+            AccessibleRole = AccessibleRole.ButtonMenu
+        };
+        // rozbalovacia ponuka by zdedila pismo znaku tlacidla - polozky v nej maju pismo ponuky
+        button.DropDown.Font = menu.Font;
+        menu.FontChanged += Menu_FontChanged;
+        var collapsed = new CollapsedMenu(button, items, items.Sum(i => ItemWidth(i.Item)));
+        menu.SuspendLayout();
+        foreach (var (item, _) in items)
+            button.DropDownItems.Add(item);
+        menu.Items.Insert(0, button);
+        menu.ResumeLayout();
+        _collapsedMenus.Add(menu, collapsed);
+        return true;
+    }
+
+    /// <summary>
+    /// Vrati polozky z tlacidla ☰ na ich miesto v ponuke.
+    /// </summary>
+    /// <returns>ponuka sa rozbalila</returns>
+    private bool Expand(MenuStrip menu)
+    {
+        if (!_collapsedMenus.TryGetValue(menu, out var collapsed))
+            return false;
+
+        _collapsedMenus.Remove(menu);
+        menu.FontChanged -= Menu_FontChanged;
+        menu.SuspendLayout();
+        menu.Items.Remove(collapsed.Button);
+        foreach (var (item, index) in collapsed.Items.OrderBy(i => i.Index))
+            if (!item.IsDisposed)
+                menu.Items.Insert(Math.Min(index, menu.Items.Count), item);
+        menu.ResumeLayout();
+        collapsed.Button.Dispose();
+        return true;
+    }
+
+    private void Menu_FontChanged(object? sender, EventArgs e)
+    {
+        if (sender is MenuStrip menu && _collapsedMenus.TryGetValue(menu, out var collapsed))
+            collapsed.Button.DropDown.Font = menu.Font;
+    }
+
+    private Font MenuGlyphFont()
+    {
+        var size = LogicalToDeviceUnits(MenuGlyphSize);
+        if (_menuGlyphFont is not null && (int)_menuGlyphFont.Size == size)
+            return _menuGlyphFont;
+
+        _menuGlyphFont?.Dispose();
+        _menuGlyphFont = new Font(Glyphs.MenuFamily, size, GraphicsUnit.Pixel);
+        return _menuGlyphFont;
+    }
+
+    /// <inheritdoc />
     protected override void OnBackColorChanged(EventArgs e)
     {
         base.OnBackColorChanged(e);
@@ -668,6 +824,8 @@ public class ExTitleBar : Panel, IThemeable
         base.OnControlRemoved(e);
         if (e.Control is ToolStrip strip && _hooks.TryGetValue(strip, out var hook))
         {
+            if (strip is MenuStrip menu)
+                Expand(menu);
             hook.Detach();
             _hooks.Remove(strip);
             UpdateStripColors();
@@ -698,12 +856,18 @@ public class ExTitleBar : Panel, IThemeable
             if (_form is not null)
                 _form.TextChanged -= Form_TextChanged;
             _glyphFont?.Dispose();
+            _menuGlyphFont?.Dispose();
             _helpGlyphFont?.Dispose();
             _smallIcon?.Dispose();
         }
 
         base.Dispose(disposing);
     }
+
+    /// <summary>
+    /// Zbalena ponuka: tlacidlo ☰, presunute polozky s povodnym poradim a ich sirka v ponuke.
+    /// </summary>
+    private sealed record CollapsedMenu(ToolStripMenuItem Button, List<(ToolStripMenuItem Item, int Index)> Items, int ItemsWidth);
 
     /// <summary>
     /// Farba panela alebo polozky prevzata od zahlavia - pamata si povodnu (nastavenu alebo zdedenu) a vrati ju, len ak
@@ -756,10 +920,10 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Znaky tlacidiel okna z pisma systemoveho zahlavia: Windows 11 Segoe Fluent Icons, Windows 10 Segoe MDL2 Assets
+    /// Znaky tlacidiel okna (a tlacidla zbalenej ponuky) z pisma systemoveho zahlavia: Windows 11 Segoe Fluent Icons, Windows 10 Segoe MDL2 Assets
     /// (aj ked ma Fluent Icons nainstalovane) - znaky maju v oboch rovnake kody; bez nich Marlett (v kazdych Windows).
     /// </summary>
-    private sealed record CaptionGlyphs(string Family, string Minimize, string Maximize, string Restore, string Close)
+    private sealed record CaptionGlyphs(string Family, string Minimize, string Maximize, string Restore, string Close, string Menu, string MenuFamily)
     {
         public static CaptionGlyphs Find()
         {
@@ -769,9 +933,9 @@ public class ExTitleBar : Panel, IThemeable
             using var fonts = new InstalledFontCollection();
             foreach (var family in families)
                 if (fonts.Families.Any(f => f.Name == family))
-                    return new CaptionGlyphs(family, "\uE921", "\uE922", "\uE923", "\uE8BB");
+                    return new CaptionGlyphs(family, "\uE921", "\uE922", "\uE923", "\uE8BB", "\uE700", family);
 
-            return new CaptionGlyphs("Marlett", "0", "1", "2", "r");
+            return new CaptionGlyphs("Marlett", "0", "1", "2", "r", "\u2261", "Segoe UI");
         }
     }
 

@@ -43,6 +43,8 @@ Aero Snap, Snap Layouts, animations).
   system caption.
 * The designer shows the form without the system caption and frame, at runtime the window has the system frame only on
   the left, right and bottom. The designed `ClientSize` is the same in both; DPI scaling scales it without the caption.
+* A `MenuStrip` in the title bar collapses into one button (☰) at runtime when its items don't fit
+  (`ExTitleBar.CollapseMenu`); the items move under the button, other items of the menu stay.
 * Empty parts of tool strips placed directly in the title bar drag the window. In an inactive window their items
   are dimmed through `ForeColor` - a renderer that picks the text color itself won't show it.
 * `ExForm.UseCompositedPainting` (`WS_EX_COMPOSITED`, on by default): an empty `TextBox` with `PlaceholderText`

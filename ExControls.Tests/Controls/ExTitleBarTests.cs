@@ -199,6 +199,7 @@ public class ExTitleBarTests
 
     [TestMethod]
     [DataRow(nameof(ExTitleBar.ShowTitle), true)]
+    [DataRow(nameof(ExTitleBar.CollapseMenu), true)]
     [DataRow(nameof(ExTitleBar.InactiveForeColor), null)]
     [DataRow(nameof(ExTitleBar.ButtonHoverBackColor), null)]
     [DataRow(nameof(ExTitleBar.ButtonPressedBackColor), null)]
@@ -449,6 +450,68 @@ public class ExTitleBarTests
     }
 
     [TestMethod]
+    public void UzkeOkno_PonukaSaZbaliARozbali()
+    {
+        using var window = new MenuWindow(900);
+        var menu = window.Menu;
+        string[] names = ["Subor", "Upravit", "Stanica", "Nastroje", "Spustit", "Nastavenia"];
+
+        CollectionAssert.AreEqual(names.Append("Hladat").ToList(), menu.Items.Cast<ToolStripItem>().Select(i => i.Text).ToList());
+
+        window.Form.Width = 320;
+        window.Form.PerformLayout();
+
+        var button = (ToolStripMenuItem)menu.Items[0];
+        CollectionAssert.AreEqual(names, button.DropDownItems.Cast<ToolStripItem>().Select(i => i.Text).ToList());
+        Assert.AreEqual(2, menu.Items.Count, "popis ostava v ponuke");
+        Assert.AreEqual("Hladat", menu.Items[1].Text);
+
+        window.Form.Width = 900;
+        window.Form.PerformLayout();
+
+        CollectionAssert.AreEqual(names.Append("Hladat").ToList(), menu.Items.Cast<ToolStripItem>().Select(i => i.Text).ToList());
+        Assert.AreEqual(0, button.DropDownItems.Count, "tlacidlo je prazdne a mimo ponuky");
+    }
+
+    [TestMethod]
+    public void ZbalenaPonuka_PolozkyMajuPismoPonuky()
+    {
+        using var window = new MenuWindow(320);
+        var menu = window.Menu;
+        var button = (ToolStripMenuItem)menu.Items[0];
+
+        Assert.AreEqual(menu.Font, button.DropDown.Font);
+        Assert.AreEqual(menu.Font, button.DropDownItems[0].Font);
+        Assert.AreNotEqual(menu.Font, button.Font, "znak ☰ je v pisme ikon");
+
+        using var font = new Font("Segoe UI", 12f);
+        menu.Font = font;
+
+        Assert.AreEqual(font, button.DropDownItems[0].Font);
+    }
+
+    [TestMethod]
+    public void UzkeOkno_BezCollapseMenuPonukaOstava()
+    {
+        using var window = new MenuWindow(320, collapse: false);
+
+        Assert.AreEqual(7, window.Menu.Items.Count);
+        Assert.AreEqual("Subor", window.Menu.Items[0].Text);
+    }
+
+    [TestMethod]
+    public void ZbalenaPonuka_PoOdobratiZoZahlaviaMaPolozky()
+    {
+        using var window = new MenuWindow(320);
+
+        window.TitleBar.Controls.Remove(window.Menu);
+
+        Assert.AreEqual(7, window.Menu.Items.Count);
+        Assert.AreEqual("Subor", window.Menu.Items[0].Text);
+        window.Menu.Dispose();
+    }
+
+    [TestMethod]
     public void DarkTitleBarAFarbaTitulku_NezrusiaSa()
     {
         using var form = new ExForm { TitleBarBackColor = Color.Purple, DarkTitleBar = true };
@@ -563,6 +626,40 @@ public class ExTitleBarTests
     private static Point CloseButton(TestWindow window) => window.TitleBar.PointToScreen(new Point(window.TitleBar.Width - 5, 20));
 
     private sealed class ThemedStrip : MenuStrip;
+
+    /// <summary>
+    /// Okno s ponukou ako v GVDEditore (sest poloziek a popis) v zahlavi, zobrazene mimo obrazovky.
+    /// </summary>
+    private sealed class MenuWindow : IDisposable
+    {
+        public MenuWindow(int width, bool collapse = true)
+        {
+            Form = new ExForm
+            {
+                Size = new Size(width, 300),
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(-20000, -20000),
+                ShowInTaskbar = false
+            };
+            TitleBar = new ExTitleBar { CollapseMenu = collapse };
+            Menu = new MenuStrip { Dock = DockStyle.Left, GripStyle = ToolStripGripStyle.Hidden };
+            foreach (var name in new[] { "Subor", "Upravit", "Stanica", "Nastroje", "Spustit", "Nastavenia" })
+                Menu.Items.Add(new ToolStripMenuItem(name, null, new ToolStripMenuItem(name + " 1")));
+            Menu.Items.Add(new ToolStripLabel("Hladat"));
+            TitleBar.Controls.Add(Menu);
+            TitleBar.SetAccent(null);
+            Form.Controls.Add(TitleBar);
+            Form.Show();
+        }
+
+        public ExForm Form { get; }
+
+        public ExTitleBar TitleBar { get; }
+
+        public MenuStrip Menu { get; }
+
+        public void Dispose() => Form.Dispose();
+    }
 
     /// <summary>
     /// Okno 600x400 so zahlavim (hlavna ponuka vlavo a pole hladania vpravo) a obsahom pod nim, zobrazene mimo obrazovky
