@@ -9,12 +9,15 @@ namespace ExControls;
 /// </summary>
 /// <remarks>
 /// Spracuju sa len panely nastrojov priamo v zahlavi (polozky maju vzdy vedla seba); ostatne prvky v zahlavi su klikatelne cele.
+/// Neaktivne okno ma stlmeny text okna, znacky tlacidiel aj polozky ponuky a popisy v tychto paneloch (ako systemova ponuka)
+/// - cez <see cref="ToolStripItem.ForeColor" />, takze renderer, ktory farbu textu poloziek urcuje sam, stlmenie neukaze.
 /// Ked okno vlastne zahlavie nepouziva (<see cref="ExForm.UsesCustomTitleBar" />), je to obycajny panel bez ikony, textu a tlacidiel.
 /// </remarks>
 [Designer("ExControls.Designers.ExTitleBarDesigner, ExControls")]
 public class ExTitleBar : Panel, IThemeable
 {
     // rozmery pri 96 DPI
+    private const int MinHeight = 32;
     private const int IconAreaWidth = 36;
     private const int IconSize = 16;
     private const int ButtonWidth = 46;
@@ -24,7 +27,12 @@ public class ExTitleBar : Panel, IThemeable
 
     private static readonly CaptionGlyphs Glyphs = CaptionGlyphs.Find();
 
+    // text okna pismom systemoveho zahlavia (vo Windows 10 a 11 Segoe UI 9 b.) ako titulok ostatnych okien,
+    // nie pismom prvku - to aplikacie nastavuju podla konfiguracie
+    private static readonly Font CaptionFont = SystemFonts.CaptionFont ?? DefaultFont;
+
     private readonly Dictionary<ToolStrip, ToolStripHook> _hooks = [];
+    private readonly Dictionary<ToolStripItem, DimmedItem> _dimmedItems = [];
     private bool _shown = true;
     private bool _showTitle = true;
     private bool _formActive = true;
@@ -46,6 +54,7 @@ public class ExTitleBar : Panel, IThemeable
     {
         SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
         Dock = DockStyle.Top;
+        AutoSize = true;
     }
 
     /// <inheritdoc />
@@ -60,7 +69,21 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Gets or sets whether the title bar shows the form's text in the free space between its controls.
+    /// Gets or sets whether the height of the title bar follows its controls (at least 32 px at 96 DPI).
+    /// </summary>
+    [Browsable(true)]
+    [EditorBrowsable(EditorBrowsableState.Always)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+    [DefaultValue(true)]
+    public override bool AutoSize
+    {
+        get => base.AutoSize;
+        set => base.AutoSize = value;
+    }
+
+    /// <summary>
+    /// Gets or sets whether the title bar shows the form's text in the free space between its controls
+    /// (in the font of the system caption).
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Gets or sets whether the title bar shows the form's text in the free space between its controls.", true)]
@@ -198,15 +221,29 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
+    /// Vyska podla prvkov zahlavia (pri <see cref="Control.AutoSize" />): najvyssi viditelny prvok s odsadenim, aspon 32 px pri 96 DPI.
+    /// </summary>
+    public override Size GetPreferredSize(Size proposedSize)
+    {
+        var content = Controls.Cast<Control>().Where(c => c.Visible).Select(c => c.GetPreferredSize(Size.Empty).Height).DefaultIfEmpty(0).Max();
+        var top = DrawsTopBorder ? Math.Max(Padding.Top, 1) : Padding.Top;
+        return new Size(Width, Math.Max(LogicalToDeviceUnits(MinHeight), content + top + Padding.Bottom));
+    }
+
+    /// <summary>
     /// Nastavi farby zahlavia podla temy (pozadie a text panelov) a pouzije temu na prvky v zahlavi.
     /// </summary>
     public void ApplyTheme(ExTheme theme)
     {
         ArgumentNullException.ThrowIfNull(theme);
 
+        // tema nastavuje farby poloziek panelov - stlmene sa vratia a po teme stlmia novou farbou
+        RestoreItems();
         BackColor = theme.PanelBackColor;
         ForeColor = theme.PanelForeColor;
         ExThemer.Apply(Controls, theme);
+        if (!_formActive)
+            DimItems();
         Invalidate(true);
     }
 
@@ -218,7 +255,52 @@ public class ExTitleBar : Panel, IThemeable
         if (_formActive == active)
             return;
         _formActive = active;
+        if (active)
+            RestoreItems();
+        else
+            DimItems();
         Invalidate();
+    }
+
+    /// <summary>
+    /// Stlmi text poloziek ponuky a popisov v paneloch zahlavia (len vlastne zahlavie za behu).
+    /// </summary>
+    private void DimItems()
+    {
+        if (!IsActive)
+            return;
+
+        var dimmed = EffectiveInactiveForeColor;
+        foreach (var strip in _hooks.Keys)
+            foreach (ToolStripItem item in strip.Items)
+            {
+                if (item is not (ToolStripMenuItem or ToolStripLabel) || _dimmedItems.ContainsKey(item))
+                    continue;
+                // nenastavena farba sa dedi z panela - po aktivacii ju treba vratit ako nenastavenu
+                var isSet = TypeDescriptor.GetProperties(item)[nameof(ToolStripItem.ForeColor)]?.ShouldSerializeValue(item) == true;
+                _dimmedItems[item] = new DimmedItem(item.ForeColor, isSet, dimmed);
+                item.ForeColor = dimmed;
+            }
+    }
+
+    /// <summary>
+    /// Vrati stlmenym polozkam povodnu farbu - okrem tych, ktorym ju medzicasom zmenila aplikacia.
+    /// </summary>
+    private void RestoreItems()
+    {
+        foreach (var pair in _dimmedItems)
+        {
+            var item = pair.Key;
+            var state = pair.Value;
+            if (item.IsDisposed || item.ForeColor != state.Dimmed)
+                continue;
+            if (state.IsSet)
+                item.ForeColor = state.Original;
+            else
+                item.ResetForeColor();
+        }
+
+        _dimmedItems.Clear();
     }
 
     /// <summary>
@@ -321,10 +403,10 @@ public class ExTitleBar : Panel, IThemeable
         var area = Rectangle.FromLTRB(layout.LeftInset + margin, 0, Width - layout.RightInset - margin, Height);
         var occupied = Controls.Cast<Control>().Where(c => c.Visible).Select(c => Rectangle.Inflate(c.Bounds, margin, 0));
         // meria sa cely text - s EndEllipsis by MeasureText vratil skrateny na navrhovanu (nulovu) sirku
-        var width = TextRenderer.MeasureText(g, text, Font, Size.Empty, flags & ~TextFormatFlags.EndEllipsis).Width;
+        var width = TextRenderer.MeasureText(g, text, CaptionFont, Size.Empty, flags & ~TextFormatFlags.EndEllipsis).Width;
         var rect = TitleBarLayout.PlaceTitle(width, area, occupied, Width / 2, LogicalToDeviceUnits(MinTitleWidth));
         if (!rect.IsEmpty)
-            TextRenderer.DrawText(g, text, Font, rect, fore, flags);
+            TextRenderer.DrawText(g, text, CaptionFont, rect, fore, flags);
     }
 
     private void DrawButton(Graphics g, Rectangle bounds, TitleBarHit button, string glyph, Color fore, bool enabled)
@@ -483,6 +565,12 @@ public class ExTitleBar : Panel, IThemeable
 
         base.Dispose(disposing);
     }
+
+    /// <summary>
+    /// Farba polozky pred stlmenim: <paramref name="IsSet" /> - nastavena (inak zdedena z panela), <paramref name="Dimmed" /> -
+    /// stlmena farba (ak ju polozka uz nema, zmenila ju aplikacia).
+    /// </summary>
+    private readonly record struct DimmedItem(Color Original, bool IsSet, Color Dimmed);
 
     /// <summary>
     /// Znaky tlacidiel okna z pisma systemoveho zahlavia: Windows 11 Segoe Fluent Icons, Windows 10 Segoe MDL2 Assets

@@ -53,8 +53,11 @@ internal static class TesterTheme
     {
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
         {
-            if (e.Item.Enabled)
-                e.TextColor = e.Item.Selected || e.Item.Pressed ? theme.HighlightForeColor : theme.PanelForeColor;
+            // polozky v paneli maju farbu panela (ExTitleBar ju v neaktivnom okne stlmi), rozbalena ponuka farbu temy
+            if (e.Item.Enabled && (e.Item.Selected || e.Item.Pressed))
+                e.TextColor = theme.HighlightForeColor;
+            else if (e.Item.Enabled && e.Item.IsOnDropDown)
+                e.TextColor = theme.PanelForeColor;
             base.OnRenderItemText(e);
         }
 

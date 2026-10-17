@@ -23,40 +23,26 @@ These components have been extended:
 * FolderBrowserDialog
 
 ## Themes
-`ExTheme` is a color palette (panels, boxes, buttons, border, highlight, marks, labels, system look, dark
-scroll bars). Ex* controls implement `IThemeable` and style themselves; `ExThemer.Apply(form.Controls, theme)`
-walks the controls. Controls outside the library (DataGridView, ToolStrip, Panel…) are styled by handlers the
-application registers with `ExThemer.Register<T>` - the handler of the nearest registered base type is used,
-a container handler themes its children by calling `ExThemer.Apply` again.
+`ExTheme` is a color palette. Ex* controls implement `IThemeable` and style themselves, `ExThemer.Apply(form.Controls, theme)`
+applies the theme to a form. Other controls (DataGridView, ToolStrip…) are styled by handlers the application registers
+with `ExThemer.Register<T>`.
 
 ## Custom title bar
-`ExTitleBar` placed directly on an `ExForm` (docked to the top) replaces the system caption, like the title bar
-of JetBrains Rider or Visual Studio: the window icon (system menu) on the left, the window buttons on the right and any
-controls in between - typically the main `MenuStrip`. The text of the form is drawn in the free space.
+`ExTitleBar` placed directly on an `ExForm` replaces the system caption like in JetBrains Rider or Visual Studio: window
+icon, form text, window buttons and controls such as the main `MenuStrip` in between. The system frame stays (shadow,
+Aero Snap, Snap Layouts, animations).
 
-* The system frame stays: shadow, rounded corners (Windows 11), Aero Snap, Snap Layouts on the maximize button
-  (Windows 11), window animations and resizing at all edges including the top one.
-* The free space of the title bar and empty parts of tool strips in it drag the window (double click maximizes,
-  right click opens the system menu); menu items and other controls stay clickable. Only tool strips placed directly
-  in the title bar are handled this way, their items are always laid out horizontally.
-* The buttons follow `ControlBox`, `MinimizeBox` and `MaximizeBox` of the form, the icon follows `ShowIcon`.
-* It works on Windows 10+ with `FormBorderStyle.Sizable` (`ExForm.UsesCustomTitleBar`); otherwise the form keeps
-  the system caption and the title bar is a plain panel. Hiding the title bar brings the system caption back.
-* The outer size of the form stays as designed - the client area grows by the height of the removed system caption.
-* Colors: `BackColor` and `ForeColor`, optionally `InactiveForeColor`, `ButtonHoverBackColor`, `ButtonPressedBackColor`,
-  `CloseButtonHoverBackColor` and `TopBorderColor` (Windows 10 only, Windows 11 draws the border itself) - empty
-  values are derived from `BackColor` and `ForeColor`. `ExTitleBar` implements `IThemeable` and passes the theme
-  to the controls in it.
-* `ExForm` has `WS_EX_COMPOSITED`: an empty `TextBox` with `PlaceholderText` repaints the whole form endlessly
-  (the text blinks) - use `ExTextBox.HintText` instead.
-* Designer: a new title bar is placed above other controls docked to the top; its smart tag adds the main menu.
+* Works on Windows 10+ with `FormBorderStyle.Sizable`, otherwise the form keeps the system caption.
+* The outer size of the form stays as designed, the client area grows by the height of the system caption.
+* Empty parts of tool strips placed directly in the title bar drag the window. In an inactive window their items
+  are dimmed through `ForeColor` - a renderer that picks the text color itself won't show it.
+* `ExForm.UseCompositedPainting` (`WS_EX_COMPOSITED`, on by default): an empty `TextBox` with `PlaceholderText`
+  repaints such a form endlessly - use `ExTextBox.HintText`.
 
 ## Breaking changes in 2.0
-* `System.Linq.Enumerable` extensions renamed to `ExEnumerable` (the second `Enumerable` class caused CS0433).
-* `IsExternalInit` polyfill (.NET Framework) is internal.
-* Removed unused theming experiments `ExStyle`, `ExStyleManager`, `IStylable`, `ISupportsDefaultStyle`,
-  `ExApplication`, `ExAppTheme` and the base class `ExStyleOld` (its members moved to `ExComboBoxStyle`).
-* Removed the unfinished `ExFormDesigner` (work in progress form with custom title bar), replaced by `ExTitleBar`.
+* `System.Linq.Enumerable` extensions renamed to `ExEnumerable`, `IsExternalInit` polyfill is internal.
+* Removed unused theming experiments (`ExStyle`, `ExStyleManager`, `IStylable`, `ExApplication`, `ExAppTheme`…) and the
+  unfinished `ExFormDesigner` (replaced by `ExTitleBar`).
 * `ExTools.SetTitlebarAndBorderColor(Form, ...)` no longer swaps the text and border colors.
 
 ## How to install?
@@ -64,13 +50,22 @@ controls in between - typically the main `MenuStrip`. The text of the form is dr
 dotnet add package ExControls
 ```
 
-## Designer extension (.NET)
-The .NET WinForms designer runs out of process and loads custom type editors only from NuGet packages.
-`ExControls.Designer.Package` builds `artifacts/packages/ExControls.Designer.<version>.nupkg`
-(client part for Visual Studio, server part for DesignToolsServer); projects that design forms with
-ExControls import `ExControls.Designer.targets` next to their `ExControls` project reference.
+## Development
 
-After changing `ExControls.Designer.Client/Server/Protocol` or the `Version` of `ExControls`
-(the server part is compiled against it), increase `ExControlsDesignerVersion`
-in `ExControls.Designer.targets`, rebuild the package and restart Visual Studio -
-NuGet and the designer cache packages by version.
+### Designer extension
+The .NET WinForms designer runs out of process and loads custom type editors only from NuGet packages.
+`ExControls.Designer.Package` builds `artifacts/packages/ExControls.Designer.<version>.nupkg`; projects that design
+forms with ExControls import `ExControls.Designer.targets` next to their `ExControls` project reference.
+
+### After changing ExControls
+The designer loads `ExControls.dll` from the build output: build the solution and open the form again (if the designer
+still shows the old controls, restart Visual Studio).
+
+Increase `ExControlsDesignerVersion` in `ExControls.Designer.targets`, build the solution and restart Visual Studio when
+* the version of ExControls changes (`<Version>` in `ExControls.csproj` and `AssemblyVersion` in `Properties/AssemblyInfo.cs`
+  always together) - the server part of the package is bound to it,
+* `ExControls.Designer.Client`, `Server` or `Protocol` change, or the ExControls code they use (`ExControls.Editors`,
+  `ExOptionsView` panels).
+
+NuGet and Visual Studio cache the package by version, a package rebuilt with the same version is ignored. An outdated
+package shows "Failed to launch the design tools server process" on every form.

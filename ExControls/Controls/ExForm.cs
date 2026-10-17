@@ -6,8 +6,9 @@ namespace ExControls;
 /// Extended form. With <see cref="ExTitleBar" /> as a direct child it replaces the system caption by the title bar.
 /// </summary>
 /// <remarks>
-/// Okno ma WS_EX_COMPOSITED. Prazdny <c>TextBox.PlaceholderText</c> bez zamerania v nom vyvola nekonecne prekreslovanie
-/// celeho okna (text blika, WinForms ho kresli mimo WM_PAINT) - namiesto neho <see cref="ExTextBox.HintText" />.
+/// Okno ma predvolene WS_EX_COMPOSITED (<see cref="UseCompositedPainting" />). Prazdny <c>TextBox.PlaceholderText</c> bez
+/// zamerania v nom vyvola nekonecne prekreslovanie celeho okna (text blika, WinForms ho kresli mimo WM_PAINT) - namiesto
+/// neho <see cref="ExTextBox.HintText" />.
 /// </remarks>
 public class ExForm : Form
 {
@@ -18,6 +19,7 @@ public class ExForm : Form
     private bool _customFrame;
     private bool _trackingNcMouse;
     private FormWindowState _lastWindowState;
+    private bool _useCompositedPainting = true;
     private bool _darkTitleBar;
     private Color _titleBarBackColor;
     private Color _titleBarForeColor;
@@ -31,7 +33,7 @@ public class ExForm : Form
         get
         {
             var cp = base.CreateParams;
-            if (!DesignMode) 
+            if (!DesignMode && _useCompositedPainting)
                 cp.ExStyle |= (int)Win32.WindowStylesEx.WS_EX_COMPOSITED;
             return cp;
         }
@@ -50,6 +52,26 @@ public class ExForm : Form
         }
 
         UpdateFrame();
+    }
+
+    /// <summary>
+    /// Gets or sets whether the whole form is painted double buffered (WS_EX_COMPOSITED) - less flicker when resizing,
+    /// but some controls repaint endlessly in such a window (TextBox.PlaceholderText). Default is true.
+    /// </summary>
+    [ExCategory(CategoryType.WindowStyle)]
+    [ExDescription("Gets or sets whether the whole form is painted double buffered (WS_EX_COMPOSITED).", true)]
+    [DefaultValue(true)]
+    public bool UseCompositedPainting
+    {
+        get => _useCompositedPainting;
+        set
+        {
+            if (_useCompositedPainting == value)
+                return;
+            _useCompositedPainting = value;
+            if (IsHandleCreated)
+                UpdateStyles();
+        }
     }
 
     /// <summary>

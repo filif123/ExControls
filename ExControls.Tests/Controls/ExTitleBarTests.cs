@@ -186,6 +186,88 @@ public class ExTitleBarTests
     }
 
     [TestMethod]
+    public void AutoSize_VyskaPodlaPrvkovAspon32()
+    {
+        using var window = new TestWindow();
+        var bar = window.TitleBar;
+
+        Assert.IsTrue(bar.AutoSize);
+        Assert.AreEqual(32, bar.Height);
+
+        window.Menu.Font = new Font("Segoe UI", 24f);
+        window.Form.PerformLayout();
+
+        Assert.IsTrue(bar.Height > 32);
+        Assert.IsTrue(bar.Height >= window.Menu.GetPreferredSize(Size.Empty).Height);
+    }
+
+    [TestMethod]
+    public void AutoSizeVypnute_PevnaVyska()
+    {
+        using var window = new TestWindow();
+        window.TitleBar.AutoSize = false;
+        window.TitleBar.Height = 40;
+
+        window.Menu.Font = new Font("Segoe UI", 24f);
+        window.Form.PerformLayout();
+
+        Assert.AreEqual(40, window.TitleBar.Height);
+    }
+
+    [TestMethod]
+    public void UseCompositedPainting_RiadiWsExComposited()
+    {
+        const int gwlExStyle = -20;
+        const long wsExComposited = 0x02000000;
+        using var form = new ExForm { UseCompositedPainting = false };
+
+        bool Composited() => ((long)Win32.GetWindowLongPtr(form.Handle, gwlExStyle) & wsExComposited) != 0;
+
+        Assert.IsFalse(Composited());
+        form.UseCompositedPainting = true;
+        Assert.IsTrue(Composited());
+        form.UseCompositedPainting = false;
+        Assert.IsFalse(Composited());
+    }
+
+    [TestMethod]
+    public void NeaktivneOkno_StlmiPolozkyPonuky()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var file = window.Menu.Items[0];
+        var label = window.Menu.Items[2];
+        // okno mimo obrazovky nemusi byt aktivne - stav sa nastavi spravou
+        NcActivate(window.Form, true);
+        var original = file.ForeColor;
+
+        NcActivate(window.Form, false);
+
+        Assert.AreNotEqual(original, file.ForeColor);
+        Assert.AreEqual(file.ForeColor, label.ForeColor);
+
+        NcActivate(window.Form, true);
+
+        Assert.AreEqual(original, file.ForeColor);
+        Assert.IsFalse(TypeDescriptor.GetProperties(file)[nameof(ToolStripItem.ForeColor)]!.ShouldSerializeValue(file), "zdedena farba ostane zdedena");
+    }
+
+    [TestMethod]
+    public void NeaktivneOkno_FarbuOdAplikacieAktivaciaNeprepise()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var file = window.Menu.Items[0];
+        NcActivate(window.Form, true);
+
+        NcActivate(window.Form, false);
+        file.ForeColor = Color.Red;
+        NcActivate(window.Form, true);
+
+        Assert.AreEqual(Color.Red, file.ForeColor);
+    }
+
+    [TestMethod]
     public void VlastneZahlavie_KlientskaOblastZacinaNaVrchuOkna()
     {
         RequireCustomTitleBar();
@@ -295,6 +377,9 @@ public class ExTitleBarTests
         _ = Win32.SendMessage(form.Handle, (uint)Win32.WM.NCLBUTTONDOWN, (IntPtr)hitCode, LParam(screen));
         _ = Win32.SendMessage(form.Handle, (uint)Win32.WM.NCLBUTTONUP, (IntPtr)hitCode, LParam(screen));
     }
+
+    private static void NcActivate(Control form, bool active) =>
+        _ = Win32.SendMessage(form.Handle, (uint)Win32.WM.NCACTIVATE, (IntPtr)(active ? 1 : 0), IntPtr.Zero);
 
     private static Point CloseButton(TestWindow window) => window.TitleBar.PointToScreen(new Point(window.TitleBar.Width - 5, 20));
 
