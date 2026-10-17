@@ -83,8 +83,10 @@
 		<PackageReference Include="System.Resources.Extensions" Version="9.0.0" />
 	</ItemGroup>
 	<!-- Navrhar VS drzi ExControls.dll otvorenu: zamknuty subor sa neda prepisat, ale da sa premenovat.
-	     Pred kompilaciou sa preto stara DLL odsunie na .locked (len Debug - pri praci s navrharom). -->
-	<Target Name="MoveLockedAssembly" BeforeTargets="CoreCompile" Condition="'$(Configuration)' == 'Debug' And Exists('$(TargetPath)')">
+	     Pred kompilaciou sa preto stara DLL odsunie na .locked (len Debug - pri praci s navrharom).
+	     Nie pri design-time builde VS (po kazdej uprave suboru): ten nekompiluje ani nekopiruje, DLL by z bin zmizla
+	     a navrhar by projekt otvoril bez ExControls ("base class could not be loaded", "Failed to launch the design tools server"). -->
+	<Target Name="MoveLockedAssembly" BeforeTargets="CoreCompile" Condition="'$(Configuration)' == 'Debug' And '$(DesignTimeBuild)' != 'true' And Exists('$(TargetPath)')">
 		<Delete Files="$(TargetPath).locked" ContinueOnError="true" />
 		<Move SourceFiles="$(TargetPath)" DestinationFiles="$(TargetPath).locked" Condition="!Exists('$(TargetPath).locked')" ContinueOnError="true" />
 	</Target>

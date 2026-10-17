@@ -28,6 +28,11 @@ public static class ExTools
     public static bool IsWin11Build22000 { get; } = IsWindows10OrGreater(22000);
 
     /// <summary>
+    /// Gets whether <see cref="ExForm" /> can replace the system caption with <see cref="ExTitleBar" /> (Windows 10+).
+    /// </summary>
+    public static bool SupportsCustomTitleBar { get; } = IsWindows10OrGreater();
+
+    /// <summary>
     /// Gets whether apps in system using light or dark mode. Works only in Windows 10+ (In previous versions always returns true).
     /// </summary>
     public static bool AppsUseLightMode { get; } = GetThemeInfo(false);
@@ -152,7 +157,7 @@ public static class ExTools
     /// <returns>whether dark mode has been successfully activated/deactivated</returns>
     public static bool SetTitlebarAndBorderColor(this Form form, Color titlebarColor = default, Color textColor = default, Color borderColor = default)
     {
-        return SetTitlebarAndBorderColor(form.Handle, titlebarColor, borderColor, textColor);
+        return SetTitlebarAndBorderColor(form.Handle, titlebarColor, textColor, borderColor);
     }
 
     /// <summary>

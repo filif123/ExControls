@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -23,6 +24,9 @@ using System.Runtime.Versioning;
 // pro komponenty modelu COM. Pokud potřebujete přístup k typu v tomto sestavení
 // z modelu COM, nastavte atribut ComVisible tohoto typu na True.
 [assembly: ComVisible(false)]
+
+// testy rozdelenia vlastneho zahlavia (TitleBarHitTest) a Win32
+[assembly: InternalsVisibleTo("ExControls.Tests")]
 
 // Následující GUID se používá pro ID knihovny typů, pokud je tento projekt vystavený pro COM.
 [assembly: Guid("e2064a91-6132-498f-9f22-8c3e7c5941bc")]

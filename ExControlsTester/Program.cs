@@ -16,8 +16,9 @@ internal static class Program
             ButtonsFont = null
         };
 
+        TesterTheme.Register();
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new Form2());
+        Application.Run(new TitleBarForm());
     }
 }

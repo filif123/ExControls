@@ -25,6 +25,76 @@ internal static partial class Win32
         WS_EX_COMPOSITED = 0x02000000
     }
 
+    /// <summary>
+    /// Navratove hodnoty WM_NCHITTEST (len pouzite).
+    /// </summary>
+    public enum HitTest
+    {
+        /// <summary>Okno je zakryte inym oknom toho isteho vlakna - sprava ide oknu pod nim.</summary>
+        HTTRANSPARENT = -1,
+        HTCLIENT = 1,
+        HTCAPTION = 2,
+        HTSYSMENU = 3,
+        HTMINBUTTON = 8,
+        HTMAXBUTTON = 9,
+        HTTOP = 12,
+        HTTOPLEFT = 13,
+        HTTOPRIGHT = 14,
+        HTCLOSE = 20
+    }
+
+    /// <summary>
+    /// Prikazy WM_SYSCOMMAND (len pouzite).
+    /// </summary>
+    public enum SysCommand
+    {
+        SC_MINIMIZE = 0xF020,
+        SC_MAXIMIZE = 0xF030,
+        SC_CLOSE = 0xF060,
+        SC_RESTORE = 0xF120
+    }
+
+    /// <summary>
+    /// Priznaky TrackMouseEvent (len pouzite).
+    /// </summary>
+    [Flags]
+    public enum TrackMouseEventFlags : uint
+    {
+        /// <summary>Po odchode mysi pride WM_MOUSELEAVE (s TME_NONCLIENT WM_NCMOUSELEAVE).</summary>
+        TME_LEAVE = 0x2,
+
+        /// <summary>Sledovat neklientsku oblast.</summary>
+        TME_NONCLIENT = 0x10
+    }
+
+    /// <summary>
+    /// Spravy SHAppBarMessage (len pouzite).
+    /// </summary>
+    public enum AppBarMessage : uint
+    {
+        /// <summary>Stav panela uloh (ABS_AUTOHIDE, ABS_ALWAYSONTOP).</summary>
+        ABM_GETSTATE = 0x4,
+
+        /// <summary>Automaticky skryvany panel na danom okraji monitora (uEdge, rc).</summary>
+        ABM_GETAUTOHIDEBAREX = 0xB
+    }
+
+    /// <summary>
+    /// Stav panela uloh z ABM_GETSTATE.
+    /// </summary>
+    public const int ABS_AUTOHIDE = 0x1;
+
+    /// <summary>
+    /// Okraj monitora pre ABM_GETAUTOHIDEBAREX.
+    /// </summary>
+    public enum AppBarEdge : uint
+    {
+        ABE_LEFT = 0,
+        ABE_TOP = 1,
+        ABE_RIGHT = 2,
+        ABE_BOTTOM = 3
+    }
+
     public enum ComboBoxButtonState
     {
         STATE_SYSTEM_NONE = 0,
@@ -95,9 +165,19 @@ internal static partial class Win32
         PAINT = 0x000F,
         ERASEBKGND = 0x0014,
         NOTIFY = 0x004E,
+        SETICON = 0x0080,
+        NCCALCSIZE = 0x0083,
+        NCHITTEST = 0x0084,
         NCPAINT = 0x0085,
+        NCACTIVATE = 0x0086,
+        NCMOUSEMOVE = 0x00A0,
+        NCLBUTTONDOWN = 0x00A1,
+        NCLBUTTONUP = 0x00A2,
+        NCLBUTTONDBLCLK = 0x00A3,
+        SYSCOMMAND = 0x0112,
         CTLCOLORLISTBOX = 0x0134,
         LBUTTONDOWN = 0x0201,
+        NCMOUSELEAVE = 0x02A2,
         PRINTCLIENT = 0x0318,
         THEMECHANGED = 0x031A,
         USER = 0x0400

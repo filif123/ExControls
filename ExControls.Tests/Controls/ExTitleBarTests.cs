@@ -1,0 +1,348 @@
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+
+namespace ExControls.Tests.Controls;
+
+/// <summary>
+/// Okno s <see cref="ExTitleBar" />: bez systemoveho zahlavia, horny okraj meni velkost, volne miesto zahlavia a hlavnej
+/// ponuky taha okno, polozky ponuky ostavaju klikatelne.
+/// </summary>
+[TestClass]
+public class ExTitleBarTests
+{
+    private const int HtTransparent = -1;
+    private const int HtClient = 1;
+    private const int HtCaption = 2;
+    private const int HtSysMenu = 3;
+    private const int HtMinButton = 8;
+    private const int HtMaxButton = 9;
+    private const int HtTop = 12;
+    private const int HtClose = 20;
+
+    [TestMethod]
+    public void HitTest_VolneMiestoAPopisSuZahlavie_PolozkyAPrvkySuKlientske()
+    {
+        using var window = new TestWindow();
+        var file = window.Menu.Items[0];
+        var label = window.Menu.Items[2];
+
+        Assert.AreEqual(TitleBarHit.Client, window.TitleBar.HitTest(InTitleBar(window, file)));
+        Assert.AreEqual(TitleBarHit.Caption, window.TitleBar.HitTest(InTitleBar(window, label)));
+        Assert.AreEqual(TitleBarHit.Caption, window.TitleBar.HitTest(new Point(window.Menu.Right - 5, 16)));
+        Assert.AreEqual(TitleBarHit.Client, window.TitleBar.HitTest(Center(window.Search.Bounds)));
+        Assert.AreEqual(TitleBarHit.Caption, window.TitleBar.HitTest(window.Free));
+    }
+
+    [TestMethod]
+    public void PanelNastrojovVZahlavi_MaPolozkyVedlaSeba()
+    {
+        using var window = new TestWindow();
+        var items = window.Menu.Items;
+
+        Assert.AreEqual(ToolStripLayoutStyle.HorizontalStackWithOverflow, window.Menu.LayoutStyle);
+        Assert.AreEqual(items[0].Bounds.Top, items[1].Bounds.Top);
+        Assert.IsTrue(items[1].Bounds.Left >= items[0].Bounds.Right);
+    }
+
+    [TestMethod]
+    public void Rozlozenie_PrvkyMedziIkonouATlacidlamiOkna()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var bar = window.TitleBar;
+
+        Assert.AreEqual(TitleBarHit.SystemMenu, bar.HitTest(new Point(10, 16)));
+        Assert.AreEqual(TitleBarHit.MinimizeButton, bar.HitTest(new Point(bar.Width - 100, 16)));
+        Assert.AreEqual(TitleBarHit.MaximizeButton, bar.HitTest(new Point(bar.Width - 50, 16)));
+        Assert.AreEqual(TitleBarHit.CloseButton, bar.HitTest(new Point(bar.Width - 5, 16)));
+        Assert.IsTrue(window.Menu.Left >= 36, "ponuka zacina za ikonou");
+        Assert.IsTrue(window.Search.Right <= bar.Width - 3 * 46, "pole hladania konci pred tlacidlami okna");
+    }
+
+    [TestMethod]
+    public void PevnyRam_ZahlavieBezIkonyATlacidiel()
+    {
+        using var window = new TestWindow(FormBorderStyle.FixedSingle);
+
+        Assert.AreEqual(0, window.Menu.Left);
+        Assert.AreEqual(window.TitleBar.ClientSize.Width, window.Search.Right);
+        Assert.AreEqual(TitleBarHit.Client, window.TitleBar.HitTest(Center(window.Search.Bounds)));
+    }
+
+    [TestMethod]
+    public void NcHitTest_IkonaATlacidlaOkna()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var bar = window.TitleBar;
+
+        int At(int x) => NcHitTest(window.Form, bar.PointToScreen(new Point(x, bar.Height - 6)));
+
+        Assert.AreEqual(HtSysMenu, At(10));
+        Assert.AreEqual(HtMinButton, At(bar.Width - 100));
+        Assert.AreEqual(HtMaxButton, At(bar.Width - 50));
+        Assert.AreEqual(HtClose, At(bar.Width - 5));
+    }
+
+    [TestMethod]
+    public void KlikNaZatvorenie_ZatvaraOkno()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var closing = 0;
+        window.Form.FormClosing += (_, e) =>
+        {
+            closing++;
+            e.Cancel = true;
+        };
+
+        NcClick(window.Form, HtClose, CloseButton(window));
+        Application.DoEvents();
+
+        Assert.AreEqual(1, closing);
+    }
+
+    [TestMethod]
+    public void StlacenieAOdchodMysi_NieJeKlik()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var closing = 0;
+        window.Form.FormClosing += (_, e) =>
+        {
+            closing++;
+            e.Cancel = true;
+        };
+        var lParam = LParam(CloseButton(window));
+
+        _ = Win32.SendMessage(window.Form.Handle, (uint)Win32.WM.NCLBUTTONDOWN, (IntPtr)HtClose, lParam);
+        _ = Win32.SendMessage(window.Form.Handle, (uint)Win32.WM.NCMOUSELEAVE, IntPtr.Zero, IntPtr.Zero);
+        _ = Win32.SendMessage(window.Form.Handle, (uint)Win32.WM.NCLBUTTONUP, (IntPtr)HtClose, lParam);
+        Application.DoEvents();
+
+        Assert.AreEqual(0, closing);
+    }
+
+    [TestMethod]
+    public void KlikNaMinimalizaciu_MinimalizujeOkno()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var bar = window.TitleBar;
+
+        NcClick(window.Form, HtMinButton, bar.PointToScreen(new Point(bar.Width - 100, 16)));
+        Application.DoEvents();
+
+        Assert.AreEqual(FormWindowState.Minimized, window.Form.WindowState);
+    }
+
+    [TestMethod]
+    public void ApplyTheme_FarbyZahlaviaAjPrvkyVNom()
+    {
+        var themed = new List<Control>();
+        ExThemer.Register<ThemedStrip>((strip, _) => themed.Add(strip));
+        using var bar = new ExTitleBar();
+        var menu = new ThemedStrip();
+        bar.Controls.Add(menu);
+        var theme = new ExTheme { PanelBackColor = Color.FromArgb(43, 45, 48), PanelForeColor = Color.Gainsboro };
+
+        bar.ApplyTheme(theme);
+
+        Assert.AreEqual(theme.PanelBackColor, bar.BackColor);
+        Assert.AreEqual(theme.PanelForeColor, bar.ForeColor);
+        CollectionAssert.Contains(themed, menu);
+    }
+
+    [TestMethod]
+    [DataRow(nameof(ExTitleBar.ShowTitle), true)]
+    [DataRow(nameof(ExTitleBar.InactiveForeColor), null)]
+    [DataRow(nameof(ExTitleBar.ButtonHoverBackColor), null)]
+    [DataRow(nameof(ExTitleBar.ButtonPressedBackColor), null)]
+    [DataRow(nameof(ExTitleBar.CloseButtonHoverBackColor), null)]
+    [DataRow(nameof(ExTitleBar.TopBorderColor), null)]
+    public void Vlastnosti_NavrharVidiAtributy(string name, object? defaultValue)
+    {
+        // vynimka v konstruktore atributu (ExCategory, ExDescription) by v navrhari zahodila vsetky atributy clena
+        var property = TypeDescriptor.GetProperties(typeof(ExTitleBar))[name];
+
+        Assert.IsNotNull(property);
+        var attribute = property.Attributes.OfType<DefaultValueAttribute>().Single();
+        Assert.AreEqual(defaultValue ?? Color.Empty, attribute.Value);
+        Assert.IsFalse(string.IsNullOrEmpty(property.Description));
+        Assert.AreNotEqual(CategoryAttribute.Default.Category, property.Category);
+    }
+
+    [TestMethod]
+    public void Navrhar_TypSaNajde()
+    {
+        var designer = TypeDescriptor.GetAttributes(typeof(ExTitleBar)).OfType<DesignerAttribute>()
+            .Single(d => d.DesignerTypeName.StartsWith("ExControls.", StringComparison.Ordinal));
+
+        Assert.AreEqual("ExControls.Designers.ExTitleBarDesigner, ExControls", designer.DesignerTypeName);
+#if NETFRAMEWORK
+        // na .NET navrhar zavisi od Microsoft.DotNet.DesignTools.Server, ktory je len v procese navrhara VS
+        Assert.IsNotNull(Type.GetType(designer.DesignerTypeName, true));
+#endif
+    }
+
+    [TestMethod]
+    public void VlastneZahlavie_KlientskaOblastZacinaNaVrchuOkna()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+
+        Assert.IsTrue(window.Form.UsesCustomTitleBar);
+        Assert.AreSame(window.TitleBar, window.Form.TitleBar);
+        Assert.AreEqual(WindowRect(window.Form).Top, window.Form.PointToScreen(Point.Empty).Y);
+    }
+
+    [TestMethod]
+    public void SkryteZahlavie_VratiSystemoveZahlavie()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+
+        window.TitleBar.Visible = false;
+
+        Assert.IsFalse(window.Form.UsesCustomTitleBar);
+        Assert.IsTrue(window.Form.PointToScreen(Point.Empty).Y > WindowRect(window.Form).Top);
+
+        window.TitleBar.Visible = true;
+
+        Assert.AreEqual(WindowRect(window.Form).Top, window.Form.PointToScreen(Point.Empty).Y);
+    }
+
+    [TestMethod]
+    public void BezZahlavia_OknoMaSystemoveZahlavie()
+    {
+        using var form = new ExForm();
+        _ = form.Handle;
+
+        Assert.IsNull(form.TitleBar);
+        Assert.IsFalse(form.UsesCustomTitleBar);
+        Assert.IsTrue(form.PointToScreen(Point.Empty).Y > WindowRect(form).Top);
+    }
+
+    [TestMethod]
+    public void PevnyRam_OknoMaSystemoveZahlavie()
+    {
+        using var window = new TestWindow(FormBorderStyle.FixedSingle);
+
+        Assert.IsFalse(window.Form.UsesCustomTitleBar);
+        Assert.IsTrue(window.Form.PointToScreen(Point.Empty).Y > WindowRect(window.Form).Top);
+    }
+
+    [TestMethod]
+    public void NcHitTest_HornyOkrajZahlavieAObsah()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var form = window.Form;
+        var middle = form.ClientSize.Width / 2;
+
+        Assert.AreEqual(HtTop, NcHitTest(form, form.PointToScreen(new Point(middle, 1))));
+        Assert.AreEqual(HtCaption, NcHitTest(form, form.PointToScreen(window.Free)));
+        Assert.AreEqual(HtCaption, NcHitTest(form, form.PointToScreen(new Point(window.Menu.Right - 5, window.TitleBar.Height - 4))));
+        Assert.AreEqual(HtClient, NcHitTest(form, form.PointToScreen(new Point(middle, window.TitleBar.Bottom + 20))));
+    }
+
+    [TestMethod]
+    public void NcHitTest_PonukaPosielaVolneMiestoZahlaviu()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var menu = window.Menu;
+
+        Assert.AreEqual(HtTransparent, NcHitTest(menu, menu.PointToScreen(new Point(menu.Width - 5, menu.Height / 2))));
+        Assert.AreEqual(HtTransparent, NcHitTest(menu, menu.PointToScreen(Center(menu.Items[2].Bounds))));
+        Assert.AreEqual(HtClient, NcHitTest(menu, menu.PointToScreen(Center(menu.Items[0].Bounds))));
+        Assert.AreEqual(HtTransparent, NcHitTest(window.TitleBar, window.TitleBar.PointToScreen(window.Free)));
+    }
+
+    [TestMethod]
+    public void NcHitTest_BezVlastnehoZahlaviaPonukaOstavaKlientska()
+    {
+        using var window = new TestWindow(FormBorderStyle.FixedSingle);
+        var menu = window.Menu;
+
+        Assert.AreEqual(HtClient, NcHitTest(menu, menu.PointToScreen(new Point(menu.Width - 5, menu.Height / 2))));
+    }
+
+    private static void RequireCustomTitleBar()
+    {
+        if (!ExTools.SupportsCustomTitleBar)
+            Assert.Inconclusive("vlastne zahlavie je len vo Windows 10+");
+    }
+
+    private static Point InTitleBar(TestWindow window, ToolStripItem item) =>
+        new(window.Menu.Left + item.Bounds.Left + item.Bounds.Width / 2, window.Menu.Top + item.Bounds.Top + item.Bounds.Height / 2);
+
+    private static Point Center(Rectangle r) => new(r.Left + r.Width / 2, r.Top + r.Height / 2);
+
+    private static Win32.RECT WindowRect(Control control)
+    {
+        Win32.GetWindowRect(new HandleRef(control, control.Handle), out var rect);
+        return rect;
+    }
+
+    private static IntPtr LParam(Point screen) => (IntPtr)((screen.Y << 16) | (screen.X & 0xFFFF));
+
+    private static int NcHitTest(Control control, Point screen) =>
+        Win32.SendMessage(control.Handle, (uint)Win32.WM.NCHITTEST, IntPtr.Zero, LParam(screen));
+
+    private static void NcClick(Control form, int hitCode, Point screen)
+    {
+        _ = Win32.SendMessage(form.Handle, (uint)Win32.WM.NCLBUTTONDOWN, (IntPtr)hitCode, LParam(screen));
+        _ = Win32.SendMessage(form.Handle, (uint)Win32.WM.NCLBUTTONUP, (IntPtr)hitCode, LParam(screen));
+    }
+
+    private static Point CloseButton(TestWindow window) => window.TitleBar.PointToScreen(new Point(window.TitleBar.Width - 5, 20));
+
+    private sealed class ThemedStrip : MenuStrip;
+
+    /// <summary>
+    /// Okno 600x400 so zahlavim (hlavna ponuka vlavo a pole hladania vpravo) a obsahom pod nim, zobrazene mimo obrazovky
+    /// (skryty panel nastrojov nerozlozi polozky).
+    /// </summary>
+    private sealed class TestWindow : IDisposable
+    {
+        public TestWindow(FormBorderStyle border = FormBorderStyle.Sizable)
+        {
+            Form = new ExForm
+            {
+                FormBorderStyle = border,
+                Size = new Size(600, 400),
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(-20000, -20000),
+                ShowInTaskbar = false
+            };
+            TitleBar = new ExTitleBar { Height = 32 };
+            Menu = new MenuStrip { Dock = DockStyle.Left, AutoSize = false, Width = 300, GripStyle = ToolStripGripStyle.Hidden };
+            Menu.Items.Add(new ToolStripMenuItem("Subor"));
+            Menu.Items.Add(new ToolStripMenuItem("Upravy"));
+            Menu.Items.Add(new ToolStripLabel("Stanica"));
+            Search = new TextBox { Dock = DockStyle.Right, Width = 120 };
+            TitleBar.Controls.Add(Menu);
+            TitleBar.Controls.Add(Search);
+            Form.Controls.Add(new Panel { Dock = DockStyle.Fill });
+            Form.Controls.Add(TitleBar);
+
+            Form.Show();
+        }
+
+        public ExForm Form { get; }
+
+        public ExTitleBar TitleBar { get; }
+
+        public MenuStrip Menu { get; }
+
+        public TextBox Search { get; }
+
+        /// <summary>
+        /// Volne miesto zahlavia medzi ponukou a polom hladania.
+        /// </summary>
+        public Point Free => new((Menu.Right + Search.Left) / 2, TitleBar.Height / 2);
+
+        public void Dispose() => Form.Dispose();
+    }
+}

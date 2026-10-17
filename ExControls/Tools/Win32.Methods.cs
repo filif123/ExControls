@@ -38,6 +38,14 @@ internal static partial class Win32
     [DllImport(USER32, EntryPoint = "SendMessageA")]
     public static extern int SendMessage(IntPtr hwnd, uint wMsg, IntPtr wParam, IntPtr lParam);
 
+    [DllImport(USER32, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport(USER32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool TrackMouseEvent(ref TRACKMOUSEEVENT lpEventTrack);
+
     [DllImport(USER32)]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool GetComboBoxInfo(IntPtr hwndCombo, ref COMBOBOXINFO pcbi);
@@ -75,6 +83,14 @@ internal static partial class Win32
 
     [DllImport(USER32, ExactSpelling = true, SetLastError = true)]
     public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In] [Out] ref POINT rect, int cPoints);
+
+    [DllImport(USER32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool IsZoomed(IntPtr hWnd);
+
+    [DllImport(USER32)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool IsIconic(IntPtr hWnd);
 
     [DllImport(USER32, SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -115,6 +131,9 @@ internal static partial class Win32
 
     [DllImport(UXTHEME, ExactSpelling = true, CharSet = CharSet.Unicode)]
     public static extern int SetWindowTheme(IntPtr hWnd, string? textSubAppName, string? textSubIdList);
+
+    [DllImport(SHELL32)]
+    public static extern UIntPtr SHAppBarMessage(AppBarMessage dwMessage, ref APPBARDATA pData);
 
     [DllImport(SHELL32, SetLastError = false)]
     public static extern int SHGetStockIconInfo(ShellIconType type, SHGSI uFlags, ref SHSTOCKICONINFO psii);

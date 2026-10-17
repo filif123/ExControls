@@ -18,6 +18,7 @@ These controls have been extended:
 These controls have been added:
 
 - LineSeparator
+- TitleBar (custom title bar of `ExForm` with the main menu)
 
 These components have been extended:
 
@@ -29,9 +30,18 @@ These components have been extended:
 `ExThemer.Apply(form.Controls, theme)` walks the controls. Controls outside the library (DataGridView, ToolStrip,
 Panel…) are styled by handlers registered with `ExThemer.Register<T>`.
 
+## Custom title bar
+
+`ExTitleBar` placed directly on an `ExForm` (docked to the top) replaces the system caption: the window icon on the left,
+the window buttons on the right and controls such as the main `MenuStrip` in between. The system frame stays (shadow,
+Aero Snap, Snap Layouts, animations); the free space of the title bar and empty parts of its tool strips drag the window.
+It works on Windows 10+ with `FormBorderStyle.Sizable`, otherwise the form keeps the system caption. Do not use
+`TextBox.PlaceholderText` on an `ExForm` (`WS_EX_COMPOSITED` repaints it endlessly) - use `ExTextBox.HintText`.
+
 ## Breaking changes in 2.0
 
 - `System.Linq.Enumerable` extensions renamed to `ExEnumerable`.
 - `IsExternalInit` polyfill (.NET Framework) is internal.
 - Removed unused `ExStyle`, `ExStyleManager`, `IStylable`, `ISupportsDefaultStyle`, `ExApplication`, `ExAppTheme`,
-  `ExStyleOld` (members moved to `ExComboBoxStyle`) and the unfinished `ExFormDesigner`.
+  `ExStyleOld` (members moved to `ExComboBoxStyle`) and the unfinished `ExFormDesigner` (replaced by `ExTitleBar`).
+- `ExTools.SetTitlebarAndBorderColor(Form, ...)` no longer swaps the text and border colors.
