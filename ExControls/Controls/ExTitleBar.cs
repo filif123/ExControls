@@ -369,7 +369,7 @@ public class ExTitleBar : Panel, IThemeable
 
     /// <summary>
     /// Farby panelov nastrojov v zahlavi (len vlastne zahlavie za behu): ina farba zahlavia nez vlastna (titulok formulara,
-    /// farba motivu) presvita cez pozadie panelov a polozky ponuky a popisy maju jej text; neaktivne okno ich stlmi.
+    /// farba motivu) presvita cez pozadie panelov aj ich poloziek ponuky a popisov, tie maju jej text; neaktivne okno ich stlmi.
     /// Meni sa len to, co sa zmenilo; farbu, ktoru medzicasom zmenila aplikacia, uz nevracia.
     /// </summary>
     private void UpdateStripColors()
@@ -383,18 +383,23 @@ public class ExTitleBar : Panel, IThemeable
             {
                 if (back)
                     wanted.Add((strip, nameof(BackColor), Color.Transparent));
-                if (fore is not { } color)
-                    continue;
                 foreach (ToolStripItem item in strip.Items)
-                    if (item is ToolStripMenuItem or ToolStripLabel)
+                {
+                    if (item is not (ToolStripMenuItem or ToolStripLabel))
+                        continue;
+                    // polozka s vlastnym pozadim (temy ho nastavuju aj polozkam) by zakryla farbu zahlavia
+                    if (back)
+                        wanted.Add((item, nameof(ToolStripItem.BackColor), Color.Transparent));
+                    if (fore is { } color)
                         wanted.Add((item, nameof(ToolStripItem.ForeColor), color));
+                }
             }
         }
 
         for (var i = _colorOverrides.Count - 1; i >= 0; i--)
         {
             var colorOverride = _colorOverrides[i];
-            if (colorOverride.IsCurrent && wanted.Remove((colorOverride.Target, colorOverride.Property, colorOverride.Applied)))
+            if (colorOverride.IsCurrent && wanted.Remove((colorOverride.Target, colorOverride.Property, colorOverride.Requested)))
                 continue;
             colorOverride.Restore();
             _colorOverrides.RemoveAt(i);
@@ -403,6 +408,17 @@ public class ExTitleBar : Panel, IThemeable
         foreach (var (target, property, color) in wanted)
             if (TypeDescriptor.GetProperties(target)[property] is { } descriptor)
                 _colorOverrides.Add(ColorOverride.Apply(target, descriptor, color));
+    }
+
+    /// <summary>
+    /// Pred kreslenim panela (udalost Paint predchadza kresleniu poloziek): vybrana a otvorena polozka ma pozadie
+    /// zvyraznenia z temy - text jej povodnou farbou, ostatne farbou zahlavia.
+    /// </summary>
+    private void ShowItemStates(ToolStrip strip)
+    {
+        foreach (var colorOverride in _colorOverrides)
+            if (colorOverride is { Target: ToolStripItem item, Property: nameof(ToolStripItem.ForeColor) } && item.Owner == strip)
+                colorOverride.Show(item.Selected || item.Pressed ? colorOverride.Original : colorOverride.Requested);
     }
 
     /// <summary>
@@ -481,7 +497,7 @@ public class ExTitleBar : Panel, IThemeable
 
     /// <summary>
     /// Zbali ponuky v zahlavi, na ktore nestaci miesto, a rozbali tie, ktore sa uz zmestia (len za behu - navrhar by
-    /// presunute polozky ulozil).
+    /// presunute polozky ulozil), a doplni farby zahlavia novym polozkam.
     /// </summary>
     private void UpdateCollapsedMenus()
     {
@@ -491,15 +507,14 @@ public class ExTitleBar : Panel, IThemeable
         _updatingMenus = true;
         try
         {
-            var changed = false;
             foreach (var menu in _hooks.Keys.OfType<MenuStrip>().ToList())
             {
                 var collapse = _collapseMenu && !DesignMode && ExpandedWidth(menu) > SpaceFor(menu);
-                changed |= collapse ? Collapse(menu) : Expand(menu);
+                _ = collapse ? Collapse(menu) : Expand(menu);
             }
 
-            if (changed)
-                UpdateStripColors();
+            // aj polozky, ktore aplikacia pridala do ponuky za behu (meni sa len to, co chyba)
+            UpdateStripColors();
         }
         finally
         {
@@ -876,15 +891,15 @@ public class ExTitleBar : Panel, IThemeable
     private sealed class ColorOverride
     {
         private readonly PropertyDescriptor _property;
-        private readonly Color _original;
         private readonly bool _isSet;
 
-        private ColorOverride(Component target, PropertyDescriptor property, Color applied)
+        private ColorOverride(Component target, PropertyDescriptor property, Color requested)
         {
             Target = target;
             _property = property;
-            Applied = applied;
-            _original = (Color)property.GetValue(target)!;
+            Requested = requested;
+            Applied = requested;
+            Original = (Color)property.GetValue(target)!;
             // nenastavena farba sa dedi (z panela, z rodica) - vrati sa ako nenastavena
             _isSet = property.ShouldSerializeValue(target);
         }
@@ -893,7 +908,20 @@ public class ExTitleBar : Panel, IThemeable
 
         public string Property => _property.Name;
 
-        public Color Applied { get; }
+        /// <summary>
+        /// Farba pred zahlavim.
+        /// </summary>
+        public Color Original { get; }
+
+        /// <summary>
+        /// Farba od zahlavia.
+        /// </summary>
+        public Color Requested { get; }
+
+        /// <summary>
+        /// Farba, ktoru prvok prave ma (pri vybranej polozke povodna).
+        /// </summary>
+        public Color Applied { get; private set; }
 
         /// <summary>
         /// Prvok ma stale farbu od zahlavia.
@@ -908,12 +936,23 @@ public class ExTitleBar : Panel, IThemeable
             return colorOverride;
         }
 
+        /// <summary>
+        /// Ukaze inu z farieb prvku (povodnu alebo od zahlavia) - len ak farbu nezmenila aplikacia.
+        /// </summary>
+        public void Show(Color color)
+        {
+            if (Applied == color || !IsCurrent)
+                return;
+            _property.SetValue(Target, color);
+            Applied = color;
+        }
+
         public void Restore()
         {
             if (!IsCurrent)
                 return;
             if (_isSet)
-                _property.SetValue(Target, _original);
+                _property.SetValue(Target, Original);
             else
                 _property.ResetValue(Target);
         }
@@ -940,7 +979,8 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Posiela WM_NCHITTEST z volneho miesta panela nastrojov zahlaviu (HTTRANSPARENT), aby nim slo tahat okno.
+    /// Posiela WM_NCHITTEST z volneho miesta panela nastrojov zahlaviu (HTTRANSPARENT), aby nim slo tahat okno, a pred
+    /// kreslenim panela nastavi farby vybranych poloziek.
     /// </summary>
     private sealed class ToolStripHook : NativeWindow
     {
@@ -953,6 +993,7 @@ public class ExTitleBar : Panel, IThemeable
             _strip = strip;
             _strip.HandleCreated += Strip_HandleCreated;
             _strip.HandleDestroyed += Strip_HandleDestroyed;
+            _strip.Paint += Strip_Paint;
             if (_strip.IsHandleCreated)
                 AssignHandle(_strip.Handle);
         }
@@ -961,12 +1002,15 @@ public class ExTitleBar : Panel, IThemeable
         {
             _strip.HandleCreated -= Strip_HandleCreated;
             _strip.HandleDestroyed -= Strip_HandleDestroyed;
+            _strip.Paint -= Strip_Paint;
             ReleaseHandle();
         }
 
         private void Strip_HandleCreated(object? sender, EventArgs e) => AssignHandle(_strip.Handle);
 
         private void Strip_HandleDestroyed(object? sender, EventArgs e) => ReleaseHandle();
+
+        private void Strip_Paint(object? sender, PaintEventArgs e) => _owner.ShowItemStates(_strip);
 
         protected override void WndProc(ref Message m)
         {

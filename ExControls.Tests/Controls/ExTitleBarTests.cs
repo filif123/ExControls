@@ -436,6 +436,67 @@ public class ExTitleBarTests
     }
 
     [TestMethod]
+    public void FarbaMotivu_PolozkySVlastnymPozadimAkoVToolsCore()
+    {
+        RequireCustomTitleBar();
+        using var window = new MenuWindow(900);
+        var menu = window.Menu;
+        var file = menu.Items[0];
+        // tema ToolsCore: profesionalny renderer, pozadie ponuky aj kazdej polozky
+        menu.RenderMode = ToolStripRenderMode.Professional;
+        menu.BackColor = SystemColors.Control;
+        foreach (ToolStripItem item in menu.Items)
+        {
+            item.BackColor = SystemColors.Control;
+            item.ForeColor = SystemColors.ControlText;
+        }
+
+        NcActivate(window.Form, true);
+        var accent = Color.FromArgb(0, 99, 177);
+
+        window.TitleBar.SetAccent(accent);
+        using var snapshot = Snapshot(window.TitleBar);
+
+        Assert.AreEqual(Color.Transparent, file.BackColor);
+        var corner = new Point(menu.Left + file.Bounds.Left + 2, menu.Top + file.Bounds.Top + 2);
+
+        // polozka pridana za behu (GVDEditor tak pridava vyber stanice)
+        var label = new ToolStripLabel("Stanica:") { BackColor = SystemColors.Control };
+        menu.Items.Add(label);
+        window.Form.PerformLayout();
+
+        Assert.AreEqual(Color.Transparent, label.BackColor);
+        Assert.AreEqual(Color.White, label.ForeColor);
+        Assert.AreEqual(accent.ToArgb(), snapshot.GetPixel(corner.X, corner.Y).ToArgb(), "pod polozkou je farba zahlavia");
+
+        // polozka pod mysou ma svetle zvyraznenie temy - text farbou temy, ostatne farbou zahlavia
+        var edit = menu.Items[1];
+        file.Select();
+        using (Snapshot(window.TitleBar))
+        {
+        }
+
+        Assert.IsTrue(file.Selected);
+        Assert.AreEqual(SystemColors.ControlText, file.ForeColor);
+        Assert.AreEqual(Color.White, edit.ForeColor);
+
+        edit.Select();
+        using (Snapshot(window.TitleBar))
+        {
+        }
+
+        Assert.AreEqual(Color.White, file.ForeColor);
+        Assert.AreEqual(SystemColors.ControlText, edit.ForeColor);
+
+        window.TitleBar.SetAccent(null);
+
+        Assert.AreEqual(SystemColors.Control, file.BackColor);
+        Assert.AreEqual(SystemColors.Control, menu.BackColor);
+        Assert.AreEqual(SystemColors.ControlText, edit.ForeColor);
+        Assert.AreEqual(SystemColors.ControlText, file.ForeColor);
+    }
+
+    [TestMethod]
     public void FarbaMotivu_FarbaTitulkuFormularaMaPrednost()
     {
         RequireCustomTitleBar();
