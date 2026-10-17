@@ -156,6 +156,7 @@ public class ExForm : Form
     /// The system caption uses it in Windows 11+, <see cref="ExTitleBar" /> in Windows 10+.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
+    [ExDescription("Gets or sets the background of the caption (system caption in Windows 11+, ExTitleBar in Windows 10+). Color.Empty uses the system color.", true)]
     [DefaultValue(typeof(Color))]
     public Color TitleBarBackColor
     {
@@ -167,7 +168,7 @@ public class ExForm : Form
             _titleBarBackColor = value;
             if (IsHandleCreated)
                 ApplyCaptionColors();
-            _titleBar?.Invalidate();
+            _titleBar?.RefreshColors();
         }
     }
 
@@ -176,6 +177,7 @@ public class ExForm : Form
     /// The system caption uses it in Windows 11+, <see cref="ExTitleBar" /> in Windows 10+ (text and window buttons).
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
+    [ExDescription("Gets or sets the text color of the caption (system caption in Windows 11+, ExTitleBar in Windows 10+). Color.Empty uses the system color.", true)]
     [DefaultValue(typeof(Color))]
     public Color TitleBarForeColor
     {
@@ -187,7 +189,7 @@ public class ExForm : Form
             _titleBarForeColor = value;
             if (IsHandleCreated)
                 ApplyCaptionColors();
-            _titleBar?.Invalidate();
+            _titleBar?.RefreshColors();
         }
     }
 
@@ -196,6 +198,7 @@ public class ExForm : Form
     /// Works only in Windows 11+ (also with <see cref="ExTitleBar" />).
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
+    [ExDescription("Gets or sets the color of the window border (Windows 11+). Color.Empty uses the system color.", true)]
     [DefaultValue(typeof(Color))]
     public Color TitleBarBorderColor
     {
@@ -215,6 +218,7 @@ public class ExForm : Form
     /// Works only in Windows 11+.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
+    [ExDescription("Gets or sets the corners of the window (Windows 11+).", true)]
     [DefaultValue(FormCornersType.Default)]
     public FormCornersType CornersType
     {
@@ -235,6 +239,7 @@ public class ExForm : Form
     /// Works only in Windows 11+ and shows only in the system caption - not under <see cref="ExTitleBar" />.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
+    [ExDescription("Gets or sets the system backdrop of the window (Windows 11+). It shows only in the system caption, not under ExTitleBar.", true)]
     [DefaultValue(FormStyle.Default)]
     public FormStyle FormStyle
     {
@@ -476,6 +481,10 @@ public class ExForm : Form
             case Win32.WM.NCACTIVATE when _titleBar is not null:
                 _titleBar.SetFormActive(m.WParam != IntPtr.Zero);
                 break;
+            case Win32.WM.SETTINGCHANGE or Win32.WM.DWMCOLORIZATIONCOLORCHANGED:
+                base.WndProc(ref m);
+                _titleBar?.RefreshAccent();
+                return;
             case Win32.WM.SETICON:
                 base.WndProc(ref m);
                 _titleBar?.RefreshCaption();

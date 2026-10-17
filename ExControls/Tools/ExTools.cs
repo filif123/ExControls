@@ -84,6 +84,29 @@ public static class ExTools
     }
 
     /// <summary>
+    /// Farba zahlavia aktivneho okna podla nastavenia Windows „Zobrazit farbu motivu na zahlaviach a okrajoch okna"
+    /// (Windows 10+); <see langword="null" />, ak je vypnute.
+    /// </summary>
+    internal static Color? CaptionAccentColor()
+    {
+        if (!SupportsCustomTitleBar)
+            return null;
+
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\DWM");
+            if (key?.GetValue("ColorPrevalence") is not int prevalence || prevalence == 0 || key.GetValue("AccentColor") is not int abgr)
+                return null;
+            // AccentColor je 0xAABBGGRR
+            return Color.FromArgb(abgr & 0xFF, (abgr >> 8) & 0xFF, (abgr >> 16) & 0xFF);
+        }
+        catch (Exception e) when (e is System.Security.SecurityException or IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Changes background color of window's caption (immersive dark mode). <br></br>
     /// Works only in Windows 10+.
     /// </summary>

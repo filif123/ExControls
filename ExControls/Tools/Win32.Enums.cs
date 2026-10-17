@@ -183,6 +183,7 @@ internal static partial class Win32
     {
         PAINT = 0x000F,
         ERASEBKGND = 0x0014,
+        SETTINGCHANGE = 0x001A,
         NOTIFY = 0x004E,
         SETICON = 0x0080,
         NCCALCSIZE = 0x0083,
@@ -199,6 +200,7 @@ internal static partial class Win32
         NCMOUSELEAVE = 0x02A2,
         PRINTCLIENT = 0x0318,
         THEMECHANGED = 0x031A,
+        DWMCOLORIZATIONCOLORCHANGED = 0x0320,
         USER = 0x0400
     }
 }

@@ -406,6 +406,49 @@ public class ExTitleBarTests
     }
 
     [TestMethod]
+    public void FarbaMotivu_ZahlavieAPonukaVAktivnomOkne()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var accent = Color.FromArgb(0, 99, 177);
+        var file = window.Menu.Items[0];
+        var menuBack = window.Menu.BackColor;
+        NcActivate(window.Form, true);
+
+        window.TitleBar.SetAccent(accent);
+        using var snapshot = Snapshot(window.TitleBar);
+
+        Assert.AreEqual(accent.ToArgb(), snapshot.GetPixel(2, 2).ToArgb());
+        Assert.AreEqual(Color.Transparent, window.Menu.BackColor, "ponuka ma pozadie zahlavia");
+        Assert.AreEqual(Color.White, file.ForeColor);
+
+        NcActivate(window.Form, false);
+
+        Assert.AreEqual(menuBack, window.Menu.BackColor, "neaktivne okno farbu motivu nema");
+        Assert.AreNotEqual(Color.White, file.ForeColor);
+
+        NcActivate(window.Form, true);
+        window.TitleBar.SetAccent(null);
+
+        Assert.AreEqual(menuBack, window.Menu.BackColor);
+        Assert.IsFalse(TypeDescriptor.GetProperties(file)[nameof(ToolStripItem.ForeColor)]!.ShouldSerializeValue(file), "zdedena farba ostane zdedena");
+    }
+
+    [TestMethod]
+    public void FarbaMotivu_FarbaTitulkuFormularaMaPrednost()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        NcActivate(window.Form, true);
+        window.Form.TitleBarBackColor = Color.FromArgb(128, 0, 128);
+
+        window.TitleBar.SetAccent(Color.FromArgb(0, 99, 177));
+        using var snapshot = Snapshot(window.TitleBar);
+
+        Assert.AreEqual(Color.FromArgb(128, 0, 128).ToArgb(), snapshot.GetPixel(2, 2).ToArgb());
+    }
+
+    [TestMethod]
     public void DarkTitleBarAFarbaTitulku_NezrusiaSa()
     {
         using var form = new ExForm { TitleBarBackColor = Color.Purple, DarkTitleBar = true };
@@ -428,8 +471,7 @@ public class ExTitleBarTests
         window.Form.TitleBarForeColor = Color.FromArgb(200, 0, 0);
         // tmava tema aplikacie (ako v testeri) farbu titulku nezrusi
         window.Form.DarkTitleBar = true;
-        using var bitmap = new Bitmap(bar.Width, bar.Height);
-        bar.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bar.Size));
+        using var bitmap = Snapshot(bar);
 
         // roh pod ikonou je pozadie zahlavia
         Assert.AreEqual(Color.FromArgb(255, 140, 0).ToArgb(), bitmap.GetPixel(2, 2).ToArgb());
@@ -483,6 +525,13 @@ public class ExTitleBarTests
         new(window.Menu.Left + item.Bounds.Left + item.Bounds.Width / 2, window.Menu.Top + item.Bounds.Top + item.Bounds.Height / 2);
 
     private static Point Center(Rectangle r) => new(r.Left + r.Width / 2, r.Top + r.Height / 2);
+
+    private static Bitmap Snapshot(Control control)
+    {
+        var bitmap = new Bitmap(control.Width, control.Height);
+        control.DrawToBitmap(bitmap, new Rectangle(Point.Empty, control.Size));
+        return bitmap;
+    }
 
     private static IEnumerable<Color> Pixels(Bitmap bitmap, Rectangle area)
     {
@@ -539,6 +588,8 @@ public class ExTitleBarTests
             Search = new TextBox { Dock = DockStyle.Right, Width = 120 };
             TitleBar.Controls.Add(Menu);
             TitleBar.Controls.Add(Search);
+            // farba motivu na zahlaviach podla nastavenia Windows - testy ju zapinaju samy
+            TitleBar.SetAccent(null);
             Form.Controls.Add(new Panel { Dock = DockStyle.Fill });
             Form.Controls.Add(TitleBar);
 

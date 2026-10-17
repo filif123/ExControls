@@ -40,6 +40,11 @@ internal static class TitleBarColors
     public static Color Inactive(Color back, Color fore) => Blend(fore, back, 0.55);
 
     /// <summary>
+    /// Text na farbe motivu: biely, na svetlej farbe (zlta, svetlozelena) cierny.
+    /// </summary>
+    public static Color AccentText(Color accent) => (accent.R * 299 + accent.G * 587 + accent.B * 114) / 1000 >= 128 ? Color.Black : Color.White;
+
+    /// <summary>
     /// Horny okraj okna vo Windows 10 (system ho pri vlastnom zahlavi nekresli).
     /// </summary>
     public static Color TopBorder(Color back, Color fore, bool active) => Blend(back, fore, active ? 0.35 : 0.2);

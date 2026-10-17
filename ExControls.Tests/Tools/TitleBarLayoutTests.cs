@@ -195,6 +195,13 @@ public class TitleBarLayoutTests
     }
 
     [TestMethod]
+    public void AccentText_BielyNaTmavejCiernyNaSvetlej()
+    {
+        Assert.AreEqual(Color.White, TitleBarColors.AccentText(Color.FromArgb(0, 99, 177)));
+        Assert.AreEqual(Color.Black, TitleBarColors.AccentText(Color.FromArgb(255, 185, 0)));
+    }
+
+    [TestMethod]
     public void CloseHover_CervenaPodlaSystemu()
     {
         // Windows 11 #C42B1C, stlacene mierne prekryte pozadim; Windows 10 #E81123, stlacene zosvetlene (#F1707A)

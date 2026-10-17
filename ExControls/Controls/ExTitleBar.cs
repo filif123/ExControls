@@ -13,8 +13,9 @@ namespace ExControls;
 /// - cez <see cref="ToolStripItem.ForeColor" />, takze renderer, ktory farbu textu poloziek urcuje sam, stlmenie neukaze.
 /// Tlacidla a ikona su ako v systemovom zahlavi: pomocnik (<see cref="Form.HelpButton" />) len bez minimalizacie
 /// a maximalizacie, nastrojove okno len zatvorenie, dialog (FixedDialog) bez vlastnej ikony bez ikony.
-/// Farby titulku formulara (<see cref="ExForm.TitleBarBackColor" />, <see cref="ExForm.TitleBarForeColor" />) maju prednost
-/// pred vlastnymi farbami zahlavia; prvky v zahlavi si nechavaju svoje.
+/// Farby titulku formulara (<see cref="ExForm.TitleBarBackColor" />, <see cref="ExForm.TitleBarForeColor" />) a v aktivnom okne
+/// farba motivu Windows (ak ju system zobrazuje na zahlaviach) maju prednost pred vlastnymi farbami zahlavia; panely nastrojov
+/// v zahlavi maju vtedy priehladne pozadie a text farbou zahlavia, ostatne prvky si nechavaju svoje farby.
 /// Ked okno vlastne zahlavie nepouziva (<see cref="ExForm.UsesCustomTitleBar" />), je to obycajny panel bez ikony, textu a tlacidiel.
 /// </remarks>
 [Designer("ExControls.Designers.ExTitleBarDesigner, ExControls")]
@@ -40,7 +41,9 @@ public class ExTitleBar : Panel, IThemeable
     private static readonly Font CaptionFont = SystemFonts.CaptionFont ?? DefaultFont;
 
     private readonly Dictionary<ToolStrip, ToolStripHook> _hooks = [];
-    private readonly Dictionary<ToolStripItem, DimmedItem> _dimmedItems = [];
+    private readonly List<ColorOverride> _colorOverrides = [];
+    private Color? _accent = ExTools.CaptionAccentColor();
+    private bool _applyingTheme;
     private bool _shown = true;
     private bool _showTitle = true;
     private bool _formActive = true;
@@ -212,14 +215,41 @@ public class ExTitleBar : Panel, IThemeable
     private Color EffectiveInactiveForeColor => _inactiveForeColor.IsEmpty ? TitleBarColors.Inactive(CaptionBackColor, CaptionForeColor) : _inactiveForeColor;
 
     /// <summary>
-    /// Pozadie zahlavia: farba titulku formulara (<see cref="ExForm.TitleBarBackColor" />), ak je zadana, inak vlastna.
+    /// Farba motivu Windows na zahlavi (nastavenie „Zobrazit farbu motivu na zahlaviach a okrajoch okna") - ako systemove
+    /// zahlavie len v aktivnom okne a len bez farby titulku formulara (<see cref="ExForm.TitleBarBackColor" />).
     /// </summary>
-    private Color CaptionBackColor => ShowsCaption && Parent is ExForm { TitleBarBackColor.IsEmpty: false } form ? form.TitleBarBackColor : BackColor;
+    private Color? ShownAccent => _accent is { } accent && _formActive && IsActive && Parent is ExForm { TitleBarBackColor.IsEmpty: true } ? accent : null;
 
     /// <summary>
-    /// Text a znacky tlacidiel: farba textu titulku formulara (<see cref="ExForm.TitleBarForeColor" />), ak je zadana, inak vlastna.
+    /// Pozadie zahlavia: farba titulku formulara (<see cref="ExForm.TitleBarBackColor" />), farba motivu Windows, inak vlastna.
     /// </summary>
-    private Color CaptionForeColor => ShowsCaption && Parent is ExForm { TitleBarForeColor.IsEmpty: false } form ? form.TitleBarForeColor : ForeColor;
+    private Color CaptionBackColor
+    {
+        get
+        {
+            if (!ShowsCaption)
+                return BackColor;
+            if (Parent is ExForm { TitleBarBackColor.IsEmpty: false } form)
+                return form.TitleBarBackColor;
+            return ShownAccent ?? BackColor;
+        }
+    }
+
+    /// <summary>
+    /// Text a znacky tlacidiel: farba textu titulku formulara (<see cref="ExForm.TitleBarForeColor" />), text na farbe motivu,
+    /// inak vlastna.
+    /// </summary>
+    private Color CaptionForeColor
+    {
+        get
+        {
+            if (!ShowsCaption)
+                return ForeColor;
+            if (Parent is ExForm { TitleBarForeColor.IsEmpty: false } form)
+                return form.TitleBarForeColor;
+            return ShownAccent is { } accent ? TitleBarColors.AccentText(accent) : ForeColor;
+        }
+    }
 
     /// <summary>
     /// Urci cast zahlavia v bode.
@@ -256,13 +286,21 @@ public class ExTitleBar : Panel, IThemeable
     {
         ArgumentNullException.ThrowIfNull(theme);
 
-        // tema nastavuje farby poloziek panelov - stlmene sa vratia a po teme stlmia novou farbou
-        RestoreItems();
-        BackColor = theme.PanelBackColor;
-        ForeColor = theme.PanelForeColor;
-        ExThemer.Apply(Controls, theme);
-        if (!_formActive)
-            DimItems();
+        // tema nastavuje farby panelov a ich poloziek - prevzate farby zahlavia sa vratia a po teme pouziju znova
+        RestoreStripColors();
+        _applyingTheme = true;
+        try
+        {
+            BackColor = theme.PanelBackColor;
+            ForeColor = theme.PanelForeColor;
+            ExThemer.Apply(Controls, theme);
+        }
+        finally
+        {
+            _applyingTheme = false;
+        }
+
+        UpdateStripColors();
         Invalidate(true);
     }
 
@@ -274,52 +312,81 @@ public class ExTitleBar : Panel, IThemeable
         if (_formActive == active)
             return;
         _formActive = active;
-        if (active)
-            RestoreItems();
-        else
-            DimItems();
+        UpdateStripColors();
         Invalidate();
     }
 
     /// <summary>
-    /// Stlmi text poloziek ponuky a popisov v paneloch zahlavia (len vlastne zahlavie za behu).
+    /// Zmenila sa farba motivu Windows alebo jej zobrazenie na zahlaviach (WM_SETTINGCHANGE, WM_DWMCOLORIZATIONCOLORCHANGED).
     /// </summary>
-    private void DimItems()
-    {
-        if (!IsActive)
-            return;
+    internal void RefreshAccent() => SetAccent(ExTools.CaptionAccentColor());
 
-        var dimmed = EffectiveInactiveForeColor;
-        foreach (var strip in _hooks.Keys)
-            foreach (ToolStripItem item in strip.Items)
-            {
-                if (item is not (ToolStripMenuItem or ToolStripLabel) || _dimmedItems.ContainsKey(item))
-                    continue;
-                // nenastavena farba sa dedi z panela - po aktivacii ju treba vratit ako nenastavenu
-                var isSet = TypeDescriptor.GetProperties(item)[nameof(ToolStripItem.ForeColor)]?.ShouldSerializeValue(item) == true;
-                _dimmedItems[item] = new DimmedItem(item.ForeColor, isSet, dimmed);
-                item.ForeColor = dimmed;
-            }
+    /// <summary>
+    /// Farba motivu na zahlavi (<see langword="null" /> = system ju na zahlaviach nezobrazuje).
+    /// </summary>
+    internal void SetAccent(Color? accent)
+    {
+        if (_accent == accent)
+            return;
+        _accent = accent;
+        RefreshColors();
     }
 
     /// <summary>
-    /// Vrati stlmenym polozkam povodnu farbu - okrem tych, ktorym ju medzicasom zmenila aplikacia.
+    /// Zmenili sa farby titulku formulara - prekreslenie a farby panelov.
     /// </summary>
-    private void RestoreItems()
+    internal void RefreshColors()
     {
-        foreach (var pair in _dimmedItems)
+        UpdateStripColors();
+        Invalidate();
+    }
+
+    /// <summary>
+    /// Farby panelov nastrojov v zahlavi (len vlastne zahlavie za behu): ina farba zahlavia nez vlastna (titulok formulara,
+    /// farba motivu) presvita cez pozadie panelov a polozky ponuky a popisy maju jej text; neaktivne okno ich stlmi.
+    /// Meni sa len to, co sa zmenilo; farbu, ktoru medzicasom zmenila aplikacia, uz nevracia.
+    /// </summary>
+    private void UpdateStripColors()
+    {
+        var wanted = new List<(Component Target, string Property, Color Color)>();
+        if (IsActive && !_applyingTheme)
         {
-            var item = pair.Key;
-            var state = pair.Value;
-            if (item.IsDisposed || item.ForeColor != state.Dimmed)
-                continue;
-            if (state.IsSet)
-                item.ForeColor = state.Original;
-            else
-                item.ResetForeColor();
+            var back = CaptionBackColor != BackColor;
+            Color? fore = !_formActive ? EffectiveInactiveForeColor : CaptionForeColor != ForeColor ? CaptionForeColor : null;
+            foreach (var strip in _hooks.Keys)
+            {
+                if (back)
+                    wanted.Add((strip, nameof(BackColor), Color.Transparent));
+                if (fore is not { } color)
+                    continue;
+                foreach (ToolStripItem item in strip.Items)
+                    if (item is ToolStripMenuItem or ToolStripLabel)
+                        wanted.Add((item, nameof(ToolStripItem.ForeColor), color));
+            }
         }
 
-        _dimmedItems.Clear();
+        for (var i = _colorOverrides.Count - 1; i >= 0; i--)
+        {
+            var colorOverride = _colorOverrides[i];
+            if (colorOverride.IsCurrent && wanted.Remove((colorOverride.Target, colorOverride.Property, colorOverride.Applied)))
+                continue;
+            colorOverride.Restore();
+            _colorOverrides.RemoveAt(i);
+        }
+
+        foreach (var (target, property, color) in wanted)
+            if (TypeDescriptor.GetProperties(target)[property] is { } descriptor)
+                _colorOverrides.Add(ColorOverride.Apply(target, descriptor, color));
+    }
+
+    /// <summary>
+    /// Vrati panelom a polozkam farby pred zahlavim.
+    /// </summary>
+    private void RestoreStripColors()
+    {
+        foreach (var colorOverride in _colorOverrides)
+            colorOverride.Restore();
+        _colorOverrides.Clear();
     }
 
     /// <summary>
@@ -374,8 +441,25 @@ public class ExTitleBar : Panel, IThemeable
     {
         _smallIcon?.Dispose();
         _smallIcon = null;
+        UpdateStripColors();
         PerformLayout();
         Invalidate();
+    }
+
+    /// <inheritdoc />
+    protected override void OnBackColorChanged(EventArgs e)
+    {
+        base.OnBackColorChanged(e);
+        if (!_applyingTheme)
+            UpdateStripColors();
+    }
+
+    /// <inheritdoc />
+    protected override void OnForeColorChanged(EventArgs e)
+    {
+        base.OnForeColorChanged(e);
+        if (!_applyingTheme)
+            UpdateStripColors();
     }
 
     /// <inheritdoc />
@@ -411,7 +495,8 @@ public class ExTitleBar : Panel, IThemeable
 
         if (!DrawsTopBorder)
             return;
-        var border = _topBorderColor.IsEmpty ? TitleBarColors.TopBorder(CaptionBackColor, CaptionForeColor, _formActive) : _topBorderColor;
+        // s farbou motivu na zahlaviach ma okno vo Windows 10 okraj farbou motivu
+        var border = !_topBorderColor.IsEmpty ? _topBorderColor : ShownAccent ?? TitleBarColors.TopBorder(CaptionBackColor, CaptionForeColor, _formActive);
         using var brush = new SolidBrush(border);
         e.Graphics.FillRectangle(brush, 0, 0, Width, 1);
     }
@@ -574,6 +659,7 @@ public class ExTitleBar : Panel, IThemeable
         if (strip.LayoutStyle is ToolStripLayoutStyle.HorizontalStackWithOverflow or ToolStripLayoutStyle.VerticalStackWithOverflow)
             strip.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
         _hooks.Add(strip, new ToolStripHook(this, strip));
+        UpdateStripColors();
     }
 
     /// <inheritdoc />
@@ -584,6 +670,7 @@ public class ExTitleBar : Panel, IThemeable
         {
             hook.Detach();
             _hooks.Remove(strip);
+            UpdateStripColors();
         }
     }
 
@@ -619,10 +706,54 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Farba polozky pred stlmenim: <paramref name="IsSet" /> - nastavena (inak zdedena z panela), <paramref name="Dimmed" /> -
-    /// stlmena farba (ak ju polozka uz nema, zmenila ju aplikacia).
+    /// Farba panela alebo polozky prevzata od zahlavia - pamata si povodnu (nastavenu alebo zdedenu) a vrati ju, len ak
+    /// farbu medzicasom nezmenila aplikacia.
     /// </summary>
-    private readonly record struct DimmedItem(Color Original, bool IsSet, Color Dimmed);
+    private sealed class ColorOverride
+    {
+        private readonly PropertyDescriptor _property;
+        private readonly Color _original;
+        private readonly bool _isSet;
+
+        private ColorOverride(Component target, PropertyDescriptor property, Color applied)
+        {
+            Target = target;
+            _property = property;
+            Applied = applied;
+            _original = (Color)property.GetValue(target)!;
+            // nenastavena farba sa dedi (z panela, z rodica) - vrati sa ako nenastavena
+            _isSet = property.ShouldSerializeValue(target);
+        }
+
+        public Component Target { get; }
+
+        public string Property => _property.Name;
+
+        public Color Applied { get; }
+
+        /// <summary>
+        /// Prvok ma stale farbu od zahlavia.
+        /// </summary>
+        public bool IsCurrent => Target is not (Control { IsDisposed: true } or ToolStripItem { IsDisposed: true }) &&
+                                 (Color)_property.GetValue(Target)! == Applied;
+
+        public static ColorOverride Apply(Component target, PropertyDescriptor property, Color color)
+        {
+            var colorOverride = new ColorOverride(target, property, color);
+            property.SetValue(target, color);
+            return colorOverride;
+        }
+
+        public void Restore()
+        {
+            if (!IsCurrent)
+                return;
+            if (_isSet)
+                _property.SetValue(Target, _original);
+            else
+                _property.ResetValue(Target);
+        }
+    }
 
     /// <summary>
     /// Znaky tlacidiel okna z pisma systemoveho zahlavia: Windows 11 Segoe Fluent Icons, Windows 10 Segoe MDL2 Assets

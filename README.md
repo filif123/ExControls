@@ -35,7 +35,10 @@ Aero Snap, Snap Layouts, animations).
 * Works on Windows 10+ with any `FormBorderStyle` except `None` (there the title bar is a plain panel). Window buttons
   and the icon follow `ControlBox`, `MinimizeBox`, `MaximizeBox`, `HelpButton`, `ShowIcon` and tool windows like the
   system caption.
-* `ExForm.TitleBarBackColor` and `TitleBarForeColor` color the title bar (controls in it keep their colors),
+* An active window shows the accent color when Windows shows it on title bars ("Show accent color on title bars and
+  window borders"). `ExForm.TitleBarBackColor` and `TitleBarForeColor` take precedence. Tool strips in the title bar
+  get a transparent background and the caption text color, other controls keep their colors.
+* `ExForm.TitleBarBackColor` and `TitleBarForeColor` color the title bar,
   `TitleBarBorderColor` and `CornersType` work as with the system caption, `FormStyle` (Mica…) shows only in the
   system caption.
 * The designer shows the form without the system caption and frame, at runtime the window has the system frame only on

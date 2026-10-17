@@ -36,7 +36,8 @@ Panel…) are styled by handlers registered with `ExThemer.Register<T>`.
 the window buttons on the right and controls such as the main `MenuStrip` in between. The system frame stays (shadow,
 Aero Snap, Snap Layouts, animations); the free space of the title bar and empty parts of its tool strips drag the window.
 It works on Windows 10+ with any `FormBorderStyle` except `None`; `TitleBarBackColor` and `TitleBarForeColor` of the
-form color the title bar, `FormStyle` (Mica…) shows only in the system caption. The designer shows
+form color the title bar (an active window otherwise follows the Windows accent color on title bars), `FormStyle`
+(Mica…) shows only in the system caption. The designer shows
 the form without the system caption and frame, so the designed `ClientSize` matches the runtime window. Do not use
 `TextBox.PlaceholderText` on an `ExForm` with `UseCompositedPainting` (`WS_EX_COMPOSITED` repaints it endlessly) -
 use `ExTextBox.HintText`.
