@@ -53,7 +53,7 @@ namespace ExControls.Test
             titleBar.Location = new Point(0, 0);
             titleBar.Name = "titleBar";
             titleBar.Padding = new Padding(0, 5, 8, 5);
-            titleBar.Size = new Size(784, 36);
+            titleBar.Size = new Size(784, 34);
             titleBar.TabIndex = 0;
             // 
             // menuStrip
@@ -64,14 +64,14 @@ namespace ExControls.Test
             menuStrip.Location = new Point(36, 5);
             menuStrip.Name = "menuStrip";
             menuStrip.Padding = new Padding(0);
-            menuStrip.Size = new Size(100, 26);
+            menuStrip.Size = new Size(100, 24);
             menuStrip.TabIndex = 0;
             // 
             // miFile
             // 
             miFile.DropDownItems.AddRange(new ToolStripItem[] { miExit });
             miFile.Name = "miFile";
-            miFile.Size = new Size(50, 26);
+            miFile.Size = new Size(50, 24);
             miFile.Text = "&Súbor";
             miFile.Click += miFile_Click;
             // 
@@ -86,7 +86,7 @@ namespace ExControls.Test
             // 
             miWindow.DropDownItems.AddRange(new ToolStripItem[] { miMinimize, miMaximize, miToggleTitleBar, miDarkTheme, miLongTitle });
             miWindow.Name = "miWindow";
-            miWindow.Size = new Size(48, 26);
+            miWindow.Size = new Size(48, 24);
             miWindow.Text = "&Okno";
             // 
             // miMinimize
