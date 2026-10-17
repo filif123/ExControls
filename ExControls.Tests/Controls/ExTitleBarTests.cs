@@ -18,6 +18,7 @@ public class ExTitleBarTests
     private const int HtMaxButton = 9;
     private const int HtTop = 12;
     private const int HtClose = 20;
+    private const int HtHelp = 21;
 
     [TestMethod]
     public void HitTest_VolneMiestoAPopisSuZahlavie_PolozkyAPrvkySuKlientske()
@@ -60,9 +61,9 @@ public class ExTitleBarTests
     }
 
     [TestMethod]
-    public void PevnyRam_ZahlavieBezIkonyATlacidiel()
+    public void BezRamu_ZahlavieBezIkonyATlacidiel()
     {
-        using var window = new TestWindow(FormBorderStyle.FixedSingle);
+        using var window = new TestWindow(FormBorderStyle.None);
 
         Assert.AreEqual(0, window.Menu.Left);
         Assert.AreEqual(window.TitleBar.ClientSize.Width, window.Search.Right);
@@ -134,6 +135,49 @@ public class ExTitleBarTests
         Application.DoEvents();
 
         Assert.AreEqual(FormWindowState.Minimized, window.Form.WindowState);
+    }
+
+    [TestMethod]
+    public void Pomocnik_LenBezMinimalizacieAMaximalizacie()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var bar = window.TitleBar;
+        int At(int x) => NcHitTest(window.Form, bar.PointToScreen(new Point(x, bar.Height - 6)));
+
+        window.Form.HelpButton = true;
+
+        Assert.AreEqual(HtMaxButton, At(bar.Width - 50), "s minimalizaciou a maximalizaciou pomocnik nie je");
+
+        window.Form.MinimizeBox = false;
+        window.Form.MaximizeBox = false;
+
+        Assert.AreEqual(HtHelp, At(bar.Width - 50));
+        Assert.AreEqual(HtClose, At(bar.Width - 5));
+        Assert.AreEqual(HtCaption, At(bar.Width - 100));
+    }
+
+    [TestMethod]
+    public void KlikNaPomocnika_VyvolaHelpButtonClicked()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var bar = window.TitleBar;
+        window.Form.MinimizeBox = false;
+        window.Form.MaximizeBox = false;
+        window.Form.HelpButton = true;
+        var clicked = 0;
+        window.Form.HelpButtonClicked += (_, e) =>
+        {
+            clicked++;
+            // bez zrusenia by system cakal na klik v rezime kontextovej napovedy
+            e.Cancel = true;
+        };
+
+        NcClick(window.Form, HtHelp, bar.PointToScreen(new Point(bar.Width - 50, 16)));
+        Application.DoEvents();
+
+        Assert.AreEqual(1, clicked);
     }
 
     [TestMethod]
@@ -306,12 +350,91 @@ public class ExTitleBarTests
     }
 
     [TestMethod]
-    public void PevnyRam_OknoMaSystemoveZahlavie()
+    public void BezRamu_ZahlavieJeObycajnyPanel()
     {
-        using var window = new TestWindow(FormBorderStyle.FixedSingle);
+        using var window = new TestWindow(FormBorderStyle.None);
 
         Assert.IsFalse(window.Form.UsesCustomTitleBar);
-        Assert.IsTrue(window.Form.PointToScreen(Point.Empty).Y > WindowRect(window.Form).Top);
+        Assert.AreEqual(WindowRect(window.Form).Top, window.Form.PointToScreen(Point.Empty).Y);
+    }
+
+    [TestMethod]
+    [DataRow(FormBorderStyle.FixedSingle)]
+    [DataRow(FormBorderStyle.Fixed3D)]
+    [DataRow(FormBorderStyle.FixedDialog)]
+    public void PevnyRam_VlastneZahlavieBezZmenyVyskyZhora(FormBorderStyle border)
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow(border);
+        var form = window.Form;
+
+        Assert.IsTrue(form.UsesCustomTitleBar);
+        Assert.AreEqual(WindowRect(form).Top, form.PointToScreen(Point.Empty).Y);
+        Assert.AreEqual(HtCaption, NcHitTest(form, form.PointToScreen(new Point(form.ClientSize.Width / 2, 1))));
+        Assert.AreEqual(HtClose, NcHitTest(form, window.TitleBar.PointToScreen(new Point(window.TitleBar.Width - 5, 16))));
+    }
+
+    [TestMethod]
+    [DataRow(FormBorderStyle.FixedToolWindow)]
+    [DataRow(FormBorderStyle.SizableToolWindow)]
+    public void NastrojoveOkno_LenZatvorenieBezIkony(FormBorderStyle border)
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow(border);
+        var bar = window.TitleBar;
+
+        Assert.IsTrue(window.Form.UsesCustomTitleBar);
+        Assert.AreEqual(0, window.Menu.Left, "bez ikony");
+        Assert.AreEqual(TitleBarHit.CloseButton, bar.HitTest(new Point(bar.Width - 5, 16)));
+        Assert.AreEqual(bar.Width - 46, window.Search.Right, "bez minimalizacie a maximalizacie");
+    }
+
+    [TestMethod]
+    public void Dialog_IkonaLenVlastna()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow(FormBorderStyle.FixedDialog);
+        var bar = window.TitleBar;
+
+        // predvolenu ikonu WinForms dialog v systemovom zahlavi neukazuje
+        Assert.AreEqual(0, window.Menu.Left);
+
+        window.Form.Icon = SystemIcons.Information;
+
+        Assert.AreEqual(TitleBarHit.SystemMenu, bar.HitTest(new Point(10, 16)));
+        Assert.IsTrue(window.Menu.Left >= 36);
+    }
+
+    [TestMethod]
+    public void DarkTitleBarAFarbaTitulku_NezrusiaSa()
+    {
+        using var form = new ExForm { TitleBarBackColor = Color.Purple, DarkTitleBar = true };
+
+        Assert.AreEqual(Color.Purple, form.TitleBarBackColor);
+
+        form.TitleBarBackColor = Color.Orange;
+
+        Assert.IsTrue(form.DarkTitleBar);
+    }
+
+    [TestMethod]
+    public void FarbyTitulkuFormulara_KresliZahlavie()
+    {
+        RequireCustomTitleBar();
+        using var window = new TestWindow();
+        var bar = window.TitleBar;
+
+        window.Form.TitleBarBackColor = Color.FromArgb(255, 140, 0);
+        window.Form.TitleBarForeColor = Color.FromArgb(200, 0, 0);
+        // tmava tema aplikacie (ako v testeri) farbu titulku nezrusi
+        window.Form.DarkTitleBar = true;
+        using var bitmap = new Bitmap(bar.Width, bar.Height);
+        bar.DrawToBitmap(bitmap, new Rectangle(Point.Empty, bar.Size));
+
+        // roh pod ikonou je pozadie zahlavia
+        Assert.AreEqual(Color.FromArgb(255, 140, 0).ToArgb(), bitmap.GetPixel(2, 2).ToArgb());
+        Assert.IsTrue(Pixels(bitmap, new Rectangle(bar.Width - 46, 0, 46, bar.Height)).Any(c => c.R > 150 && c is { G: < 80, B: < 80 }),
+            "znak zatvorenia farbou textu titulku");
     }
 
     [TestMethod]
@@ -344,7 +467,7 @@ public class ExTitleBarTests
     [TestMethod]
     public void NcHitTest_BezVlastnehoZahlaviaPonukaOstavaKlientska()
     {
-        using var window = new TestWindow(FormBorderStyle.FixedSingle);
+        using var window = new TestWindow(FormBorderStyle.None);
         var menu = window.Menu;
 
         Assert.AreEqual(HtClient, NcHitTest(menu, menu.PointToScreen(new Point(menu.Width - 5, menu.Height / 2))));
@@ -360,6 +483,13 @@ public class ExTitleBarTests
         new(window.Menu.Left + item.Bounds.Left + item.Bounds.Width / 2, window.Menu.Top + item.Bounds.Top + item.Bounds.Height / 2);
 
     private static Point Center(Rectangle r) => new(r.Left + r.Width / 2, r.Top + r.Height / 2);
+
+    private static IEnumerable<Color> Pixels(Bitmap bitmap, Rectangle area)
+    {
+        for (var y = area.Top; y < area.Bottom; y++)
+            for (var x = area.Left; x < area.Right; x++)
+                yield return bitmap.GetPixel(x, y);
+    }
 
     private static Win32.RECT WindowRect(Control control)
     {

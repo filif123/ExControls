@@ -48,5 +48,10 @@ public enum TitleBarHit
     /// <summary>
     /// Pravy horny roh okna - zmena velkosti.
     /// </summary>
-    ResizeTopRight
+    ResizeTopRight,
+
+    /// <summary>
+    /// Tlacidlo pomocnika (<see cref="Form.HelpButton" />, len bez minimalizacie a maximalizacie) - kontextova napoveda.
+    /// </summary>
+    HelpButton
 }

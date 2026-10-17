@@ -39,6 +39,7 @@ internal static class TitleBarHitTest
         TitleBarHit.MinimizeButton => Win32.HitTest.HTMINBUTTON,
         TitleBarHit.MaximizeButton => Win32.HitTest.HTMAXBUTTON,
         TitleBarHit.CloseButton => Win32.HitTest.HTCLOSE,
+        TitleBarHit.HelpButton => Win32.HitTest.HTHELP,
         TitleBarHit.ResizeTop => Win32.HitTest.HTTOP,
         TitleBarHit.ResizeTopLeft => Win32.HitTest.HTTOPLEFT,
         TitleBarHit.ResizeTopRight => Win32.HitTest.HTTOPRIGHT,
@@ -54,17 +55,19 @@ internal static class TitleBarHitTest
         Win32.HitTest.HTMINBUTTON => TitleBarHit.MinimizeButton,
         Win32.HitTest.HTMAXBUTTON => TitleBarHit.MaximizeButton,
         Win32.HitTest.HTCLOSE => TitleBarHit.CloseButton,
+        Win32.HitTest.HTHELP => TitleBarHit.HelpButton,
         _ => null
     };
 
     /// <summary>
-    /// Systemovy prikaz (WM_SYSCOMMAND) tlacidla okna - cez neho ma okno systemove animacie a FormClosing.
+    /// Systemovy prikaz (WM_SYSCOMMAND) tlacidla okna - cez neho ma okno systemove animacie, FormClosing a HelpButtonClicked.
     /// </summary>
     public static int SysCommandOf(TitleBarHit button, bool maximized) => (int)(button switch
     {
         TitleBarHit.MinimizeButton => Win32.SysCommand.SC_MINIMIZE,
         TitleBarHit.MaximizeButton => maximized ? Win32.SysCommand.SC_RESTORE : Win32.SysCommand.SC_MAXIMIZE,
         TitleBarHit.CloseButton => Win32.SysCommand.SC_CLOSE,
+        TitleBarHit.HelpButton => Win32.SysCommand.SC_CONTEXTHELP,
         _ => throw new ArgumentOutOfRangeException(nameof(button), button, null)
     });
 

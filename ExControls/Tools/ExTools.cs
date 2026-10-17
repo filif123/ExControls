@@ -14,13 +14,17 @@ public static class ExTools
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
+    // poradie podla dwmapi.h (DWMWINDOWATTRIBUTE): ram, titulok, text
     private const int DWMWA_WINDOW_CORNER_PREFERENCE = 33;
-    private const int DWMWA_TEXT_COLOR = 34;
+    private const int DWMWA_BORDER_COLOR = 34;
     private const int DWMWA_CAPTION_COLOR = 35;
-    private const int DWMWA_BORDER_COLOR = 36;
+    private const int DWMWA_TEXT_COLOR = 36;
     private const int DWMWA_VISIBLE_FRAME_BORDER_THICKNESS = 37;
     private const int DWMWA_SYSTEMBACKDROP_TYPE = 38;
     private const int DWMWA_MICA_EFFECT = 1029;
+
+    // farba podla systemu (DWMWA_COLOR_DEFAULT)
+    private const int DWMWA_COLOR_DEFAULT = unchecked((int)0xFFFFFFFF);
 
     /// <summary>
     /// Gets 
@@ -158,6 +162,26 @@ public static class ExTools
     public static bool SetTitlebarAndBorderColor(this Form form, Color titlebarColor = default, Color textColor = default, Color borderColor = default)
     {
         return SetTitlebarAndBorderColor(form.Handle, titlebarColor, textColor, borderColor);
+    }
+
+    /// <summary>
+    /// Nastavi farby titulku, textu titulku a ramu okna (Windows 11+). Na rozdiel od <see cref="SetTitlebarAndBorderColor(IntPtr, Color, Color, Color)" />,
+    /// kde prazdna farba nic nemeni, prazdna farba vrati systemovu.
+    /// </summary>
+    internal static void SetCaptionColors(IntPtr handle, Color caption, Color text, Color border)
+    {
+        if (!IsWin11Build22000)
+            return;
+
+        SetColorAttribute(handle, DWMWA_CAPTION_COLOR, caption);
+        SetColorAttribute(handle, DWMWA_TEXT_COLOR, text);
+        SetColorAttribute(handle, DWMWA_BORDER_COLOR, border);
+    }
+
+    private static void SetColorAttribute(IntPtr handle, int attribute, Color color)
+    {
+        var value = color.IsEmpty ? DWMWA_COLOR_DEFAULT : ColorTranslator.ToWin32(color);
+        _ = Win32.DwmSetWindowAttribute(handle, attribute, ref value, sizeof(int));
     }
 
     /// <summary>

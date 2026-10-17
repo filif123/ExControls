@@ -12,7 +12,13 @@ internal static partial class Win32
     public enum WindowStyles : uint
     {
         /// <summary>The window has a thin-line border.</summary>
-        WS_BORDER = 0x800000
+        WS_BORDER = 0x800000,
+
+        /// <summary>The window has a title bar (WS_BORDER | WS_DLGFRAME).</summary>
+        WS_CAPTION = 0xC00000,
+
+        /// <summary>The window has a sizing border.</summary>
+        WS_THICKFRAME = 0x40000
     }
 
     /// <summary>
@@ -21,6 +27,15 @@ internal static partial class Win32
     [Flags]
     public enum WindowStylesEx : uint
     {
+        /// <summary>The window has a double border.</summary>
+        WS_EX_DLGMODALFRAME = 0x1,
+
+        /// <summary>The window has a border with a raised edge.</summary>
+        WS_EX_WINDOWEDGE = 0x100,
+
+        /// <summary>The window has a border with a sunken edge (Fixed3D).</summary>
+        WS_EX_CLIENTEDGE = 0x200,
+
         /// <summary>Paints all descendants of a window in bottom-to-top painting order using double-buffering.</summary>
         WS_EX_COMPOSITED = 0x02000000
     }
@@ -40,7 +55,8 @@ internal static partial class Win32
         HTTOP = 12,
         HTTOPLEFT = 13,
         HTTOPRIGHT = 14,
-        HTCLOSE = 20
+        HTCLOSE = 20,
+        HTHELP = 21
     }
 
     /// <summary>
@@ -51,7 +67,10 @@ internal static partial class Win32
         SC_MINIMIZE = 0xF020,
         SC_MAXIMIZE = 0xF030,
         SC_CLOSE = 0xF060,
-        SC_RESTORE = 0xF120
+        SC_RESTORE = 0xF120,
+
+        /// <summary>Kontextova napoveda - kurzor s otaznikom, klik na prvok posle WM_HELP.</summary>
+        SC_CONTEXTHELP = 0xF180
     }
 
     /// <summary>

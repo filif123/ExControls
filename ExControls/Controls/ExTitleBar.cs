@@ -11,6 +11,10 @@ namespace ExControls;
 /// Spracuju sa len panely nastrojov priamo v zahlavi (polozky maju vzdy vedla seba); ostatne prvky v zahlavi su klikatelne cele.
 /// Neaktivne okno ma stlmeny text okna, znacky tlacidiel aj polozky ponuky a popisy v tychto paneloch (ako systemova ponuka)
 /// - cez <see cref="ToolStripItem.ForeColor" />, takze renderer, ktory farbu textu poloziek urcuje sam, stlmenie neukaze.
+/// Tlacidla a ikona su ako v systemovom zahlavi: pomocnik (<see cref="Form.HelpButton" />) len bez minimalizacie
+/// a maximalizacie, nastrojove okno len zatvorenie, dialog (FixedDialog) bez vlastnej ikony bez ikony.
+/// Farby titulku formulara (<see cref="ExForm.TitleBarBackColor" />, <see cref="ExForm.TitleBarForeColor" />) maju prednost
+/// pred vlastnymi farbami zahlavia; prvky v zahlavi si nechavaju svoje.
 /// Ked okno vlastne zahlavie nepouziva (<see cref="ExForm.UsesCustomTitleBar" />), je to obycajny panel bez ikony, textu a tlacidiel.
 /// </remarks>
 [Designer("ExControls.Designers.ExTitleBarDesigner, ExControls")]
@@ -22,6 +26,10 @@ public class ExTitleBar : Panel, IThemeable
     private const int IconSize = 16;
     private const int ButtonWidth = 46;
     private const int GlyphSize = 10;
+    // pomocnika kresli systemove zahlavie obycajnym otaznikom pisma Segoe UI (pismo ikon ma iny tvar) - vysoky ako krizik
+    private const string HelpGlyph = "?";
+    private const string HelpGlyphFamily = "Segoe UI";
+    private const int HelpGlyphSize = 14;
     private const int TitleMargin = 8;
     private const int MinTitleWidth = 40;
 
@@ -40,6 +48,7 @@ public class ExTitleBar : Panel, IThemeable
     private TitleBarHit? _pressedButton;
     private Form? _form;
     private Font? _glyphFont;
+    private Font? _helpGlyphFont;
     private Icon? _smallIcon;
     private Color _inactiveForeColor;
     private Color _buttonHoverBackColor;
@@ -200,7 +209,17 @@ public class ExTitleBar : Panel, IThemeable
     /// </summary>
     private bool DrawsTopBorder => ShowsCaption && !ExTools.IsWin11Build22000 && _form is { WindowState: not FormWindowState.Maximized };
 
-    private Color EffectiveInactiveForeColor => _inactiveForeColor.IsEmpty ? TitleBarColors.Inactive(BackColor, ForeColor) : _inactiveForeColor;
+    private Color EffectiveInactiveForeColor => _inactiveForeColor.IsEmpty ? TitleBarColors.Inactive(CaptionBackColor, CaptionForeColor) : _inactiveForeColor;
+
+    /// <summary>
+    /// Pozadie zahlavia: farba titulku formulara (<see cref="ExForm.TitleBarBackColor" />), ak je zadana, inak vlastna.
+    /// </summary>
+    private Color CaptionBackColor => ShowsCaption && Parent is ExForm { TitleBarBackColor.IsEmpty: false } form ? form.TitleBarBackColor : BackColor;
+
+    /// <summary>
+    /// Text a znacky tlacidiel: farba textu titulku formulara (<see cref="ExForm.TitleBarForeColor" />), ak je zadana, inak vlastna.
+    /// </summary>
+    private Color CaptionForeColor => ShowsCaption && Parent is ExForm { TitleBarForeColor.IsEmpty: false } form ? form.TitleBarForeColor : ForeColor;
 
     /// <summary>
     /// Urci cast zahlavia v bode.
@@ -360,6 +379,20 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <inheritdoc />
+    protected override void OnPaintBackground(PaintEventArgs e)
+    {
+        var back = CaptionBackColor;
+        if (back == BackColor)
+        {
+            base.OnPaintBackground(e);
+            return;
+        }
+
+        using var brush = new SolidBrush(back);
+        e.Graphics.FillRectangle(brush, ClientRectangle);
+    }
+
+    /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
@@ -367,17 +400,18 @@ public class ExTitleBar : Panel, IThemeable
             return;
 
         var layout = ComputeLayout();
-        var fore = _formActive ? ForeColor : EffectiveInactiveForeColor;
+        var fore = _formActive ? CaptionForeColor : EffectiveInactiveForeColor;
         DrawIcon(e.Graphics, layout.Icon);
         DrawTitle(e.Graphics, layout, fore);
         DrawButton(e.Graphics, layout.Minimize, TitleBarHit.MinimizeButton, Glyphs.Minimize, fore, layout.MinimizeEnabled);
         var maximize = _form.WindowState == FormWindowState.Maximized ? Glyphs.Restore : Glyphs.Maximize;
         DrawButton(e.Graphics, layout.Maximize, TitleBarHit.MaximizeButton, maximize, fore, layout.MaximizeEnabled);
+        DrawButton(e.Graphics, layout.Help, TitleBarHit.HelpButton, HelpGlyph, fore, true);
         DrawButton(e.Graphics, layout.Close, TitleBarHit.CloseButton, Glyphs.Close, fore, true);
 
         if (!DrawsTopBorder)
             return;
-        var border = _topBorderColor.IsEmpty ? TitleBarColors.TopBorder(BackColor, ForeColor, _formActive) : _topBorderColor;
+        var border = _topBorderColor.IsEmpty ? TitleBarColors.TopBorder(CaptionBackColor, CaptionForeColor, _formActive) : _topBorderColor;
         using var brush = new SolidBrush(border);
         e.Graphics.FillRectangle(brush, 0, 0, Width, 1);
     }
@@ -421,13 +455,13 @@ public class ExTitleBar : Panel, IThemeable
             if (button == TitleBarHit.CloseButton)
             {
                 var close = _closeButtonHoverBackColor.IsEmpty ? TitleBarColors.CloseHover(ExTools.IsWin11Build22000) : _closeButtonHoverBackColor;
-                back = pressed ? TitleBarColors.ClosePressed(close, BackColor, ExTools.IsWin11Build22000) : close;
+                back = pressed ? TitleBarColors.ClosePressed(close, CaptionBackColor, ExTools.IsWin11Build22000) : close;
                 fore = Color.White;
             }
             else if (pressed)
-                back = _buttonPressedBackColor.IsEmpty ? TitleBarColors.ButtonPressed(BackColor, ForeColor) : _buttonPressedBackColor;
+                back = _buttonPressedBackColor.IsEmpty ? TitleBarColors.ButtonPressed(CaptionBackColor, CaptionForeColor) : _buttonPressedBackColor;
             else
-                back = _buttonHoverBackColor.IsEmpty ? TitleBarColors.ButtonHover(BackColor, ForeColor) : _buttonHoverBackColor;
+                back = _buttonHoverBackColor.IsEmpty ? TitleBarColors.ButtonHover(CaptionBackColor, CaptionForeColor) : _buttonHoverBackColor;
 
             using var brush = new SolidBrush(back);
             g.FillRectangle(brush, bounds);
@@ -435,7 +469,10 @@ public class ExTitleBar : Panel, IThemeable
         else if (!enabled)
             fore = EffectiveInactiveForeColor;
 
-        TextRenderer.DrawText(g, glyph, GlyphFont(), bounds, fore,
+        var font = button == TitleBarHit.HelpButton
+            ? GlyphFont(ref _helpGlyphFont, HelpGlyphFamily, HelpGlyphSize)
+            : GlyphFont(ref _glyphFont, Glyphs.Family, GlyphSize);
+        TextRenderer.DrawText(g, glyph, font, bounds, fore,
             TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix |
             TextFormatFlags.NoPadding);
     }
@@ -443,10 +480,24 @@ public class ExTitleBar : Panel, IThemeable
     private TitleBarLayout ComputeLayout()
     {
         if (!ShowsCaption || _form is not { } form)
-            return TitleBarLayout.Compute(ClientSize, 0, 0, false, false, false, false);
+            return TitleBarLayout.Compute(ClientSize, 0, 0, false, false, false, false, false);
 
+        // nastrojove okno ma ako v systemovom zahlavi len tlacidlo zatvorenia
+        var toolWindow = form.FormBorderStyle is FormBorderStyle.FixedToolWindow or FormBorderStyle.SizableToolWindow;
         return TitleBarLayout.Compute(ClientSize, LogicalToDeviceUnits(IconAreaWidth), LogicalToDeviceUnits(ButtonWidth),
-            form.ShowIcon && form.Icon is not null, form.ControlBox, form.MinimizeBox, form.MaximizeBox);
+            !toolWindow && ShowsIcon(form), form.ControlBox, form.MinimizeBox && !toolWindow, form.MaximizeBox && !toolWindow,
+            form.HelpButton && !toolWindow);
+    }
+
+    /// <summary>
+    /// Okno ma ikonu ako pri systemovom zahlavi: dialog (FixedDialog) len vlastnu, nie predvolenu ikonu WinForms.
+    /// </summary>
+    private static bool ShowsIcon(Form form)
+    {
+        if (!form.ShowIcon || form.Icon is null)
+            return false;
+        return form.FormBorderStyle != FormBorderStyle.FixedDialog ||
+               TypeDescriptor.GetProperties(form)[nameof(Form.Icon)]?.ShouldSerializeValue(form) == true;
     }
 
     private Icon? SmallIcon()
@@ -460,15 +511,15 @@ public class ExTitleBar : Panel, IThemeable
         return _smallIcon;
     }
 
-    private Font GlyphFont()
+    private Font GlyphFont(ref Font? cached, string family, int logicalSize)
     {
-        var size = LogicalToDeviceUnits(GlyphSize);
-        if (_glyphFont is not null && (int)_glyphFont.Size == size)
-            return _glyphFont;
+        var size = LogicalToDeviceUnits(logicalSize);
+        if (cached is not null && (int)cached.Size == size)
+            return cached;
 
-        _glyphFont?.Dispose();
-        _glyphFont = new Font(Glyphs.Family, size, GraphicsUnit.Pixel);
-        return _glyphFont;
+        cached?.Dispose();
+        cached = new Font(family, size, GraphicsUnit.Pixel);
+        return cached;
     }
 
     private void InvalidateButton(TitleBarHit? button)
@@ -560,6 +611,7 @@ public class ExTitleBar : Panel, IThemeable
             if (_form is not null)
                 _form.TextChanged -= Form_TextChanged;
             _glyphFont?.Dispose();
+            _helpGlyphFont?.Dispose();
             _smallIcon?.Dispose();
         }
 

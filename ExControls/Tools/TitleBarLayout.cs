@@ -3,13 +3,14 @@ namespace ExControls;
 /// <summary>
 /// Rozlozenie vlastneho zahlavia (ciste, bez okna): ikona vlavo, tlacidla okna vpravo, medzi nimi prvky zahlavia a text.
 /// Pravidla ako systemove zahlavie - bez <see cref="Form.ControlBox" /> nie je ikona ani tlacidla, minimalizacia
-/// a maximalizacia su vzdy spolu (vypnute je len zakazane).
+/// a maximalizacia su vzdy spolu (vypnute je len zakazane), pomocnik (<see cref="Form.HelpButton" />) je len bez nich.
 /// </summary>
 /// <param name="Size">velkost zahlavia</param>
 /// <param name="Icon">ikona okna (systemova ponuka)</param>
 /// <param name="Minimize">tlacidlo minimalizacie</param>
 /// <param name="Maximize">tlacidlo maximalizacie a obnovenia</param>
 /// <param name="Close">tlacidlo zatvorenia</param>
+/// <param name="Help">tlacidlo pomocnika (kontextova napoveda)</param>
 /// <param name="MinimizeEnabled">minimalizacia je povolena (<see cref="Form.MinimizeBox" />)</param>
 /// <param name="MaximizeEnabled">maximalizacia je povolena (<see cref="Form.MaximizeBox" />)</param>
 internal readonly record struct TitleBarLayout(
@@ -18,6 +19,7 @@ internal readonly record struct TitleBarLayout(
     Rectangle Minimize,
     Rectangle Maximize,
     Rectangle Close,
+    Rectangle Help,
     bool MinimizeEnabled,
     bool MaximizeEnabled)
 {
@@ -31,17 +33,20 @@ internal readonly record struct TitleBarLayout(
     /// <param name="controlBox">okno ma systemovu ponuku a tlacidla (<see cref="Form.ControlBox" />)</param>
     /// <param name="minimizeBox"><see cref="Form.MinimizeBox" /></param>
     /// <param name="maximizeBox"><see cref="Form.MaximizeBox" /></param>
-    public static TitleBarLayout Compute(Size size, int iconWidth, int buttonWidth, bool showIcon, bool controlBox, bool minimizeBox, bool maximizeBox)
+    /// <param name="helpButton"><see cref="Form.HelpButton" /></param>
+    public static TitleBarLayout Compute(Size size, int iconWidth, int buttonWidth, bool showIcon, bool controlBox, bool minimizeBox, bool maximizeBox,
+        bool helpButton)
     {
         if (!controlBox)
-            return new TitleBarLayout(size, Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, false, false);
+            return new TitleBarLayout(size, Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, Rectangle.Empty, false, false);
 
         var icon = showIcon ? new Rectangle(0, 0, iconWidth, size.Height) : Rectangle.Empty;
         var close = new Rectangle(size.Width - buttonWidth, 0, buttonWidth, size.Height);
         var minMax = minimizeBox || maximizeBox;
         var maximize = minMax ? new Rectangle(close.Left - buttonWidth, 0, buttonWidth, size.Height) : Rectangle.Empty;
         var minimize = minMax ? new Rectangle(close.Left - 2 * buttonWidth, 0, buttonWidth, size.Height) : Rectangle.Empty;
-        return new TitleBarLayout(size, icon, minimize, maximize, close, minimizeBox, maximizeBox);
+        var help = helpButton && !minMax ? new Rectangle(close.Left - buttonWidth, 0, buttonWidth, size.Height) : Rectangle.Empty;
+        return new TitleBarLayout(size, icon, minimize, maximize, close, help, minimizeBox, maximizeBox);
     }
 
     /// <summary>
@@ -52,7 +57,7 @@ internal readonly record struct TitleBarLayout(
     /// <summary>
     /// Miesto vpravo, ktore zaberaju tlacidla okna.
     /// </summary>
-    public int RightInset => Close.IsEmpty ? 0 : Size.Width - (Minimize.IsEmpty ? Close.Left : Minimize.Left);
+    public int RightInset => Close.IsEmpty ? 0 : Size.Width - (!Minimize.IsEmpty ? Minimize.Left : !Help.IsEmpty ? Help.Left : Close.Left);
 
     /// <summary>
     /// Cast zahlavia nad ikonou alebo tlacidlom; zakazane tlacidlo je volne miesto zahlavia.
@@ -62,6 +67,8 @@ internal readonly record struct TitleBarLayout(
     {
         if (Close.Contains(point))
             return TitleBarHit.CloseButton;
+        if (Help.Contains(point))
+            return TitleBarHit.HelpButton;
         if (Maximize.Contains(point))
             return MaximizeEnabled ? TitleBarHit.MaximizeButton : TitleBarHit.Caption;
         if (Minimize.Contains(point))
@@ -77,6 +84,7 @@ internal readonly record struct TitleBarLayout(
         TitleBarHit.MinimizeButton => Minimize,
         TitleBarHit.MaximizeButton => Maximize,
         TitleBarHit.CloseButton => Close,
+        TitleBarHit.HelpButton => Help,
         _ => Rectangle.Empty
     };
 

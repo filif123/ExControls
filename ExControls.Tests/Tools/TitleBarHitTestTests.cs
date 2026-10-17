@@ -52,6 +52,7 @@ public class TitleBarHitTestTests
     [DataRow(TitleBarHit.ResizeTopLeft, 13)]
     [DataRow(TitleBarHit.ResizeTopRight, 14)]
     [DataRow(TitleBarHit.CloseButton, 20)]
+    [DataRow(TitleBarHit.HelpButton, 21)]
     public void ToHitCode_ZodpovedaHodnotamWin32(TitleBarHit hit, int expected)
     {
         Assert.AreEqual(expected, TitleBarHitTest.ToHitCode(hit));
@@ -61,6 +62,7 @@ public class TitleBarHitTestTests
     [DataRow(8, TitleBarHit.MinimizeButton)]
     [DataRow(9, TitleBarHit.MaximizeButton)]
     [DataRow(20, TitleBarHit.CloseButton)]
+    [DataRow(21, TitleBarHit.HelpButton)]
     [DataRow(2, null)]
     [DataRow(3, null)]
     [DataRow(12, null)]
@@ -75,6 +77,7 @@ public class TitleBarHitTestTests
     [DataRow(TitleBarHit.MaximizeButton, false, 0xF030)]
     [DataRow(TitleBarHit.MaximizeButton, true, 0xF120)]
     [DataRow(TitleBarHit.CloseButton, false, 0xF060)]
+    [DataRow(TitleBarHit.HelpButton, false, 0xF180)]
     public void SysCommandOf_MaximalizovaneOknoTlacidlomObnovi(TitleBarHit button, bool maximized, int expected)
     {
         Assert.AreEqual(expected, TitleBarHitTest.SysCommandOf(button, maximized));

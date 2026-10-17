@@ -140,7 +140,7 @@ namespace ExControls.Test
             txtSearch.HighlightColor = SystemColors.Highlight;
             txtSearch.HintForeColor = Color.Gray;
             txtSearch.HintText = "Hľadať (prvok v záhlaví)";
-            txtSearch.Location = new Point(478, 5);
+            txtSearch.Location = new Point(524, 5);
             txtSearch.Name = "txtSearch";
             txtSearch.Size = new Size(160, 23);
             txtSearch.TabIndex = 1;
@@ -184,7 +184,10 @@ namespace ExControls.Test
             Controls.Add(lblState);
             Controls.Add(txtInfo);
             Controls.Add(titleBar);
+            HelpButton = true;
             MainMenuStrip = menuStrip;
+            MaximizeBox = false;
+            MinimizeBox = false;
             MinimumSize = new Size(400, 300);
             Name = "TitleBarForm";
             StartPosition = FormStartPosition.CenterScreen;

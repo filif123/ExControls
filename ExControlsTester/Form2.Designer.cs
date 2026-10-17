@@ -38,7 +38,6 @@
             // 
             // exButton1
             // 
-            exButton1.DefaultStyle = true;
             exButton1.Location = new Point(252, 163);
             exButton1.Name = "exButton1";
             exButton1.Size = new Size(75, 23);
@@ -52,27 +51,23 @@
             exTextBox1.BackColor = SystemColors.GrayText;
             exTextBox1.BorderColor = Color.SandyBrown;
             exTextBox1.BorderStyle = BorderStyle.FixedSingle;
-            exTextBox1.BorderThickness = 1;
             exTextBox1.DefaultStyle = false;
             exTextBox1.DisabledBackColor = SystemColors.Control;
             exTextBox1.DisabledBorderColor = SystemColors.InactiveBorder;
             exTextBox1.DisabledForeColor = SystemColors.GrayText;
             exTextBox1.HighlightColor = Color.FromArgb(192, 255, 192);
             exTextBox1.HintForeColor = SystemColors.GrayText;
-            exTextBox1.HintText = null;
             exTextBox1.Location = new Point(417, 94);
             exTextBox1.Name = "exTextBox1";
             exTextBox1.Size = new Size(195, 23);
             exTextBox1.TabIndex = 2;
             exTextBox1.Text = "exTextBox1";
-            exTextBox1.UseDarkScrollBar = false;
             // 
             // exListBox1
             // 
             exListBox1.BackColor = SystemColors.GrayText;
             exListBox1.BorderColor = Color.IndianRed;
             exListBox1.BorderStyle = BorderStyle.FixedSingle;
-            exListBox1.BorderThickness = 1;
             exListBox1.DefaultStyle = false;
             exListBox1.DisabledBackColor = SystemColors.Control;
             exListBox1.DisabledBorderColor = SystemColors.InactiveBorder;
@@ -105,23 +100,25 @@
             // 
             // exDateTimePicker1
             // 
-            exDateTimePicker1.ArrowColor = Color.Black;
-            exDateTimePicker1.BorderColor = Color.DimGray;
-            exDateTimePicker1.ButtonBackColor = Color.White;
-            exDateTimePicker1.Checked = true;
-            exDateTimePicker1.CustomFormat = null;
+            // 
+            // 
+            // 
+            exDateTimePicker1.Calendar.DefaultStyle = false;
+            exDateTimePicker1.Calendar.HighlightColor = Color.Empty;
+            exDateTimePicker1.Calendar.HighlightForeColor = Color.Empty;
+            exDateTimePicker1.Calendar.Location = new Point(0, 0);
+            exDateTimePicker1.Calendar.Name = "";
+            exDateTimePicker1.Calendar.TabIndex = 0;
+            exDateTimePicker1.Calendar.TodayBorderColor = Color.Empty;
             exDateTimePicker1.DefaultStyle = false;
             exDateTimePicker1.DisabledBackColor = SystemColors.Control;
             exDateTimePicker1.DisabledForeColor = SystemColors.GrayText;
-            exDateTimePicker1.DropDownAlign = LeftRightAlignment.Left;
-            exDateTimePicker1.Format = DateTimePickerFormat.Long;
             exDateTimePicker1.HighlightColor = SystemColors.Highlight;
             exDateTimePicker1.Location = new Point(22, 102);
             exDateTimePicker1.Name = "exDateTimePicker1";
             exDateTimePicker1.SelectedFieldBackColor = SystemColors.Highlight;
             exDateTimePicker1.SelectedFieldForeColor = SystemColors.HighlightText;
             exDateTimePicker1.ShowCheckBox = true;
-            exDateTimePicker1.ShowUpDown = false;
             exDateTimePicker1.Size = new Size(200, 23);
             exDateTimePicker1.TabIndex = 6;
             // 

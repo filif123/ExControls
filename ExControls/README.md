@@ -35,7 +35,9 @@ Panel…) are styled by handlers registered with `ExThemer.Register<T>`.
 `ExTitleBar` placed directly on an `ExForm` (docked to the top) replaces the system caption: the window icon on the left,
 the window buttons on the right and controls such as the main `MenuStrip` in between. The system frame stays (shadow,
 Aero Snap, Snap Layouts, animations); the free space of the title bar and empty parts of its tool strips drag the window.
-It works on Windows 10+ with `FormBorderStyle.Sizable`, otherwise the form keeps the system caption. Do not use
+It works on Windows 10+ with any `FormBorderStyle` except `None`; `TitleBarBackColor` and `TitleBarForeColor` of the
+form color the title bar, `FormStyle` (Mica…) shows only in the system caption. The designer shows
+the form without the system caption and frame, so the designed `ClientSize` matches the runtime window. Do not use
 `TextBox.PlaceholderText` on an `ExForm` with `UseCompositedPainting` (`WS_EX_COMPOSITED` repaints it endlessly) -
 use `ExTextBox.HintText`.
 
@@ -45,4 +47,7 @@ use `ExTextBox.HintText`.
 - `IsExternalInit` polyfill (.NET Framework) is internal.
 - Removed unused `ExStyle`, `ExStyleManager`, `IStylable`, `ISupportsDefaultStyle`, `ExApplication`, `ExAppTheme`,
   `ExStyleOld` (members moved to `ExComboBoxStyle`) and the unfinished `ExFormDesigner` (replaced by `ExTitleBar`).
-- `ExTools.SetTitlebarAndBorderColor(Form, ...)` no longer swaps the text and border colors.
+- `ExTools.SetTitlebarAndBorderColor(IntPtr, ...)` no longer swaps the text and border colors (wrong DWM attribute
+  numbers, the `Form` overload compensated them).
+- `ExForm.DarkTitleBar` and `TitleBarBackColor` no longer reset each other (the caption color takes precedence), empty
+  title bar colors restore the system colors also after the form is shown.

@@ -32,8 +32,14 @@ with `ExThemer.Register<T>`.
 icon, form text, window buttons and controls such as the main `MenuStrip` in between. The system frame stays (shadow,
 Aero Snap, Snap Layouts, animations).
 
-* Works on Windows 10+ with `FormBorderStyle.Sizable`, otherwise the form keeps the system caption.
-* The outer size of the form stays as designed, the client area grows by the height of the system caption.
+* Works on Windows 10+ with any `FormBorderStyle` except `None` (there the title bar is a plain panel). Window buttons
+  and the icon follow `ControlBox`, `MinimizeBox`, `MaximizeBox`, `HelpButton`, `ShowIcon` and tool windows like the
+  system caption.
+* `ExForm.TitleBarBackColor` and `TitleBarForeColor` color the title bar (controls in it keep their colors),
+  `TitleBarBorderColor` and `CornersType` work as with the system caption, `FormStyle` (Mica…) shows only in the
+  system caption.
+* The designer shows the form without the system caption and frame, at runtime the window has the system frame only on
+  the left, right and bottom. The designed `ClientSize` is the same in both; DPI scaling scales it without the caption.
 * Empty parts of tool strips placed directly in the title bar drag the window. In an inactive window their items
   are dimmed through `ForeColor` - a renderer that picks the text color itself won't show it.
 * `ExForm.UseCompositedPainting` (`WS_EX_COMPOSITED`, on by default): an empty `TextBox` with `PlaceholderText`
@@ -43,7 +49,10 @@ Aero Snap, Snap Layouts, animations).
 * `System.Linq.Enumerable` extensions renamed to `ExEnumerable`, `IsExternalInit` polyfill is internal.
 * Removed unused theming experiments (`ExStyle`, `ExStyleManager`, `IStylable`, `ExApplication`, `ExAppTheme`…) and the
   unfinished `ExFormDesigner` (replaced by `ExTitleBar`).
-* `ExTools.SetTitlebarAndBorderColor(Form, ...)` no longer swaps the text and border colors.
+* `ExTools.SetTitlebarAndBorderColor(IntPtr, ...)` no longer swaps the text and border colors (wrong DWM attribute
+  numbers, the `Form` overload compensated them).
+* `ExForm.DarkTitleBar` and `TitleBarBackColor` no longer reset each other (the caption color takes precedence), empty
+  title bar colors restore the system colors also after the form is shown.
 
 ## How to install?
 ```

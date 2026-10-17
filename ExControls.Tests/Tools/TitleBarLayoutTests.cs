@@ -11,7 +11,7 @@ public class TitleBarLayoutTests
     [TestMethod]
     public void Compute_IkonaVlavoTlacidlaVpravo()
     {
-        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, true, true);
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, true, true, false);
 
         Assert.AreEqual(new Rectangle(0, 0, 36, 32), layout.Icon);
         Assert.AreEqual(new Rectangle(554, 0, 46, 32), layout.Close);
@@ -24,9 +24,9 @@ public class TitleBarLayoutTests
     [TestMethod]
     public void Compute_BezControlBox_BezIkonyATlacidiel()
     {
-        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, false, true, true);
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, false, true, true, false);
 
-        Assert.IsTrue(layout.Icon.IsEmpty && layout.Minimize.IsEmpty && layout.Maximize.IsEmpty && layout.Close.IsEmpty);
+        Assert.IsTrue(layout.Icon.IsEmpty && layout.Minimize.IsEmpty && layout.Maximize.IsEmpty && layout.Close.IsEmpty && layout.Help.IsEmpty);
         Assert.AreEqual(0, layout.LeftInset);
         Assert.AreEqual(0, layout.RightInset);
         Assert.IsNull(layout.HitTest(new Point(590, 10)));
@@ -35,7 +35,7 @@ public class TitleBarLayoutTests
     [TestMethod]
     public void Compute_BezMinimalizacieAMaximalizacie_LenZatvorenie()
     {
-        var layout = TitleBarLayout.Compute(Bar, 36, 46, false, true, false, false);
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, false, true, false, false, false);
 
         Assert.IsTrue(layout.Icon.IsEmpty);
         Assert.IsTrue(layout.Minimize.IsEmpty && layout.Maximize.IsEmpty);
@@ -43,11 +43,43 @@ public class TitleBarLayoutTests
     }
 
     [TestMethod]
+    public void Compute_PomocnikBezMinimalizacieAMaximalizacie_VedlaZatvorenia()
+    {
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, false, false, true);
+
+        Assert.AreEqual(new Rectangle(508, 0, 46, 32), layout.Help);
+        Assert.AreEqual(92, layout.RightInset);
+        Assert.AreEqual(TitleBarHit.HelpButton, layout.HitTest(new Point(530, 10)));
+        Assert.AreEqual(layout.Help, layout.BoundsOf(TitleBarHit.HelpButton));
+    }
+
+    [TestMethod]
+    [DataRow(true, true)]
+    [DataRow(false, true)]
+    [DataRow(true, false)]
+    public void Compute_PomocnikSMinimalizaciouAleboMaximalizaciou_NieJe(bool minimizeBox, bool maximizeBox)
+    {
+        // ako systemove zahlavie - otaznik je len namiesto tlacidiel minimalizacie a maximalizacie
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, minimizeBox, maximizeBox, true);
+
+        Assert.IsTrue(layout.Help.IsEmpty);
+        Assert.AreEqual(138, layout.RightInset);
+    }
+
+    [TestMethod]
+    public void Compute_PomocnikBezControlBox_NieJe()
+    {
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, false, false, false, true);
+
+        Assert.IsTrue(layout.Help.IsEmpty && layout.Close.IsEmpty);
+    }
+
+    [TestMethod]
     [DataRow(false, true)]
     [DataRow(true, false)]
     public void Compute_JednoZMinimalizacieAMaximalizacie_ObeTlacidlaVypnuteZakazane(bool minimizeBox, bool maximizeBox)
     {
-        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, minimizeBox, maximizeBox);
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, minimizeBox, maximizeBox, false);
 
         Assert.IsFalse(layout.Minimize.IsEmpty);
         Assert.IsFalse(layout.Maximize.IsEmpty);
@@ -66,7 +98,7 @@ public class TitleBarLayoutTests
     [DataRow(554, 16, TitleBarHit.CloseButton)]
     public void HitTest_IkonaATlacidla(int x, int y, TitleBarHit expected)
     {
-        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, true, true);
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, true, true, false);
 
         Assert.AreEqual(expected, layout.HitTest(new Point(x, y)));
     }
@@ -77,7 +109,7 @@ public class TitleBarLayoutTests
     [DataRow(461, 16)]
     public void HitTest_MimoIkonyATlacidielNic(int x, int y)
     {
-        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, true, true);
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, true, true, false);
 
         Assert.IsNull(layout.HitTest(new Point(x, y)));
     }
@@ -85,7 +117,7 @@ public class TitleBarLayoutTests
     [TestMethod]
     public void BoundsOf_PlochaTlacidla()
     {
-        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, true, true);
+        var layout = TitleBarLayout.Compute(Bar, 36, 46, true, true, true, true, false);
 
         Assert.AreEqual(layout.Close, layout.BoundsOf(TitleBarHit.CloseButton));
         Assert.AreEqual(layout.Maximize, layout.BoundsOf(TitleBarHit.MaximizeButton));

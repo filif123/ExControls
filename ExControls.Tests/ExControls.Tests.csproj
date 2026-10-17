@@ -16,6 +16,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\ExControls\ExControls.csproj" />
 	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net48'">
+		<!-- DesignSurface v testoch navrhara -->
+		<Reference Include="System.Design" />
+	</ItemGroup>
 	<ItemGroup>
 		<Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
 	</ItemGroup>
