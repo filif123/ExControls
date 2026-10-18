@@ -1,57 +1,57 @@
 namespace ExControls;
 
 /// <summary>
-/// Cast vlastneho zahlavia okna v danom bode - urcuje, co Windows urobi s mysou (<see cref="ExTitleBar.HitTest" />).
+/// Part of the custom title bar of a form at a point - determines what Windows does with the mouse (<see cref="ExTitleBar.HitTest" />).
 /// </summary>
 public enum TitleBarHit
 {
     /// <summary>
-    /// Prvok v zahlavi (polozka ponuky, tlacidlo panela nastrojov) - mys spracuje on.
+    /// A control in the title bar (menu item, tool strip button) - it handles the mouse itself.
     /// </summary>
     Client,
 
     /// <summary>
-    /// Volne miesto zahlavia - tahanie okna, dvojklik na maximalizaciu, systemova ponuka pravym klikom.
+    /// Free space of the title bar - dragging the window, double click to maximize, system menu on right click.
     /// </summary>
     Caption,
 
     /// <summary>
-    /// Ikona okna - systemova ponuka.
+    /// Window icon - system menu.
     /// </summary>
     SystemMenu,
 
     /// <summary>
-    /// Tlacidlo minimalizacie.
+    /// Minimize button.
     /// </summary>
     MinimizeButton,
 
     /// <summary>
-    /// Tlacidlo maximalizacie a obnovenia - vo Windows 11 nad nim system ponukne rozlozenia (Snap Layouts).
+    /// Maximize and restore button - in Windows 11 the system offers Snap Layouts over it.
     /// </summary>
     MaximizeButton,
 
     /// <summary>
-    /// Tlacidlo zatvorenia.
+    /// Close button.
     /// </summary>
     CloseButton,
 
     /// <summary>
-    /// Horny okraj okna - zmena vysky.
+    /// Top border of the window - resizing the height.
     /// </summary>
     ResizeTop,
 
     /// <summary>
-    /// Lavy horny roh okna - zmena velkosti.
+    /// Top left corner of the window - resizing.
     /// </summary>
     ResizeTopLeft,
 
     /// <summary>
-    /// Pravy horny roh okna - zmena velkosti.
+    /// Top right corner of the window - resizing.
     /// </summary>
     ResizeTopRight,
 
     /// <summary>
-    /// Tlacidlo pomocnika (<see cref="Form.HelpButton" />, len bez minimalizacie a maximalizacie) - kontextova napoveda.
+    /// Help button (<see cref="Form.HelpButton" />, only without minimize and maximize) - context help.
     /// </summary>
     HelpButton
 }

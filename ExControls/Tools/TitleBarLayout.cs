@@ -1,18 +1,19 @@
 namespace ExControls;
 
 /// <summary>
-/// Rozlozenie vlastneho zahlavia (ciste, bez okna): ikona vlavo, tlacidla okna vpravo, medzi nimi prvky zahlavia a text.
-/// Pravidla ako systemove zahlavie - bez <see cref="Form.ControlBox" /> nie je ikona ani tlacidla, minimalizacia
-/// a maximalizacia su vzdy spolu (vypnute je len zakazane), pomocnik (<see cref="Form.HelpButton" />) je len bez nich.
+/// Layout of the custom title bar (pure, without a window): the icon on the left, the window buttons on the right, the title
+/// bar controls and the text between them. The rules follow the system caption - without <see cref="Form.ControlBox" /> there
+/// is neither icon nor buttons, minimize and maximize always come together (a turned off one is only disabled), help
+/// (<see cref="Form.HelpButton" />) only without them.
 /// </summary>
-/// <param name="Size">velkost zahlavia</param>
-/// <param name="Icon">ikona okna (systemova ponuka)</param>
-/// <param name="Minimize">tlacidlo minimalizacie</param>
-/// <param name="Maximize">tlacidlo maximalizacie a obnovenia</param>
-/// <param name="Close">tlacidlo zatvorenia</param>
-/// <param name="Help">tlacidlo pomocnika (kontextova napoveda)</param>
-/// <param name="MinimizeEnabled">minimalizacia je povolena (<see cref="Form.MinimizeBox" />)</param>
-/// <param name="MaximizeEnabled">maximalizacia je povolena (<see cref="Form.MaximizeBox" />)</param>
+/// <param name="Size">size of the title bar</param>
+/// <param name="Icon">window icon (system menu)</param>
+/// <param name="Minimize">minimize button</param>
+/// <param name="Maximize">maximize and restore button</param>
+/// <param name="Close">close button</param>
+/// <param name="Help">help button (context help)</param>
+/// <param name="MinimizeEnabled">minimize is enabled (<see cref="Form.MinimizeBox" />)</param>
+/// <param name="MaximizeEnabled">maximize is enabled (<see cref="Form.MaximizeBox" />)</param>
 internal readonly record struct TitleBarLayout(
     Size Size,
     Rectangle Icon,
@@ -24,13 +25,13 @@ internal readonly record struct TitleBarLayout(
     bool MaximizeEnabled)
 {
     /// <summary>
-    /// Rozlozi zahlavie danej velkosti.
+    /// Lays out a title bar of the given size.
     /// </summary>
-    /// <param name="size">velkost zahlavia</param>
-    /// <param name="iconWidth">sirka miesta pre ikonu</param>
-    /// <param name="buttonWidth">sirka tlacidla okna</param>
-    /// <param name="showIcon">okno ukazuje ikonu (<see cref="Form.ShowIcon" />)</param>
-    /// <param name="controlBox">okno ma systemovu ponuku a tlacidla (<see cref="Form.ControlBox" />)</param>
+    /// <param name="size">size of the title bar</param>
+    /// <param name="iconWidth">width of the space for the icon</param>
+    /// <param name="buttonWidth">width of a window button</param>
+    /// <param name="showIcon">the form shows the icon (<see cref="Form.ShowIcon" />)</param>
+    /// <param name="controlBox">the form has the system menu and buttons (<see cref="Form.ControlBox" />)</param>
     /// <param name="minimizeBox"><see cref="Form.MinimizeBox" /></param>
     /// <param name="maximizeBox"><see cref="Form.MaximizeBox" /></param>
     /// <param name="helpButton"><see cref="Form.HelpButton" /></param>
@@ -50,19 +51,20 @@ internal readonly record struct TitleBarLayout(
     }
 
     /// <summary>
-    /// Miesto vlavo, ktore zabera ikona.
+    /// Space on the left taken by the icon.
     /// </summary>
     public int LeftInset => Icon.Right;
 
     /// <summary>
-    /// Miesto vpravo, ktore zaberaju tlacidla okna.
+    /// Space on the right taken by the window buttons.
     /// </summary>
     public int RightInset => Close.IsEmpty ? 0 : Size.Width - (!Minimize.IsEmpty ? Minimize.Left : !Help.IsEmpty ? Help.Left : Close.Left);
 
     /// <summary>
-    /// Cast zahlavia nad ikonou alebo tlacidlom; zakazane tlacidlo je volne miesto zahlavia.
+    /// Part of the title bar over the icon or a button; a disabled button is free space of the title bar.
     /// </summary>
-    /// <returns><see langword="null" />, ak bod nie je nad ikonou ani tlacidlom</returns>
+    /// <param name="point">point in client coordinates of the title bar</param>
+    /// <returns><see langword="null" /> if the point is over neither the icon nor a button</returns>
     public TitleBarHit? HitTest(Point point)
     {
         if (Close.Contains(point))
@@ -77,8 +79,9 @@ internal readonly record struct TitleBarLayout(
     }
 
     /// <summary>
-    /// Plocha tlacidla okna (prazdna, ak tlacidlo nie je).
+    /// Bounds of a window button (empty if there is no such button).
     /// </summary>
+    /// <param name="button">window button</param>
     public Rectangle BoundsOf(TitleBarHit button) => button switch
     {
         TitleBarHit.MinimizeButton => Minimize,
@@ -89,15 +92,15 @@ internal readonly record struct TitleBarLayout(
     };
 
     /// <summary>
-    /// Umiestni text okna do najsirsieho volneho useku medzi prvkami zahlavia - na stred zahlavia, ak sa tam zmesti,
-    /// inak co najblizsie k nemu; dlhy text sa skrati na sirku useku.
+    /// Places the form text into the widest free gap between the title bar controls - in the center of the title bar if it
+    /// fits there, otherwise as close to it as possible; a long text is trimmed to the width of the gap.
     /// </summary>
-    /// <param name="textWidth">sirka textu</param>
-    /// <param name="area">oblast pre text (medzi ikonou a tlacidlami)</param>
-    /// <param name="occupied">plochy prvkov v zahlavi</param>
-    /// <param name="center">vodorovny stred zahlavia</param>
-    /// <param name="minWidth">najuzsi usek, do ktoreho sa text este kresli</param>
-    /// <returns>plocha textu na celu vysku oblasti; prazdna, ak nie je dost miesta</returns>
+    /// <param name="textWidth">width of the text</param>
+    /// <param name="area">area for the text (between the icon and the buttons)</param>
+    /// <param name="occupied">bounds of the controls in the title bar</param>
+    /// <param name="center">horizontal center of the title bar</param>
+    /// <param name="minWidth">narrowest gap the text is still drawn into</param>
+    /// <returns>bounds of the text over the full height of the area; empty if there is not enough space</returns>
     public static Rectangle PlaceTitle(int textWidth, Rectangle area, IEnumerable<Rectangle> occupied, int center, int minWidth)
     {
         var best = Rectangle.Empty;

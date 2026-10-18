@@ -6,7 +6,7 @@ internal static partial class Win32
     public const int GWL_STYLE = -16;
 
     /// <summary>
-    /// Window styles (len pouzite).
+    /// Window styles (only the used ones).
     /// </summary>
     [Flags]
     public enum WindowStyles : uint
@@ -22,7 +22,7 @@ internal static partial class Win32
     }
 
     /// <summary>
-    /// Extended window styles (len pouzite).
+    /// Extended window styles (only the used ones).
     /// </summary>
     [Flags]
     public enum WindowStylesEx : uint
@@ -41,11 +41,11 @@ internal static partial class Win32
     }
 
     /// <summary>
-    /// Navratove hodnoty WM_NCHITTEST (len pouzite).
+    /// Return values of WM_NCHITTEST (only the used ones).
     /// </summary>
     public enum HitTest
     {
-        /// <summary>Okno je zakryte inym oknom toho isteho vlakna - sprava ide oknu pod nim.</summary>
+        /// <summary>The window is covered by another window of the same thread - the message goes to the window under it.</summary>
         HTTRANSPARENT = -1,
         HTCLIENT = 1,
         HTCAPTION = 2,
@@ -60,7 +60,7 @@ internal static partial class Win32
     }
 
     /// <summary>
-    /// Prikazy WM_SYSCOMMAND (len pouzite).
+    /// WM_SYSCOMMAND commands (only the used ones).
     /// </summary>
     public enum SysCommand
     {
@@ -69,42 +69,42 @@ internal static partial class Win32
         SC_CLOSE = 0xF060,
         SC_RESTORE = 0xF120,
 
-        /// <summary>Kontextova napoveda - kurzor s otaznikom, klik na prvok posle WM_HELP.</summary>
+        /// <summary>Context help - a cursor with a question mark, a click on a control sends WM_HELP.</summary>
         SC_CONTEXTHELP = 0xF180
     }
 
     /// <summary>
-    /// Priznaky TrackMouseEvent (len pouzite).
+    /// TrackMouseEvent flags (only the used ones).
     /// </summary>
     [Flags]
     public enum TrackMouseEventFlags : uint
     {
-        /// <summary>Po odchode mysi pride WM_MOUSELEAVE (s TME_NONCLIENT WM_NCMOUSELEAVE).</summary>
+        /// <summary>WM_MOUSELEAVE arrives when the mouse leaves (WM_NCMOUSELEAVE with TME_NONCLIENT).</summary>
         TME_LEAVE = 0x2,
 
-        /// <summary>Sledovat neklientsku oblast.</summary>
+        /// <summary>Track the non-client area.</summary>
         TME_NONCLIENT = 0x10
     }
 
     /// <summary>
-    /// Spravy SHAppBarMessage (len pouzite).
+    /// SHAppBarMessage messages (only the used ones).
     /// </summary>
     public enum AppBarMessage : uint
     {
-        /// <summary>Stav panela uloh (ABS_AUTOHIDE, ABS_ALWAYSONTOP).</summary>
+        /// <summary>State of the taskbar (ABS_AUTOHIDE, ABS_ALWAYSONTOP).</summary>
         ABM_GETSTATE = 0x4,
 
-        /// <summary>Automaticky skryvany panel na danom okraji monitora (uEdge, rc).</summary>
+        /// <summary>Auto-hide taskbar on the given edge of a monitor (uEdge, rc).</summary>
         ABM_GETAUTOHIDEBAREX = 0xB
     }
 
     /// <summary>
-    /// Stav panela uloh z ABM_GETSTATE.
+    /// Taskbar state from ABM_GETSTATE.
     /// </summary>
     public const int ABS_AUTOHIDE = 0x1;
 
     /// <summary>
-    /// Okraj monitora pre ABM_GETAUTOHIDEBAREX.
+    /// Monitor edge for ABM_GETAUTOHIDEBAREX.
     /// </summary>
     public enum AppBarEdge : uint
     {
@@ -134,7 +134,7 @@ internal static partial class Win32
         /// <summary>The hIcon member receives a handle to the specified icon.</summary>
         ICON = 0b_1_00000000,
 
-        /// <summary>The iSysImageImage member receives the index of the specified icon in the system imagelist.</summary>
+        /// <summary>The iSysImageIndex member receives the index of the specified icon in the system imagelist.</summary>
         SYSICONINDEX = 0b_01000000_00000000,
 
         /// <summary>Adds the link overlay to the file's icon.</summary>
@@ -155,7 +155,7 @@ internal static partial class Win32
 #pragma warning restore CA1069
 
     /// <summary>
-    /// Flags for SetWindowPos (len pouzite).
+    /// Flags for SetWindowPos (only the used ones).
     /// </summary>
     [Flags]
     public enum SetWindowPosFlags : uint
@@ -177,7 +177,7 @@ internal static partial class Win32
     }
 
     /// <summary>
-    /// Window messages (len pouzite).
+    /// Window messages (only the used ones).
     /// </summary>
     public enum WM : uint
     {

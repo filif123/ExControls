@@ -3,7 +3,7 @@ using System.Globalization;
 namespace ExControls.Test;
 
 /// <summary>
-/// Skuska vlastneho zahlavia <see cref="ExTitleBar" />: ram okna, tlacidla okna, ikona, text, aktivita a tema.
+/// Test of the custom title bar <see cref="ExTitleBar" />: window frame, window buttons, icon, text, activation and theme.
 /// </summary>
 public partial class TitleBarForm : ExForm
 {

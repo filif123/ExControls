@@ -21,9 +21,7 @@ namespace ExControls;
 [Designer("ExControls.Designers.ExDateTimePickerDesigner, ExControls")]
 public class ExDateTimePicker : Control, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         if (theme.TodayText is not null)
@@ -131,7 +129,8 @@ public class ExDateTimePicker : Control, IExControl, IThemeable
     private int _dropDownClosedAt;
 
     /// <summary>
-    /// Constructor.
+    /// Initializes a new instance of the <see cref="ExDateTimePicker" /> class in the default style with the current date and
+    /// time in the long format.
     /// </summary>
     public ExDateTimePicker()
     {
@@ -199,8 +198,9 @@ public class ExDateTimePicker : Control, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Minimum selectable date.
+    /// Gets or sets the minimum selectable date and time; a value before it is moved to it.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">when the value is after <see cref="MaxDate" />.</exception>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Minimum selectable date.")]
     public DateTime MinDate
@@ -224,8 +224,9 @@ public class ExDateTimePicker : Control, IExControl, IThemeable
     private void ResetMinDate() => MinDate = MinimumDateTime;
 
     /// <summary>
-    /// Maximum selectable date.
+    /// Gets or sets the maximum selectable date and time; a value after it is moved to it.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">when the value is before <see cref="MinDate" />.</exception>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Maximum selectable date.")]
     public DateTime MaxDate
@@ -637,18 +638,23 @@ public class ExDateTimePicker : Control, IExControl, IThemeable
     public event EventHandler? CloseUp;
 
     /// <summary>Raises the <see cref="ValueChanged" /> event.</summary>
+    /// <param name="e">An <see cref="EventArgs" /> that contains the event data.</param>
     protected virtual void OnValueChanged(EventArgs e) => ValueChanged?.Invoke(this, e);
 
     /// <summary>Raises the <see cref="CheckedChanged" /> event.</summary>
+    /// <param name="e">An <see cref="EventArgs" /> that contains the event data.</param>
     protected virtual void OnCheckedChanged(EventArgs e) => CheckedChanged?.Invoke(this, e);
 
     /// <summary>Raises the <see cref="FormatChanged" /> event.</summary>
+    /// <param name="e">An <see cref="EventArgs" /> that contains the event data.</param>
     protected virtual void OnFormatChanged(EventArgs e) => FormatChanged?.Invoke(this, e);
 
     /// <summary>Raises the <see cref="DropDown" /> event.</summary>
+    /// <param name="e">An <see cref="EventArgs" /> that contains the event data.</param>
     protected virtual void OnDropDown(EventArgs e) => DropDown?.Invoke(this, e);
 
     /// <summary>Raises the <see cref="CloseUp" /> event.</summary>
+    /// <param name="e">An <see cref="EventArgs" /> that contains the event data.</param>
     protected virtual void OnCloseUp(EventArgs e) => CloseUp?.Invoke(this, e);
 
     /// <summary>Raises the <see cref="DefaultStyleChanged" /> event.</summary>

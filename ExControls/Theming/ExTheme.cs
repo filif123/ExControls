@@ -1,78 +1,78 @@
 namespace ExControls;
 
 /// <summary>
-/// Farebna tema ovladacich prvkov. Ex* prvky ju pouziju cez <see cref="IThemeable" />, ostatne prvky cez obsluhy
-/// zaregistrovane v <see cref="ExThemer" />.
+/// Color theme of controls. Ex* controls apply it through <see cref="IThemeable" />, other controls through handlers
+/// registered in <see cref="ExThemer" />.
 /// </summary>
 public sealed class ExTheme
 {
     /// <summary>
-    /// Pouzit systemovy vzhlad prvkov (Ex* prvky kreslia ako standardne prvky Windows).
+    /// Gets or sets whether controls use the system style (Ex* controls draw like standard Windows controls).
     /// </summary>
     public bool UseSystemStyle { get; set; }
 
     /// <summary>
-    /// Tmave posuvniky (tema Windows DarkMode_Explorer).
+    /// Gets or sets whether scroll bars are dark (Windows theme DarkMode_Explorer).
     /// </summary>
     public bool DarkScrollBars { get; set; }
 
     /// <summary>
-    /// Pozadie panelov, okien a ponuk.
+    /// Gets or sets the background of panels, forms and menus.
     /// </summary>
     public Color PanelBackColor { get; set; } = SystemColors.Control;
 
     /// <summary>
-    /// Text panelov, okien a ponuk.
+    /// Gets or sets the text color of panels, forms and menus.
     /// </summary>
     public Color PanelForeColor { get; set; } = SystemColors.ControlText;
 
     /// <summary>
-    /// Pozadie poli (text, zoznamy, tabulky).
+    /// Gets or sets the background of boxes (text, lists, grids).
     /// </summary>
     public Color BoxBackColor { get; set; } = SystemColors.Window;
 
     /// <summary>
-    /// Text poli.
+    /// Gets or sets the text color of boxes.
     /// </summary>
     public Color BoxForeColor { get; set; } = SystemColors.WindowText;
 
     /// <summary>
-    /// Pozadie tlacidiel a hlaviciek.
+    /// Gets or sets the background of buttons and headers.
     /// </summary>
     public Color ButtonBackColor { get; set; } = SystemColors.Control;
 
     /// <summary>
-    /// Text tlacidiel a hlaviciek.
+    /// Gets or sets the text color of buttons and headers.
     /// </summary>
     public Color ButtonForeColor { get; set; } = SystemColors.ControlText;
 
     /// <summary>
-    /// Farba okrajov.
+    /// Gets or sets the color of borders.
     /// </summary>
     public Color BorderColor { get; set; } = SystemColors.ControlDark;
 
     /// <summary>
-    /// Pozadie zvyraznenia (vyber, prechod mysou, zameranie).
+    /// Gets or sets the highlight background (selection, hover, focus).
     /// </summary>
     public Color HighlightBackColor { get; set; } = SystemColors.Highlight;
 
     /// <summary>
-    /// Text zvyraznenia.
+    /// Gets or sets the highlight text color.
     /// </summary>
     public Color HighlightForeColor { get; set; } = SystemColors.HighlightText;
 
     /// <summary>
-    /// Farba znaciek (zaskrtnutie, prepinac, cisla tyzdnov).
+    /// Gets or sets the color of marks (check mark, radio button, week numbers).
     /// </summary>
     public Color MarkColor { get; set; } = SystemColors.ControlText;
 
     /// <summary>
-    /// Text popisov.
+    /// Gets or sets the text color of labels.
     /// </summary>
     public Color LabelForeColor { get; set; } = SystemColors.ControlText;
 
     /// <summary>
-    /// Text tlacidla Dnes v kalendari; <see langword="null" /> = ponechat.
+    /// Gets or sets the text of the Today button in the calendar; <see langword="null" /> = keep it.
     /// </summary>
     public string? TodayText { get; set; }
 }

@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 namespace ExControls.Tests.Controls;
 
 /// <summary>
-/// Okno s <see cref="ExTitleBar" />: bez systemoveho zahlavia, horny okraj meni velkost, volne miesto zahlavia a hlavnej
-/// ponuky taha okno, polozky ponuky ostavaju klikatelne.
+/// Form with <see cref="ExTitleBar" />: no system caption, the top border resizes the window, the free space of the title bar
+/// and of the main menu drags the window, the menu items stay clickable.
 /// </summary>
 [TestClass]
 public class ExTitleBarTests
@@ -689,7 +689,7 @@ public class ExTitleBarTests
     private sealed class ThemedStrip : MenuStrip;
 
     /// <summary>
-    /// Okno s ponukou ako v GVDEditore (sest poloziek a popis) v zahlavi, zobrazene mimo obrazovky.
+    /// Form with a menu as in GVDEditor (six items and a label) in the title bar, shown off screen.
     /// </summary>
     private sealed class MenuWindow : IDisposable
     {
@@ -723,8 +723,8 @@ public class ExTitleBarTests
     }
 
     /// <summary>
-    /// Okno 600x400 so zahlavim (hlavna ponuka vlavo a pole hladania vpravo) a obsahom pod nim, zobrazene mimo obrazovky
-    /// (skryty panel nastrojov nerozlozi polozky).
+    /// A 600x400 form with a title bar (main menu on the left and a search box on the right) and content below it, shown off
+    /// screen (a hidden tool strip does not lay out its items).
     /// </summary>
     private sealed class TestWindow : IDisposable
     {
@@ -763,7 +763,7 @@ public class ExTitleBarTests
         public TextBox Search { get; }
 
         /// <summary>
-        /// Volne miesto zahlavia medzi ponukou a polom hladania.
+        /// Free space of the title bar between the menu and the search box.
         /// </summary>
         public Point Free => new((Menu.Right + Search.Left) / 2, TitleBar.Height / 2);
 

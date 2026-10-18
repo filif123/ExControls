@@ -6,14 +6,12 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded TableLayoutPanel Control
+/// Extended TableLayoutPanel control: in the custom style it draws the cell borders with its own color and thickness.
 /// </summary>
 [ToolboxBitmap(typeof(TableLayoutPanel), "TableLayoutPanel.bmp")]
 public class ExTableLayoutPanel : TableLayoutPanel, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         ExThemer.Apply(Controls, theme);
@@ -32,7 +30,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl, IThemeable
     private bool _defaultStyle;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExTableLayoutPanel" /> class in the default style.
     /// </summary>
     public ExTableLayoutPanel()
     {

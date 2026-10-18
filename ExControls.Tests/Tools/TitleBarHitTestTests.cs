@@ -1,7 +1,7 @@
 namespace ExControls.Tests.Tools;
 
 /// <summary>
-/// Rozdelenie vrchu okna s vlastnym zahlavim: horny okraj na zmenu velkosti ma prednost, potom rozhoduje zahlavie.
+/// Splitting the top of a form with a custom title bar: the top resize border takes precedence, then the title bar decides.
 /// </summary>
 [TestClass]
 public class TitleBarHitTestTests

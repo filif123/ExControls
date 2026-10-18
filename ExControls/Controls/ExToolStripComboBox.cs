@@ -7,15 +7,13 @@ using System.Windows.Forms.Design;
 namespace ExControls;
 
 /// <summary>
-/// Expanded ComboBox Control for ToolStrip.
+/// ToolStrip item hosting an <see cref="ExComboBox" />.
 /// </summary>
 [ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.ToolStrip | ToolStripItemDesignerAvailability.MenuStrip | ToolStripItemDesignerAvailability.ContextMenuStrip)]
 [DefaultProperty("Items")]
 public class ExToolStripComboBox : ToolStripControlHost, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         ComboBox.DefaultStyle = theme.UseSystemStyle;
@@ -38,14 +36,14 @@ public class ExToolStripComboBox : ToolStripControlHost, IThemeable
     }
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExToolStripComboBox" /> class hosting a new <see cref="ExComboBox" />.
     /// </summary>
     public ExToolStripComboBox() : base(new ExComboBox())
     {
     }
 
     /// <summary>
-    /// Object ComboBox, type <see cref="ExComboBox" />.
+    /// Gets the hosted <see cref="ExComboBox" />.
     /// </summary>
     [Browsable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]

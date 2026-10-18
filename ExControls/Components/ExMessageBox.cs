@@ -58,8 +58,8 @@ public sealed class ExMessageBox
     /// <summary>
     /// Initializes a new instance of the ExMessageBox class with specified owner and text.
     /// </summary>
-    /// <param name="owner"></param>
-    /// <param name="text"></param>
+    /// <param name="owner">owner of this MessageBox</param>
+    /// <param name="text">text in MessageBox's message</param>
     public ExMessageBox(IWin32Window? owner, [Localizable(true)] string text) : this(owner)
     {
         Text = text;
@@ -68,9 +68,9 @@ public sealed class ExMessageBox
     /// <summary>
     /// Initializes a new instance of the ExMessageBox class with specified owner, text and caption.
     /// </summary>
-    /// <param name="owner"></param>
-    /// <param name="text"></param>
-    /// <param name="caption"></param>
+    /// <param name="owner">owner of this MessageBox</param>
+    /// <param name="text">text in MessageBox's message</param>
+    /// <param name="caption">caption of the MessageBox</param>
     public ExMessageBox(IWin32Window? owner, [Localizable(true)] string text, [Localizable(true)] string caption) : this(owner)
     {
         Text = text;
@@ -677,6 +677,9 @@ public sealed class ExMessageBox
     /// <summary>
     /// Displays a message box with specified text.
     /// </summary>
+    /// <param name="text">text in MessageBox's message</param>
+    /// <param name="countdown">countdown in seconds before the default button is pressed; -1 = no countdown</param>
+    /// <returns>the button the user pressed</returns>
     public static DialogResult Show([Localizable(true)] string text, int countdown = -1)
     {
         return ShowCore(null, text, "", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0, false, countdown);
@@ -766,7 +769,7 @@ public sealed class ExMessageBox
     /// <summary>
     /// Raises the <see cref="HelpRequested" /> event.
     /// </summary>
-    /// <param name="hlpevent"></param>
+    /// <param name="hlpevent">The event data.</param>
     private void OnHelpRequested(HelpEventArgs hlpevent) => HelpRequested?.Invoke(this, hlpevent);
 }
 
@@ -831,12 +834,12 @@ public class ExMessageBoxStyle
     public int? ButtonBorderSize { get; set; }
 
     /// <summary>
-    /// Gets or sets mouse-down color color of MessageBox's buttons.
+    /// Gets or sets mouse-down color of MessageBox's buttons.
     /// </summary>
     public Color? ButtonMouseDownColor { get; set; }
 
     /// <summary>
-    /// Gets or sets mouse-over color color of MessageBox's buttons.
+    /// Gets or sets mouse-over color of MessageBox's buttons.
     /// </summary>
     public Color? ButtonMouseOverColor { get; set; }
 }

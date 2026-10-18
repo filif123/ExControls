@@ -6,14 +6,14 @@ namespace ExControls.Test
     partial class Form1
     {
         /// <summary>
-        /// Vyžaduje se proměnná návrháře.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Uvolněte všechny používané prostředky.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">hodnota true, když by se měl spravovaný prostředek odstranit; jinak false.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))

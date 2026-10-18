@@ -6,14 +6,15 @@ namespace ExControls;
 /// Extended form. With <see cref="ExTitleBar" /> as a direct child it replaces the system caption by the title bar.
 /// </summary>
 /// <remarks>
-/// Okno ma predvolene WS_EX_COMPOSITED (<see cref="UseCompositedPainting" />). Prazdny <c>TextBox.PlaceholderText</c> bez
-/// zamerania v nom vyvola nekonecne prekreslovanie celeho okna (text blika, WinForms ho kresli mimo WM_PAINT) - namiesto
-/// neho <see cref="ExTextBox.HintText" />.
+/// The form uses WS_EX_COMPOSITED by default (<see cref="UseCompositedPainting" />). An empty unfocused
+/// <c>TextBox.PlaceholderText</c> in it causes endless repainting of the whole form (the text flickers, WinForms draws it
+/// outside WM_PAINT) - use <see cref="ExTextBox.HintText" /> instead.
 /// <para>
-/// Okno s vlastnym zahlavim ma za behu systemovy ram len vlavo, vpravo a dole, v navrhari ziadny ram ani titulok - klientska
-/// oblast (<see cref="Control.ClientSize" />, ktoru uklada navrhar) je v oboch rovnaka. WinForms pocita rozmery okna zo
-/// stylu okna, teda so systemovym titulkom; ExForm ich preto za behu prepocitava sam (SetClientSizeCore, odhad klientskej
-/// oblasti pred vytvorenim okna, velkost noveho okna v CreateParams, skalovanie).
+/// At runtime a form with a custom title bar has the system frame only on the left, right and bottom, in the designer it has
+/// neither frame nor caption - the client area (<see cref="Control.ClientSize" />, which the designer saves) is the same in both.
+/// WinForms computes the form size from the window style, i.e. with the system caption; ExForm therefore recomputes it itself
+/// at runtime (SetClientSizeCore, client area estimate before the window is created, size of the new window in CreateParams,
+/// scaling).
 /// </para>
 /// </remarks>
 public class ExForm : Form
@@ -59,8 +60,8 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Velkost noveho okna: WinForms ju pri vytvoreni prepocita zo zadanej ClientSize so systemovym titulkom (a podla nej
-    /// okno vycentruje), okno s vlastnym zahlavim ma rozmery bez neho.
+    /// Size of the new window: on creation WinForms recomputes it from the set ClientSize with the system caption (and centers
+    /// the window by it), a form with a custom title bar has its size without the caption.
     /// </summary>
     private void KeepCreateSize(CreateParams cp)
     {
@@ -107,7 +108,7 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Farby titulku, textu a ramu v DWM - prazdna farba vrati systemovu.
+    /// Caption, text and border colors in DWM - an empty color restores the system one.
     /// </summary>
     private void ApplyCaptionColors() => ExTools.SetCaptionColors(Handle, _titleBarBackColor, _titleBarForeColor, _titleBarBorderColor);
 
@@ -270,8 +271,8 @@ public class ExForm : Form
     public bool UsesCustomTitleBar => HidesSystemCaption && !DesignMode;
 
     /// <summary>
-    /// Okno nema systemovy titulok: za behu vlastne zahlavie (<see cref="UsesCustomTitleBar" />), v navrhari okno bez ramu
-    /// (navrhar zobrazuje formular ako podriadene okno, TopLevel = false).
+    /// The form has no system caption: a custom title bar at runtime (<see cref="UsesCustomTitleBar" />), a form without
+    /// a frame in the designer (the designer shows the form as a child window, TopLevel = false).
     /// </summary>
     private bool HidesSystemCaption =>
         _titleBar is { Shown: true } && FormBorderStyle != FormBorderStyle.None && (TopLevel || DesignMode) && !IsMdiChild &&
@@ -280,8 +281,8 @@ public class ExForm : Form
     private FrameKind Frame => !HidesSystemCaption ? FrameKind.System : DesignMode ? FrameKind.Designer : FrameKind.CustomTitleBar;
 
     /// <summary>
-    /// Rozmery okna sa pocitaju s vlastnym zahlavim: pred vytvorenim okna podla ocakavania, potom podla skutocneho ramu
-    /// (WM_NCCALCSIZE).
+    /// The form size is computed with the custom title bar: before the window is created as expected, afterwards by the
+    /// actual frame (WM_NCCALCSIZE).
     /// </summary>
     private bool SizedWithCustomFrame => IsHandleCreated ? _customFrame : UsesCustomTitleBar;
 
@@ -316,9 +317,9 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Prepocita ram okna, ak sa zmenilo, ci okno ma vlastne zahlavie: rozmery pred vytvorenim okna a v navrhari, ram
-    /// vytvoreneho okna (WM_NCCALCSIZE). Zahlavie ho vola pri zmene <see cref="Control.Visible" /> (skryty formular udalost
-    /// VisibleChanged zahlavia nevyvola).
+    /// Recomputes the window frame if it changed whether the form has a custom title bar: the size before the window is
+    /// created and in the designer, the frame of the created window (WM_NCCALCSIZE). The title bar calls it when
+    /// <see cref="Control.Visible" /> changes (a hidden form does not raise the VisibleChanged event of the title bar).
     /// </summary>
     internal void UpdateFrame()
     {
@@ -337,8 +338,9 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Rozmery po zmene ramu. V navrhari a pred vytvorenim okna so zadanou ClientSize ostava klientska oblast (ako pri zmene
-    /// FormBorderStyle) - InitializeComponent pridava zahlavie az po nastaveni ClientSize. Inak ostava vonkajsia velkost.
+    /// Size after a frame change. In the designer and before the window is created with a set ClientSize the client area is
+    /// kept (as when FormBorderStyle changes) - InitializeComponent adds the title bar only after setting ClientSize.
+    /// Otherwise the outer size is kept.
     /// </summary>
     private void KeepSizeForFrame()
     {
@@ -359,7 +361,8 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Odhad klientskej oblasti pred vytvorenim okna podla ramu okna (WinForms ho pocita so systemovym titulkom).
+    /// Estimates the client area from the window frame before the window is created (WinForms computes it with the system
+    /// caption).
     /// </summary>
     private void UpdateClientSize()
     {
@@ -370,7 +373,7 @@ public class ExForm : Form
     }
 
     /// <inheritdoc />
-    /// <remarks>Okno s vlastnym zahlavim ma systemovy ram len vlavo, vpravo a dole.</remarks>
+    /// <remarks>A form with a custom title bar has the system frame only on the left, right and bottom.</remarks>
     protected override Size SizeFromClientSize(Size clientSize)
     {
         if (!SizedWithCustomFrame)
@@ -405,7 +408,7 @@ public class ExForm : Form
     }
 
     /// <inheritdoc />
-    /// <remarks>Okno s vlastnym zahlavim skaluje klientsku oblast bez systemoveho titulku.</remarks>
+    /// <remarks>A form with a custom title bar scales the client area without the system caption.</remarks>
     protected override Rectangle GetScaledBounds(Rectangle bounds, SizeF factor, BoundsSpecified specified)
     {
         var scaled = base.GetScaledBounds(bounds, factor, specified);
@@ -497,8 +500,8 @@ public class ExForm : Form
     private static int HitCode(Message m) => unchecked((int)m.WParam.ToInt64());
 
     /// <summary>
-    /// Neklientska cast okna: systemovy titulok a ram, vlastne zahlavie za behu (ram vlavo, vpravo a dole) alebo navrhar
-    /// (ziadna).
+    /// Non-client area of the window: system caption and frame, custom title bar at runtime (frame on the left, right and
+    /// bottom) or designer (none).
     /// </summary>
     private enum FrameKind
     {
@@ -508,9 +511,9 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Mys nad zahlavim: tlacidlo pod mysou a sledovanie odchodu mysi (WM_NCMOUSELEAVE).
+    /// Mouse over the title bar: the window button under the mouse and tracking the mouse leave (WM_NCMOUSELEAVE).
     /// </summary>
-    /// <returns>sprava je spracovana (mys je nad tlacidlom okna)</returns>
+    /// <returns>the message is handled (the mouse is over a window button)</returns>
     private bool WmNcMouseMove(ref Message m, ExTitleBar titleBar)
     {
         if (!_trackingNcMouse)
@@ -536,8 +539,8 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Odstrani z neklientskej oblasti titulok a horny ram. Okraje vlavo, vpravo a dole (aj neviditelne na zmenu velkosti)
-    /// ostavaju systemove, takze okno si necha tien, zaoblene rohy, prichytavanie a animacie.
+    /// Removes the caption and the top frame from the non-client area. The borders on the left, right and bottom (including
+    /// the invisible resize borders) stay system ones, so the window keeps its shadow, rounded corners, snapping and animations.
     /// </summary>
     private void WmNcCalcSize(ref Message m)
     {
@@ -560,7 +563,7 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Maximalizovane okno nesmie zakryt cely monitor, inak sa automaticky skryvany panel uloh nevysunie.
+    /// A maximized window must not cover the whole monitor, otherwise an auto-hide taskbar does not slide out.
     /// </summary>
     private static void KeepAutoHideTaskbarsReachable(ref Win32.RECT client)
     {
@@ -591,7 +594,8 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Rozdeli vrch klientskej oblasti na horny okraj a casti zahlavia (tahanie, tlacidla, prvky v zahlavi).
+    /// Splits the top of the client area into the top border and the parts of the title bar (dragging, buttons, controls in
+    /// the title bar).
     /// </summary>
     private void WmNcHitTest(ref Message m, ExTitleBar titleBar)
     {
@@ -609,7 +613,7 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Hrubka systemoveho ramu (vratane neviditelnej casti na zmenu velkosti) - rovnaka je aj horna zona na zmenu vysky.
+    /// Thickness of the system frame (including the invisible resize part) - the top resize zone is just as thick.
     /// </summary>
     private int FrameThickness(IntPtr handle)
     {

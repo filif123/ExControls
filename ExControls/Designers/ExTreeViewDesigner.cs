@@ -9,9 +9,9 @@ using Microsoft.DotNet.DesignTools.Designers.Actions;
 namespace ExControls.Designers;
 
 /// <summary>
-/// This is the designer for tree view controls.  It inherits 
+/// This is the designer for tree view controls.  It inherits
 /// from the base control designer and adds live hit testing
-/// capabilites for the tree view control. 
+/// capabilities for the tree view control.
 /// </summary>
 internal sealed class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 {
@@ -56,13 +56,13 @@ internal sealed class ExTreeViewDesigner : DesignerControlBase<ExTreeView>
 
 
     /// <summary>
-    /// Allows your component to support a design time user interface. A TabStrip
-    /// control, for example, has a design time user interface that allows the user 
-    /// to click the tabs to change tabs. To implement this, TabStrip returns
-    /// true whenever the given point is within its tabs. 
+    /// Determines whether a mouse click at the specified point is passed to the tree view at design time,
+    /// so that nodes can be selected and expanded or collapsed in the designer.
     /// </summary>
-    /// <param name="point"></param>
-    /// <returns></returns>
+    /// <param name="point">The point in screen coordinates.</param>
+    /// <returns>
+    /// <see langword="true" /> if the point is on a node or its expand button; otherwise, <see langword="false" />.
+    /// </returns>
     protected override unsafe bool GetHitTest(Point point)
     {
         point = Control.PointToClient(point);

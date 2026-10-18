@@ -1,12 +1,12 @@
 namespace ExControls;
 
 /// <summary>
-/// Prvok, ktory sa podla temy nastyluje sam (vratane svojich vnorenych prvkov).
+/// A control that styles itself by a theme (including its child controls).
 /// </summary>
 public interface IThemeable
 {
     /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
+    /// Sets the colors and appearance of the control by the theme.
     /// </summary>
     void ApplyTheme(ExTheme theme);
 }

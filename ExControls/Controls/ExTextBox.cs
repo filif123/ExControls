@@ -7,7 +7,8 @@
 namespace ExControls;
 
 /// <summary>
-/// Expanded TextBox Control
+/// Extended TextBox control: in the custom style it draws the border with its own color and thickness, highlighted when the
+/// control has focus or is under the mouse, and uses its own colors when disabled; it can show a hint text and dark scroll bars.
 /// </summary>
 [ToolboxBitmap(typeof(TextBox), "TextBox.bmp")]
 [Designer("ExControls.Designers.ExTextBoxDesigner, ExControls")]
@@ -15,9 +16,7 @@ namespace ExControls;
 [DefaultEvent(nameof(TextChanged))]
 public class ExTextBox : TextBox, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         BackColor = theme.BoxBackColor;
@@ -46,7 +45,7 @@ public class ExTextBox : TextBox, IExControl, IThemeable
     private bool _selected;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExTextBox" /> class in the default style.
     /// </summary>
     public ExTextBox()
     {
@@ -101,7 +100,7 @@ public class ExTextBox : TextBox, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Background color of the TextBox's when it is disabled.
+    /// Background color of the TextBox when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -120,7 +119,7 @@ public class ExTextBox : TextBox, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Foreground color of the TextBox's when it is disabled.
+    /// Foreground color of the TextBox when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -234,7 +233,7 @@ public class ExTextBox : TextBox, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Nastavi temu okna podla UseDarkScrollBar (tema DarkMode_Explorer da tmave scrollbary).
+    /// Sets the window theme by UseDarkScrollBar (the DarkMode_Explorer theme gives dark scroll bars).
     /// </summary>
     private void ApplyScrollBarTheme()
     {
@@ -257,10 +256,9 @@ public class ExTextBox : TextBox, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Tematicky Edit (comctl32 v6, Windows 11) pri vytvoreni okna odstrani WS_BORDER a ramik kresli sam
-    /// v klientskej oblasti - neklientska oblast je potom nulova a scrollbar siaha az po okraj okna, takze
-    /// prekryva nas ramik. WS_BORDER sa preto vrati, aby system vyhradil skutocny 1px ram a scrollbar
-    /// ostal vnutri neho.
+    /// A themed Edit (comctl32 v6, Windows 11) removes WS_BORDER when the window is created and draws the border itself in the
+    /// client area - the non-client area is then empty and the scroll bar reaches the edge of the window, so it covers our
+    /// border. WS_BORDER is therefore restored so that the system reserves a real 1 px frame and the scroll bar stays inside it.
     /// </summary>
     private void EnsureNativeBorder()
     {
@@ -355,9 +353,9 @@ public class ExTextBox : TextBox, IExControl, IThemeable
     private const int PrfEraseBkgnd = 0x0008;
 
     /// <summary>
-    /// WM_PAINT bez blikania: Edit nakresli obsah (aj svoj tematicky vnutorny ramik) cez WM_PRINTCLIENT do bufferu,
-    /// v nom sa ramik prekryje (OnPaint) a na obrazovku ide jeden blit. Kreslenie priamo na obrazovku
-    /// (Edit a potom my) sposobovalo pri hoveri blikanie vnutorneho ramika.
+    /// WM_PAINT without flicker: Edit draws its content (including its themed inner border) through WM_PRINTCLIENT into
+    /// a buffer, the border is painted over in it (OnPaint) and a single blit goes to the screen. Drawing directly to the screen
+    /// (Edit and then us) made the inner border flicker on hover.
     /// </summary>
     private void PaintBuffered(ref Message m)
     {
@@ -393,7 +391,7 @@ public class ExTextBox : TextBox, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Nakresli vlastny ramik do neklientskej oblasti okna (cez system. ramik BorderStyle.FixedSingle).
+    /// Draws the custom border into the non-client area of the window (over the system BorderStyle.FixedSingle border).
     /// </summary>
     private void DrawBorder()
     {
@@ -442,9 +440,9 @@ public class ExTextBox : TextBox, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Draws a hint text on TextBox
+    /// Draws the hint text when the text box is empty and does not have focus.
     /// </summary>
-    /// <param name="g"></param>
+    /// <param name="g">The graphics to draw on.</param>
     protected virtual void DrawHint(Graphics g)
     {
         if (!Focused && string.IsNullOrEmpty(Text) && !string.IsNullOrEmpty(HintText))

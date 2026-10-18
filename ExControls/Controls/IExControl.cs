@@ -1,12 +1,13 @@
 ﻿namespace ExControls.Controls;
 
 /// <summary>
-/// Every Control in this library implements this interface.
+/// Control of this library that can be drawn in a custom style besides the default Windows style.
 /// </summary>
 public interface IExControl
 {
     /// <summary>
-    /// Default style of the Control.
+    /// Gets or sets whether the control uses the default Windows style; <see langword="false" /> = the custom style drawn by the
+    /// control with its own colors.
     /// </summary>
     public bool DefaultStyle { get; set; }
 
@@ -15,37 +16,38 @@ public interface IExControl
 }
 
 /// <summary>
-/// This interface is implemented by RadioButton and Checkbox as checkable controls.
+/// Checkable control (<see cref="ExCheckBox" />, <see cref="ExRadioButton" />) whose box and text are laid out by
+/// <see cref="ExButtonRenderer.GetBoxAndTextRectangle" />.
 /// </summary>
 public interface ICheckableExControl
 {
     /// <summary>
-    /// Text aligment.
+    /// Gets or sets the alignment of the text.
     /// </summary>
     public ContentAlignment TextAlign { get; set; }
 
     /// <summary>
-    /// CheckBox/RadioButton aligment.
+    /// Gets or sets the alignment of the check box or radio button mark.
     /// </summary>
     public ContentAlignment CheckAlign { get; set; }
 
     /// <summary>
-    /// Bounds of this control.
+    /// Gets the client area of the control.
     /// </summary>
     public Rectangle ClientRectangle { get; }
 
     /// <summary>
-    /// Right-to-left aligment.
+    /// Gets or sets whether the control is laid out from right to left.
     /// </summary>
     public RightToLeft RightToLeft { get; set; }
 
     /// <summary>
-    /// Text of the Control.
+    /// Gets or sets the text of the control.
     /// </summary>
     public string Text { get; set; }
 
     /// <summary>
-    /// Font of the Text.
+    /// Gets or sets the font of the text.
     /// </summary>
     public Font Font { get; set; }
 }

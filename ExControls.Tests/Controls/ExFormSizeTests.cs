@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 namespace ExControls.Tests.Controls;
 
 /// <summary>
-/// Rozmery <see cref="ExForm" /> s vlastnym zahlavim: navrhar ukazuje okno bez titulku a ramu, za behu ma okno ram len
-/// vlavo, vpravo a dole - klientska oblast ulozena navrharom je v oboch rovnaka a nacitanie a ulozenie ju nemeni. Navrhova
-/// plocha sa vo vlakne MTA nacitava desiatky sekund, preto STA.
+/// Size of <see cref="ExForm" /> with a custom title bar: the designer shows the form without caption and frame, at runtime
+/// the form has a frame only on the left, right and bottom - the client area saved by the designer is the same in both and
+/// loading and saving do not change it. The design surface takes tens of seconds to load on an MTA thread, hence STA.
 /// </summary>
 [STATestClass]
 public class ExFormSizeTests
@@ -211,7 +211,7 @@ public class ExFormSizeTests
     private static Size Scaled(int factor) => new(Designed.Width * factor, Designed.Height * factor);
 
     /// <summary>
-    /// Rozmery pisma, s ktorymi sa formular pri nacitani neskaluje.
+    /// Font dimensions with which the form is not scaled when loaded.
     /// </summary>
     private static SizeF CurrentDimensions()
     {
@@ -220,7 +220,7 @@ public class ExFormSizeTests
     }
 
     /// <summary>
-    /// Rozmery pisma navrhnute pri polovicnom DPI - formular sa pri nacitani zvacsi dvakrat.
+    /// Font dimensions designed at half the DPI - the form doubles in size when loaded.
     /// </summary>
     private static SizeF HalfDimensions()
     {
@@ -229,7 +229,7 @@ public class ExFormSizeTests
     }
 
     /// <summary>
-    /// Ram vlastneho zahlavia: klientska oblast zacina na vrchu okna, ram dole je rovnaky ako po stranach.
+    /// Frame of the custom title bar: the client area starts at the top of the window, the bottom frame is as thick as the side ones.
     /// </summary>
     private static void AssertCustomFrame(Form form)
     {
@@ -257,7 +257,7 @@ public class ExFormSizeTests
     }
 
     /// <summary>
-    /// Formular za behu zostaveny ako v InitializeComponent.
+    /// Form built at runtime as in InitializeComponent.
     /// </summary>
     private static ExForm RuntimeForm(Size clientSize, SizeF autoScaleDimensions, FormBorderStyle border = FormBorderStyle.Sizable,
         params Control[] controls)
@@ -268,7 +268,8 @@ public class ExFormSizeTests
     }
 
     /// <summary>
-    /// Poradie prikazov z InitializeComponent: rozmery pisma, ClientSize, prvky (zahlavie nakoniec, je navrchu), potom ram.
+    /// Order of the statements from InitializeComponent: font dimensions, ClientSize, controls (the title bar last, it is on top),
+    /// then the frame.
     /// </summary>
     private static void InitializeComponent(ExForm form, Size clientSize, SizeF autoScaleDimensions, bool withTitleBar, FormBorderStyle border,
         Control[] controls)
@@ -287,7 +288,7 @@ public class ExFormSizeTests
     }
 
     /// <summary>
-    /// Formular nacitany na navrhovej ploche (ako navrhar Visual Studia) a zobrazeny mimo obrazovky.
+    /// Form loaded on a design surface (like the Visual Studio designer) and shown off screen.
     /// </summary>
     private sealed class DesignedForm : IDisposable
     {
@@ -312,7 +313,7 @@ public class ExFormSizeTests
         public ExForm Form { get; }
 
         /// <summary>
-        /// ClientSize, ktoru navrhar zapise do InitializeComponent (vlastnost upravena navrharom formulara).
+        /// ClientSize that the designer writes into InitializeComponent (the property as adjusted by the form designer).
         /// </summary>
         public Size SavedClientSize => (Size)TypeDescriptor.GetProperties(Form)[nameof(Form.ClientSize)]!.GetValue(Form)!;
 

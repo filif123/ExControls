@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace ExControls;
 
 /// <summary>
-/// Volania Win32 API, ktore kniznica pouziva. Len [DllImport] - [LibraryImport] na .NET Framework neexistuje.
+/// Win32 API calls used by the library. Only [DllImport] - [LibraryImport] does not exist on .NET Framework.
 /// </summary>
 internal static partial class Win32
 {
@@ -25,6 +25,8 @@ internal static partial class Win32
     /// <summary>
     /// Retrieves information about the specified window (GetWindowLong on 32-bit, GetWindowLongPtr on 64-bit processes).
     /// </summary>
+    /// <param name="hWnd">handle of the window</param>
+    /// <param name="nIndex">offset of the value to retrieve (e.g. GWL_STYLE)</param>
     public static IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex) =>
         IntPtr.Size == 8 ? GetWindowLongPtr64(hWnd, nIndex) : GetWindowLongPtr32(hWnd, nIndex);
 
@@ -74,6 +76,7 @@ internal static partial class Win32
     /// <summary>
     /// Plays a waveform sound. The waveform sound for each sound type is identified by an entry in the registry.
     /// </summary>
+    /// <param name="type">sound type (MB_ICONASTERISK, MB_ICONHAND...)</param>
     [DllImport(USER32, ExactSpelling = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool MessageBeep(uint type);

@@ -9,14 +9,13 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded ComboBox Control
+/// Extended ComboBox control: in the custom style it draws itself with separate colors for the normal, hover, selected and
+/// disabled states (<see cref="ExComboBoxStyle" />) and can use dark scroll bars.
 /// </summary>
 [ToolboxBitmap(typeof(ComboBox), "ComboBox.bmp")]
 public class ExComboBox : ComboBox, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         // prvok s vlastnym vzhladom ho ponecha aj pri systemovom vzhlade temy
@@ -54,7 +53,7 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
     private ComboBoxEdit? _editControl;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExComboBox" /> class in the default style.
     /// </summary>
     public ExComboBox()
     {
@@ -248,7 +247,7 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets whether the drop-down list uses dark (DarkMode_Explorer) scroll bars.
     /// </summary>
     [DefaultValue(false)]
     public bool UseDarkScrollBar { get; set; }
@@ -694,23 +693,25 @@ public class ExComboBoxStyle : IExNotifyPropertyChanged, ICloneable
     private Color? _buttonBorderColor;
 
     /// <summary>
-    /// Constructor for designer.
+    /// Initializes a new instance of the <see cref="ExComboBoxStyle" /> class for the normal state (used by the designer).
     /// </summary>
     public ExComboBoxStyle() : this(StyleType.Normal)
     {
     }
 
     /// <summary>
-    /// Constructor.
+    /// Initializes a new instance of the <see cref="ExComboBoxStyle" /> class for the specified state of the combo box.
     /// </summary>
+    /// <param name="type">type of the style</param>
     public ExComboBoxStyle(StyleType type)
     {
         Type = type;
     }
 
     /// <summary>
-    /// Copy constructor.
+    /// Initializes a new instance of the <see cref="ExComboBoxStyle" /> class with the values of another style.
     /// </summary>
+    /// <param name="copy">style to copy</param>
     protected ExComboBoxStyle(ExComboBoxStyle copy)
     {
         Type = copy.Type;
@@ -724,7 +725,7 @@ public class ExComboBoxStyle : IExNotifyPropertyChanged, ICloneable
     }
 
     /// <summary>
-    /// Type of style.
+    /// Gets the state of the combo box this style is used for.
     /// </summary>
     public StyleType Type { get; }
 
@@ -774,7 +775,7 @@ public class ExComboBoxStyle : IExNotifyPropertyChanged, ICloneable
     }
 
     /// <summary>
-    /// Color of the Controls's border.
+    /// Color of the control's border.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -891,7 +892,7 @@ public class ExComboBoxStyle : IExNotifyPropertyChanged, ICloneable
     /// <summary>
     /// Raises the <see cref="PropertyChanged" /> event.
     /// </summary>
-    /// <param name="e"></param>
+    /// <param name="e">The event data.</param>
     protected void OnPropertyChanged(ExPropertyChangedEventArgs e)
     {
         PropertyChanged?.Invoke(this, e);

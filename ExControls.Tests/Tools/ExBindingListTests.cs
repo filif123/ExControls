@@ -3,7 +3,7 @@ using System.ComponentModel;
 namespace ExControls.Tests.Tools;
 
 /// <summary>
-/// Zoznam pre naviazanie na grid s triedenim podla stlpca.
+/// List for binding to a grid with sorting by a column.
 /// </summary>
 [TestClass]
 public class ExBindingListTests

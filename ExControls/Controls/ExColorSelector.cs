@@ -4,7 +4,7 @@
 namespace ExControls;
 
 /// <summary>
-/// ExColorSelector control.
+/// Control that shows the selected color; a click opens a color dialog (<see cref="ExColorSelector.Dialog" />) to change it.
 /// </summary>
 [Designer("ExControls.Designers.ExColorSelectorDesigner, ExControls")]
 [DefaultProperty(nameof(SelectedColor))]
@@ -22,7 +22,7 @@ public partial class ExColorSelector : UserControl
     public event EventHandler? SelectedColorChanged;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExColorSelector" /> class.
     /// </summary>
     public ExColorSelector()
     {

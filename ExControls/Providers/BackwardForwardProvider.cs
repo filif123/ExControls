@@ -12,23 +12,24 @@ public class BackwardForwardProvider : Component
     private readonly Stack<IBackwardForwardCommand> _backwardStack, _forwardStack;
 
     /// <summary>
-    /// 
+    /// Occurs when the provider moved backward or forward in the history, or when the history was cleared.
     /// </summary>
     public event EventHandler<UndoRedoStateEventArgs>? BackwardForwardStateChanged;
 
     /// <summary>
-    /// 
+    /// Occurs when a new command was added and became the current command.
     /// </summary>
     public event EventHandler<BackwardForwardAddedCommandEventArgs>? CommandAdded;
 
     /// <summary>
-    /// Enables or disables manager to add commands to stacks. Dafault is false.
+    /// Enables or disables manager to add commands to stacks. Default is false.
     /// </summary>
     [DefaultValue(false)]
     public bool ManagerEnabled { get; set; }
 
     /// <summary>
-    /// Represents current command.
+    /// Gets the current command - the last added one or the one the history moved to; <see langword="null" /> before the first
+    /// command is added.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -69,7 +70,8 @@ public class BackwardForwardProvider : Component
     public IBackwardForwardCommand NextForwardCommand => _forwardStack.Peek();
 
     /// <summary>
-    /// Constructor which initializes the manager.
+    /// Initializes a new instance of the <see cref="BackwardForwardProvider" /> class with an empty history; commands are added
+    /// only after <see cref="ManagerEnabled" /> is turned on.
     /// </summary>
     public BackwardForwardProvider()
     {
@@ -83,6 +85,7 @@ public class BackwardForwardProvider : Component
     /// application has performed an operation/command that is
     /// undoable.
     /// </summary>
+    /// <param name="cmd">command to add to the history</param>
     public void AddCommand(IBackwardForwardCommand cmd)
     {
         if (!ManagerEnabled)
@@ -111,10 +114,10 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    /// Perform the back operation.
-    /// If an undo handler was specified, it will be used to perform the actual operation.
-    /// Otherwise, the command instance is asked to perform the undo.
+    /// Moves one step back: the previous command becomes the current one and is asked to perform the move.
     /// </summary>
+    /// <exception cref="InvalidOperationException">when the manager is disabled, the backward history is empty or there is no
+    /// current command.</exception>
     public void Backward()
     {
         if (!ManagerEnabled)
@@ -132,10 +135,15 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    /// Perform the forward operation.
-    /// If an undo handler was specified, it will be used to perform the actual operation.
-    /// Otherwise, the command instance is asked to perform the undo.
+    /// Moves back to <paramref name="finalCmd" />: it becomes the current command and is asked to perform the move,
+    /// the skipped commands go to the forward history.
     /// </summary>
+    /// <param name="finalCmd">command in the backward history to move back to</param>
+    /// <exception cref="InvalidOperationException">when the manager is disabled, the backward history is empty or there is no
+    /// current command.</exception>
+    /// <exception cref="ArgumentNullException">when <paramref name="finalCmd" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">when <paramref name="finalCmd" /> is the current command or is not in the backward
+    /// history.</exception>
     public void Backward(IBackwardForwardCommand finalCmd)
     {
         if (!ManagerEnabled)
@@ -162,10 +170,10 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    /// Perform the forward operation.
-    /// If an undo handler was specified, it will be used to perform the actual operation.
-    /// Otherwise, the command instance is asked to perform the redo.
+    /// Moves one step forward: the next command becomes the current one and is asked to perform the move.
     /// </summary>
+    /// <exception cref="InvalidOperationException">when the manager is disabled, the forward history is empty or there is no
+    /// current command.</exception>
     public void Forward()
     {
         if (!ManagerEnabled)
@@ -183,10 +191,15 @@ public class BackwardForwardProvider : Component
     }
 
     /// <summary>
-    /// Perform the forward operation.
-    /// If an undo handler was specified, it will be used to perform the actual operation.
-    /// Otherwise, the command instance is asked to perform the redo.
+    /// Moves forward to <paramref name="finalCmd" />: it becomes the current command and is asked to perform the move,
+    /// the skipped commands go to the backward history.
     /// </summary>
+    /// <param name="finalCmd">command in the forward history to move forward to</param>
+    /// <exception cref="InvalidOperationException">when the manager is disabled, the forward history is empty or there is no
+    /// current command.</exception>
+    /// <exception cref="ArgumentNullException">when <paramref name="finalCmd" /> is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">when <paramref name="finalCmd" /> is the current command or is not in the forward
+    /// history.</exception>
     public void Forward(IBackwardForwardCommand finalCmd)
     {
         if (!ManagerEnabled)
@@ -227,26 +240,26 @@ public class BackwardForwardProvider : Component
     public string GetForwardText() => CanForward ? NextForwardCommand.CommandName : "";
 
     /// <summary>
-    /// 
+    /// Returns the history of commands to which the provider can move backward.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The backward commands, the nearest one first.</returns>
     public IEnumerable<IBackwardForwardCommand> GetBackwardHistory() => _backwardStack;
 
     /// <summary>
-    /// 
+    /// Returns the history of commands to which the provider can move forward.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The forward commands, the nearest one first.</returns>
     public IEnumerable<IBackwardForwardCommand> GetForwardHistory() => _forwardStack;
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="BackwardForwardStateChanged" /> event.
     /// </summary>
-    /// <param name="e"></param>
+    /// <param name="e">The event data.</param>
     protected virtual void OnBackwardForwardStateChanged(UndoRedoStateEventArgs e) => BackwardForwardStateChanged?.Invoke(this, e);
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="CommandAdded" /> event.
     /// </summary>
-    /// <param name="e"></param>
+    /// <param name="e">The event data.</param>
     protected virtual void OnCommandAdded(BackwardForwardAddedCommandEventArgs e) => CommandAdded?.Invoke(this, e);
 }

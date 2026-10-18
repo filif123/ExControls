@@ -15,12 +15,19 @@ namespace ExControls.Editors;
 public class OptionsPanelCollectionEditor : CollectionEditor
 {
 #if NETFRAMEWORK
-    /// <inheritdoc />
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OptionsPanelCollectionEditor" /> class.
+    /// </summary>
+    /// <param name="type">type of the edited collection</param>
     public OptionsPanelCollectionEditor(Type type) : base(type)
     {
     }
 #else
-    /// <inheritdoc />
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OptionsPanelCollectionEditor" /> class.
+    /// </summary>
+    /// <param name="provider">service provider of the design tools server</param>
+    /// <param name="type">type of the edited collection</param>
     public OptionsPanelCollectionEditor(IServiceProvider provider, Type type) : base(provider, type)
     {
     }

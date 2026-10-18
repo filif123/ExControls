@@ -9,15 +9,14 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded TabControl Control
+/// Extended TabControl control: in the custom style it draws the tab headers and the border with its own colors for the normal,
+/// active and highlighted tabs.
 /// </summary>
 [ToolboxBitmap(typeof(TabControl), "TabControl.bmp")]
 [DefaultProperty(nameof(TabPages))]
 public class ExTabControl : TabControl, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         ExThemer.Apply(Controls, theme);
@@ -54,7 +53,7 @@ public class ExTabControl : TabControl, IExControl, IThemeable
     private int _hoverIndex = -1;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExTabControl" /> class in the default style.
     /// </summary>
     public ExTabControl()
     {
@@ -510,10 +509,10 @@ public class TabPageChangeEventArgs : EventArgs
     public bool Cancel { get; set; }
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="TabPageChangeEventArgs" /> class.
     /// </summary>
-    /// <param name="currentTab">current Tab</param>
-    /// <param name="newTab">new tab</param>
+    /// <param name="currentTab">the selected tab page; <see langword="null" /> if no tab page is selected</param>
+    /// <param name="newTab">the tab page to be selected</param>
     public TabPageChangeEventArgs(TabPage? currentTab, TabPage newTab)
     {
         CurrentTab = currentTab;

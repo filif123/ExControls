@@ -3,7 +3,8 @@ using System.Drawing.Text;
 namespace ExControls;
 
 /// <summary>
-/// Expanded Label Control.
+/// Extended Label control: a disabled label draws its text in <see cref="ExLabel.DisabledForeColor" /> instead of the system
+/// gray.
 /// </summary>
 [ToolboxBitmap(typeof(Label), "Label.bmp")]
 public class ExLabel : Label
@@ -16,7 +17,7 @@ public class ExLabel : Label
     private Color _disabledForeColor;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExLabel" /> class.
     /// </summary>
     public ExLabel()
     {
@@ -24,7 +25,7 @@ public class ExLabel : Label
     }
 
     /// <summary>
-    /// Color of the CheckBox's text and box when the Control is disabled
+    /// Color of the Label's text when the Control is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -56,9 +57,10 @@ public class ExLabel : Label
 
     /// <inheritdoc />
     /// <remarks>
-    /// Povoleny popis kresli <see cref="Label" />. Zakazany text ma namiesto systemovej farby <see cref="DisabledForeColor" />,
-    /// inak sa kresli rovnako ako v <see cref="Label" /> (zarovnanie, zalamovanie, okraje, mnemotechnika, vypustka),
-    /// aby sedel s velkostou z <see cref="Label.GetPreferredSize" />. Zakazany popis nevyvola udalost <see cref="Control.Paint" />.
+    /// An enabled label is drawn by <see cref="Label" />. A disabled text has <see cref="DisabledForeColor" /> instead of the
+    /// system color, otherwise it is drawn the same way as in <see cref="Label" /> (alignment, wrapping, padding, mnemonics,
+    /// ellipsis) so that it matches the size from <see cref="Label.GetPreferredSize" />. A disabled label does not raise the
+    /// <see cref="Control.Paint" /> event.
     /// </remarks>
     protected override void OnPaint(PaintEventArgs e)
     {
@@ -84,7 +86,7 @@ public class ExLabel : Label
         }
     }
 
-    /// <summary>Format textu GDI+ ako v <see cref="Label" /> (pri <see cref="Label.UseCompatibleTextRendering" />).</summary>
+    /// <summary>GDI+ text format as in <see cref="Label" /> (with <see cref="Label.UseCompatibleTextRendering" />).</summary>
     private StringFormat CreateStringFormat()
     {
         var format = new StringFormat
@@ -106,8 +108,8 @@ public class ExLabel : Label
     }
 
     /// <summary>
-    /// Priznaky textu GDI ako v <see cref="Label" />: zarovnanie podla <see cref="Label.TextAlign" /> (aj sprava dolava),
-    /// zalamovanie po slovach, <see cref="Label.AutoEllipsis" /> a <see cref="Label.UseMnemonic" />.
+    /// GDI text flags as in <see cref="Label" />: alignment by <see cref="Label.TextAlign" /> (also right to left), word
+    /// wrapping, <see cref="Label.AutoEllipsis" /> and <see cref="Label.UseMnemonic" />.
     /// </summary>
     private TextFormatFlags CreateTextFormatFlags()
     {

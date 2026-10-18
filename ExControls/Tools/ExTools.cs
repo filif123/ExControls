@@ -27,7 +27,7 @@ public static class ExTools
     private const int DWMWA_COLOR_DEFAULT = unchecked((int)0xFFFFFFFF);
 
     /// <summary>
-    /// Gets 
+    /// Gets whether the system is Windows 11 (Windows 10 build 22000 or newer).
     /// </summary>
     public static bool IsWin11Build22000 { get; } = IsWindows10OrGreater(22000);
 
@@ -84,8 +84,8 @@ public static class ExTools
     }
 
     /// <summary>
-    /// Farba zahlavia aktivneho okna podla nastavenia Windows „Zobrazit farbu motivu na zahlaviach a okrajoch okna"
-    /// (Windows 10+); <see langword="null" />, ak je vypnute.
+    /// Title bar color of an active window by the Windows setting "Show accent color on title bars and window borders"
+    /// (Windows 10+); <see langword="null" /> if it is turned off.
     /// </summary>
     internal static Color? CaptionAccentColor()
     {
@@ -188,8 +188,9 @@ public static class ExTools
     }
 
     /// <summary>
-    /// Nastavi farby titulku, textu titulku a ramu okna (Windows 11+). Na rozdiel od <see cref="SetTitlebarAndBorderColor(IntPtr, Color, Color, Color)" />,
-    /// kde prazdna farba nic nemeni, prazdna farba vrati systemovu.
+    /// Sets the colors of the caption, the caption text and the window border (Windows 11+). Unlike
+    /// <see cref="SetTitlebarAndBorderColor(IntPtr, Color, Color, Color)" />, where an empty color changes nothing, an empty color
+    /// restores the system one.
     /// </summary>
     internal static void SetCaptionColors(IntPtr handle, Color caption, Color text, Color border)
     {
@@ -276,7 +277,7 @@ public static class ExTools
     /// </summary>
     /// <param name="handle">handle to form where change is applying</param>
     /// <param name="sizeInPoints">width of border in points</param>
-    /// <returns></returns>
+    /// <returns>whether the width has been successfully retrieved</returns>
     public static bool GetFormBorderThickness(IntPtr handle, out int sizeInPoints)
     {
         sizeInPoints = 0;
@@ -292,7 +293,7 @@ public static class ExTools
     /// </summary>
     /// <param name="form">form where the change is applying</param>
     /// <param name="sizeInPoints">width of border in points</param>
-    /// <returns></returns>
+    /// <returns>whether the width has been successfully retrieved</returns>
     public static bool GetFormBorderThickness(this Form form, out int sizeInPoints)
     {
         return GetFormBorderThickness(form.Handle, out sizeInPoints);
@@ -301,11 +302,10 @@ public static class ExTools
     /// <summary>
     /// Sets theme for the control. Works only on some controls.
     /// </summary>
-    /// <param name="control">editing control</param>
+    /// <param name="control">control whose theme is set</param>
     /// <param name="theme">theme that will be used</param>
     /// <param name="customThemeName">
-    /// used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" /> and
-    /// specify theme name.
+    /// name of the theme, used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" />
     /// </param>
     public static void SetTheme(this Control control, WindowsTheme theme, string customThemeName = "")
     {
@@ -317,11 +317,10 @@ public static class ExTools
     /// <summary>
     /// Sets theme for the control. Works only on some controls.
     /// </summary>
-    /// <param name="handle">editing control handle</param>
+    /// <param name="handle">handle of the control whose theme is set</param>
     /// <param name="theme">theme that will be used</param>
     /// <param name="customThemeName">
-    /// used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" /> and
-    /// specifify theme name
+    /// name of the theme, used only when <paramref name="theme" /> is set to <see cref="WindowsTheme.Other" />
     /// </param>
     public static void SetTheme(IntPtr handle, WindowsTheme theme, string customThemeName = "")
     {
@@ -353,7 +352,7 @@ public static class ExTools
     /// <summary>
     /// Sets a color of Progress bar.
     /// </summary>
-    /// <param name="bar">editing ProgressBar</param>
+    /// <param name="bar">progress bar whose color is set</param>
     /// <param name="color">style for this ProgressBar</param>
     /// <exception cref="ArgumentOutOfRangeException">when <paramref name="color" /> is invalid.</exception>
     public static void SetProgressBarColor(this ProgressBar bar, ProgressBarColor color)
@@ -377,13 +376,13 @@ public static class ExTools
     }
 
     /// <summary>
-    /// Sends a message to the specified process.
+    /// Sends a message to the main window of the specified process.
     /// </summary>
-    /// <param name="process"></param>
-    /// <param name="msg"></param>
-    /// <param name="wParam"></param>
-    /// <param name="lParam"></param>
-    /// <returns></returns>
+    /// <param name="process">target process</param>
+    /// <param name="msg">window message</param>
+    /// <param name="wParam">wParam of the message</param>
+    /// <param name="lParam">lParam of the message</param>
+    /// <returns>result of the message; -1 if the process is <see langword="null" /> or has exited</returns>
     public static int SendMessage(this Process? process, uint msg, IntPtr wParam, IntPtr lParam)
     {
         if (process is null || process.HasExited)

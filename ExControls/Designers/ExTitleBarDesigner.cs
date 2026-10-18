@@ -8,8 +8,8 @@ using Microsoft.DotNet.DesignTools.Designers.Actions;
 namespace ExControls.Designers;
 
 /// <summary>
-/// Navrhar <see cref="ExTitleBar" />: zahlavie patri priamo na formular a ten ma len jedno, nove ide navrch okna
-/// (nad ostatne prvky ukotvene hore) a inteligentna znacka prida do zahlavia hlavnu ponuku.
+/// Designer of <see cref="ExTitleBar" />: the title bar belongs directly onto the form and the form has only one, a new one
+/// goes to the top of the form (above the other controls docked to the top) and the smart tag adds a main menu to it.
 /// </summary>
 internal sealed class ExTitleBarDesigner : DesignerParentControlBase<ExTitleBar>
 {
@@ -31,22 +31,23 @@ internal sealed class ExTitleBarDesigner : DesignerParentControlBase<ExTitleBar>
     }
 
     /// <inheritdoc />
-    /// <remarks>Zahlavie v zahlavi nema zmysel - systemove zahlavie nahradza len zahlavie priamo na formulari.</remarks>
+    /// <remarks>A title bar inside a title bar makes no sense - only a title bar directly on the form replaces the system
+    /// caption.</remarks>
     public override bool CanParent(Control control) => control is not ExTitleBar && base.CanParent(control);
 
     /// <inheritdoc />
-    /// <remarks>Len priamo na formular, ktory este zahlavie nema.</remarks>
+    /// <remarks>Only directly onto a form that has no title bar yet.</remarks>
     public override bool CanBeParentedTo(System.ComponentModel.Design.IDesigner parentDesigner) =>
         parentDesigner.Component is Form form && IsOnlyTitleBar(ControlHost, form) && base.CanBeParentedTo(parentDesigner);
 
     /// <summary>
-    /// V rodicovi nie je ine zahlavie.
+    /// The parent has no other title bar.
     /// </summary>
     private static bool IsOnlyTitleBar(ExTitleBar titleBar, Control? parent) =>
         parent is null || !parent.Controls.OfType<ExTitleBar>().Any(other => other != titleBar);
 
     /// <summary>
-    /// Prida do zahlavia novu ponuku vlavo a nastavi ju ako hlavnu ponuku formulara (klavesa Alt).
+    /// Adds a new menu docked left into the title bar and sets it as the main menu of the form (Alt key).
     /// </summary>
     internal void AddMainMenu()
     {

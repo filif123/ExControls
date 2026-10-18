@@ -8,7 +8,7 @@ namespace ExControls;
 /// <summary>
 /// Provides a generic collection that supports data binding and sorting.
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">type of the items</typeparam>
 public class ExBindingList<T> : BindingList<T>
 {
     private bool _isSorted;
@@ -25,6 +25,7 @@ public class ExBindingList<T> : BindingList<T>
     /// <summary>
     /// Initializes a new instance of the <see cref="ExBindingList{T}" /> class.
     /// </summary>
+    /// <param name="list">list of items wrapped by the binding list</param>
     public ExBindingList(IList<T> list) : base(list)
     {
     }
@@ -71,10 +72,10 @@ public class ExBindingList<T> : BindingList<T>
     }
 
     /// <summary>
-    /// Sorts the items.
+    /// Sorts the items (only when <see cref="Sortable" /> is <see langword="true" />).
     /// </summary>
-    /// <param name="prop"></param>
-    /// <param name="direction"></param>
+    /// <param name="prop">property of the items to sort by</param>
+    /// <param name="direction">sort direction</param>
     protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
     {
         if (!Sortable)
@@ -124,11 +125,13 @@ public class ExBindingList<T> : BindingList<T>
     }
 
     /// <summary>
-    /// Compares two property values
+    /// Compares two property values: as integers if both are integers, otherwise through <see cref="IComparable" />,
+    /// otherwise by their text.
     /// </summary>
     /// <param name="left">left item</param>
     /// <param name="right">right item</param>
-    /// <returns></returns>
+    /// <returns>less than zero if <paramref name="left" /> precedes <paramref name="right" />, zero if they are equal,
+    /// greater than zero if it follows</returns>
     protected virtual int OnComparison(object left, object right)
     {
         if (long.TryParse(left.ToString(), out var ln) && long.TryParse(right.ToString(), out var rn)) 
@@ -143,9 +146,10 @@ public class ExBindingList<T> : BindingList<T>
     }
 
     /// <summary>
-    /// Adds the elements of the specified collection to the end of the <see cref="ExBindingList{T}" />.
+    /// Adds the elements of the specified collection to the end of the <see cref="ExBindingList{T}" /> and raises a single
+    /// <see cref="BindingList{T}.ListChanged" /> event for all of them.
     /// </summary>
-    /// <param name="items"></param>
+    /// <param name="items">items to add</param>
     public void AddRange(IEnumerable<T> items)
     {
         ArgumentNullException.ThrowIfNull(items);

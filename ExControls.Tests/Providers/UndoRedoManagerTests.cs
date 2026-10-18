@@ -3,7 +3,7 @@ using ExControls.Providers;
 namespace ExControls.Tests.Providers;
 
 /// <summary>
-/// Historia zmien (Spat/Znovu).
+/// History of changes (Undo/Redo).
 /// </summary>
 [TestClass]
 public class UndoRedoManagerTests

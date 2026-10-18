@@ -8,7 +8,7 @@ using Microsoft.DotNet.DesignTools.Designers;
 namespace ExControls.Designers;
 
 /// <summary>
-/// Provides a common base class for ParentControlDesigners.
+/// Provides a common base class for ScrollableControlDesigners.
 /// </summary>
 /// <typeparam name="T">The Control to design.</typeparam>
 internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner where T : Control
@@ -41,11 +41,9 @@ internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner wher
     private ISelectionService? _selectionService;
 
     /// <summary>
-    /// Creates and returns the ISelectionService used to select components in the designer.
+    /// Gets the selection service used to select components in the designer.
     /// </summary>
-    /// <value></value>
-    /// <returns></returns>
-    /// <remarks></remarks>
+    /// <value>The selection service, obtained from the designer services on first access.</value>
 #if NETFRAMEWORK
     public ISelectionService SelectionService => (_selectionService ??= (ISelectionService?)GetService(typeof(ISelectionService)))!;
 #else
@@ -53,7 +51,7 @@ internal class DesignerScrollableControlBase<T> : ScrollableControlDesigner wher
 #endif
 
     /// <summary>
-    /// Creates and returns the IDesignerHost service.
+    /// Gets the designer host service.
     /// </summary>
 #if NETFRAMEWORK
     public IDesignerHost DesignerHost => (_designerHost ??= (IDesignerHost?)GetService(typeof(IDesignerHost)))!;

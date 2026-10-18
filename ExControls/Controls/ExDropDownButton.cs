@@ -8,7 +8,9 @@ public class ExDropDownButton : ExButton
     private Color _arrowColor;
     private Color _disabledArrowColor;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExDropDownButton" /> class without a menu.
+    /// </summary>
     public ExDropDownButton()
     {
         _arrowColor = Color.Black;
@@ -16,7 +18,8 @@ public class ExDropDownButton : ExButton
     }
     
     /// <summary>
-    /// Drop down menu.
+    /// Gets or sets the menu shown when the button is clicked with the left mouse button - under the button, or under the cursor
+    /// with <see cref="ShowMenuUnderCursor" />.
     /// </summary>
     [DefaultValue(null)]
     public ContextMenuStrip? DropDownMenu { get; set; }
@@ -28,7 +31,7 @@ public class ExDropDownButton : ExButton
     public bool ShowMenuUnderCursor { get; set; }
 
     /// <summary>
-    /// 
+    /// Gets or sets the color of the drop-down arrow when the button is enabled.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("ArrowColorDescr")]
@@ -46,7 +49,7 @@ public class ExDropDownButton : ExButton
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the color of the drop-down arrow when the button is disabled.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("DisabledArrowColorDescr")]

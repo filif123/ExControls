@@ -1,7 +1,8 @@
 namespace ExControls.Tests.Tools;
 
 /// <summary>
-/// Rozlozenie vlastneho zahlavia: ikona vlavo, tlacidla okna vpravo podla pravidiel systemoveho zahlavia, text vo volnom mieste.
+/// Layout of the custom title bar: icon on the left, window buttons on the right by the rules of the system caption, text in the
+/// free space.
 /// </summary>
 [TestClass]
 public class TitleBarLayoutTests

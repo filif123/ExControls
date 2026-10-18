@@ -6,14 +6,13 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded CheckListBox Control
+/// Extended CheckedListBox control: in the custom style it draws the items with its own box, check mark, highlight and focus
+/// colors.
 /// </summary>
 [ToolboxBitmap(typeof(CheckedListBox), "CheckedListBox.bmp")]
 public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
@@ -44,7 +43,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
     private Color _squareBackColor;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExCheckedListBox" /> class in the default style.
     /// </summary>
     public ExCheckedListBox()
     {

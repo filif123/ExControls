@@ -17,9 +17,7 @@ namespace ExControls;
 [DefaultEvent(nameof(DateChanged))]
 public class ExCalendar : Control, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         if (theme.TodayText is not null)
@@ -107,7 +105,8 @@ public class ExCalendar : Control, IExControl, IThemeable
     private int _hoverCell = -1;
 
     /// <summary>
-    /// Constructor.
+    /// Initializes a new instance of the <see cref="ExCalendar" /> class in the default style, showing the current month with
+    /// today's date selected.
     /// </summary>
     public ExCalendar()
     {
@@ -216,8 +215,9 @@ public class ExCalendar : Control, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Minimum selectable date.
+    /// Gets or sets the minimum selectable date; a selected date before it is moved to it.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">when the date is after <see cref="MaxDate" />.</exception>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Minimum selectable date.")]
     public DateTime MinDate
@@ -241,8 +241,9 @@ public class ExCalendar : Control, IExControl, IThemeable
     private void ResetMinDate() => MinDate = new DateTime(1753, 1, 1);
 
     /// <summary>
-    /// Maximum selectable date.
+    /// Gets or sets the maximum selectable date; a selected date after it is moved to it.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">when the date is before <see cref="MinDate" />.</exception>
     [ExCategory(CategoryType.Behavior)]
     [ExDescription("Maximum selectable date.")]
     public DateTime MaxDate
@@ -399,7 +400,7 @@ public class ExCalendar : Control, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Not used.
+    /// Not used - the calendar shows no text.
     /// </summary>
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -672,12 +673,15 @@ public class ExCalendar : Control, IExControl, IThemeable
     public event EventHandler? DisplayMonthChanged;
 
     /// <summary>Raises the <see cref="DateChanged" /> event.</summary>
+    /// <param name="e">An <see cref="EventArgs" /> that contains the event data.</param>
     protected virtual void OnDateChanged(EventArgs e) => DateChanged?.Invoke(this, e);
 
     /// <summary>Raises the <see cref="DateSelected" /> event.</summary>
+    /// <param name="e">An <see cref="EventArgs" /> that contains the event data.</param>
     protected virtual void OnDateSelected(EventArgs e) => DateSelected?.Invoke(this, e);
 
     /// <summary>Raises the <see cref="DisplayMonthChanged" /> event.</summary>
+    /// <param name="e">An <see cref="EventArgs" /> that contains the event data.</param>
     protected virtual void OnDisplayMonthChanged(EventArgs e) => DisplayMonthChanged?.Invoke(this, e);
 
     /// <summary>Raises the <see cref="DefaultStyleChanged" /> event.</summary>
@@ -690,6 +694,7 @@ public class ExCalendar : Control, IExControl, IThemeable
     /// <summary>
     /// Scrolls the calendar so that the month of the date is visible.
     /// </summary>
+    /// <param name="date">date to show</param>
     public void EnsureVisible(DateTime date) => DisplayMonth = new DateTime(date.Year, date.Month, 1);
 
     /// <summary>
@@ -700,6 +705,7 @@ public class ExCalendar : Control, IExControl, IThemeable
     /// <summary>
     /// Returns the date at the specified client point, or null when there is no day.
     /// </summary>
+    /// <param name="pt">point in client coordinates</param>
     public DateTime? HitTestDate(Point pt)
     {
         EnsureLayout();

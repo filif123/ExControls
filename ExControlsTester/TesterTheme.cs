@@ -1,7 +1,7 @@
 namespace ExControls.Test;
 
 /// <summary>
-/// Tmava a svetla tema skusobnych okien a vzhlad ponuky podla nej (ako obsluhy temy v aplikaciach).
+/// Dark and light theme of the test forms and the menu look by it (like the theme handlers in the applications).
 /// </summary>
 internal static class TesterTheme
 {
@@ -37,7 +37,7 @@ internal static class TesterTheme
     };
 
     /// <summary>
-    /// Zaregistruje vzhlad ponuky podla temy (pred prvym oknom).
+    /// Registers the menu look by the theme (before the first form).
     /// </summary>
     public static void Register()
     {

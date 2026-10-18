@@ -3,12 +3,12 @@
 namespace ExControls;
 
 /// <summary>
-/// Zoznam akcii Spat/Znovu - vyber akcie urci, po ktoru sa ma vratit alebo zopakovat.
+/// List of Undo/Redo actions - selecting an action determines up to which one to undo or redo.
 /// </summary>
 public partial class UndoRedoActionChooser : UserControl
 {
     /// <summary>
-    /// Vybrana posledna akcia; <see langword="null" />, ak pouzivatel nic nevybral.
+    /// The selected last action; <see langword="null" /> if the user selected nothing.
     /// </summary>
     public IUndoRedoCommand? FinalCommand { get; private set; }
 
@@ -33,7 +33,7 @@ public partial class UndoRedoActionChooser : UserControl
     }
 
     /// <summary>
-    /// 
+    /// Clears the selection and selects the first action; call it whenever the list is shown.
     /// </summary>
     public void OnShown()
     {

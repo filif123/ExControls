@@ -1,7 +1,7 @@
 ﻿namespace ExControls.Providers;
 
 /// <summary>
-/// 
+/// Provides data for the <see cref="UndoRedoManager.CommandAdded" /> event.
 /// </summary>
 public class UndoRedoAddedCommandEventArgs : EventArgs
 {
@@ -15,7 +15,11 @@ public class UndoRedoAddedCommandEventArgs : EventArgs
     /// </summary>
     public IUndoHandler? NewHandler { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UndoRedoAddedCommandEventArgs" /> class.
+    /// </summary>
+    /// <param name="newCommand">command added to the history</param>
+    /// <param name="newHandler">handler of the command; <see langword="null" /> if it has none</param>
     public UndoRedoAddedCommandEventArgs(IUndoRedoCommand newCommand, IUndoHandler? newHandler)
     {
         NewCommand = newCommand;

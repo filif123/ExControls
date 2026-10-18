@@ -3,13 +3,13 @@
 namespace ExControls;
 
 /// <summary>
-/// Rozbalovacia ponuka so zoznamom akcii Spat/Znovu (<see cref="UndoRedoActionChooser" />).
+/// Drop-down with a list of Undo/Redo actions (<see cref="UndoRedoActionChooser" />).
 /// </summary>
 [ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.ToolStrip | ToolStripItemDesignerAvailability.ContextMenuStrip)]
 public class ToolStripUndoRedoActionChooser : ToolStripDropDown
 {
     /// <summary>
-    /// Zoznam akcii v ponuke.
+    /// The list of actions in the drop-down.
     /// </summary>
     public UndoRedoActionChooser Chooser { get; }
 

@@ -1,13 +1,12 @@
 ﻿namespace ExControls;
 
 /// <summary>
-/// Expanded CheckBox Column for DataGridView.
+/// DataGridView column of <see cref="DataGridViewExCheckBoxCell" /> cells, which can be drawn in the custom style like
+/// <see cref="ExCheckBox" />.
 /// </summary>
 public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
@@ -21,7 +20,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn, IThemeab
     }
 
     /// <summary>
-    /// Creates new instance of 
+    /// Initializes a new instance of the <see cref="DataGridViewExCheckBoxColumn" /> class with cells in the default style.
     /// </summary>
     public DataGridViewExCheckBoxColumn()
     {
@@ -176,14 +175,14 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn, IThemeab
 }
 
 /// <summary>
-/// Expanded CheckBox Cell for DataGridView
+/// DataGridView cell with a check box that can be drawn in the custom style with its own colors like <see cref="ExCheckBox" />.
 /// </summary>
 public class DataGridViewExCheckBoxCell : DataGridViewCheckBoxCell
 {
     private bool _hover;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="DataGridViewExCheckBoxCell" /> class in the default style.
     /// </summary>
     public DataGridViewExCheckBoxCell()
     {

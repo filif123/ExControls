@@ -3,7 +3,7 @@ using ExControls.Providers;
 namespace ExControls.Tests.Providers;
 
 /// <summary>
-/// Navigacia spat/dopredu po predchadzajucich vyberoch.
+/// Back/forward navigation through the previous selections.
 /// </summary>
 [TestClass]
 public sealed class BackwardForwardProviderTests : IDisposable

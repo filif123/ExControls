@@ -6,9 +6,9 @@ namespace ExControls
     {
 
         /// <summary>
-        /// UserControl overrides dispose to clean up the component list.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing"></param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         [DebuggerNonUserCode()]
         protected override void Dispose(bool disposing)
         {

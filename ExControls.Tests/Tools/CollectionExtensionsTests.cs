@@ -1,7 +1,7 @@
 namespace ExControls.Tests.Tools;
 
 /// <summary>
-/// Rozsirenia kolekcii - na .NET Framework aj pretazenia, ktore BCL ma az od .NET 6.
+/// Collection extensions - on .NET Framework also the overloads the BCL has only since .NET 6.
 /// </summary>
 [TestClass]
 public class CollectionExtensionsTests

@@ -18,21 +18,24 @@ public class ExOptionsPanel : Panel
     private readonly List<Control> _linkCollection;
 
     /// <summary>
-    /// 
+    /// Occurs when the <see cref="ParentNode" /> property is set.
     /// </summary>
     public event EventHandler? ParentNodeChanged;
 
     /// <summary>
-    /// 
+    /// Occurs when another panel sets its <see cref="ParentNode" /> to the node of this panel.
     /// </summary>
     public event EventHandler? ChildrenChanged;
 
     /// <summary>
-    /// 
+    /// Occurs when the <see cref="NodeText" /> property changes.
     /// </summary>
     public event EventHandler? NodeTextChanged;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExOptionsPanel" /> class that fills its parent; the owning view is looked
+    /// up among the parent controls.
+    /// </summary>
     public ExOptionsPanel()
     {
         Size = ClientSize;
@@ -44,9 +47,9 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExOptionsPanel" /> class that belongs to the specified view.
     /// </summary>
-    /// <param name="owner"></param>
+    /// <param name="owner">The view to which the panel belongs.</param>
     public ExOptionsPanel(ExOptionsView owner) : this()
     {
         Owner = owner;
@@ -55,11 +58,12 @@ public class ExOptionsPanel : Panel
     #region  Properties
 
     /// <summary>
-    /// Gets the ExOptionsView to which this panel belongs
+    /// Gets the <see cref="ExOptionsView" /> to which this panel belongs.
     /// </summary>
-    /// <value></value>
-    /// <returns></returns>
-    /// <remarks></remarks>
+    /// <value>
+    /// The owning view, looked up among the parent controls if it was not set;
+    /// <see langword="null" /> if the panel is not placed in a view.
+    /// </value>
     public ExOptionsView? Owner
     {
         // Just in case the Owner has not been set, let's try to find it ourselves
@@ -121,7 +125,7 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    /// Gets or sets
+    /// Gets or sets whether the panel shows links to its child panels.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("", true)]
@@ -253,10 +257,10 @@ public class ExOptionsPanel : Panel
     #endregion
 
     /// <summary>
-    /// Detects if there is a control in the panel with the specified text.
+    /// Determines whether a control in the panel (including nested controls) or the node text contains the specified text.
     /// </summary>
-    /// <param name="text"></param>
-    /// <returns></returns>
+    /// <param name="text">The text to search for.</param>
+    /// <returns><see langword="true" /> if the text was found; otherwise, <see langword="false" />.</returns>
     public bool Search(string text)
     {
         foreach (Control ctl in Controls)
@@ -278,7 +282,7 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="ParentNodeChanged" /> event.
     /// </summary>
     protected virtual void OnParentNodeChanged()
     {
@@ -286,7 +290,8 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="ChildrenChanged" /> event and regenerates the links if <see cref="GenerateLinksToChildren" /> is
+    /// <see langword="true" />.
     /// </summary>
     protected virtual void OnChildrenChanged()
     {
@@ -295,7 +300,7 @@ public class ExOptionsPanel : Panel
     }
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="NodeTextChanged" /> event.
     /// </summary>
     protected virtual void OnNodeTextChanged()
     {

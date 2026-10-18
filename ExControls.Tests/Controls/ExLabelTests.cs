@@ -1,8 +1,8 @@
 namespace ExControls.Tests.Controls;
 
 /// <summary>
-/// Zakazany ExLabel kresli text farbou DisabledForeColor, inak rovnako ako povoleny Label
-/// (zarovnanie, zalamovanie, mnemotechnika, vypustka, okraje, sprava dolava) - v GDI aj GDI+.
+/// A disabled ExLabel draws the text in DisabledForeColor, otherwise the same way as an enabled Label
+/// (alignment, wrapping, mnemonics, ellipsis, padding, right to left) - in GDI and GDI+.
 /// </summary>
 [TestClass]
 public class ExLabelTests

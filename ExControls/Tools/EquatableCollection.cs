@@ -3,14 +3,16 @@
 namespace ExControls;
 
 /// <summary>
-/// Provides the base class for a generic collection that support equality.
+/// Provides the base class for a generic collection that supports equality (two collections are equal when they contain
+/// equal items in the same order).
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">type of the items</typeparam>
 public class EquatableCollection<T> : Collection<T>
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="EquatableCollection{T}" /> class with a copy of the given items.
     /// </summary>
-    /// <param name="list"></param>
+    /// <param name="list">items of the new collection</param>
     public EquatableCollection(IEnumerable<T> list) : base(list.ToArray())
     {
     }

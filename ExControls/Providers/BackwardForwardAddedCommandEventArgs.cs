@@ -11,7 +11,10 @@ public class BackwardForwardAddedCommandEventArgs : EventArgs
     /// </summary>
     public IBackwardForwardCommand NewCommand { get; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BackwardForwardAddedCommandEventArgs" /> class.
+    /// </summary>
+    /// <param name="newCommand">command added to the history</param>
     public BackwardForwardAddedCommandEventArgs(IBackwardForwardCommand newCommand)
     {
         NewCommand = newCommand;

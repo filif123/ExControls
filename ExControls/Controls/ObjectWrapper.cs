@@ -1,20 +1,21 @@
 ﻿namespace ExControls;
 
-/// <summary>This class is a wrapper. It contains the object the propertyGrid has to display.</summary>
+/// <summary>Wrapper of the object shown by <see cref="ExPropertyGrid" /> that exposes only the selected properties
+/// (<see cref="PropertyDescriptors" />).</summary>
 internal sealed class ObjectWrapper : ICustomTypeDescriptor
 {
-    /// <summary>Simple constructor.</summary>
-    /// <param name="obj">A reference to the selected object that will linked to the parent PropertyGrid.</param>
+    /// <summary>Initializes a new instance of the <see cref="ObjectWrapper" /> class for the specified object.</summary>
+    /// <param name="obj">A reference to the selected object that will be linked to the parent PropertyGrid.</param>
     internal ObjectWrapper(object? obj)
     {
         SelectedObject = obj;
     }
 
-    /// <summary>Get or set a reference to the selected object that will linked to the parent PropertyGrid.</summary>
+    /// <summary>Gets or sets a reference to the selected object that will be linked to the parent PropertyGrid.</summary>
     public object? SelectedObject { get; set; }
 
     /// <summary>
-    /// Get or set a reference to the collection of properties to show in the parent PropertyGrid.
+    /// Gets or sets the properties to show in the parent PropertyGrid.
     /// By default, PropertyDescriptors contain all the properties of the object.
     /// </summary>
     public List<PropertyDescriptor> PropertyDescriptors { get; set; } = new();
@@ -31,49 +32,49 @@ internal sealed class ObjectWrapper : ICustomTypeDescriptor
         return new PropertyDescriptorCollection(PropertyDescriptors.ToArray(), true);
     }
 
-    /// <summary>GetAttributes.</summary>
-    /// <returns>AttributeCollection</returns>
+    /// <summary>Returns the attributes of <see cref="SelectedObject" />.</summary>
+    /// <returns>attributes of the selected object</returns>
     public AttributeCollection GetAttributes()
     {
         return TypeDescriptor.GetAttributes(SelectedObject!, true);
     }
-    /// <summary>Get Class Name.</summary>
-    /// <returns>String</returns>
+    /// <summary>Returns the class name of <see cref="SelectedObject" />.</summary>
+    /// <returns>class name of the selected object</returns>
     public string? GetClassName()
     {
         return TypeDescriptor.GetClassName(SelectedObject!, true);
     }
-    /// <summary>GetComponentName.</summary>
-    /// <returns>String</returns>
+    /// <summary>Returns the component name of <see cref="SelectedObject" />.</summary>
+    /// <returns>name of the selected object; <see langword="null" /> if it has none</returns>
     public string? GetComponentName()
     {
         return TypeDescriptor.GetComponentName(SelectedObject!, true);
     }
 
-    /// <summary>GetConverter.</summary>
-    /// <returns>TypeConverter</returns>
+    /// <summary>Returns the type converter of <see cref="SelectedObject" />.</summary>
+    /// <returns>type converter of the selected object</returns>
     public TypeConverter GetConverter()
     {
         return TypeDescriptor.GetConverter(SelectedObject!, true);
     }
 
-    /// <summary>GetDefaultEvent.</summary>
-    /// <returns>EventDescriptor</returns>
+    /// <summary>Returns the default event of <see cref="SelectedObject" />.</summary>
+    /// <returns>default event of the selected object; <see langword="null" /> if it has none</returns>
     public EventDescriptor? GetDefaultEvent()
     {
         return TypeDescriptor.GetDefaultEvent(SelectedObject!, true);
     }
 
-    /// <summary>GetDefaultProperty.</summary>
-    /// <returns>PropertyDescriptor</returns>
+    /// <summary>Returns the default property of <see cref="SelectedObject" />.</summary>
+    /// <returns>default property of the selected object; <see langword="null" /> if it has none</returns>
     public PropertyDescriptor? GetDefaultProperty()
     {
         return TypeDescriptor.GetDefaultProperty(SelectedObject!, true);
     }
 
-    /// <summary>GetEditor.</summary>
-    /// <param name="editorBaseType">editorBaseType</param>
-    /// <returns>object</returns>
+    /// <summary>Returns an editor of the specified type for the wrapper.</summary>
+    /// <param name="editorBaseType">base type of the requested editor</param>
+    /// <returns>the editor; <see langword="null" /> if there is none</returns>
     public object? GetEditor(Type editorBaseType)
     {
         return TypeDescriptor.GetEditor(this, editorBaseType, true);

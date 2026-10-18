@@ -1,8 +1,8 @@
 namespace ExControls.Tests.Theming;
 
 /// <summary>
-/// Pouzitie temy: Ex* prvky sa nastyluju samy, ostatne podla zaregistrovanej obsluhy najblizsieho predka.
-/// Obsluhy su globalne - testy registruju len vlastne typy prvkov.
+/// Applying a theme: Ex* controls style themselves, the others by the registered handler of the nearest base type.
+/// The handlers are global - the tests register only their own control types.
 /// </summary>
 [TestClass]
 public class ExThemerTests

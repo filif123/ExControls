@@ -1,7 +1,7 @@
 ﻿namespace ExControls;
 
 /// <summary>
-/// Type of style.
+/// State of a control that a style (<see cref="ExComboBoxStyle" />) is used for.
 /// </summary>
 public enum StyleType
 {

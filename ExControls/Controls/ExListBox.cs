@@ -1,6 +1,9 @@
 namespace ExControls;
 
-/// <inheritdoc />
+/// <summary>
+/// Extended ListBox control: in the custom style it draws the border with its own color and thickness, the selected row in its
+/// own color and uses its own colors when disabled.
+/// </summary>
 public class ExListBox : ListBox
 {
     private const int RGN_DIFF = 0x4;
@@ -13,7 +16,9 @@ public class ExListBox : ListBox
     private Color _disabledBorderColor;
     private int _borderThickness;
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExListBox" /> class in the default style.
+    /// </summary>
     public ExListBox()
     {
         _defaultStyle = true;
@@ -114,7 +119,7 @@ public class ExListBox : ListBox
     }
 
     /// <summary>
-    /// Background color of the ListBox's when it is disabled.
+    /// Background color of the ListBox when it is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -133,7 +138,7 @@ public class ExListBox : ListBox
     }
 
     /// <summary>
-    /// Foreground color of the ListBox's when it is disabled
+    /// Foreground color of the ListBox when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

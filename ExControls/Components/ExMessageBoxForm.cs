@@ -6,7 +6,7 @@
 namespace ExControls;
 
 /// <summary>
-/// 
+/// Represents the dialog window displayed by <see cref="ExMessageBox" />.
 /// </summary>
 public partial class ExMessageBoxForm : Form
 {
@@ -22,10 +22,10 @@ public partial class ExMessageBoxForm : Form
     internal ShellIcon? ShellIcon;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExMessageBoxForm" /> class.
     /// </summary>
-    /// <param name="style"></param>
-    /// <param name="icon"></param>
+    /// <param name="style">The style applied to the window, or <see langword="null" /> to keep the default look.</param>
+    /// <param name="icon">The icon of the message, which selects the system sound played when the window is shown.</param>
     public ExMessageBoxForm(ExMessageBoxStyle? style, MessageBoxIcon icon = MessageBoxIcon.None)
     {
         InitializeComponent();
@@ -69,33 +69,34 @@ public partial class ExMessageBoxForm : Form
     }
 
     /// <summary>
-    /// 
+    /// Gets the style applied to the window, or <see langword="null" /> if the default look is used.
     /// </summary>
     public ExMessageBoxStyle? Style { get; }
 
     /// <summary>
-    /// 
+    /// Gets or sets the icon of the message, which selects the system sound played when the window is shown.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxIcon MessageIcon { get; set; }
 
     /// <summary>
-    /// 
+    /// Gets or sets the set of buttons shown in the window, which together with <see cref="DefaultButton" />
+    /// selects the button that displays the countdown.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxButtons Buttons { get; set; }
 
     /// <summary>
-    /// 
+    /// Gets or sets the default button of the window, which displays the remaining seconds of the countdown.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MessageBoxDefaultButton DefaultButton { get; set; }
 
     /// <summary>
-    /// 
+    /// Gets or sets the number of seconds after which the window closes itself; zero or less disables the countdown.
     /// </summary>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

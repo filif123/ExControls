@@ -37,7 +37,7 @@ public static class ExButtonRenderer
     /// Draws the check mark used by <see cref="ExCheckBox" /> into the box, scaled to the box size
     /// (the shape is designed for a 16 px box).
     /// </summary>
-    /// <param name="g">Graphics.</param>
+    /// <param name="g">Graphics to draw on.</param>
     /// <param name="box">Bounds of the check box.</param>
     /// <param name="color">Color of the mark.</param>
     public static void DrawCheckMark(Graphics g, Rectangle box, Color color)
@@ -56,7 +56,7 @@ public static class ExButtonRenderer
     /// <paramref name="center" /> is the center of the triangle's bounding box, <paramref name="size" /> its height
     /// (number of rows/columns from the base to the tip); the base is 2 * size - 1 pixels long.
     /// </summary>
-    /// <param name="g">Graphics.</param>
+    /// <param name="g">Graphics to draw on.</param>
     /// <param name="color">Fill color.</param>
     /// <param name="center">Center of the triangle.</param>
     /// <param name="size">Height of the triangle in pixels.</param>
@@ -93,7 +93,7 @@ public static class ExButtonRenderer
     /// Draws the drop-down button of a date picker: a small calendar glyph followed by a down arrow
     /// (the same shape as the DATEPICKER visual style glyph), all in <paramref name="glyphColor" />.
     /// </summary>
-    /// <param name="g">Graphics.</param>
+    /// <param name="g">Graphics to draw on.</param>
     /// <param name="rec">Bounds of the button.</param>
     /// <param name="backColor">Background color of the button.</param>
     /// <param name="borderColor">Border color of the button.</param>
@@ -138,11 +138,11 @@ public static class ExButtonRenderer
     /// <summary>
     /// Measures and returns bounds of the Text and Box of the <see cref="ExCheckBox" /> or <see cref="ExRadioButton" />.
     /// </summary>
-    /// <param name="g">Graphics ot the control.</param>
+    /// <param name="g">Graphics of the control.</param>
     /// <param name="c">Control (<see cref="ExCheckBox" /> or <see cref="ExRadioButton" />).</param>
     /// <param name="boxSize">Size of box.</param>
     /// <param name="boxOffset">Distance between box and text.</param>
-    /// <returns></returns>
+    /// <returns>Bounds of the box and of the text in client coordinates of the control.</returns>
     public static BoxAndTextRectangle GetBoxAndTextRectangle(IDeviceContext g, ICheckableExControl c, int boxSize, int boxOffset)
     {
         var boxtext = new BoxAndTextRectangle();
@@ -300,12 +300,12 @@ public static class ExButtonRenderer
 public class BoxAndTextRectangle
 {
     /// <summary>
-    /// Bounds of box
+    /// Gets or sets the bounds of the box (check box square or radio button circle).
     /// </summary>
     public Rectangle BoxRectangle { get; set; }
 
     /// <summary>
-    /// Bounds of text
+    /// Gets or sets the bounds of the text.
     /// </summary>
     public Rectangle TextRectangle { get; set; }
 }

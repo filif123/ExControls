@@ -13,7 +13,7 @@ public static class MessageBoxStrings
     /// Gets a localized text to specified MessageBox button.
     /// </summary>
     /// <param name="type">Type of MessageBox button.</param>
-    /// <returns></returns>
+    /// <returns>The text of the button in the language of Windows; an empty string if it is not found.</returns>
     public static string GetLocalizedString(MessageBoxCmdType type) => Marshal.PtrToStringAuto(Win32.MB_GetString((int)type)) ?? "";
 }
 

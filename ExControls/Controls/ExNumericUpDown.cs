@@ -5,14 +5,12 @@
 namespace ExControls;
 
 /// <summary>
-/// Expanded NumericUpDown Control
+/// Extended NumericUpDown control: in the custom style it draws the border and the up-down buttons itself with its own colors.
 /// </summary>
 [ToolboxBitmap(typeof(NumericUpDown), "NumericUpDown.bmp")]
 public class ExNumericUpDown : NumericUpDown, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
@@ -39,7 +37,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl, IThemeable
     private Color _selectedButtonColor;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExNumericUpDown" /> class in the default style.
     /// </summary>
     public ExNumericUpDown()
     {
@@ -188,9 +186,9 @@ public class ExNumericUpDown : NumericUpDown, IExControl, IThemeable
     private void TextBox_MouseLeave(object? sender, EventArgs e) => UpdateHover();
 
     /// <summary>
-    /// Nastavi hover podla skutocnej polohy kurzora nad celym prvkom (textbox aj tlacidla su samostatne okna,
-    /// takze Enter/Leave jednotlivych casti neurcuju, ci kurzor prvok naozaj opustil) a prekresli aj deti -
-    /// tlacidla kreslia zvyrazneny obrys podla _hover.
+    /// Sets the hover state by the actual cursor position over the whole control (the text box and the buttons are separate
+    /// windows, so Enter/Leave of the individual parts do not tell whether the cursor really left the control) and repaints
+    /// the children too - the buttons draw the highlighted outline by _hover.
     /// </summary>
     private void UpdateHover()
     {
@@ -444,7 +442,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl, IThemeable
         }
 
         /// <summary>
-        /// Nastavi zvyraznene tlacidlo podla aktualnej polohy kurzora (nie podla suradnic zo spravy).
+        /// Sets the highlighted button by the current cursor position (not by the coordinates from the message).
         /// </summary>
         private void UpdateMouseOver()
         {

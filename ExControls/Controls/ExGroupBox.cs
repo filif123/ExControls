@@ -9,15 +9,14 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded GroupBox Control.
+/// Extended GroupBox control: in the custom style it draws the border with its own color, thickness and style, and the text
+/// of a disabled group box in its own color.
 /// </summary>
 [ToolboxBitmap(typeof(GroupBox), "GroupBox.bmp")]
 [Designer("ExControls.Designers.ExGroupBoxDesigner, ExControls")]
 public class ExGroupBox : GroupBox, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         ExThemer.Apply(Controls, theme);
@@ -34,7 +33,7 @@ public class ExGroupBox : GroupBox, IExControl, IThemeable
     private Color _disabledForeColor;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExGroupBox" /> class in the default style.
     /// </summary>
     public ExGroupBox()
     {
@@ -234,6 +233,7 @@ public class ExGroupBox : GroupBox, IExControl, IThemeable
     }
 
     /// <summary>Raises the <see cref="LineDrawing" /> event.</summary>
+    /// <param name="e">A <see cref="LinePenEventArgs" /> with the pen used to draw the line.</param>
     protected virtual void OnLineDrawing(LinePenEventArgs e)
     {
         LineDrawing?.Invoke(this, e);

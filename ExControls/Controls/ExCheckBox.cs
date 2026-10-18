@@ -8,15 +8,14 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded CheckBox Control
+/// Extended CheckBox control: in the custom style it draws the box, the check mark and the text itself with its own colors,
+/// including the text color of a disabled check box.
 /// </summary>
 [ToolboxBitmap(typeof(CheckBox), "CheckBox.bmp")]
 [Designer("ExControls.Designers.ExCheckBoxDesigner, ExControls")]
 public class ExCheckBox : CheckBox, IExControl, ICheckableExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
@@ -42,7 +41,7 @@ public class ExCheckBox : CheckBox, IExControl, ICheckableExControl, IThemeable
     private Color _markColor;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExCheckBox" /> class in the default style.
     /// </summary>
     public ExCheckBox()
     {

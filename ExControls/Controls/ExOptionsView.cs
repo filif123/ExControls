@@ -10,16 +10,15 @@ using System.Drawing.Design;
 namespace ExControls;
 
 /// <summary>
-/// 
+/// Represents an options view with a searchable tree of option pages on the left and the selected
+/// <see cref="ExOptionsPanel" /> on the right.
 /// </summary>
 [Designer("ExControls.Designers.ExOptionsViewDesigner, ExControls")]
 [DefaultEvent("SelectedPanelChanged")]
 [ToolboxBitmap(typeof(ExOptionsView), "Controls\\ExOptionsView.bmp")]
 public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         ExThemer.Apply(Panels, theme);
@@ -30,12 +29,12 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
     }
 
     /// <summary>
-    /// 
+    /// Occurs when a panel is selected (displayed) through the <see cref="SelectedPanel" /> property.
     /// </summary>
     public event EventHandler? SelectedPanelChanged;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExOptionsView" /> class.
     /// </summary>
     public ExOptionsView()
     {
@@ -357,7 +356,9 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
         }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Tree of the option panels on the left side of <see cref="ExOptionsView" />.
+    /// </summary>
     public class ExOptionsTreeView : ExTreeView
     {
         /// <inheritdoc />
@@ -385,6 +386,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
         }
 
         /// <summary>
+        /// Gets or sets the location of the tree view. Hidden in the designer, the tree view is laid out by the
+        /// <see cref="ExOptionsView" />.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -396,6 +399,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
         }
 
         /// <summary>
+        /// Gets or sets the space between the tree view and other controls. Hidden in the designer, the tree view is laid out
+        /// by the <see cref="ExOptionsView" />.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -427,6 +432,8 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
         }
 
         /// <summary>
+        /// Gets or sets the size of the tree view. Hidden in the designer, the tree view is laid out by the
+        /// <see cref="ExOptionsView" />.
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

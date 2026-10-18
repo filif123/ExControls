@@ -9,15 +9,13 @@ using System.Drawing.Drawing2D;
 namespace ExControls;
 
 /// <summary>
-/// LineSeparator Control
+/// Horizontal or vertical line separating controls, with its own thickness, color and dash style.
 /// </summary>
 [ToolboxBitmap(typeof(ExLineSeparator), "Controls\\ExLineSeparator.bmp")]
 [Designer("ExControls.Designers.ExLineSeparatorDesigner, ExControls")]
 public class ExLineSeparator : Control, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         LineColor = theme.BorderColor;
@@ -29,7 +27,7 @@ public class ExLineSeparator : Control, IThemeable
     private int _lineThickness;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExLineSeparator" /> class with a 1 px solid light gray horizontal line.
     /// </summary>
     public ExLineSeparator()
     {
@@ -206,6 +204,7 @@ public class ExLineSeparator : Control, IThemeable
     }
 
     /// <summary>Raises the <see cref="LineDrawing" /> event.</summary>
+    /// <param name="e">A <see cref="LinePenEventArgs" /> with the pen used to draw the line.</param>
     protected virtual void OnLineDrawing(LinePenEventArgs e)
     {
         LineDrawing?.Invoke(this, e);

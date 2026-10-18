@@ -3,7 +3,8 @@
 namespace ExControls;
 
 /// <summary>
-/// Expanded TreeView control.
+/// Extended TreeView control: nodes can be hidden without removing them (<see cref="ExTreeNodeCollection" />) and the tree can
+/// use the Explorer theme (<see cref="ExTreeView.Style" />).
 /// </summary>
 [Designer("ExControls.Designers.ExTreeViewDesigner, ExControls")]
 [ToolboxBitmap(typeof(TreeView), "TreeView.bmp")]
@@ -14,7 +15,7 @@ public class ExTreeView : TreeView
     private readonly ExTreeNodeCollection _nodes;
 
     /// <summary>
-    ///
+    /// Initializes a new instance of the <see cref="ExTreeView" /> class.
     /// </summary>
     public ExTreeView()
     {
@@ -65,7 +66,7 @@ public class ExTreeView : TreeView
     }
 
     /// <summary>
-    /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
+    /// Occurs when a <see cref="TreeNode"/> was removed from <see cref="Nodes"/>.
     /// </summary>
     public event EventHandler<ExTreeViewNodeRemovedEventArgs> TreeNodeRemoved
     {
@@ -74,7 +75,8 @@ public class ExTreeView : TreeView
     }
 
     /// <summary>
-    /// 
+    /// Gets the collection of root tree nodes including the hidden ones;
+    /// the base <see cref="System.Windows.Forms.TreeView.Nodes" /> contains only the visible nodes.
     /// </summary>
     [ExCategory(CategoryType.Behavior)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -85,38 +87,38 @@ public class ExTreeView : TreeView
 }
 
 /// <summary>
-/// Style of TreeView.
+/// Windows theme of <see cref="ExTreeView" />.
 /// </summary>
 public enum ExTreeViewStyle
 {
     /// <summary>
-    /// Default style.
+    /// Default theme of the tree view.
     /// </summary>
     Default,
 
     /// <summary>
-    /// Win10 light theme.
+    /// Explorer theme (as in Windows Explorer).
     /// </summary>
     Light,
 
     /// <summary>
-    /// Win10 dark theme.
+    /// Dark Explorer theme.
     /// </summary>
     Dark,
 
     /// <summary>
-    /// Old style.
+    /// No theme - the classic look with plus/minus signs.
     /// </summary>
     Old
 }
 
 /// <summary>
-/// 
+/// Provides data for the <see cref="ExTreeView.TreeNodeAdded" /> event.
 /// </summary>
 public class ExTreeViewNodeAddedEventArgs : EventArgs
 {
     /// <summary>
-    /// Node that was added or removed.
+    /// Node that was added, or the first of the added nodes.
     /// </summary>
     public TreeNode Node { get; }
 
@@ -131,11 +133,11 @@ public class ExTreeViewNodeAddedEventArgs : EventArgs
     public int Count { get; }
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExTreeViewNodeAddedEventArgs" /> class.
     /// </summary>
-    /// <param name="node"></param>
-    /// <param name="index"></param>
-    /// <param name="count"></param>
+    /// <param name="node">The added node, or the first of the added nodes.</param>
+    /// <param name="index">The index of the (first) added node in the collection.</param>
+    /// <param name="count">The number of added nodes.</param>
     public ExTreeViewNodeAddedEventArgs(TreeNode node, int index, int count)
     {
         Node = node;
@@ -145,7 +147,7 @@ public class ExTreeViewNodeAddedEventArgs : EventArgs
 }
 
 /// <summary>
-/// Occurs when the <see cref="TreeNode"/> was removed frm <see cref="TreeNodeCollection"/>.
+/// Provides data for the <see cref="ExTreeView.TreeNodeRemoved" /> event.
 /// </summary>
 public class ExTreeViewNodeRemovedEventArgs : EventArgs
 {
@@ -165,11 +167,11 @@ public class ExTreeViewNodeRemovedEventArgs : EventArgs
     public int Count { get; }
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExTreeViewNodeRemovedEventArgs" /> class.
     /// </summary>
-    /// <param name="node"></param>
-    /// <param name="index"></param>
-    /// <param name="count"></param>
+    /// <param name="node">The removed node, or <see langword="null" /> when the whole collection was cleared.</param>
+    /// <param name="index">The index of the removed node in the collection.</param>
+    /// <param name="count">The number of removed nodes.</param>
     public ExTreeViewNodeRemovedEventArgs(TreeNode? node, int index, int count)
     {
         Node = node;

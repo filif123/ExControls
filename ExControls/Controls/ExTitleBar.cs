@@ -3,22 +3,26 @@ using System.Drawing.Text;
 namespace ExControls;
 
 /// <summary>
-/// Vlastne zahlavie okna <see cref="ExForm" />. Ako priamy potomok formulara (ukotveny hore) nahradi systemove zahlavie:
-/// vlavo ikona okna (systemova ponuka), vpravo tlacidla okna, medzi nimi prvky zahlavia (napr. hlavna ponuka) a text okna
-/// vo volnom mieste. Volne miesto a prazdne casti panelov nastrojov tahaju okno, ich polozky ostavaju klikatelne.
+/// Custom title bar of an <see cref="ExForm" />. As a direct child of the form (docked to the top) it replaces the system
+/// caption: the window icon (system menu) on the left, the window buttons on the right, the title bar controls (e.g. the main
+/// menu) between them and the form text in the free space. The free space and empty parts of tool strips drag the window,
+/// their items stay clickable.
 /// </summary>
 /// <remarks>
-/// Spracuju sa len panely nastrojov priamo v zahlavi (polozky maju vzdy vedla seba); ostatne prvky v zahlavi su klikatelne cele.
-/// Neaktivne okno ma stlmeny text okna, znacky tlacidiel aj polozky ponuky a popisy v tychto paneloch (ako systemova ponuka)
-/// - cez <see cref="ToolStripItem.ForeColor" />, takze renderer, ktory farbu textu poloziek urcuje sam, stlmenie neukaze.
-/// Tlacidla a ikona su ako v systemovom zahlavi: pomocnik (<see cref="Form.HelpButton" />) len bez minimalizacie
-/// a maximalizacie, nastrojove okno len zatvorenie, dialog (FixedDialog) bez vlastnej ikony bez ikony.
-/// Farby titulku formulara (<see cref="ExForm.TitleBarBackColor" />, <see cref="ExForm.TitleBarForeColor" />) a v aktivnom okne
-/// farba motivu Windows (ak ju system zobrazuje na zahlaviach) maju prednost pred vlastnymi farbami zahlavia; panely nastrojov
-/// v zahlavi maju vtedy priehladne pozadie a text farbou zahlavia, ostatne prvky si nechavaju svoje farby.
-/// Ponuka (<see cref="MenuStrip" />), ktorej polozky sa do zahlavia nezmestia, sa za behu zbali do tlacidla ☰
+/// Only tool strips directly in the title bar are handled (their items are always laid out side by side); other controls in
+/// the title bar are clickable as a whole.
+/// An inactive form has dimmed text, button glyphs and also menu items and labels in these tool strips (like a system menu bar)
+/// - through <see cref="ToolStripItem.ForeColor" />, so a renderer that determines the text color of items itself does not show
+/// the dimming.
+/// The buttons and the icon follow the system caption: help (<see cref="Form.HelpButton" />) only without minimize and
+/// maximize, a tool window only close, a dialog (FixedDialog) without its own icon has no icon.
+/// The caption colors of the form (<see cref="ExForm.TitleBarBackColor" />, <see cref="ExForm.TitleBarForeColor" />) and in an
+/// active form the Windows accent color (if the system shows it on title bars) take precedence over the colors of the title bar;
+/// tool strips in the title bar then have a transparent background and text in the caption color, other controls keep their colors.
+/// A menu (<see cref="MenuStrip" />) whose items do not fit into the title bar collapses at runtime into a ☰ button
 /// (<see cref="CollapseMenu" />).
-/// Ked okno vlastne zahlavie nepouziva (<see cref="ExForm.UsesCustomTitleBar" />), je to obycajny panel bez ikony, textu a tlacidiel.
+/// When the form does not use the custom title bar (<see cref="ExForm.UsesCustomTitleBar" />), it is a plain panel without icon,
+/// text and buttons.
 /// </remarks>
 [Designer("ExControls.Designers.ExTitleBarDesigner, ExControls")]
 public class ExTitleBar : Panel, IThemeable
@@ -67,7 +71,7 @@ public class ExTitleBar : Panel, IThemeable
     private Color _topBorderColor;
 
     /// <summary>
-    /// Vytvori zahlavie ukotvene hore.
+    /// Creates a title bar docked to the top.
     /// </summary>
     public ExTitleBar()
     {
@@ -201,7 +205,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <inheritdoc />
-    /// <remarks>Prvky zahlavia sa ukladaju medzi ikonu a tlacidla okna.</remarks>
+    /// <remarks>The title bar controls are laid out between the icon and the window buttons.</remarks>
     public override Rectangle DisplayRectangle
     {
         get
@@ -218,36 +222,38 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Zahlavie ma byt zobrazene (vlastna hodnota <see cref="Control.Visible" /> - nezavisi od toho, ci je zobrazeny formular).
+    /// The title bar should be shown (own value of <see cref="Control.Visible" /> - does not depend on whether the form is shown).
     /// </summary>
     internal bool Shown => _shown;
 
 
     /// <summary>
-    /// Zahlavie prave nahradza systemove zahlavie svojho formulara.
+    /// The title bar currently replaces the system caption of its form.
     /// </summary>
     private bool IsActive => Parent is ExForm form && form.TitleBar == this && form.UsesCustomTitleBar;
 
     /// <summary>
-    /// Zahlavie kresli ikonu, text a tlacidla okna - za behu s vlastnym zahlavim, v navrhari vzdy (nahlad).
+    /// The title bar draws the window icon, text and buttons - at runtime with the custom title bar, always in the designer
+    /// (preview).
     /// </summary>
     private bool ShowsCaption => Parent is ExForm form && form.TitleBar == this && (form.UsesCustomTitleBar || DesignMode);
 
     /// <summary>
-    /// Horny okraj okna kresli zahlavie len vo Windows 10 (vo Windows 11 ho kresli system) a nie pri maximalizacii.
+    /// The title bar draws the top border of the window only in Windows 10 (Windows 11 draws it itself) and not when maximized.
     /// </summary>
     private bool DrawsTopBorder => ShowsCaption && !ExTools.IsWin11Build22000 && _form is { WindowState: not FormWindowState.Maximized };
 
     private Color EffectiveInactiveForeColor => _inactiveForeColor.IsEmpty ? TitleBarColors.Inactive(CaptionBackColor, CaptionForeColor) : _inactiveForeColor;
 
     /// <summary>
-    /// Farba motivu Windows na zahlavi (nastavenie „Zobrazit farbu motivu na zahlaviach a okrajoch okna") - ako systemove
-    /// zahlavie len v aktivnom okne a len bez farby titulku formulara (<see cref="ExForm.TitleBarBackColor" />).
+    /// The Windows accent color on the title bar (setting "Show accent color on title bars and window borders") - like the
+    /// system caption only in an active form and only without a caption color of the form (<see cref="ExForm.TitleBarBackColor" />).
     /// </summary>
     private Color? ShownAccent => _accent is { } accent && _formActive && IsActive && Parent is ExForm { TitleBarBackColor.IsEmpty: true } ? accent : null;
 
     /// <summary>
-    /// Pozadie zahlavia: farba titulku formulara (<see cref="ExForm.TitleBarBackColor" />), farba motivu Windows, inak vlastna.
+    /// Title bar background: the caption color of the form (<see cref="ExForm.TitleBarBackColor" />), the Windows accent color,
+    /// otherwise its own.
     /// </summary>
     private Color CaptionBackColor
     {
@@ -262,8 +268,8 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Text a znacky tlacidiel: farba textu titulku formulara (<see cref="ExForm.TitleBarForeColor" />), text na farbe motivu,
-    /// inak vlastna.
+    /// Text and button glyphs: the caption text color of the form (<see cref="ExForm.TitleBarForeColor" />), text on the accent
+    /// color, otherwise its own.
     /// </summary>
     private Color CaptionForeColor
     {
@@ -278,9 +284,9 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Urci cast zahlavia v bode.
+    /// Determines the part of the title bar at a point.
     /// </summary>
-    /// <param name="point">bod v klientskych suradniciach zahlavia</param>
+    /// <param name="point">point in client coordinates of the title bar</param>
     public TitleBarHit HitTest(Point point)
     {
         if (ComputeLayout().HitTest(point) is { } hit)
@@ -296,8 +302,10 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Vyska podla prvkov zahlavia (pri <see cref="Control.AutoSize" />): najvyssi viditelny prvok s odsadenim, aspon 32 px pri 96 DPI.
+    /// Height by the title bar controls (with <see cref="Control.AutoSize" />): the tallest visible control with padding, at least
+    /// 32 px at 96 DPI.
     /// </summary>
+    /// <param name="proposedSize">proposed size (ignored, the title bar keeps its width)</param>
     public override Size GetPreferredSize(Size proposedSize)
     {
         var content = Controls.Cast<Control>().Where(c => c.Visible).Select(c => c.GetPreferredSize(Size.Empty).Height).DefaultIfEmpty(0).Max();
@@ -306,8 +314,9 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Nastavi farby zahlavia podla temy (pozadie a text panelov) a pouzije temu na prvky v zahlavi.
+    /// Sets the title bar colors by the theme (panel background and text) and applies the theme to the controls in the title bar.
     /// </summary>
+    /// <param name="theme">theme to apply</param>
     public void ApplyTheme(ExTheme theme)
     {
         ArgumentNullException.ThrowIfNull(theme);
@@ -331,7 +340,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Formular je aktivny (WM_NCACTIVATE) - neaktivny ma text a znacky tlacidiel tlmene.
+    /// The form is active (WM_NCACTIVATE) - an inactive one has dimmed text and button glyphs.
     /// </summary>
     internal void SetFormActive(bool active)
     {
@@ -343,12 +352,12 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Zmenila sa farba motivu Windows alebo jej zobrazenie na zahlaviach (WM_SETTINGCHANGE, WM_DWMCOLORIZATIONCOLORCHANGED).
+    /// The Windows accent color or its display on title bars changed (WM_SETTINGCHANGE, WM_DWMCOLORIZATIONCOLORCHANGED).
     /// </summary>
     internal void RefreshAccent() => SetAccent(ExTools.CaptionAccentColor());
 
     /// <summary>
-    /// Farba motivu na zahlavi (<see langword="null" /> = system ju na zahlaviach nezobrazuje).
+    /// The accent color on the title bar (<see langword="null" /> = the system does not show it on title bars).
     /// </summary>
     internal void SetAccent(Color? accent)
     {
@@ -359,7 +368,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Zmenili sa farby titulku formulara - prekreslenie a farby panelov.
+    /// The caption colors of the form changed - repaint and tool strip colors.
     /// </summary>
     internal void RefreshColors()
     {
@@ -368,9 +377,10 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Farby panelov nastrojov v zahlavi (len vlastne zahlavie za behu): ina farba zahlavia nez vlastna (titulok formulara,
-    /// farba motivu) presvita cez pozadie panelov aj ich poloziek ponuky a popisov, tie maju jej text; neaktivne okno ich stlmi.
-    /// Meni sa len to, co sa zmenilo; farbu, ktoru medzicasom zmenila aplikacia, uz nevracia.
+    /// Colors of the tool strips in the title bar (only the custom title bar at runtime): a title bar color other than its own
+    /// (caption of the form, accent color) shows through the background of the strips and of their menu items and labels, which
+    /// get its text color; an inactive form dims them. Only what changed is updated; a color the application has changed in
+    /// the meantime is not restored.
     /// </summary>
     private void UpdateStripColors()
     {
@@ -411,8 +421,8 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Pred kreslenim panela (udalost Paint predchadza kresleniu poloziek): vybrana a otvorena polozka ma pozadie
-    /// zvyraznenia z temy - text jej povodnou farbou, ostatne farbou zahlavia.
+    /// Before a tool strip is painted (the Paint event precedes painting the items): a selected or open item has the highlight
+    /// background from the theme - its text in its original color, the others in the title bar color.
     /// </summary>
     private void ShowItemStates(ToolStrip strip)
     {
@@ -422,7 +432,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Vrati panelom a polozkam farby pred zahlavim.
+    /// Restores the colors the tool strips and items had before the title bar changed them.
     /// </summary>
     private void RestoreStripColors()
     {
@@ -432,7 +442,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Mys je nad tlacidlom okna (alebo inde v zahlavi - <see langword="null" />).
+    /// The mouse is over a window button (or elsewhere in the title bar - <see langword="null" />).
     /// </summary>
     internal void TrackButton(TitleBarHit? button)
     {
@@ -444,7 +454,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Tlacidlo okna je stlacene.
+    /// A window button is pressed.
     /// </summary>
     internal void PressButton(TitleBarHit button)
     {
@@ -454,9 +464,9 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Mys je uvolnena nad tlacidlom <paramref name="button" />.
+    /// The mouse is released over <paramref name="button" />.
     /// </summary>
-    /// <returns>tlacidlo bolo aj stlacene - je to klik</returns>
+    /// <returns>the button was also pressed - it is a click</returns>
     internal bool ReleaseButton(TitleBarHit button)
     {
         var clicked = _pressedButton == button;
@@ -466,7 +476,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Mys opustila zahlavie - ziadne tlacidlo nie je pod mysou ani stlacene.
+    /// The mouse left the title bar - no button is under the mouse or pressed.
     /// </summary>
     internal void ResetButtons()
     {
@@ -477,7 +487,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Formular zmenil ikonu, tlacidla, stav okna alebo ram - nove rozlozenie a prekreslenie.
+    /// The form changed its icon, buttons, window state or frame - new layout and repaint.
     /// </summary>
     internal void RefreshCaption()
     {
@@ -496,8 +506,8 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Zbali ponuky v zahlavi, na ktore nestaci miesto, a rozbali tie, ktore sa uz zmestia (len za behu - navrhar by
-    /// presunute polozky ulozil), a doplni farby zahlavia novym polozkam.
+    /// Collapses the menus in the title bar that do not fit and expands those that fit again (only at runtime - the designer
+    /// would save the moved items), and applies the title bar colors to new items.
     /// </summary>
     private void UpdateCollapsedMenus()
     {
@@ -523,7 +533,8 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Sirka ponuky so vsetkymi polozkami - zbalena ma namiesto tlacidla ☰ polozky v sirke pred zbalenim.
+    /// Width of the menu with all its items - a collapsed menu counts the width its items had before collapsing instead of
+    /// the ☰ button.
     /// </summary>
     private int ExpandedWidth(MenuStrip menu)
     {
@@ -536,7 +547,8 @@ public class ExTitleBar : Panel, IThemeable
     private static int ItemWidth(ToolStripItem item) => item.GetPreferredSize(Size.Empty).Width + item.Margin.Horizontal;
 
     /// <summary>
-    /// Miesto pre ponuku: obsah zahlavia bez ostatnych prvkov ukotvenych vlavo a vpravo; ponuka s pevnou sirkou viac nema.
+    /// Space for the menu: the title bar content without the other controls docked left and right; a menu with a fixed width
+    /// gets no more than its width.
     /// </summary>
     private int SpaceFor(MenuStrip menu)
     {
@@ -548,10 +560,10 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Presunie polozky ponuky pod tlacidlo ☰ na zaciatku ponuky (ostatne prvky ponuky ostavaju) - polozky sa presuvaju,
-    /// takze prikazy, udalosti aj klavesove skratky aplikacie platia dalej.
+    /// Moves the menu items under a ☰ button at the start of the menu (other kinds of items stay in the menu) - the items are
+    /// moved, so the commands, events and shortcut keys of the application keep working.
     /// </summary>
-    /// <returns>ponuka sa zbalila</returns>
+    /// <returns>the menu was collapsed</returns>
     private bool Collapse(MenuStrip menu)
     {
         if (_collapsedMenus.ContainsKey(menu))
@@ -580,9 +592,9 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Vrati polozky z tlacidla ☰ na ich miesto v ponuke.
+    /// Returns the items from the ☰ button to their places in the menu.
     /// </summary>
-    /// <returns>ponuka sa rozbalila</returns>
+    /// <returns>the menu was expanded</returns>
     private bool Expand(MenuStrip menu)
     {
         if (!_collapsedMenus.TryGetValue(menu, out var collapsed))
@@ -746,7 +758,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Okno ma ikonu ako pri systemovom zahlavi: dialog (FixedDialog) len vlastnu, nie predvolenu ikonu WinForms.
+    /// The form has an icon as with the system caption: a dialog (FixedDialog) only its own one, not the default WinForms icon.
     /// </summary>
     private static bool ShowsIcon(Form form)
     {
@@ -793,7 +805,7 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Miesto panela nastrojov bez klikatelnej polozky (prazdne, oddelovac, popis bez odkazu).
+    /// A place in the tool strip without a clickable item (empty space, separator, label without a link).
     /// </summary>
     private static bool IsFreeArea(ToolStrip strip, Point point) =>
         strip.GetItemAt(point) is null or ToolStripSeparator or ToolStripLabel { IsLink: false };
@@ -880,13 +892,13 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Zbalena ponuka: tlacidlo ☰, presunute polozky s povodnym poradim a ich sirka v ponuke.
+    /// A collapsed menu: the ☰ button, the moved items with their original positions and their width in the menu.
     /// </summary>
     private sealed record CollapsedMenu(ToolStripMenuItem Button, List<(ToolStripMenuItem Item, int Index)> Items, int ItemsWidth);
 
     /// <summary>
-    /// Farba panela alebo polozky prevzata od zahlavia - pamata si povodnu (nastavenu alebo zdedenu) a vrati ju, len ak
-    /// farbu medzicasom nezmenila aplikacia.
+    /// A tool strip or item color taken over from the title bar - remembers the original one (set or inherited) and restores
+    /// it only if the application has not changed the color in the meantime.
     /// </summary>
     private sealed class ColorOverride
     {
@@ -909,22 +921,22 @@ public class ExTitleBar : Panel, IThemeable
         public string Property => _property.Name;
 
         /// <summary>
-        /// Farba pred zahlavim.
+        /// The color before the title bar changed it.
         /// </summary>
         public Color Original { get; }
 
         /// <summary>
-        /// Farba od zahlavia.
+        /// The color from the title bar.
         /// </summary>
         public Color Requested { get; }
 
         /// <summary>
-        /// Farba, ktoru prvok prave ma (pri vybranej polozke povodna).
+        /// The color the target currently has (the original one for a selected item).
         /// </summary>
         public Color Applied { get; private set; }
 
         /// <summary>
-        /// Prvok ma stale farbu od zahlavia.
+        /// The target still has the color from the title bar.
         /// </summary>
         public bool IsCurrent => Target is not (Control { IsDisposed: true } or ToolStripItem { IsDisposed: true }) &&
                                  (Color)_property.GetValue(Target)! == Applied;
@@ -937,8 +949,10 @@ public class ExTitleBar : Panel, IThemeable
         }
 
         /// <summary>
-        /// Ukaze inu z farieb prvku (povodnu alebo od zahlavia) - len ak farbu nezmenila aplikacia.
+        /// Shows the other of the target colors (the original one or the one from the title bar) - only if the application has
+        /// not changed the color.
         /// </summary>
+        /// <param name="color">color to show</param>
         public void Show(Color color)
         {
             if (Applied == color || !IsCurrent)
@@ -959,8 +973,9 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Znaky tlacidiel okna (a tlacidla zbalenej ponuky) z pisma systemoveho zahlavia: Windows 11 Segoe Fluent Icons, Windows 10 Segoe MDL2 Assets
-    /// (aj ked ma Fluent Icons nainstalovane) - znaky maju v oboch rovnake kody; bez nich Marlett (v kazdych Windows).
+    /// Glyphs of the window buttons (and of the collapsed menu button) from the font of the system caption: Segoe Fluent Icons
+    /// in Windows 11, Segoe MDL2 Assets in Windows 10 (even with Fluent Icons installed) - the glyphs have the same codes in both;
+    /// without them Marlett (in every Windows).
     /// </summary>
     private sealed record CaptionGlyphs(string Family, string Minimize, string Maximize, string Restore, string Close, string Menu, string MenuFamily)
     {
@@ -979,8 +994,8 @@ public class ExTitleBar : Panel, IThemeable
     }
 
     /// <summary>
-    /// Posiela WM_NCHITTEST z volneho miesta panela nastrojov zahlaviu (HTTRANSPARENT), aby nim slo tahat okno, a pred
-    /// kreslenim panela nastavi farby vybranych poloziek.
+    /// Passes WM_NCHITTEST from the free space of a tool strip to the title bar (HTTRANSPARENT) so that it drags the window,
+    /// and sets the colors of selected items before the tool strip is painted.
     /// </summary>
     private sealed class ToolStripHook : NativeWindow
     {

@@ -13,7 +13,7 @@ namespace ExControls.Test.Properties {
     
     
     /// <summary>
-    ///   Třída prostředků se silnými typy pro vyhledávání lokalizovaných řetězců atp.
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
     // Tato třída byla automaticky generována třídou StronglyTypedResourceBuilder
     // pomocí nástroje podobného aplikaci ResGen nebo Visual Studio.
@@ -33,7 +33,7 @@ namespace ExControls.Test.Properties {
         }
         
         /// <summary>
-        ///   Vrací instanci ResourceManager uloženou v mezipaměti použitou touto třídou.
+        ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Resources.ResourceManager ResourceManager {
@@ -47,8 +47,8 @@ namespace ExControls.Test.Properties {
         }
         
         /// <summary>
-        ///   Potlačí vlastnost CurrentUICulture aktuálního vlákna pro všechna
-        ///   vyhledání prostředků pomocí třídy prostředků se silnými typy.
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Globalization.CultureInfo Culture {

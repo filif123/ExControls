@@ -5,13 +5,12 @@ using System.Runtime.InteropServices;
 namespace ExControls;
 
 /// <summary>
-/// Expanded ComboBox Column for DataGridView
+/// DataGridView column of <see cref="DataGridViewExComboBoxCell" /> cells, which can be drawn in the custom style like
+/// <see cref="ExComboBox" />.
 /// </summary>
 public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
@@ -35,7 +34,7 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn, IThemeab
     }
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="DataGridViewExComboBoxColumn" /> class with cells in the default style.
     /// </summary>
     public DataGridViewExComboBoxColumn()
     {
@@ -252,14 +251,15 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn, IThemeab
 }
 
 /// <summary>
-/// Expanded ComboBox Cell for DataGridView
+/// DataGridView cell with a combo box that can be drawn in the custom style with the state colors of <see cref="ExComboBoxStyle" />
+/// like <see cref="ExComboBox" />.
 /// </summary>
 public class DataGridViewExComboBoxCell : DataGridViewComboBoxCell
 {
     private bool _drawing;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="DataGridViewExComboBoxCell" /> class in the default style.
     /// </summary>
     public DataGridViewExComboBoxCell()
     {

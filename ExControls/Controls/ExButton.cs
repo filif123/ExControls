@@ -6,14 +6,13 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded Button Control.
+/// Extended Button control: in the custom style (<see cref="ExButton.DefaultStyle" /> = <see langword="false" />) it is flat with
+/// border and background colors for the hover, pressed and focus states (<see cref="ExButton.ExFlatAppearance" />).
 /// </summary>
 [ToolboxBitmap(typeof(Button), "Button.bmp")]
 public class ExButton : Button, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
@@ -36,7 +35,7 @@ public class ExButton : Button, IExControl, IThemeable
     private bool _focused;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExButton" /> class.
     /// </summary>
     public ExButton()
     {
@@ -64,7 +63,8 @@ public class ExButton : Button, IExControl, IThemeable
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the flat style appearance of the button. When <see cref="DefaultStyle" /> is <see langword="false" />,
+    /// the style is always <see cref="System.Windows.Forms.FlatStyle.Flat" />.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public new FlatStyle FlatStyle
@@ -79,7 +79,7 @@ public class ExButton : Button, IExControl, IThemeable
     }
 
     /// <summary>
-    /// Dont use.
+    /// Do not use: the appearance of the button is set by its style and <see cref="ExFlatAppearance" />.
     /// </summary>
     [Browsable(false)]
     [Obsolete("ExButton does not use FlatAppearance - the appearance is set by its style.")]
@@ -88,7 +88,8 @@ public class ExButton : Button, IExControl, IThemeable
     public new FlatButtonAppearance FlatAppearance => base.FlatAppearance;
 
     /// <summary>
-    /// 
+    /// Gets the border and background colors of the button for the mouse and focus states,
+    /// used when <see cref="DefaultStyle" /> is <see langword="false" />.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -137,7 +138,7 @@ public class ExButton : Button, IExControl, IThemeable
             SetFocusColor();
     }
 
-    /// <summary>Raises the <see cref="System.Windows.Forms.Control.Enter" /> event.</summary>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.MouseEnter" /> event.</summary>
     /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnMouseEnter(EventArgs e)
     {
@@ -149,7 +150,7 @@ public class ExButton : Button, IExControl, IThemeable
         ExFlatAppearance.BorderColor = ExFlatAppearance.MouseOverBorderColor;
     }
 
-    /// <summary>Raises the <see cref="System.Windows.Forms.Control.Leave" /> event.</summary>
+    /// <summary>Raises the <see cref="System.Windows.Forms.Control.MouseLeave" /> event.</summary>
     /// <param name="e">An <see cref="System.EventArgs" /> that contains the event data.</param>
     protected override void OnMouseLeave(EventArgs e)
     {
@@ -202,7 +203,7 @@ public class ExButton : Button, IExControl, IThemeable
 
 
 /// <summary>
-/// ....
+/// Border and background colors of an <see cref="ExButton" /> in the flat style, including the colors for the mouse and focus states.
 /// </summary>
 [TypeConverter(typeof(ExpandableObjectConverter))]
 public class ExFlatButtonAppearance
@@ -220,13 +221,13 @@ public class ExFlatButtonAppearance
     private bool _inFocusMode;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExFlatButtonAppearance" /> class.
     /// </summary>
-    /// <param name="owner"></param>
+    /// <param name="owner">The button whose appearance is configured.</param>
     public ExFlatButtonAppearance(ButtonBase owner) => this._owner = owner;
 
     /// <summary>
-    /// ...
+    /// Gets or sets the width of the button border in pixels.
     /// </summary>
     [Browsable(true)]
     [NotifyParentProperty(true)]
@@ -241,7 +242,8 @@ public class ExFlatButtonAppearance
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the border color of the button.
+    /// While the hover, pressed or focus border color is shown, the original border color is returned.
     /// </summary>
     [Browsable(true)]
     [NotifyParentProperty(true)]
@@ -266,7 +268,7 @@ public class ExFlatButtonAppearance
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the background color of the button when it is checked.
     /// </summary>
     [Browsable(true)]
     [NotifyParentProperty(true)]
@@ -281,7 +283,7 @@ public class ExFlatButtonAppearance
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the background color of the button while the mouse button is pressed over it.
     /// </summary>
     [Browsable(true)]
     [NotifyParentProperty(true)]
@@ -296,7 +298,7 @@ public class ExFlatButtonAppearance
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the background color of the button when the mouse pointer is over it.
     /// </summary>
     [Browsable(true)]
     [NotifyParentProperty(true)]
@@ -311,7 +313,8 @@ public class ExFlatButtonAppearance
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the border color of the button while the mouse button is pressed over it.
+    /// <see cref="Color.Empty" /> keeps the border color unchanged.
     /// </summary>
     [Browsable(true)]
     [NotifyParentProperty(true)]
@@ -332,7 +335,8 @@ public class ExFlatButtonAppearance
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the border color of the button when the mouse pointer is over it.
+    /// <see cref="Color.Empty" /> keeps the border color unchanged.
     /// </summary>
     [Browsable(true)]
     [NotifyParentProperty(true)]
@@ -353,7 +357,8 @@ public class ExFlatButtonAppearance
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets the border color of the button when it has focus.
+    /// <see cref="Color.Empty" /> keeps the border color unchanged.
     /// </summary>
     [Browsable(true)]
     [NotifyParentProperty(true)]
@@ -400,7 +405,7 @@ public class ExFlatButtonAppearance
     internal void SetTmpBeforeFocusColor(Color tmpBeforeFocusColor)
     {
         _tmpBeforeFocusColor = tmpBeforeFocusColor;
-        _inClickMode = true;
+        _inFocusMode = true;
     }
 
     internal void UnsetTmpBeforeFocusColor()

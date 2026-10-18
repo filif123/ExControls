@@ -6,12 +6,14 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded RichTextBox Control
+/// Extended RichTextBox control: in the custom style it draws the border with its own color and thickness, highlighted when
+/// the control has focus or is under the mouse, and uses its own colors when disabled.
 /// </summary>
 [ToolboxBitmap(typeof(RichTextBox), "RichTextBox.bmp")]
 public class ExRichTextBox : RichTextBox, IExControl
 {
     private Color _borderColor;
+    private BorderStyle _borderStyle;
     private int _borderThickness;
     private bool _defaultStyle;
     private Color _disabledBackColor;
@@ -23,11 +25,12 @@ public class ExRichTextBox : RichTextBox, IExControl
     private bool _selected;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExRichTextBox" /> class.
     /// </summary>
     public ExRichTextBox()
     {
         _defaultStyle = true;
+        _borderStyle = base.BorderStyle;
         _borderColor = Color.DimGray;
         _highlightColor = SystemColors.Highlight;
         _borderThickness = 1;
@@ -39,23 +42,27 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
+    /// Gets or sets the border style of the rich text box in the default style. When <see cref="DefaultStyle" /> is
+    /// <see langword="false" />, the native border is <see cref="System.Windows.Forms.BorderStyle.None" />, because the control
+    /// draws its own border; the value is kept and used again when <see cref="DefaultStyle" /> is turned back on.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     public new BorderStyle BorderStyle
     {
-        get => base.BorderStyle;
+        get => _borderStyle;
         set
         {
-            if (base.BorderStyle == value)
+            if (_borderStyle == value)
                 return;
 
-            if (!DefaultStyle)
-                base.BorderStyle = BorderStyle.None;
+            _borderStyle = value;
+            if (DefaultStyle)
+                base.BorderStyle = value;
         }
     }
 
     /// <summary>
-    /// Color of the TextBox's border
+    /// Color of the RichTextBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -74,7 +81,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    /// Color of the TextBox's border when it is disabled
+    /// Color of the RichTextBox's border when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -93,7 +100,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    /// Background color of the TextBox's when it is disabled
+    /// Background color of the RichTextBox when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -112,7 +119,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    /// Foreground color of the TextBox's when it is disabled
+    /// Foreground color of the RichTextBox when it is disabled
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -150,7 +157,7 @@ public class ExRichTextBox : RichTextBox, IExControl
     }
 
     /// <summary>
-    /// Width of the TextBox's border
+    /// Width of the RichTextBox's border
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]
@@ -184,12 +191,8 @@ public class ExRichTextBox : RichTextBox, IExControl
             if (_defaultStyle == value)
                 return;
             _defaultStyle = value;
-            if (!value)
-            {
-                base.BorderStyle = BorderStyle.None;
-                return;
-            }
-
+            // vlastny styl kresli ramik sam, predvoleny vrati ramik z BorderStyle
+            base.BorderStyle = value ? _borderStyle : BorderStyle.None;
             Invalidate();
         }
     }

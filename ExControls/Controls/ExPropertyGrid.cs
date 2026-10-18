@@ -31,7 +31,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     private ObjectWrapper? _wrapper;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExPropertyGrid" /> class.
     /// </summary>
     public ExPropertyGrid()
     {
@@ -89,8 +89,8 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     public ToolStripButton? ButtonPropertyPages => field ??= InnerToolStrip?.Items.OfType<ToolStripButton>().Skip(2).LastOrDefault();
 
     /// <summary>
-    /// Tlacidlo radenia podla poradia na paneli (0 = podla kategorii, 1 = abecedne). Text tlacidiel je
-    /// lokalizovany (v cestine ich WinForms prekladaju), preto sa nehladaju podla textu.
+    /// Sort button by its position in the tool strip (0 = by category, 1 = alphabetical). The text of the buttons is localized
+    /// (WinForms translates them in Czech), so they are not looked up by text.
     /// </summary>
     private ToolStripButton? SortButton(int index) =>
         InnerToolStrip?.Items.OfType<ToolStripButton>().ElementAtOrDefault(index);
@@ -199,7 +199,7 @@ public class ExPropertyGrid : PropertyGrid, ISearchable
     }
 
     /// <summary>
-    /// 
+    /// Gets or sets whether the grid starts with no properties, so that only the attributes and properties set as browsable are shown.
     /// </summary>
     [DefaultValue(false)]
     public bool FirstHideAllProperties

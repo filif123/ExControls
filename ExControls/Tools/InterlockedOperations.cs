@@ -5,14 +5,14 @@ namespace ExControls;
 #if NETCOREAPP3_0_OR_GREATER
 
 /// <summary>
-/// Vlaknovo bezpecna lenia inicializacia.
+/// Thread-safe lazy initialization.
 /// </summary>
 public static class InterlockedOperations
 {
     /// <summary>
-    /// Nastavi <paramref name="target" /> na <paramref name="value" />, ak je este <see langword="null" />.
+    /// Sets <paramref name="target" /> to <paramref name="value" /> if it is still <see langword="null" />.
     /// </summary>
-    /// <returns>hodnota v <paramref name="target" /> po inicializacii (aj ked ju medzitym nastavilo ine vlakno)</returns>
+    /// <returns>the value in <paramref name="target" /> after the initialization (even if another thread set it in the meantime)</returns>
     public static T Initialize<T>([NotNull] ref T target, T value) where T : class
     {
         ArgumentNullException.ThrowIfNull(value);

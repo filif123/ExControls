@@ -13,17 +13,17 @@ public class UndoRedoManager : Component
     private readonly Stack<(IUndoRedoCommand cmd, IUndoHandler? handler)> _undoStack, _redoStack;
 
     /// <summary>
-    /// 
+    /// Occurs when a command was undone or redone, or when the history was cleared.
     /// </summary>
     public event EventHandler<UndoRedoStateEventArgs>? UndoRedoStateChanged;
 
     /// <summary>
-    /// 
+    /// Occurs when a new command was added to the undo history.
     /// </summary>
     public event EventHandler<UndoRedoAddedCommandEventArgs>? CommandAdded;
 
     /// <summary>
-    /// Enables or disables manager to add commands to stacks. Dafault is false.
+    /// Enables or disables manager to add commands to stacks. Default is false.
     /// </summary>
     [DefaultValue(false)]
     public bool ManagerEnabled { get; set; }
@@ -64,7 +64,8 @@ public class UndoRedoManager : Component
     public IUndoRedoCommand NextRedoCommand => _redoStack.Peek().cmd;
 
     /// <summary>
-    /// Constructor which initializes the manager.
+    /// Initializes a new instance of the <see cref="UndoRedoManager" /> class with an empty history; commands are added only
+    /// after <see cref="ManagerEnabled" /> is turned on.
     /// </summary>
     public UndoRedoManager()
     {
@@ -78,6 +79,7 @@ public class UndoRedoManager : Component
     /// application has performed an operation/command that is
     /// undoable.
     /// </summary>
+    /// <param name="cmd">command to add to the history</param>
     public void AddCommand(IUndoRedoCommand cmd)
     {
         if (!ManagerEnabled)
@@ -94,6 +96,8 @@ public class UndoRedoManager : Component
     /// The undo handler is used to perform the actual undo or redo
     /// operation later when requested.
     /// </summary>
+    /// <param name="cmd">command to add to the history</param>
+    /// <param name="handler">handler that performs the undo and redo of the command</param>
     public void AddCommand(IUndoRedoCommand cmd, IUndoHandler handler)
     {
         if (!ManagerEnabled)
@@ -127,7 +131,9 @@ public class UndoRedoManager : Component
     /// <summary>
     /// Returns whether the manager is in saved state.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>
+    /// <see langword="true" /> if the newest undo command is the same as when <see cref="SetSavedState" /> was called
+    /// (both may be none); otherwise, <see langword="false" />.</returns>
     public bool IsInSavedState() => ReferenceEquals(_undoStack.Count == 0 ? null : NextUndoCommand, SavedStateCommand);
 
     /// <summary>
@@ -158,6 +164,7 @@ public class UndoRedoManager : Component
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the undo.
     /// </summary>
+    /// <param name="finalCmd">command in the undo history up to which the commands are undone</param>
     public void Undo(IUndoRedoCommand finalCmd)
     {
         if (!ManagerEnabled)
@@ -201,6 +208,7 @@ public class UndoRedoManager : Component
     /// If an undo handler was specified, it will be used to perform the actual operation.
     /// Otherwise, the command instance is asked to perform the redo.
     /// </summary>
+    /// <param name="finalCmd">command in the redo history up to which the commands are redone</param>
     public void Redo(IUndoRedoCommand finalCmd)
     {
         if (!ManagerEnabled)
@@ -236,24 +244,24 @@ public class UndoRedoManager : Component
     /// <summary>
     /// Gets current history of undo commands.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The commands that can be undone, the newest first.</returns>
     public IEnumerable<IUndoRedoCommand> GetUndoHistory() => _undoStack.Select(x => x.cmd);
 
     /// <summary>
     /// Gets current history of redo commands.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The commands that can be redone, the next one to redo first.</returns>
     public IEnumerable<IUndoRedoCommand> GetRedoHistory() => _redoStack.Select(x => x.cmd);
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="UndoRedoStateChanged" /> event.
     /// </summary>
-    /// <param name="e"></param>
+    /// <param name="e">The event data.</param>
     protected virtual void OnUndoRedoStateChanged(UndoRedoStateEventArgs e) => UndoRedoStateChanged?.Invoke(this, e);
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="CommandAdded" /> event.
     /// </summary>
-    /// <param name="e"></param>
+    /// <param name="e">The event data.</param>
     protected virtual void OnCommandAdded(UndoRedoAddedCommandEventArgs e) => CommandAdded?.Invoke(this, e);
 }

@@ -3,7 +3,7 @@ using ExControls.Collections;
 namespace ExControls.Tests.Collections;
 
 /// <summary>
-/// Uzly stromu so skryvanim (vyhladavanie v ExOptionsView) - skryte uzly ostavaju v kolekcii a vracaju sa na svoje miesto.
+/// Tree nodes with hiding (search in ExOptionsView) - hidden nodes stay in the collection and return to their place.
 /// </summary>
 [TestClass]
 public sealed class ExTreeNodeCollectionTests : IDisposable

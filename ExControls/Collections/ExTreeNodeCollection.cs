@@ -8,7 +8,8 @@ using System.Drawing.Design;
 namespace ExControls.Collections;
 
 /// <summary>
-/// 
+/// Represents a collection of tree nodes that also remembers hidden nodes; the wrapped
+/// <see cref="TreeNodeCollection" /> contains only the visible ones.
 /// </summary>
 
 //, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a
@@ -21,9 +22,9 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     private readonly TreeNodeCollection _visibleNodes;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="ExTreeNodeCollection" /> class.
     /// </summary>
-    /// <param name="nodes"></param>
+    /// <param name="nodes">The collection that holds the visible nodes; its current nodes become the content of this collection.</param>
     public ExTreeNodeCollection(TreeNodeCollection nodes)
     {
         _nodes = nodes.Cast<TreeNode>().ToList();
@@ -36,7 +37,7 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     public event EventHandler<ExTreeViewNodeAddedEventArgs>? TreeNodeAdded;
 
     /// <summary>
-    /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.
+    /// Occurs when a <see cref="TreeNode"/> was removed from the collection.
     /// </summary>
     public event EventHandler<ExTreeViewNodeRemovedEventArgs>? TreeNodeRemoved;
 
@@ -257,6 +258,7 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     }
 
     /// <summary>Removes all tree nodes from the collection.</summary>
+    /// <param name="recursive"><see langword="true" /> to clear also the child nodes of the removed nodes</param>
     public virtual void Clear(bool recursive)
     {
         if (!recursive)
@@ -294,8 +296,8 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     }
 
     /// <summary>
-    /// Zobrazi uzol <paramref name="node" /> na mieste, ktore mu patri podla poradia vsetkych uzlov
-    /// (<paramref name="index" />) - skryte uzly pred nim sa nerataju.
+    /// Shows <paramref name="node" /> at the place it belongs to by the order of all nodes (<paramref name="index" />) -
+    /// hidden nodes before it are not counted.
     /// </summary>
     private void ShowAt(int index, TreeNode node)
     {
@@ -313,7 +315,7 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     /// <summary>
     /// Sets the visibility of the tree node.
     /// </summary>
-    /// <param name="node">treenode</param>
+    /// <param name="node">tree node to show or hide</param>
     /// <param name="visible">whether node should be visible</param>
     public void SetVisibility(TreeNode? node, bool visible)
     {
@@ -351,9 +353,10 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     /// <summary>
     /// Sets the visibility of the tree node by index.
     /// </summary>
-    /// <param name="index">index of treenode</param>
+    /// <param name="index">index of the tree node among all nodes, hidden ones included</param>
     /// <param name="visible">whether node should be visible</param>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="index" /> is less than zero or not less than the number of all nodes, hidden ones included.</exception>
     public void SetVisibility(int index, bool visible)
     {
         if (GetVisibility(index) == visible)
@@ -379,9 +382,10 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     /// <summary>
     /// Sets the visibility of the tree node by key.
     /// </summary>
-    /// <param name="key">key of treenode</param>
+    /// <param name="key">name of the tree node</param>
     /// <param name="visible">whether node should be visible</param>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// No node in the collection or in its subtrees has the name <paramref name="key" />.</exception>
     public void SetVisibility(string? key, bool visible)
     {
         if (key == null || GetVisibility(key) == visible)
@@ -400,14 +404,16 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     /// Gets the visibility of the tree node by node.
     /// </summary>
     /// <param name="node">tree node</param>
-    /// <returns></returns>
+    /// <returns>
+    /// <see langword="true" /> if <paramref name="node" /> is among the visible nodes of the collection;
+    /// otherwise, <see langword="false" />.</returns>
     public bool GetVisibility(TreeNode node) => _visibleNodes.Contains(node);
 
     /// <summary>
     /// Gets the visibility of the tree node by index.
     /// </summary>
-    /// <param name="index"></param>
-    /// <returns></returns>
+    /// <param name="index">index of treenode among all nodes, hidden ones included</param>
+    /// <returns><see langword="true" /> if the node at <paramref name="index" /> is visible; otherwise, <see langword="false" />.</returns>
     public bool GetVisibility(int index)
     {
         if (index < 0 || index >= _nodes.Count)
@@ -420,7 +426,9 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     /// Gets the visibility of the tree node by key.
     /// </summary>
     /// <param name="key">tree node key</param>
-    /// <returns></returns>
+    /// <returns>
+    /// <see langword="true" /> if a visible node of the collection has the name <paramref name="key" />;
+    /// otherwise, <see langword="false" />.</returns>
     public bool GetVisibility(string key) => _visibleNodes.ContainsKey(key);
 
     /// <summary>
@@ -439,11 +447,11 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     }
 
     /// <summary>
-    /// 
+    /// Determines whether the collection contains the tree node, visible or hidden.
     /// </summary>
-    /// <param name="node"></param>
-    /// <param name="subNodes"></param>
-    /// <returns></returns>
+    /// <param name="node">tree node to locate</param>
+    /// <param name="subNodes">whether the child nodes of all levels are searched too</param>
+    /// <returns><see langword="true" /> if <paramref name="node" /> is found; otherwise, <see langword="false" />.</returns>
     public bool Contains(TreeNode node, bool subNodes)
     {
         if (!subNodes)
@@ -453,11 +461,11 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     }
 
     /// <summary>
-    /// 
+    /// Determines whether the tree node is among the visible nodes of the collection.
     /// </summary>
-    /// <param name="node"></param>
-    /// <param name="subNodes"></param>
-    /// <returns></returns>
+    /// <param name="node">tree node to locate</param>
+    /// <param name="subNodes">whether the child nodes of all levels of the visible nodes are searched too</param>
+    /// <returns><see langword="true" /> if <paramref name="node" /> is found; otherwise, <see langword="false" />.</returns>
     public bool ContainsVisible(TreeNode node, bool subNodes)
     {
         if (!subNodes)
@@ -476,15 +484,15 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     }
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="TreeNodeAdded" /> event.
     /// </summary>
-    /// <param name="e"></param>
+    /// <param name="e">The event data.</param>
     protected virtual void OnTreeNodeAdded(ExTreeViewNodeAddedEventArgs e) => TreeNodeAdded?.Invoke(this, e);
 
     /// <summary>
-    /// 
+    /// Raises the <see cref="TreeNodeRemoved" /> event.
     /// </summary>
-    /// <param name="e"></param>
+    /// <param name="e">The event data.</param>
     protected virtual void OnTreeNodeRemoved(ExTreeViewNodeRemovedEventArgs e) => TreeNodeRemoved?.Invoke(this, e);
 
     object? IList.this[int index]
@@ -506,9 +514,9 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     }
 
     /// <summary>
-    /// 
+    /// Gets the visible tree node with the specified name, or <see langword="null" /> if there is none.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="key">The name of the tree node to retrieve.</param>
     public virtual TreeNode? this[string key] => _visibleNodes[key];
 
     /// <summary>Gets a value indicating whether the <see cref="System.Collections.IList" /> is read-only.</summary>
@@ -578,9 +586,9 @@ public class ExTreeNodeCollection : IList, IReadOnlyList<TreeNode>
     }
 
     /// <summary>
-    /// 
+    /// Removes the tree node from the collection, even if it is hidden, and from its parent in the tree.
     /// </summary>
-    /// <param name="node"></param>
+    /// <param name="node">The <see cref="System.Windows.Forms.TreeNode" /> to remove.</param>
     public virtual void Remove(TreeNode node)
     {
         // odstraneny uzol sa nesmie vratit pri zobrazeni vsetkych uzlov

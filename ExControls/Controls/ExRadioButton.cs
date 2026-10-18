@@ -8,14 +8,13 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded RadioButton Control.
+/// Extended RadioButton control: in the custom style it draws the circle, the mark and the text itself with its own colors,
+/// including the text color of a disabled radio button.
 /// </summary>
 [ToolboxBitmap(typeof(RadioButton), "RadioButton.bmp")]
 public class ExRadioButton : RadioButton, IExControl, ICheckableExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
@@ -41,7 +40,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl, IThem
     private Color _markColor;
 
     /// <summary>
-    /// Creates a new instance of the <see cref="ExRadioButton"/> class.
+    /// Initializes a new instance of the <see cref="ExRadioButton" /> class in the default style.
     /// </summary>
     public ExRadioButton()
     {
@@ -56,7 +55,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl, IThem
     }
 
     /// <summary>
-    /// Color of the CheckBox's text and box when the Control is disabled.
+    /// Color of the RadioButton's text and box when the Control is disabled.
     /// </summary>
     [Browsable(true)]
     [ExCategory(CategoryType.Appearance)]

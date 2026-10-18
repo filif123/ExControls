@@ -1,20 +1,20 @@
 namespace ExControls;
 
 /// <summary>
-/// Rozdelenie vrchu okna s vlastnym zahlavim na casti pre WM_NCHITTEST (ciste, bez okna).
+/// Splits the top of a form with a custom title bar into parts for WM_NCHITTEST (pure, without a window).
 /// </summary>
 internal static class TitleBarHitTest
 {
     /// <summary>
-    /// Urci cast okna v bode klientskej oblasti, ktory systemova obsluha vyhodnotila ako klientsky.
+    /// Determines the part of the window at a point of the client area that the default handling evaluated as client.
     /// </summary>
-    /// <param name="point">bod v klientskych suradniciach okna</param>
-    /// <param name="clientWidth">sirka klientskej oblasti</param>
+    /// <param name="point">point in client coordinates of the window</param>
+    /// <param name="clientWidth">width of the client area</param>
     /// <param name="resizeBorder">
-    /// hrubka horneho okraja na zmenu velkosti; 0 = okno sa zhora nemeni (maximalizovane, pevny ram)
+    /// thickness of the top resize border; 0 = the window is not resized from the top (maximized, fixed frame)
     /// </param>
-    /// <param name="titleBar">poloha zahlavia v klientskej oblasti</param>
-    /// <param name="titleBarHitTest">cast zahlavia v bode zahlavia (<see cref="ExTitleBar.HitTest" />)</param>
+    /// <param name="titleBar">bounds of the title bar in the client area</param>
+    /// <param name="titleBarHitTest">part of the title bar at a point of the title bar (<see cref="ExTitleBar.HitTest" />)</param>
     public static TitleBarHit Classify(Point point, int clientWidth, int resizeBorder, Rectangle titleBar, Func<Point, TitleBarHit> titleBarHitTest)
     {
         // horny okraj ma prednost pred zahlavim - inak by sa okno zhora nedalo zmensit
@@ -30,8 +30,9 @@ internal static class TitleBarHitTest
     }
 
     /// <summary>
-    /// Navratova hodnota WM_NCHITTEST pre cast okna.
+    /// Return value of WM_NCHITTEST for a part of the window.
     /// </summary>
+    /// <param name="hit">part of the window</param>
     public static int ToHitCode(TitleBarHit hit) => (int)(hit switch
     {
         TitleBarHit.Caption => Win32.HitTest.HTCAPTION,
@@ -47,9 +48,10 @@ internal static class TitleBarHitTest
     });
 
     /// <summary>
-    /// Tlacidlo okna podla kodu WM_NCHITTEST zo sprav mysi mimo klientskej oblasti (wParam).
+    /// Window button by the WM_NCHITTEST code from non-client mouse messages (wParam).
     /// </summary>
-    /// <returns><see langword="null" />, ak kod nie je tlacidlo okna</returns>
+    /// <param name="hitCode">WM_NCHITTEST code</param>
+    /// <returns><see langword="null" /> if the code is not a window button</returns>
     public static TitleBarHit? CaptionButtonOf(int hitCode) => (Win32.HitTest)hitCode switch
     {
         Win32.HitTest.HTMINBUTTON => TitleBarHit.MinimizeButton,
@@ -60,8 +62,11 @@ internal static class TitleBarHitTest
     };
 
     /// <summary>
-    /// Systemovy prikaz (WM_SYSCOMMAND) tlacidla okna - cez neho ma okno systemove animacie, FormClosing a HelpButtonClicked.
+    /// System command (WM_SYSCOMMAND) of a window button - through it the window gets the system animations, FormClosing and
+    /// HelpButtonClicked.
     /// </summary>
+    /// <param name="button">window button</param>
+    /// <param name="maximized">the window is maximized (the maximize button restores it)</param>
     public static int SysCommandOf(TitleBarHit button, bool maximized) => (int)(button switch
     {
         TitleBarHit.MinimizeButton => Win32.SysCommand.SC_MINIMIZE,
@@ -72,8 +77,9 @@ internal static class TitleBarHitTest
     });
 
     /// <summary>
-    /// Bod obrazovky z lParam sprav mysi mimo klientskej oblasti (suradnice so znamienkom - monitor vlavo/hore od hlavneho).
+    /// Screen point from lParam of non-client mouse messages (signed coordinates - a monitor left of or above the primary one).
     /// </summary>
+    /// <param name="lParam">lParam of the message</param>
     public static Point ScreenPoint(IntPtr lParam)
     {
         var value = unchecked((int)lParam.ToInt64());

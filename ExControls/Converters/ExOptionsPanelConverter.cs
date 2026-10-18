@@ -3,12 +3,13 @@
 namespace ExControls.Converters;
 
 /// <summary>
-/// 
+/// Type converter for references to <see cref="ExOptionsPanel" />: the property grid offers the panels of the owning
+/// <see cref="ExOptionsView" /> and the designer serializes a panel as <c>new ExOptionsPanel(owner)</c>.
 /// </summary>
 public class ExOptionsPanelConverter : ReferenceConverter
 {
     /// <summary>
-    /// Vytvorí nový <see cref="ExOptionsPanelConverter"/>.
+    /// Initializes a new instance of the <see cref="ExOptionsPanelConverter"/> class.
     /// </summary>
     public ExOptionsPanelConverter() : base(typeof(ExOptionsPanel))
     {

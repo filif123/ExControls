@@ -6,14 +6,13 @@ using ExControls.Controls;
 namespace ExControls;
 
 /// <summary>
-/// Expanded MaskedTextBox Control
+/// Extended MaskedTextBox control: in the custom style it draws the border with its own color and thickness, highlighted when
+/// the control has focus or is under the mouse.
 /// </summary>
 [ToolboxBitmap(typeof(MaskedTextBox), "MaskedTextBox.bmp")]
 public class ExMaskedTextBox : MaskedTextBox, IExControl, IThemeable
 {
-    /// <summary>
-    /// Nastavi farby a vzhlad prvku podla temy.
-    /// </summary>
+    /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
@@ -39,7 +38,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl, IThemeable
     private bool _selected;
 
     /// <summary>
-    /// Constructor
+    /// Initializes a new instance of the <see cref="ExMaskedTextBox" /> class in the default style.
     /// </summary>
     public ExMaskedTextBox()
     {

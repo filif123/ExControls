@@ -13,7 +13,7 @@ namespace ExControls;
 public sealed class ShellIcon : IDisposable
 {
     /// <summary>
-    /// Creates new instance of ShellIcon class with specified type and size.
+    /// Initializes a new instance of the <see cref="ShellIcon" /> class and loads the system stock icon of the specified type and size.
     /// </summary>
     /// <param name="type">Type of the <see cref="ShellIcon"/>.</param>
     /// <param name="size">Size of the <see cref="ShellIcon"/>.</param>
@@ -94,15 +94,17 @@ public sealed class ShellIcon : IDisposable
     }
 
     /// <summary>
+    /// Converts <see cref="ShellIcon"/> to <see cref="System.Drawing.Icon"/> that uses the same handle (it stays valid only
+    /// until the <see cref="ShellIcon"/> is disposed).
     /// </summary>
-    /// <param name="icon"></param>
-    /// <returns></returns>
+    /// <param name="icon">the shell icon</param>
+    /// <returns>icon with the handle of <paramref name="icon"/></returns>
     public static implicit operator Icon(ShellIcon icon) => Icon.FromHandle(icon.Handle);
 
     /// <summary>
     /// Converts <see cref="ShellIcon"/> to <see cref="Bitmap"/> image.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>a new bitmap with the icon</returns>
     public Bitmap ToBitmap() => Icon.FromHandle(Handle).ToBitmap();
 
     private static Win32.SHSTOCKICONINFO GetStockIconInfo(Win32.SHGSI flags, ShellIconType type)
