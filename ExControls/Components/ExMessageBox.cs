@@ -18,6 +18,13 @@ public sealed class ExMessageBox
     private MessageBoxButtons _buttons;
 
     /// <summary>
+    /// Gets or sets a function that supplies the image of the message box icon (e.g. icons of the application) for the icon
+    /// type and the control that shows it; when it is null or returns null, the system stock icon is shown.
+    /// The message box does not dispose the image.
+    /// </summary>
+    public static Func<MessageBoxIcon, Control, Image?>? IconProvider { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the ExMessageBox class.
     /// </summary>
     public ExMessageBox() : this((IWin32Window?) null)
@@ -316,8 +323,14 @@ public sealed class ExMessageBox
 
     private static void ChangeIcon(ExMessageBoxForm form, MessageBoxIcon icon)
     {
-        if (form.picIcon.Image != null)
-            form.ShellIcon!.Dispose();
+        form.ShellIcon?.Dispose();
+        form.ShellIcon = null;
+
+        if (icon != MessageBoxIcon.None && IconProvider?.Invoke(icon, form.picIcon) is { } image)
+        {
+            form.picIcon.Image = image;
+            return;
+        }
 
         switch (icon)
         {
