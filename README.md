@@ -83,3 +83,6 @@ Increase `ExControlsDesignerVersion` in `ExControls.Designer.targets`, build the
 
 NuGet and Visual Studio cache the package by version, a package rebuilt with the same version is ignored. An outdated
 package shows "Failed to launch the design tools server process" on every form.
+
+## License
+MIT, see [LICENSE](LICENSE).

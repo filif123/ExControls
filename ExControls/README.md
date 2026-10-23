@@ -53,3 +53,7 @@ use `ExTextBox.HintText`.
   numbers, the `Form` overload compensated them).
 - `ExForm.DarkTitleBar` and `TitleBarBackColor` no longer reset each other (the caption color takes precedence), empty
   title bar colors restore the system colors also after the form is shown.
+
+## License
+
+MIT

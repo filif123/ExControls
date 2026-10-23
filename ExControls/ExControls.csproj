@@ -68,6 +68,7 @@
 		<!-- po zmene zvysit aj AssemblyVersion v Properties\AssemblyInfo.cs a ExControlsDesignerVersion v ..\ExControls.Designer.targets -->
 		<Version>2.0.0</Version>
 		<PackageProjectUrl>https://github.com/filif123/ExControls</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>Extended controls for Windows Forms.</Description>
 		<PackageTags>WinForms;Windows Forms</PackageTags>
 	</PropertyGroup>

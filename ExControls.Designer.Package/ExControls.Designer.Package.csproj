@@ -19,6 +19,7 @@
 		<PackageVersion>$(ExControlsDesignerVersion)</PackageVersion>
 		<Description>Visual Studio designer extension for ExControls (collection editor of ExOptionsView.Panels).</Description>
 		<Authors>filif123</Authors>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
