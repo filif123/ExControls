@@ -9,7 +9,7 @@ using System.Runtime.Versioning;
 [assembly: AssemblyTitle("ExControls")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("iniss.6f.sk")]
+[assembly: AssemblyCompany("iniss-tools.fvat.sk")]
 [assembly: AssemblyProduct("ExControls")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
