@@ -7,7 +7,11 @@ namespace ExControls;
 /// <summary>
 /// Extended NumericUpDown control: in the custom style it draws the border and the up-down buttons itself with its own colors.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(NumericUpDown), "NumericUpDown.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExNumericUpDown.ico")]
+#endif
 public class ExNumericUpDown : NumericUpDown, IExControl, IThemeable
 {
     /// <inheritdoc />

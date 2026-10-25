@@ -12,7 +12,11 @@ namespace ExControls;
 /// Month calendar control drawn completely by the library (no Win32 MonthCalendar).
 /// Used standalone or as the drop-down part of <see cref="ExDateTimePicker" />.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(MonthCalendar), "MonthCalendar.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExCalendar.ico")]
+#endif
 [DefaultProperty(nameof(SelectionDate))]
 [DefaultEvent(nameof(DateChanged))]
 public class ExCalendar : Control, IExControl, IThemeable

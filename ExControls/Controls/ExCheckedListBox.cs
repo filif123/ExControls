@@ -9,7 +9,11 @@ namespace ExControls;
 /// Extended CheckedListBox control: in the custom style it draws the items with its own box, check mark, highlight and focus
 /// colors.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(CheckedListBox), "CheckedListBox.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExCheckedListBox.ico")]
+#endif
 public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
 {
     /// <inheritdoc />

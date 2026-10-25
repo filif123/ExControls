@@ -9,7 +9,11 @@ namespace ExControls;
 /// Extended Button control: in the custom style (<see cref="ExButton.DefaultStyle" /> = <see langword="false" />) it is flat with
 /// border and background colors for the hover, pressed and focus states (<see cref="ExButton.ExFlatAppearance" />).
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(Button), "Button.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExButton.ico")]
+#endif
 public class ExButton : Button, IExControl, IThemeable
 {
     /// <inheritdoc />

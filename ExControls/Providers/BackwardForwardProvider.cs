@@ -7,6 +7,7 @@ namespace ExControls.Providers;
 /// <summary>
 /// Provides backward-forward capability.
 /// </summary>
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.BackwardForwardProvider.ico")]
 public class BackwardForwardProvider : Component
 {
     private readonly Stack<IBackwardForwardCommand> _backwardStack, _forwardStack;

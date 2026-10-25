@@ -14,7 +14,11 @@ namespace ExControls;
 /// Date/time picker drawn completely by the library (no Win32 DateTimePicker). The drop-down part is an
 /// <see cref="ExCalendar" />. Public API mirrors <see cref="DateTimePicker" /> so the controls are interchangeable.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(DateTimePicker), "DateTimePicker.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExDateTimePicker.ico")]
+#endif
 [DefaultProperty(nameof(Value))]
 [DefaultEvent(nameof(ValueChanged))]
 [DefaultBindingProperty(nameof(Value))]

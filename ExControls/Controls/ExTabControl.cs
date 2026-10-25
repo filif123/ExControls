@@ -12,7 +12,11 @@ namespace ExControls;
 /// Extended TabControl control: in the custom style it draws the tab headers and the border with its own colors for the normal,
 /// active and highlighted tabs.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(TabControl), "TabControl.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExTabControl.ico")]
+#endif
 [DefaultProperty(nameof(TabPages))]
 public class ExTabControl : TabControl, IExControl, IThemeable
 {

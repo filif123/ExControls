@@ -11,7 +11,11 @@ namespace ExControls;
 /// Extended RadioButton control: in the custom style it draws the circle, the mark and the text itself with its own colors,
 /// including the text color of a disabled radio button.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(RadioButton), "RadioButton.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExRadioButton.ico")]
+#endif
 public class ExRadioButton : RadioButton, IExControl, ICheckableExControl, IThemeable
 {
     /// <inheritdoc />

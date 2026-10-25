@@ -9,7 +9,11 @@ namespace ExControls;
 /// Extended MaskedTextBox control: in the custom style it draws the border with its own color and thickness, highlighted when
 /// the control has focus or is under the mouse.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(MaskedTextBox), "MaskedTextBox.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExMaskedTextBox.ico")]
+#endif
 public class ExMaskedTextBox : MaskedTextBox, IExControl, IThemeable
 {
     /// <inheritdoc />

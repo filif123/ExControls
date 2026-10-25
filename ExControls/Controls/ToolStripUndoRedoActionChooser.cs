@@ -6,6 +6,7 @@ namespace ExControls;
 /// Drop-down with a list of Undo/Redo actions (<see cref="UndoRedoActionChooser" />).
 /// </summary>
 [ToolStripItemDesignerAvailability(ToolStripItemDesignerAvailability.ToolStrip | ToolStripItemDesignerAvailability.ContextMenuStrip)]
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ToolStripUndoRedoActionChooser.ico")]
 public class ToolStripUndoRedoActionChooser : ToolStripDropDown
 {
     /// <summary>

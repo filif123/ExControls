@@ -12,7 +12,11 @@ namespace ExControls;
 /// Extended ComboBox control: in the custom style it draws itself with separate colors for the normal, hover, selected and
 /// disabled states (<see cref="ExComboBoxStyle" />) and can use dark scroll bars.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(ComboBox), "ComboBox.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExComboBox.ico")]
+#endif
 public class ExComboBox : ComboBox, IExControl, IThemeable
 {
     /// <inheritdoc />

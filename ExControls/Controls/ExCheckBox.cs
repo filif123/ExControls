@@ -11,7 +11,11 @@ namespace ExControls;
 /// Extended CheckBox control: in the custom style it draws the box, the check mark and the text itself with its own colors,
 /// including the text color of a disabled check box.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(CheckBox), "CheckBox.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExCheckBox.ico")]
+#endif
 [Designer("ExControls.Designers.ExCheckBoxDesigner, ExControls")]
 public class ExCheckBox : CheckBox, IExControl, ICheckableExControl, IThemeable
 {

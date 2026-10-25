@@ -10,7 +10,11 @@ namespace ExControls;
 /// Extended TextBox control: in the custom style it draws the border with its own color and thickness, highlighted when the
 /// control has focus or is under the mouse, and uses its own colors when disabled; it can show a hint text and dark scroll bars.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(TextBox), "TextBox.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExTextBox.ico")]
+#endif
 [Designer("ExControls.Designers.ExTextBoxDesigner, ExControls")]
 [DefaultProperty(nameof(Text))]
 [DefaultEvent(nameof(TextChanged))]

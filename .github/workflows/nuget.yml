@@ -1,0 +1,84 @@
+# Publishes ExControls to nuget.org: a tag v<Version> from ExControls.csproj (git tag v2.0.0 && git push origin v2.0.0)
+# builds and tests the library and publishes the package with symbols through Trusted Publishing - no API key in the repository.
+# One-time setup on nuget.org (user menu > Trusted Publishing > Create): package owner filif123, repository owner filif123,
+# repository ExControls, workflow file nuget.yml, no environment, scope "Push new package versions" with the glob pattern ExControls.
+# The policy becomes permanent after the first successful run within 7 days.
+name: NuGet
+
+on:
+  push:
+    tags: ['v[0-9]*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (v2.0.0) that already exists in the repository
+        required: true
+
+jobs:
+  publish:
+    name: ExControls ${{ inputs.tag || github.ref_name }}
+    runs-on: windows-2025
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      # OIDC token that NuGet/login exchanges for a temporary nuget.org API key
+      id-token: write
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+      DOTNET_NOLOGO: 'true'
+      DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: refs/tags/${{ env.TAG }}
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Version from the tag
+        id: meta
+        shell: pwsh
+        run: |
+          $version = (dotnet msbuild ExControls/ExControls.csproj -nologo -getProperty:Version).Trim()
+          if ($LASTEXITCODE -ne 0 -or -not $version) { throw 'Could not read the version from ExControls.csproj' }
+          if ($env:TAG -cne "v$version") { throw "Tag '$env:TAG' does not match version $version in ExControls.csproj" }
+          # the designer and dependent assemblies bind to ExControls by AssemblyVersion - it must follow the package version
+          $assembly = (Select-String -Path ExControls/Properties/AssemblyInfo.cs -Pattern '^\[assembly: AssemblyVersion\("([^"]+)"\)\]').Matches.Groups[1].Value
+          $expected = ($version -split '-')[0]
+          while ($expected.Split('.').Count -lt 4) { $expected += '.0' }
+          if ($assembly -ne $expected) { throw "AssemblyVersion $assembly in Properties/AssemblyInfo.cs does not match version $version (expected $expected)" }
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Tests
+        shell: pwsh
+        run: |
+          dotnet test ExControls.Tests/ExControls.Tests.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw 'Tests failed' }
+
+      - name: Package
+        shell: pwsh
+        run: |
+          # builds all targets and the designer extension (lib/<tfm>/Design/WinForms)
+          dotnet pack ExControls/ExControls.csproj -c Release -o artifacts/nuget
+          if ($LASTEXITCODE -ne 0) { throw 'Could not build the package' }
+          Get-ChildItem artifacts/nuget | Format-Table Name, Length
+
+      # the temporary key is valid for one hour - log in right before publishing
+      - name: Log in to nuget.org
+        id: login
+        uses: NuGet/login@v1
+        with:
+          # nuget.org profile name of the package owner (not a secret)
+          user: filif123
+
+      - name: Publish
+        shell: pwsh
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          # push sends the .snupkg next to the package as well; --skip-duplicate allows re-running after a partial failure
+          dotnet nuget push "artifacts/nuget/ExControls.$env:VERSION.nupkg" --api-key $env:NUGET_API_KEY `
+            --source https://api.nuget.org/v3/index.json --skip-duplicate
+          if ($LASTEXITCODE -ne 0) { throw 'Publishing to nuget.org failed' }

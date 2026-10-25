@@ -15,7 +15,7 @@ namespace ExControls;
 /// </summary>
 [Designer("ExControls.Designers.ExOptionsViewDesigner, ExControls")]
 [DefaultEvent("SelectedPanelChanged")]
-[ToolboxBitmap(typeof(ExOptionsView), "Controls\\ExOptionsView.bmp")]
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExOptionsView.ico")]
 public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
 {
     /// <inheritdoc />

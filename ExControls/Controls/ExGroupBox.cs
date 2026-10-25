@@ -12,7 +12,11 @@ namespace ExControls;
 /// Extended GroupBox control: in the custom style it draws the border with its own color, thickness and style, and the text
 /// of a disabled group box in its own color.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(GroupBox), "GroupBox.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExGroupBox.ico")]
+#endif
 [Designer("ExControls.Designers.ExGroupBoxDesigner, ExControls")]
 public class ExGroupBox : GroupBox, IExControl, IThemeable
 {

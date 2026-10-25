@@ -3,6 +3,11 @@
 /// <summary>
 /// Extended button control with drop down menu.
 /// </summary>
+#if NETFRAMEWORK
+[ToolboxBitmap(typeof(ToolStripSplitButton), "ToolStripSplitButton.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExDropDownButton.ico")]
+#endif
 public class ExDropDownButton : ExButton
 {
     private Color _arrowColor;

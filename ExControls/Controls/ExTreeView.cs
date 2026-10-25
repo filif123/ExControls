@@ -7,7 +7,11 @@ namespace ExControls;
 /// use the Explorer theme (<see cref="ExTreeView.Style" />).
 /// </summary>
 [Designer("ExControls.Designers.ExTreeViewDesigner, ExControls")]
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(TreeView), "TreeView.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExTreeView.ico")]
+#endif
 [DefaultProperty(nameof(Nodes))]
 [DefaultEvent(nameof(AfterSelect))]
 public class ExTreeView : TreeView

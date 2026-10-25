@@ -12,7 +12,11 @@ namespace ExControls;
 /// Part of this code is from: https://www.codeproject.com/Articles/13342/Filtering-properties-in-a-PropertyGrid
 /// </summary>
 [Designer("ExControls.Designers.ExPropertyGridDesigner, ExControls")]
-[ToolboxBitmap(typeof(PropertyGrid),"PropertyGrid.bmp")]
+#if NETFRAMEWORK
+[ToolboxBitmap(typeof(PropertyGrid), "PropertyGrid.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExPropertyGrid.ico")]
+#endif
 public class ExPropertyGrid : PropertyGrid, ISearchable
 {
     private readonly ToolStrip? _innerToolStrip;

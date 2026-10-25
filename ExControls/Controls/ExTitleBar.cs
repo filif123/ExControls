@@ -25,6 +25,11 @@ namespace ExControls;
 /// text and buttons.
 /// </remarks>
 [Designer("ExControls.Designers.ExTitleBarDesigner, ExControls")]
+#if NETFRAMEWORK
+[ToolboxBitmap(typeof(MenuStrip), "MenuStrip.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExTitleBar.ico")]
+#endif
 public class ExTitleBar : Panel, IThemeable
 {
     // rozmery pri 96 DPI

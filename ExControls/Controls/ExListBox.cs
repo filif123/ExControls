@@ -4,6 +4,11 @@ namespace ExControls;
 /// Extended ListBox control: in the custom style it draws the border with its own color and thickness, the selected row in its
 /// own color and uses its own colors when disabled.
 /// </summary>
+#if NETFRAMEWORK
+[ToolboxBitmap(typeof(ListBox), "ListBox.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExListBox.ico")]
+#endif
 public class ExListBox : ListBox
 {
     private const int RGN_DIFF = 0x4;

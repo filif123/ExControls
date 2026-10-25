@@ -6,7 +6,11 @@ namespace ExControls;
 /// Extended Label control: a disabled label draws its text in <see cref="ExLabel.DisabledForeColor" /> instead of the system
 /// gray.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(Label), "Label.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExLabel.ico")]
+#endif
 public class ExLabel : Label
 {
     private const ContentAlignment AnyBottom = ContentAlignment.BottomLeft | ContentAlignment.BottomCenter | ContentAlignment.BottomRight;

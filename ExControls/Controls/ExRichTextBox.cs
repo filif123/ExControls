@@ -9,7 +9,11 @@ namespace ExControls;
 /// Extended RichTextBox control: in the custom style it draws the border with its own color and thickness, highlighted when
 /// the control has focus or is under the mouse, and uses its own colors when disabled.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(RichTextBox), "RichTextBox.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExRichTextBox.ico")]
+#endif
 public class ExRichTextBox : RichTextBox, IExControl
 {
     private Color _borderColor;

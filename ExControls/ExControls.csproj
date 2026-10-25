@@ -7,9 +7,13 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+		<!-- XML documentation for IntelliSense of the package users: packed from obj (_PackDocumentationFromObj), not copied
+		     next to the DLL (it would get into the output and installers of every program with a ProjectReference to ExControls) -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<CopyDocumentationFileToOutputDirectory>false</CopyDocumentationFileToOutputDirectory>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);_PackDocumentationFromObj</TargetsForTfmSpecificBuildOutput>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<DocumentationFile>bin\Debug\ExControls.xml</DocumentationFile>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -54,24 +58,80 @@
 		<Compile Update="Controls\ExToolStripComboBox.cs" />
 		<Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
 		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="..\THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="\" Link="THIRD-PARTY-NOTICES.md" />
 	</ItemGroup>
 	<ItemGroup>
-		<EmbeddedResource Include="Controls\ExLineSeparator.bmp" />
-	</ItemGroup>
-	<ItemGroup>
-		<Content Include="Controls\ExOptionsView.bmp" />
+		<!-- toolbox icons (ToolboxBitmap via ToolboxIcons) are embedded - as Content the package would add them to every project using ExControls -->
+		<EmbeddedResource Include="Toolbox\*.ico" />
 	</ItemGroup>
 	<PropertyGroup>
-		<!-- balik NuGet len z Release - Debug build ho zbytocne vyraba pri kazdom builde -->
-		<GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
+		<!-- the NuGet package only from dotnet pack (-c Release), which builds also the designer extension - not on every build -->
 		<Title>ExControls</Title>
-		<!-- po zmene zvysit aj AssemblyVersion v Properties\AssemblyInfo.cs a ExControlsDesignerVersion v ..\ExControls.Designer.targets -->
+		<!-- after a change increase also AssemblyVersion in Properties\AssemblyInfo.cs and ExControlsDesignerVersion in ..\ExControls.Designer.targets;
+		     a release on nuget.org = tag v<Version> (.github/workflows/nuget.yml) -->
 		<Version>2.0.0</Version>
+		<Authors>Filip Vateha</Authors>
+		<Copyright>Copyright © 2021-2026 Filip Vateha</Copyright>
 		<PackageProjectUrl>https://github.com/filif123/ExControls</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/filif123/ExControls</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Description>Extended controls for Windows Forms.</Description>
-		<PackageTags>WinForms;Windows Forms</PackageTags>
+		<Description>Extended controls for Windows Forms with dark mode themes and a custom title bar.</Description>
+		<PackageTags>WinForms;WindowsForms;controls;theme;dark-mode;title-bar</PackageTags>
+		<!-- symbols (portable PDB) as .snupkg next to the package; dotnet nuget push sends them together with it -->
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!-- deterministic paths in PDBs when built on GitHub (Source Link is part of the SDK) -->
+		<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
 	</PropertyGroup>
+	<!-- pack takes the documentation from the output folder, where it is not copied -->
+	<Target Name="_PackDocumentationFromObj">
+		<ItemGroup>
+			<DocumentationProjectOutputGroupOutput Remove="@(DocumentationProjectOutputGroupOutput)" />
+			<BuildOutputInPackage Include="@(DocFileItem->'%(FullPath)')" />
+		</ItemGroup>
+	</Target>
+	<!-- The designer extension of the .NET out-of-process designer (collection editor of ExOptionsView.Panels) is part of the package:
+	     Visual Studio loads it from Design/WinForms next to the referenced ExControls.dll (lib/<tfm>/Design/WinForms, server part in Server/).
+	     The server part references ExControls, so it is neither in the restore graph of ExControls nor built from its inner builds
+	     (a circular reference) - BeforePack restores and builds the extension, the per-framework content only adds its assemblies.
+	     Projects with a ProjectReference to ExControls get the extension from ..\ExControls.Designer.targets instead. -->
+	<PropertyGroup>
+		<BeforePack>$(BeforePack);_BuildDesignerForPackage</BeforePack>
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddDesignerToPackage</TargetsForTfmSpecificContentInPackage>
+		<!-- NU5100: assemblies of the extension outside the lib root (Design/WinForms is intended) -->
+		<NoWarn>$(NoWarn);NU5100</NoWarn>
+	</PropertyGroup>
+	<ItemGroup>
+		<_DesignerClientProject Include="..\ExControls.Designer.Client\ExControls.Designer.Client.csproj" />
+		<_DesignerServerProject Include="..\ExControls.Designer.Server\ExControls.Designer.Server.csproj" />
+		<_DesignerProtocolProject Include="..\ExControls.Designer.Protocol\ExControls.Designer.Protocol.csproj" />
+	</ItemGroup>
+	<Target Name="_BuildDesignerForPackage">
+		<!-- restore with another global property, so that the build evaluates the projects again with the restored packages -->
+		<MSBuild Projects="@(_DesignerClientProject);@(_DesignerServerProject)" Targets="Restore" Properties="Configuration=$(Configuration);_ExControlsDesignerRestore=true" RemoveProperties="TargetFramework;RuntimeIdentifier" />
+		<MSBuild Projects="@(_DesignerClientProject);@(_DesignerServerProject)" Targets="Build" Properties="Configuration=$(Configuration)" RemoveProperties="TargetFramework;RuntimeIdentifier" />
+	</Target>
+	<Target Name="_AddDesignerToPackage" Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+		<MSBuild Projects="@(_DesignerClientProject)" Targets="GetTargetPath" Properties="Configuration=$(Configuration)" RemoveProperties="TargetFramework;RuntimeIdentifier">
+			<Output TaskParameter="TargetOutputs" ItemName="_DesignerClientAssembly" />
+		</MSBuild>
+		<MSBuild Projects="@(_DesignerServerProject)" Targets="GetTargetPath" Properties="Configuration=$(Configuration)" RemoveProperties="TargetFramework;RuntimeIdentifier">
+			<Output TaskParameter="TargetOutputs" ItemName="_DesignerServerAssembly" />
+		</MSBuild>
+		<MSBuild Projects="@(_DesignerProtocolProject)" Targets="GetTargetPath" Properties="Configuration=$(Configuration)" RemoveProperties="TargetFramework;RuntimeIdentifier">
+			<Output TaskParameter="TargetOutputs" ItemName="_DesignerProtocolAssembly" />
+		</MSBuild>
+		<!-- the folder of ExControls.dll in the package (net10.0-windows7.0), the extension must be right next to it -->
+		<GetNuGetShortFolderName TargetFrameworkMoniker="$(TargetFrameworkMoniker)" TargetPlatformMoniker="$(TargetPlatformMoniker)">
+			<Output TaskParameter="NuGetShortFolderName" PropertyName="_DesignerLibFolder" />
+		</GetNuGetShortFolderName>
+		<ItemGroup>
+			<TfmSpecificPackageFile Include="@(_DesignerClientAssembly);@(_DesignerProtocolAssembly)" PackagePath="lib/$(_DesignerLibFolder)/Design/WinForms" />
+			<TfmSpecificPackageFile Include="@(_DesignerServerAssembly);@(_DesignerProtocolAssembly)" PackagePath="lib/$(_DesignerLibFolder)/Design/WinForms/Server" />
+		</ItemGroup>
+		<Error Condition="!Exists('%(TfmSpecificPackageFile.FullPath)')" Text="Designer extension assembly %(TfmSpecificPackageFile.FullPath) was not built." />
+	</Target>
 	<ItemGroup>
 		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.Windows.Compatibility" Version="10.0.13" />
 		<PackageReference Condition="'$(TargetFramework)'!='net48'" Include="Microsoft.WinForms.Designer.SDK" Version="1.6.0" />
@@ -83,10 +143,10 @@
 		<Reference Include="System.Drawing.Design" />
 		<PackageReference Include="System.Resources.Extensions" Version="9.0.0" />
 	</ItemGroup>
-	<!-- Navrhar VS drzi ExControls.dll otvorenu: zamknuty subor sa neda prepisat, ale da sa premenovat.
-	     Pred kompilaciou sa preto stara DLL odsunie na .locked (len Debug - pri praci s navrharom).
-	     Nie pri design-time builde VS (po kazdej uprave suboru): ten nekompiluje ani nekopiruje, DLL by z bin zmizla
-	     a navrhar by projekt otvoril bez ExControls ("base class could not be loaded", "Failed to launch the design tools server"). -->
+	<!-- The VS designer keeps ExControls.dll open: a locked file can't be overwritten, but it can be renamed.
+	     So before compiling, the old DLL is moved aside to .locked (Debug only - when working with the designer).
+	     Not in a VS design-time build (after every edit of a file): it neither compiles nor copies, the DLL would disappear from bin
+	     and the designer would open the project without ExControls ("base class could not be loaded", "Failed to launch the design tools server"). -->
 	<Target Name="MoveLockedAssembly" BeforeTargets="CoreCompile" Condition="'$(Configuration)' == 'Debug' And '$(DesignTimeBuild)' != 'true' And Exists('$(TargetPath)')">
 		<Delete Files="$(TargetPath).locked" ContinueOnError="true" />
 		<Move SourceFiles="$(TargetPath)" DestinationFiles="$(TargetPath).locked" Condition="!Exists('$(TargetPath).locked')" ContinueOnError="true" />

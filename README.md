@@ -67,9 +67,12 @@ dotnet add package ExControls
 ## Development
 
 ### Designer extension
-The .NET WinForms designer runs out of process and loads custom type editors only from NuGet packages.
-`ExControls.Designer.Package` builds `artifacts/packages/ExControls.Designer.<version>.nupkg`; projects that design
-forms with ExControls import `ExControls.Designer.targets` next to their `ExControls` project reference.
+The .NET WinForms designer runs out of process and loads custom type editors only from NuGet packages, from
+`Design/WinForms` next to the referenced assembly. The `ExControls` package contains the extension in
+`lib/<tfm>/Design/WinForms` (`dotnet pack ExControls/ExControls.csproj -c Release` restores and builds it, XML
+documentation is packed too). For a project reference, `ExControls.Designer.Package` builds
+`artifacts/packages/ExControls.Designer.<version>.nupkg`; projects that design forms with ExControls import
+`ExControls.Designer.targets` next to their `ExControls` project reference.
 
 ### After changing ExControls
 The designer loads `ExControls.dll` from the build output: build the solution and open the form again (if the designer
@@ -84,5 +87,20 @@ Increase `ExControlsDesignerVersion` in `ExControls.Designer.targets`, build the
 NuGet and Visual Studio cache the package by version, a package rebuilt with the same version is ignored. An outdated
 package shows "Failed to launch the design tools server process" on every form.
 
+### Toolbox icons
+Icons are embedded `.ico` files in `ExControls/Toolbox`, assigned by `[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.<Name>.ico")]`.
+The toolbox of .NET projects in Visual Studio looks the icon up only in the assembly of the control - an icon of a Windows
+Forms control (`typeof(Button), "Button.bmp"`) shows the default component icon there, so controls derived from Windows
+Forms use it only under `#if NETFRAMEWORK`. Each icon has a single 16x16 frame without semi-transparent pixels and,
+like the Windows Forms icons, a 1 px `#F6F6F6` halo around dark strokes: the toolbox shows no image for a multi-size
+icon, draws semi-transparent pixels with magenta edges and loses strokes that border transparency. `ToolboxBitmapTests`
+checks all of it.
+
+### Release
+A tag `v<Version>` (`git tag v2.0.0`, `git push origin v2.0.0`) runs `.github/workflows/nuget.yml`: it checks that the
+tag matches `<Version>` and `AssemblyVersion`, runs the tests and publishes the package with symbols to nuget.org
+through Trusted Publishing, without an API key in the repository.
+
 ## License
-MIT, see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE). Toolbox icons come from .NET Windows Forms and Fluent UI System Icons (both MIT), see
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

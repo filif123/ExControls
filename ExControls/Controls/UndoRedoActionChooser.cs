@@ -5,6 +5,7 @@ namespace ExControls;
 /// <summary>
 /// List of Undo/Redo actions - selecting an action determines up to which one to undo or redo.
 /// </summary>
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.UndoRedoActionChooser.ico")]
 public partial class UndoRedoActionChooser : UserControl
 {
     /// <summary>

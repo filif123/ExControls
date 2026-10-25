@@ -9,6 +9,11 @@ namespace ExControls;
 [Designer("ExControls.Designers.ExColorSelectorDesigner, ExControls")]
 [DefaultProperty(nameof(SelectedColor))]
 [DefaultEvent(nameof(SelectedColorChanged))]
+#if NETFRAMEWORK
+[ToolboxBitmap(typeof(ColorDialog), "ColorDialog.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExColorSelector.ico")]
+#endif
 public partial class ExColorSelector : UserControl
 {
     private Color _selectedColor;

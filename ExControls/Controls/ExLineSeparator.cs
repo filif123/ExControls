@@ -11,7 +11,7 @@ namespace ExControls;
 /// <summary>
 /// Horizontal or vertical line separating controls, with its own thickness, color and dash style.
 /// </summary>
-[ToolboxBitmap(typeof(ExLineSeparator), "Controls\\ExLineSeparator.bmp")]
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExLineSeparator.ico")]
 [Designer("ExControls.Designers.ExLineSeparatorDesigner, ExControls")]
 public class ExLineSeparator : Control, IThemeable
 {

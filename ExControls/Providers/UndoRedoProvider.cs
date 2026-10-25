@@ -8,6 +8,7 @@ namespace ExControls.Providers;
 /// <summary>
 /// Provides undo-redo capability.
 /// </summary>
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.UndoRedoManager.ico")]
 public class UndoRedoManager : Component
 {
     private readonly Stack<(IUndoRedoCommand cmd, IUndoHandler? handler)> _undoStack, _redoStack;

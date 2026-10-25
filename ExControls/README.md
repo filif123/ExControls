@@ -43,6 +43,11 @@ the form without the system caption and frame, so the designed `ClientSize` matc
 `TextBox.PlaceholderText` on an `ExForm` with `UseCompositedPainting` (`WS_EX_COMPOSITED` repaints it endlessly) -
 use `ExTextBox.HintText`.
 
+## Visual Studio designer
+
+In .NET projects the package brings its own designer extension (collection editor of `ExOptionsView.Panels`),
+Visual Studio loads it automatically.
+
 ## Breaking changes in 2.0
 
 - `System.Linq.Enumerable` extensions renamed to `ExEnumerable`.
@@ -56,4 +61,5 @@ use `ExTextBox.HintText`.
 
 ## License
 
-MIT
+MIT. Toolbox icons come from .NET Windows Forms and Fluent UI System Icons (both MIT), see THIRD-PARTY-NOTICES.md
+in the package.

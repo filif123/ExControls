@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<!-- kniznica sa publikuje aj pre .NET Framework - testy overuju oba ciele -->
+		<!-- the library is published also for .NET Framework - the tests check both targets -->
 		<TargetFrameworks>net48;net10.0-windows</TargetFrameworks>
 		<RootNamespace>ExControls.Tests</RootNamespace>
 		<AssemblyName>ExControls.Tests</AssemblyName>
@@ -17,7 +17,7 @@
 		<ProjectReference Include="..\ExControls\ExControls.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net48'">
-		<!-- DesignSurface v testoch navrhara -->
+		<!-- DesignSurface in the designer tests -->
 		<Reference Include="System.Design" />
 	</ItemGroup>
 	<ItemGroup>

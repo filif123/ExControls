@@ -8,7 +8,11 @@ namespace ExControls;
 /// <summary>
 /// Extended TableLayoutPanel control: in the custom style it draws the cell borders with its own color and thickness.
 /// </summary>
+#if NETFRAMEWORK
 [ToolboxBitmap(typeof(TableLayoutPanel), "TableLayoutPanel.bmp")]
+#else
+[ToolboxBitmap(typeof(ToolboxIcons), "Toolbox.ExTableLayoutPanel.ico")]
+#endif
 public class ExTableLayoutPanel : TableLayoutPanel, IExControl, IThemeable
 {
     /// <inheritdoc />
