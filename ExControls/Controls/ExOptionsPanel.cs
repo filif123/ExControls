@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Drawing.Design;
 using ExControls.Converters;
 using ExControls.Editors;
@@ -16,6 +16,9 @@ public class ExOptionsPanel : Panel
     private OptionsNode? _node;
 
     private readonly List<Control> _linkCollection;
+
+    // original background colors of the controls highlighted by the search; Color.Empty = inherited from the parent
+    private readonly Dictionary<Control, Color> _highlighted = new();
 
     /// <summary>
     /// Occurs when the <see cref="ParentNode" /> property is set.
@@ -271,14 +274,59 @@ public class ExOptionsPanel : Panel
             if (Search(text, ctl))
                 return true;
         }
-        return NodeText.Contains(text);
+        return NodeText.Contains(text, StringComparison.CurrentCultureIgnoreCase);
     }
 
     private static bool Search(string text, Control control)
     {
-        if (control.Text.Contains(text, StringComparison.CurrentCultureIgnoreCase))
+        if (TextMatches(control, text))
             return true;
         return control.Controls.Cast<Control>().Any(ctrl => Search(text, ctrl));
+    }
+
+    /// <summary>
+    /// Highlights the labels, check boxes and radio buttons in the panel (including nested controls) whose text contains the
+    /// specified text and removes the previous highlight. An empty text only removes the highlight.
+    /// </summary>
+    /// <param name="text">The text to search for.</param>
+    /// <param name="color">The background color of the highlighted controls.</param>
+    /// <returns>The number of highlighted controls.</returns>
+    public int HighlightMatches(string? text, Color color)
+    {
+        ClearHighlight();
+        if (text is null || string.IsNullOrWhiteSpace(text))
+            return 0;
+
+        foreach (var control in Descendants(this).Where(c => (c is Label or CheckBox or RadioButton) && TextMatches(c, text)))
+        {
+            // a color inherited from the parent is restored as inherited (Color.Empty), not as a fixed color
+            var inherited = TypeDescriptor.GetProperties(control)[nameof(BackColor)]?.ShouldSerializeValue(control) != true;
+            _highlighted[control] = inherited ? Color.Empty : control.BackColor;
+            control.BackColor = color;
+        }
+
+        return _highlighted.Count;
+    }
+
+    private void ClearHighlight()
+    {
+        foreach (var pair in _highlighted.Where(pair => !pair.Key.IsDisposed))
+            pair.Key.BackColor = pair.Value;
+        _highlighted.Clear();
+    }
+
+    // mnemonic ampersands are not part of the visible text
+    private static bool TextMatches(Control control, string text) =>
+        control.Text.Replace("&", "").Contains(text, StringComparison.CurrentCultureIgnoreCase);
+
+    private static IEnumerable<Control> Descendants(Control parent)
+    {
+        foreach (Control child in parent.Controls)
+        {
+            yield return child;
+            foreach (var nested in Descendants(child))
+                yield return nested;
+        }
     }
 
     /// <summary>

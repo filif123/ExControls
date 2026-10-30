@@ -137,6 +137,14 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
     }
 
     /// <summary>
+    /// Gets or sets background color of the controls whose text matches the search. <see cref="Color.Empty" /> = light
+    /// yellow on a light panel, dark amber on a dark one.
+    /// </summary>
+    [DefaultValue(typeof(Color), "")]
+    [ExCategory(CategoryType.Appearance)]
+    public Color SearchHighlightColor { get; set; } = Color.Empty;
+
+    /// <summary>
     /// Gets or sets visibility of the Header node name.
     /// </summary>
     [DefaultValue(true)]
@@ -324,16 +332,22 @@ public partial class ExOptionsView : UserControl, ISupportInitialize, IThemeable
             SelectedPanel = panel;
     }
 
+    private Color HighlightColorFor(Control panel) =>
+        !SearchHighlightColor.IsEmpty ? SearchHighlightColor
+        : panel.BackColor.GetBrightness() < 0.5f ? Color.FromArgb(94, 76, 22)
+        : Color.FromArgb(255, 236, 140);
+
     private void TbSearch_TextChanged(object sender, EventArgs e)
     {
+        foreach (var panel in Panels.OfType<ExOptionsPanel>())
+            panel.HighlightMatches(tbSearch.Text, HighlightColorFor(panel));
+
         if (string.IsNullOrWhiteSpace(tbSearch.Text))
         {
             TreeView.Nodes.SetVisibilityForAll(true);
-            foreach (Control control in Panels)
-            {
-                if (control is ExOptionsPanel p) 
-                    p.Search(tbSearch.Text);
-            }
+            // searchable controls (property grid) drop their filter on an empty text
+            foreach (var panel in Panels.OfType<ExOptionsPanel>())
+                panel.Search(tbSearch.Text);
             return;
         }
 
