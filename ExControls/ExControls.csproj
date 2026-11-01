@@ -69,7 +69,7 @@
 		<Title>ExControls</Title>
 		<!-- after a change increase also AssemblyVersion in Properties\AssemblyInfo.cs and ExControlsDesignerVersion in ..\ExControls.Designer.targets;
 		     a release on nuget.org = tag v<Version> (.github/workflows/nuget.yml) -->
-		<Version>2.0.0</Version>
+		<Version>2.1.0</Version>
 		<Authors>Filip Vateha</Authors>
 		<Copyright>Copyright © 2021-2026 Filip Vateha</Copyright>
 		<PackageProjectUrl>https://github.com/filif123/ExControls</PackageProjectUrl>

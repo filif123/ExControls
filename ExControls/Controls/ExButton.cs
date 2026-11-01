@@ -17,7 +17,7 @@ namespace ExControls;
 public class ExButton : Button, IExControl, IThemeable
 {
     /// <inheritdoc />
-    public void ApplyTheme(ExTheme theme)
+    public virtual void ApplyTheme(ExTheme theme)
     {
         DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)

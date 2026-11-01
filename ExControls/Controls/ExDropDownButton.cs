@@ -72,6 +72,15 @@ public class ExDropDownButton : ExButton
     }
 
     /// <inheritdoc />
+    public override void ApplyTheme(ExTheme theme)
+    {
+        base.ApplyTheme(theme);
+        // sipka ma farbu textu tlacidla - inak by v tmavej teme ostala cierna
+        ArrowColor = theme.UseSystemStyle ? SystemColors.ControlText : theme.ButtonForeColor;
+        DisabledArrowColor = theme.UseSystemStyle ? SystemColors.GrayText : Color.FromArgb(110, theme.ButtonForeColor);
+    }
+
+    /// <inheritdoc />
     protected override void OnMouseDown(MouseEventArgs mevent)
     {
         base.OnMouseDown(mevent);
