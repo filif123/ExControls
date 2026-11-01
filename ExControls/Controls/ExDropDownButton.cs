@@ -78,6 +78,9 @@ public class ExDropDownButton : ExButton
         // sipka ma farbu textu tlacidla - inak by v tmavej teme ostala cierna
         ArrowColor = theme.UseSystemStyle ? SystemColors.ControlText : theme.ButtonForeColor;
         DisabledArrowColor = theme.UseSystemStyle ? SystemColors.GrayText : Color.FromArgb(110, theme.ButtonForeColor);
+        // ponuka nie je ContextMenuStrip ziadneho prvku, tema by ju inak nenasla
+        if (DropDownMenu is not null)
+            ExThemer.Apply(DropDownMenu, theme);
     }
 
     /// <inheritdoc />

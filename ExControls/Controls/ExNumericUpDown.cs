@@ -17,6 +17,7 @@ public class ExNumericUpDown : NumericUpDown, IExControl, IThemeable
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(this, theme, nameof(BorderStyle), nameof(BackColor), nameof(ForeColor), nameof(ArrowsColor), nameof(BorderColor), nameof(HighlightColor), nameof(SelectedButtonColor));
         DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)
             return;

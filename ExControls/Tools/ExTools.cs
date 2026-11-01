@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Microsoft.Win32;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMethodReturnValue.Global
@@ -115,7 +116,14 @@ public static class ExTools
     /// <returns>whether dark mode has been successfully activated/deactivated</returns>
     public static bool SetImmersiveDarkMode(this Form form, bool enabled)
     {
-        return SetImmersiveDarkMode(form.Handle, enabled);
+        ArgumentNullException.ThrowIfNull(form);
+
+        var result = SetImmersiveDarkMode(form.Handle, enabled);
+        // zobrazene okno prekresli zahlavie az pri dalsom prekresleni ramu (napr. aktivacii) - vynuti sa hned
+        if (result && form.Visible)
+            Win32.SetWindowPos(form.Handle, IntPtr.Zero, 0, 0, 0, 0, Win32.SetWindowPosFlags.IgnoreMove | Win32.SetWindowPosFlags.IgnoreResize
+                | Win32.SetWindowPosFlags.IgnoreZOrder | Win32.SetWindowPosFlags.DoNotActivate | Win32.SetWindowPosFlags.FrameChanged);
+        return result;
     }
 
     /// <summary>
@@ -297,6 +305,31 @@ public static class ExTools
     public static bool GetFormBorderThickness(this Form form, out int sizeInPoints)
     {
         return GetFormBorderThickness(form.Handle, out sizeInPoints);
+    }
+
+    // prvky, ktorym SetDarkScrollBars zapol tmave posuvniky
+    private static readonly ConditionalWeakTable<Control, object> DarkScrollBarControls = new();
+
+    /// <summary>
+    /// Turns the dark scroll bars (theme DarkMode_Explorer) of the control on or off. Turning them off restores the default
+    /// Windows theme (<see cref="ExTreeView" /> the theme of its <see cref="ExTreeView.Style" />) only to a control that had
+    /// the dark scroll bars - other controls stay untouched.
+    /// </summary>
+    /// <param name="control">control with scroll bars</param>
+    /// <param name="dark">whether the scroll bars are dark</param>
+    public static void SetDarkScrollBars(this Control control, bool dark)
+    {
+        ArgumentNullException.ThrowIfNull(control);
+
+        if (dark)
+        {
+            control.SetTheme(WindowsTheme.DarkExplorer);
+            _ = DarkScrollBarControls.GetValue(control, _ => new object());
+        }
+        else if (DarkScrollBarControls.Remove(control))
+        {
+            control.SetTheme(control is ExTreeView tree ? tree.StyleTheme : WindowsTheme.Default);
+        }
     }
 
     /// <summary>

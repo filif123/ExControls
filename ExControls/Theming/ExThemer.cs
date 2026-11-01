@@ -1,4 +1,7 @@
 using System.Collections;
+using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace ExControls;
 
@@ -54,6 +57,64 @@ public static class ExThemer
         if (control.ContextMenuStrip is { } menu)
             FindHandler(menu.GetType())?.Invoke(menu, theme);
     }
+
+    /// <summary>
+    /// Keeps the properties of an object (a control, its part or a cell style) as they were before the first theme and
+    /// restores them for the system style - a control switched from the custom style back to the system one then looks
+    /// like a control that never had the custom style. Call it in a handler (or <see cref="IThemeable.ApplyTheme" />) before
+    /// the properties change; they are restored in the given order. A property that was not set (inherited from the parent
+    /// or default) is reset, so it inherits again.
+    /// </summary>
+    /// <param name="target">object whose properties the theme changes</param>
+    /// <param name="theme">theme being applied</param>
+    /// <param name="properties">names of the properties the custom style changes</param>
+    /// <exception cref="ArgumentException">when <paramref name="target" /> has no property of the given name</exception>
+    public static void KeepDefaults(object target, ExTheme theme, params string[] properties)
+    {
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(theme);
+        ArgumentNullException.ThrowIfNull(properties);
+
+        var saved = Defaults.GetOrCreateValue(target);
+        var descriptors = TypeDescriptor.GetProperties(target);
+        foreach (var name in properties)
+        {
+            var property = descriptors[name]
+                ?? throw new ArgumentException($"{target.GetType().Name} has no property {name}.", nameof(properties));
+            if (!saved.TryGetValue(name, out var value))
+            {
+                saved[name] = new SavedValue(property.GetValue(target), !property.ShouldSerializeValue(target));
+                continue;
+            }
+
+            if (!theme.UseSystemStyle)
+                continue;
+
+            // vlastnost s resetom (zdedena alebo predvolena hodnota) sa resetuje - ak uz nastavena nie je, nemeni sa;
+            // bez resetu (napr. farby stylu bunky) sa vrati povodna hodnota
+            if (value.NotSet && HasReset(target, property))
+            {
+                if (property.CanResetValue(target))
+                    property.ResetValue(target);
+            }
+            else
+            {
+                property.SetValue(target, value.Value);
+            }
+        }
+    }
+
+    private static bool HasReset(object target, PropertyDescriptor property) =>
+        property.Attributes[typeof(DefaultValueAttribute)] is not null
+        || target.GetType().GetMethod("Reset" + property.Name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            null, Type.EmptyTypes, null) is not null;
+
+    // hodnoty vlastnosti pred prvou temou (objekt -> nazov vlastnosti -> hodnota)
+    private static readonly ConditionalWeakTable<object, Dictionary<string, SavedValue>> Defaults = new();
+
+    /// <param name="Value">hodnota pred prvou temou</param>
+    /// <param name="NotSet">vlastnost nebola nastavena (zdedena alebo predvolena) - obnovi sa cez ResetValue</param>
+    private sealed record SavedValue(object? Value, bool NotSet);
 
     private static Action<Control, ExTheme>? FindHandler(Type? type)
     {

@@ -9,6 +9,7 @@ public class DataGridViewExCheckBoxColumn : DataGridViewCheckBoxColumn, IThemeab
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(this, theme, nameof(BorderColor), nameof(MarkColor), nameof(SquareBackColor), nameof(HighlightColor));
         DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)
             return;

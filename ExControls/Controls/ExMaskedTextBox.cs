@@ -19,6 +19,7 @@ public class ExMaskedTextBox : MaskedTextBox, IExControl, IThemeable
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(this, theme, nameof(BackColor), nameof(ForeColor), nameof(BorderColor), nameof(HighlightColor), nameof(DisabledBorderColor));
         DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)
             return;

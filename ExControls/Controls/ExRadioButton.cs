@@ -21,6 +21,7 @@ public class ExRadioButton : RadioButton, IExControl, ICheckableExControl, IThem
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(this, theme, nameof(BorderColor), nameof(BoxBackColor), nameof(MarkColor), nameof(HighlightColor));
         DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)
             return;

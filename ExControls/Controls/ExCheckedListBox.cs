@@ -19,6 +19,8 @@ public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(this, theme, nameof(BackColor), nameof(ForeColor), nameof(BorderColor), nameof(SquareBackColor),
+            nameof(MarkColor), nameof(BorderStyle), nameof(FocusedBackColor), nameof(HighlightColor));
         DefaultStyle = theme.UseSystemStyle;
         if (!theme.UseSystemStyle)
         {
@@ -32,8 +34,7 @@ public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
             HighlightColor = theme.HighlightBackColor;
         }
 
-        if (theme.DarkScrollBars)
-            this.SetTheme(WindowsTheme.DarkExplorer);
+        this.SetDarkScrollBars(theme.DarkScrollBars);
     }
 
     private Color _borderColor;

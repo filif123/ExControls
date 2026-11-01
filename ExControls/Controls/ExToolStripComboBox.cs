@@ -16,6 +16,13 @@ public class ExToolStripComboBox : ToolStripControlHost, IThemeable
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(ComboBox, theme, nameof(ComboBox.BackColor), nameof(ComboBox.ForeColor),
+            nameof(ComboBox.DropDownSelectedRowBackColor), nameof(ComboBox.DropDownBackColor));
+        ExThemer.KeepDefaults(ComboBox.StyleNormal, theme, nameof(ExComboBoxStyle.BackColor), nameof(ExComboBoxStyle.ForeColor),
+            nameof(ExComboBoxStyle.BorderColor), nameof(ExComboBoxStyle.ArrowColor));
+        ExThemer.KeepDefaults(ComboBox.StyleSelected, theme, nameof(ExComboBoxStyle.BorderColor), nameof(ExComboBoxStyle.ButtonRenderFirst),
+            nameof(ExComboBoxStyle.ButtonBackColor), nameof(ExComboBoxStyle.ButtonBorderColor));
+        ExThemer.KeepDefaults(ComboBox.StyleHighlight, theme, nameof(ExComboBoxStyle.BorderColor), nameof(ExComboBoxStyle.ButtonBorderColor));
         ComboBox.DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)
             return;

@@ -13,6 +13,11 @@ public class DataGridViewExComboBoxColumn : DataGridViewComboBoxColumn, IThemeab
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(this, theme, nameof(DropDownBackColor), nameof(DropDownSelectedBackColor));
+        foreach (var style in new[] { StyleNormal, StyleSelected, StyleHighlight })
+            ExThemer.KeepDefaults(style, theme, nameof(ExComboBoxStyle.ForeColor), nameof(ExComboBoxStyle.BackColor),
+                nameof(ExComboBoxStyle.BorderColor), nameof(ExComboBoxStyle.ArrowColor), nameof(ExComboBoxStyle.ButtonBackColor),
+                nameof(ExComboBoxStyle.ButtonBorderColor), nameof(ExComboBoxStyle.ButtonRenderFirst));
         DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)
             return;

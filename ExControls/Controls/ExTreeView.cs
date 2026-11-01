@@ -40,25 +40,20 @@ public class ExTreeView : TreeView
             if (field == value)
                 return;
             field = value;
-            switch (value)
-            {
-                case ExTreeViewStyle.Default:
-                    this.SetTheme(WindowsTheme.Default);
-                    break;
-                case ExTreeViewStyle.Light:
-                    this.SetTheme(WindowsTheme.Explorer);
-                    break;
-                case ExTreeViewStyle.Dark:
-                    this.SetTheme(WindowsTheme.DarkExplorer);
-                    break;
-                case ExTreeViewStyle.Old:
-                    this.SetTheme(WindowsTheme.None);
-                    break;
-                default:
-                    return;
-            }
+            this.SetTheme(StyleTheme);
         }
     }
+
+    /// <summary>
+    /// Tema Windows podla <see cref="Style" /> - vrati sa aj po vypnuti tmavych posuvnikov (<see cref="ExTools.SetDarkScrollBars" />).
+    /// </summary>
+    internal WindowsTheme StyleTheme => Style switch
+    {
+        ExTreeViewStyle.Light => WindowsTheme.Explorer,
+        ExTreeViewStyle.Dark => WindowsTheme.DarkExplorer,
+        ExTreeViewStyle.Old => WindowsTheme.None,
+        _ => WindowsTheme.Default
+    };
 
     /// <summary>
     /// Occurs when the new <see cref="TreeNode"/> was added to <see cref="TreeNodeCollection"/>.

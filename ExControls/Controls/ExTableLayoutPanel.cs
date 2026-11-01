@@ -18,6 +18,7 @@ public class ExTableLayoutPanel : TableLayoutPanel, IExControl, IThemeable
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(this, theme, nameof(CellBorderStyle), nameof(BorderColor));
         ExThemer.Apply(Controls, theme);
         BackColor = theme.PanelBackColor;
         ForeColor = theme.PanelForeColor;

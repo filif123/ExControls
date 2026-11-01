@@ -56,6 +56,11 @@ public class ExTabControl : TabControl, IExControl, IThemeable
     private Color _highlightForeColor;
     private int _hoverIndex = -1;
 
+    // styly kreslenia vlastneho vzhladu; predvoleny vzhlad ma tie z TabControl
+    private static readonly ControlStyles[] CustomPaintStyles =
+        [ControlStyles.UserPaint, ControlStyles.DoubleBuffer, ControlStyles.ResizeRedraw, ControlStyles.SupportsTransparentBackColor];
+    private readonly bool[] _systemPaintStyles;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ExTabControl" /> class in the default style.
     /// </summary>
@@ -70,6 +75,7 @@ public class ExTabControl : TabControl, IExControl, IThemeable
         _highlightBackColor = SystemColors.GradientInactiveCaption;
         _highlightForeColor = Color.Black;
         _borderThickness = 1;
+        _systemPaintStyles = CustomPaintStyles.Select(GetStyle).ToArray();
 
         Invalidate();
     }
@@ -267,6 +273,8 @@ public class ExTabControl : TabControl, IExControl, IThemeable
             if (_defaultStyle == value)
                 return;
             _defaultStyle = value;
+            if (Created)
+                UpdatePaintStyles();
             DrawMode = value ? TabDrawMode.Normal : TabDrawMode.OwnerDrawFixed;
             Invalidate();
         }
@@ -283,12 +291,16 @@ public class ExTabControl : TabControl, IExControl, IThemeable
     {
         base.OnCreateControl();
         if (!DefaultStyle)
-        {
-            SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.DoubleBuffer, true);
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-        }
+            UpdatePaintStyles();
+    }
+
+    /// <summary>
+    /// Vlastny vzhlad kresli prvok sam, predvoleny system - po zmene vzhladu za behu (tema) sa styly prepnu.
+    /// </summary>
+    private void UpdatePaintStyles()
+    {
+        for (var i = 0; i < CustomPaintStyles.Length; i++)
+            SetStyle(CustomPaintStyles[i], !_defaultStyle || _systemPaintStyles[i]);
     }
 
     /// <inheritdoc />

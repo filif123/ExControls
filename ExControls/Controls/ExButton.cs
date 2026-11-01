@@ -19,6 +19,9 @@ public class ExButton : Button, IExControl, IThemeable
     /// <inheritdoc />
     public virtual void ApplyTheme(ExTheme theme)
     {
+        ExThemer.KeepDefaults(this, theme, nameof(BackColor), nameof(ForeColor), nameof(UseVisualStyleBackColor));
+        ExThemer.KeepDefaults(ExFlatAppearance, theme, nameof(ExFlatAppearance.BorderColor), nameof(ExFlatAppearance.MouseOverBackColor),
+            nameof(ExFlatAppearance.MouseDownBackColor), nameof(ExFlatAppearance.FocusBorderColor));
         DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)
             return;
@@ -32,6 +35,8 @@ public class ExButton : Button, IExControl, IThemeable
     }
 
     private bool _defaultStyle;
+    // FlatStyle z navrhara alebo kodu - plati, ked ma tlacidlo predvoleny vzhlad
+    private FlatStyle _flatStyle = FlatStyle.Standard;
     private ExFlatButtonAppearance? _appearance;
     private Color _tmpBeforeHoverColor = Color.Empty;
     private Color _tmpBeforeClickColor = Color.Empty;
@@ -59,8 +64,7 @@ public class ExButton : Button, IExControl, IThemeable
             if (_defaultStyle == value)
                 return;
             _defaultStyle = value;
-            if (!_defaultStyle) 
-                FlatStyle = FlatStyle.Flat;
+            base.FlatStyle = _defaultStyle ? _flatStyle : FlatStyle.Flat;
 
             OnDefaultStyleChanged();
         }
@@ -76,9 +80,8 @@ public class ExButton : Button, IExControl, IThemeable
         get => base.FlatStyle;
         set
         {
-            if (!_defaultStyle && value != FlatStyle.Flat)
-                value = FlatStyle.Flat;
-            base.FlatStyle = value;
+            _flatStyle = value;
+            base.FlatStyle = _defaultStyle ? value : FlatStyle.Flat;
         }
     }
 

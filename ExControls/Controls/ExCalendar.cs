@@ -26,6 +26,9 @@ public class ExCalendar : Control, IExControl, IThemeable
     {
         if (theme.TodayText is not null)
             TodayText = theme.TodayText;
+        ExThemer.KeepDefaults(this, theme, nameof(BackColor), nameof(ForeColor), nameof(HeaderForeColor), nameof(DayOfWeekForeColor),
+            nameof(ArrowColor), nameof(BorderColor), nameof(TrailingForeColor), nameof(WeekNumberForeColor), nameof(DisabledForeColor),
+            nameof(HoverBackColor), nameof(HighlightColor), nameof(HighlightForeColor), nameof(TodayBorderColor));
         DefaultStyle = theme.UseSystemStyle;
         if (theme.UseSystemStyle)
             return;

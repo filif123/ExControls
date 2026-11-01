@@ -30,7 +30,11 @@ public class ExDateTimePicker : Control, IExControl, IThemeable
     {
         if (theme.TodayText is not null)
             Calendar.TodayText = theme.TodayText;
+        ExThemer.KeepDefaults(this, theme, nameof(BackColor), nameof(ForeColor), nameof(BorderColor), nameof(ArrowColor),
+            nameof(ButtonBackColor), nameof(HighlightColor), nameof(SelectedFieldBackColor), nameof(SelectedFieldForeColor),
+            nameof(DisabledBackColor), nameof(DisabledForeColor));
         DefaultStyle = theme.UseSystemStyle;
+        ExThemer.Apply(Calendar, theme);
         if (theme.UseSystemStyle)
             return;
 
@@ -44,7 +48,6 @@ public class ExDateTimePicker : Control, IExControl, IThemeable
         SelectedFieldForeColor = theme.HighlightForeColor;
         DisabledBackColor = theme.BoxBackColor;
         DisabledForeColor = theme.BorderColor;
-        ExThemer.Apply(Calendar, theme);
     }
 
     /// <summary>Minimum date the control accepts (same as <see cref="DateTimePicker.MinimumDateTime" />).</summary>

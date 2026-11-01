@@ -22,7 +22,16 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
     /// <inheritdoc />
     public void ApplyTheme(ExTheme theme)
     {
-        // prvok s vlastnym vzhladom ho ponecha aj pri systemovom vzhlade temy
+        // prvok s vlastnym vzhladom z navrhu ho ponecha aj pri systemovom vzhlade temy
+        ExThemer.KeepDefaults(this, theme, nameof(DefaultStyle), nameof(BackColor), nameof(ForeColor),
+            nameof(DropDownSelectedRowBackColor), nameof(DropDownBackColor));
+        // BackColor a ForeColor prvku sa zapisuju aj do StyleNormal - obnovia sa az po nich
+        ExThemer.KeepDefaults(StyleNormal, theme, nameof(ExComboBoxStyle.BackColor), nameof(ExComboBoxStyle.ForeColor),
+            nameof(ExComboBoxStyle.BorderColor), nameof(ExComboBoxStyle.ArrowColor), nameof(ExComboBoxStyle.ButtonBorderColor));
+        ExThemer.KeepDefaults(StyleSelected, theme, nameof(ExComboBoxStyle.BorderColor), nameof(ExComboBoxStyle.ButtonRenderFirst),
+            nameof(ExComboBoxStyle.ButtonBackColor), nameof(ExComboBoxStyle.ButtonBorderColor));
+        ExThemer.KeepDefaults(StyleHighlight, theme, nameof(ExComboBoxStyle.BorderColor), nameof(ExComboBoxStyle.ButtonBorderColor));
+        ExThemer.KeepDefaults(StyleDisabled, theme, nameof(ExComboBoxStyle.BackColor), nameof(ExComboBoxStyle.ForeColor));
         DefaultStyle = DefaultStyle && theme.UseSystemStyle;
         UseDarkScrollBar = theme.DarkScrollBars;
         if (DefaultStyle)
@@ -256,6 +265,9 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
     [DefaultValue(false)]
     public bool UseDarkScrollBar { get; set; }
 
+    // rozbalovaci zoznam ma tmave posuvniky
+    private bool _darkDropDownList;
+
     /// <summary>Occurs when the <see cref="IExControl.DefaultStyle" /> property changes.</summary>
     [ExCategory("Changed Property")]
     [ExDescription("Occurs when the BorderColor property changes.")]
@@ -384,13 +396,20 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
         // Install wrapper
         base.OnDropDown(e);
 
-        if (!UseDarkScrollBar)
+        // zoznam si temu pamata - predvolena sa mu vrati len po tmavej
+        if (UseDarkScrollBar == _darkDropDownList)
             return;
 
         // Retrieve handle to dropdown list
         var info = GetComboboxInfo();
-        ExTools.SetTheme(info.hwndList, WindowsTheme.DarkExplorer);
+        ExTools.SetTheme(info.hwndList, UseDarkScrollBar ? WindowsTheme.DarkExplorer : WindowsTheme.Default);
+        _darkDropDownList = UseDarkScrollBar;
     }
+
+    // farby zakazaneho pola - bez farby v StyleDisabled ako pozadie rodica a siva
+    internal Color DisabledBackColor => StyleDisabled.BackColor ?? Parent?.BackColor ?? BackColor;
+
+    internal Color DisabledForeColor => StyleDisabled.ForeColor ?? SystemColors.GrayText;
 
     /// <inheritdoc />
     protected override void OnPaint(PaintEventArgs e)
@@ -409,29 +428,31 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
         var textStart = new Point(2, (int)Math.Round(ClientRectangle.Height / 2d - size.Height / 2d));
         var dropButton = new Rectangle(Width - 20, 0, 20, Height);
 
-        var back = StyleNormal.BackColor ??= Color.White;
-        var fore = StyleNormal.ForeColor ??= Color.Black;
-        var border = StyleNormal.BorderColor ??= Color.DimGray;
-        var arrow = StyleNormal.ArrowColor ??= Color.Black;
-        var backbut = StyleNormal.ButtonBackColor ??= back;
-        var borbut = StyleNormal.ButtonBorderColor ??= back;
-        var bbfirst = StyleNormal.ButtonRenderFirst ??= true;
+        // nenastavene farby stylov sa dopocitaju len na kreslenie - do stylov sa nezapisuju, inak by po zmene temy
+        // ostali farby z predchadzajucej
+        var back = StyleNormal.BackColor ?? Color.White;
+        var fore = StyleNormal.ForeColor ?? Color.Black;
+        var border = StyleNormal.BorderColor ?? Color.DimGray;
+        var arrow = StyleNormal.ArrowColor ?? Color.Black;
+        var backbut = StyleNormal.ButtonBackColor ?? back;
+        var borbut = StyleNormal.ButtonBorderColor ?? back;
+        var bbfirst = StyleNormal.ButtonRenderFirst ?? true;
 
         if (!Enabled)
         {
-            StyleDisabled.BackColor = back = StyleDisabled.BackColor ?? Parent?.BackColor ?? BackColor;
-            StyleDisabled.ForeColor = fore = StyleDisabled.ForeColor ?? SystemColors.GrayText;
+            back = DisabledBackColor;
+            fore = DisabledForeColor;
             if (StyleDisabled.BorderColor.HasValue) border = StyleDisabled.BorderColor.Value;
-            StyleDisabled.ArrowColor = arrow = StyleDisabled.ArrowColor ?? SystemColors.GrayText;
-            StyleDisabled.ButtonBackColor = backbut = StyleDisabled.ButtonBackColor ?? back;
-            StyleDisabled.ButtonBorderColor = borbut = StyleDisabled.ButtonBorderColor ?? back;
+            arrow = StyleDisabled.ArrowColor ?? SystemColors.GrayText;
+            backbut = StyleDisabled.ButtonBackColor ?? back;
+            borbut = StyleDisabled.ButtonBorderColor ?? back;
             if (StyleDisabled.ButtonRenderFirst.HasValue) bbfirst = StyleDisabled.ButtonRenderFirst.Value;
         }
         else if (_selected)
         {
             if (StyleSelected.BackColor.HasValue) back = StyleSelected.BackColor.Value;
             if (StyleSelected.ForeColor.HasValue) fore = StyleSelected.ForeColor.Value;
-            StyleSelected.BorderColor = border = StyleSelected.BorderColor ?? SystemColors.Highlight;
+            border = StyleSelected.BorderColor ?? SystemColors.Highlight;
             if (StyleSelected.ArrowColor.HasValue) arrow = StyleSelected.ArrowColor.Value;
             if (StyleSelected.ButtonBackColor.HasValue) backbut = StyleSelected.ButtonBackColor.Value;
             if (StyleSelected.ButtonBorderColor.HasValue) borbut = StyleSelected.ButtonBorderColor.Value;
@@ -441,7 +462,7 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
         {
             if (StyleHighlight.BackColor.HasValue) back = StyleHighlight.BackColor.Value;
             if (StyleHighlight.ForeColor.HasValue) fore = StyleHighlight.ForeColor.Value;
-            StyleHighlight.BorderColor = border = StyleHighlight.BorderColor ?? SystemColors.Highlight;
+            border = StyleHighlight.BorderColor ?? SystemColors.Highlight;
             if (StyleHighlight.ArrowColor.HasValue) arrow = StyleHighlight.ArrowColor.Value;
             if (StyleHighlight.ButtonBackColor.HasValue) backbut = StyleHighlight.ButtonBackColor.Value;
             if (StyleHighlight.ButtonBorderColor.HasValue) borbut = StyleHighlight.ButtonBorderColor.Value;
@@ -672,8 +693,8 @@ public class ExComboBox : ComboBox, IExControl, IThemeable
                 return;
 
             var g = Graphics.FromHwnd(Handle);
-            var backColor = _parent.StyleDisabled.BackColor ?? SystemColors.Control;
-            var foreColor = _parent.StyleDisabled.ForeColor ?? SystemColors.GrayText;
+            var backColor = _parent.DisabledBackColor;
+            var foreColor = _parent.DisabledForeColor;
             Win32.GetWindowRect(new HandleRef(this, Handle), out var rec);
             var recc = new Rectangle(0, 0, rec.Width, rec.Height);
             g.Clear(backColor);
