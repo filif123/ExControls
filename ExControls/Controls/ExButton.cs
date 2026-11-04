@@ -34,6 +34,9 @@ public class ExButton : Button, IExControl, IThemeable
         ExFlatAppearance.FocusBorderColor = theme.HighlightBackColor;
     }
 
+    // sila textu neaktivneho tlacidla - rovnaka ako pri sipke ExDropDownButton
+    private const int DisabledForeAlpha = 110;
+
     private bool _defaultStyle;
     // FlatStyle z navrhara alebo kodu - plati, ked ma tlacidlo predvoleny vzhlad
     private FlatStyle _flatStyle = FlatStyle.Standard;
@@ -118,6 +121,53 @@ public class ExButton : Button, IExControl, IThemeable
 
     /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
     protected virtual void OnDefaultStyleChanged() => DefaultStyleChanged?.Invoke(this, EventArgs.Empty);
+
+    /// <summary>
+    /// Text color of a disabled button in the custom style: <see cref="Control.ForeColor" /> faded towards <see cref="Control.BackColor" />.
+    /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public Color DisabledForeColor
+    {
+        get
+        {
+            int Fade(int fore, int back) => back + (fore - back) * DisabledForeAlpha / 255;
+            return Color.FromArgb(Fade(ForeColor.R, BackColor.R), Fade(ForeColor.G, BackColor.G), Fade(ForeColor.B, BackColor.B));
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnPaint(PaintEventArgs pevent)
+    {
+        base.OnPaint(pevent);
+        if (_defaultStyle || Enabled || Text.Length == 0 || Image is not null || BackgroundImage is not null)
+            return;
+
+        // WinForms berie farbu neaktivneho textu z tmavsieho odtiena pozadia - na tmavom pozadi by bol takmer cierny
+        var area = Rectangle.Inflate(ClientRectangle, -ExFlatAppearance.BorderSize, -ExFlatAppearance.BorderSize);
+        using (var brush = new SolidBrush(BackColor))
+            pevent.Graphics.FillRectangle(brush, area);
+
+        var text = new Rectangle(area.X + Padding.Left, area.Y + Padding.Top, area.Width - Padding.Horizontal, area.Height - Padding.Vertical);
+        TextRenderer.DrawText(pevent.Graphics, Text, Font, text, DisabledForeColor, TextFlags());
+    }
+
+    private TextFormatFlags TextFlags()
+    {
+        var flags = TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl;
+        if (!UseMnemonic)
+            flags |= TextFormatFlags.NoPrefix;
+        else if (!ShowKeyboardCues)
+            flags |= TextFormatFlags.HidePrefix;
+
+        const ContentAlignment right = ContentAlignment.TopRight | ContentAlignment.MiddleRight | ContentAlignment.BottomRight;
+        const ContentAlignment center = ContentAlignment.TopCenter | ContentAlignment.MiddleCenter | ContentAlignment.BottomCenter;
+        const ContentAlignment bottom = ContentAlignment.BottomLeft | ContentAlignment.BottomCenter | ContentAlignment.BottomRight;
+        const ContentAlignment middle = ContentAlignment.MiddleLeft | ContentAlignment.MiddleCenter | ContentAlignment.MiddleRight;
+        flags |= (TextAlign & right) != 0 ? TextFormatFlags.Right : (TextAlign & center) != 0 ? TextFormatFlags.HorizontalCenter : TextFormatFlags.Left;
+        flags |= (TextAlign & bottom) != 0 ? TextFormatFlags.Bottom : (TextAlign & middle) != 0 ? TextFormatFlags.VerticalCenter : TextFormatFlags.Top;
+        return flags;
+    }
 
     /// <summary>Raises the <see cref="System.Windows.Forms.Control.OnMouseDown(System.Windows.Forms.MouseEventArgs)" /> event.</summary>
     /// <param name="mevent">A <see cref="System.Windows.Forms.MouseEventArgs" /> that contains the event data.</param>
