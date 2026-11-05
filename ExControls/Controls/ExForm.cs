@@ -34,7 +34,7 @@ public class ExForm : Form
     private Color _titleBarForeColor;
     private Color _titleBarBorderColor;
     private FormCornersType _cornersType;
-    private FormStyle _formStyle = FormStyle.Default;
+    private FormStyle _formStyle = FormStyle.Auto;
 
     /// <inheritdoc />
     protected override CreateParams CreateParams
@@ -236,12 +236,13 @@ public class ExForm : Form
     }
 
     /// <summary>
-    /// Gets or sets system backdrop of the form. Default is FormStyle.Default.
+    /// Gets or sets system backdrop of the form. Default is FormStyle.Auto, the same caption as a plain Form has;
+    /// FormStyle.Default turns the backdrop off, which makes the active caption black in dark mode.
     /// Works only in Windows 11+ and shows only in the system caption - not under <see cref="ExTitleBar" />.
     /// </summary>
     [ExCategory(CategoryType.Appearance)]
     [ExDescription("Gets or sets the system backdrop of the window (Windows 11+). It shows only in the system caption, not under ExTitleBar.", true)]
-    [DefaultValue(FormStyle.Default)]
+    [DefaultValue(FormStyle.Auto)]
     public FormStyle FormStyle
     {
         get => _formStyle;
