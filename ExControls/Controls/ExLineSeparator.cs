@@ -210,19 +210,3 @@ public class ExLineSeparator : Control, IThemeable
         LineDrawing?.Invoke(this, e);
     }
 }
-
-/// <summary>
-/// Orientation of the LineSeparator.
-/// </summary>
-public enum LineOrientation
-{
-    /// <summary>
-    /// Horizontal orientation.
-    /// </summary>
-    Horizontal,
-
-    /// <summary>
-    /// Vertical orientation.
-    /// </summary>
-    Vertical
-}
