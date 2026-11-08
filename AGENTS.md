@@ -27,6 +27,7 @@ dotnet pack ExControls/ExControls.csproj -c Release     # package into artifacts
 ## Common rules
 
 - `Directory.Build.props`: `TreatWarningsAsErrors`, `Nullable`, `ImplicitUsings`, `AnalysisLevel latest-recommended` – the build must not produce a single warning; intentionally disabled rules live only there (`NoWarn` with a reason). Fix warnings in code; an exceptional suppression goes directly on the reported member (`[SuppressMessage(..., Justification = ...)]`).
+- One top-level type per file (nested types may stay); put several related files into their own folder.
 - Do not launch the GUI from Bash – the user verifies it manually.
 - Tests use MSTest, methods are named `Area_WhatItVerifies` (in Slovak, e.g. `Oblast_CoOveruje`).
 - Scripts: save generators as files (a bash heredoc mangles `\\` and `\n`); no diacritics in `.ps1` files.
