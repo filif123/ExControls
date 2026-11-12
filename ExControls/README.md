@@ -19,6 +19,7 @@ These controls have been added:
 
 - LineSeparator
 - TitleBar (custom title bar of `ExForm` with the main menu)
+- DockManager (dockable tool panels like Visual Studio or Rider)
 
 These components have been extended:
 
@@ -29,6 +30,38 @@ These components have been extended:
 `ExTheme` is a color palette. Ex* controls implement `IThemeable` and style themselves;
 `ExThemer.Apply(form.Controls, theme)` walks the controls. Controls outside the library (DataGridView, ToolStrip,
 Panel…) are styled by handlers registered with `ExThemer.Register<T>`.
+
+## Dock manager
+
+`ExDockManager` lays out a window into the main content (`Document`) and tool panels (`ExDockPanel`) docked to the
+left, right, top or bottom. Left and right zones span the full height, top and bottom ones lie between them; panels of a
+zone are stacked along the side, more panels in one group are tabs. The user resizes zones and groups with splitters,
+hides a panel (×), collapses its group to the strip at the edge (pin, the panel slides out on a click), drags the caption
+(whole group) or a tab (one panel) with docking guides to another zone, group or tab, or out of the guides to a floating
+window (`AllowFloating`). Panels are identified by `Key`; the layout is saved as a single-line XML string with sizes in
+logical pixels:
+
+```csharp
+var dock = new ExDockManager { Dock = DockStyle.Fill, Strings = new ExDockStrings { Hide = "Skryť" /* ... */ } };
+Controls.Remove(content);
+dock.Document.Controls.Add(content);          // main content of the window
+Controls.Add(dock);
+dock.BringToFront();                          // Fill after the docked tool strips
+
+var errors = new ExDockPanel("errors", "Error List");
+errors.Controls.Add(new ErrorListView { Dock = DockStyle.Fill });
+dock.AddPanel(errors, ExDockSide.Bottom);     // AddPanel(panel, tabWith) adds a tab
+dock.SetZoneSize(ExDockSide.Bottom, 180);
+dock.HidePanel(errors);                       // shown later by ShowPanel(errors)
+dock.LoadLayout(settings.DockLayout);         // after adding all panels; empty = keep, invalid = FormatException
+// ...
+settings.DockLayout = dock.SaveLayout();
+```
+
+The manager owns its panels (disposing it disposes the hidden ones too), applies a theme to the document and to all
+panels (`IThemeable`) and raises `PanelStateChanged` (e.g. for a checked menu item), `PanelClosing` (the user hides a
+panel, can be cancelled) and `ActivePanelChanged`. `ShowPanel`, `HidePanel`, `DockPanel`, `FloatPanel` and
+`SetAutoHide` change the layout from code. The manager is created in code (it is not in the toolbox).
 
 ## Custom title bar
 

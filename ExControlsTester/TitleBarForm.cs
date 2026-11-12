@@ -26,6 +26,8 @@ public partial class TitleBarForm : ExForm
             "• Okno → Systémové záhlavie: vráti systémové záhlavie (v tmavej téme tmavé), ponuka ostane v paneli bez ikony a tlačidiel.",
             "• Ťahanie, dvojklik, systémová ponuka pravým klikom, Aero Snap a horný okraj ako v etape 1.",
             "• Windows 10: horný 1 px okraj kreslí záhlavie (pri maximalizácii nie je).");
+        miWindow.DropDownItems.Add(new ToolStripSeparator());
+        miWindow.DropDownItems.Add("&Dock manager…", null, (_, _) => new DockForm().Show(this));
         ApplyTesterTheme(miDarkTheme.Checked);
         UpdateState();
     }
