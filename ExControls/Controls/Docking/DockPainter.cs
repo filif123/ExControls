@@ -138,15 +138,26 @@ internal static class DockPainter
     }
 
     /// <summary>
-    /// Text tlacidla listy: na boku zvislo (zhora nadol), hore a dole vodorovne.
+    /// Meranie vodorovneho textu tlacidla listy: bez okrajov ako kreslenie, ale bez skracovania (s prazdnou sirkou by
+    /// meranie vratilo uz skrateny text).
+    /// </summary>
+    internal const TextFormatFlags StripMeasureFlags = TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix | TextFormatFlags.NoPadding;
+
+    /// <summary>
+    /// Kreslenie vodorovneho textu tlacidla listy: bez okrajov ako meranie, skrati sa len v zuzenom tlacidle.
+    /// </summary>
+    internal const TextFormatFlags StripTextFlags =
+        TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis |
+        TextFormatFlags.NoPrefix | TextFormatFlags.NoPadding;
+
+    /// <summary>
+    /// Text tlacidla listy: na boku zvislo (zhora nadol), hore a dole vodorovne; skrati sa, len ked je tlacidlo zuzene.
     /// </summary>
     public static void DrawStripText(Graphics g, string text, Font font, Rectangle bounds, Color color, bool vertical)
     {
         if (!vertical)
         {
-            TextRenderer.DrawText(g, text, font, bounds, color,
-                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine |
-                TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
+            TextRenderer.DrawText(g, text, font, bounds, color, StripTextFlags);
             return;
         }
 
@@ -165,7 +176,7 @@ internal static class DockPainter
     public static int MeasureStripText(string text, Font font, bool vertical)
     {
         if (!vertical)
-            return TextRenderer.MeasureText(text, font, Size.Empty, TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix).Width;
+            return TextRenderer.MeasureText(text, font, Size.Empty, StripMeasureFlags).Width;
 
         using var g = Graphics.FromHwnd(IntPtr.Zero);
         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
@@ -174,12 +185,12 @@ internal static class DockPainter
         return (int)Math.Ceiling(Math.Max(size.Width, size.Height));
     }
 
-    // zvisly text zhora nadol bez skracovania (dlzku tlacidla urcuje MeasureStripText)
+    // zvisly text zhora nadol; v zuzenom tlacidle sa oreze po znakoch (tri bodky sa zvislo nekreslia spravne)
     private static StringFormat VerticalFormat() => new(StringFormatFlags.DirectionVertical | StringFormatFlags.NoWrap)
     {
         Alignment = StringAlignment.Center,
         LineAlignment = StringAlignment.Center,
-        Trimming = StringTrimming.None,
+        Trimming = StringTrimming.Character,
         HotkeyPrefix = System.Drawing.Text.HotkeyPrefix.None
     };
 }

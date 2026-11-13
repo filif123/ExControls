@@ -104,18 +104,27 @@ public partial class ExDockManager
                 continue;
 
             var vertical = DockLayoutEngine.IsHorizontalSide(zone.Side);
-            var position = (vertical ? strip.Y : strip.X) + gap;
-            foreach (var group in AutoHideGroupsOf(zone.Side))
-            {
-                foreach (var panel in group.VisiblePanels)
-                {
-                    var length = StripButtonLength(panel, vertical);
-                    var bounds = vertical ? new Rectangle(strip.X, position, strip.Width, length) : new Rectangle(position, strip.Y, length, strip.Height);
-                    _stripButtons.Add(new StripButton(zone.Side, group, panel, bounds));
-                    position += length + gap;
-                }
+            var groups = AutoHideGroupsOf(zone.Side);
+            var groupGap = ToDevice(8);
+            var buttons = groups.SelectMany(g => g.VisiblePanels.Select(p => (Group: g, Panel: p, Length: StripButtonLength(p, vertical)))).ToList();
 
-                position += ToDevice(8);
+            // tlacidla maju dlzku celeho textu; zuzia sa (rovnakym pomerom), len ked sa na listu nezmestia
+            var gaps = gap * (buttons.Count + 1) + groupGap * Math.Max(0, groups.Count - 1);
+            var available = (vertical ? strip.Height : strip.Width) - gaps;
+            var total = buttons.Sum(b => b.Length);
+            var scale = total > available && total > 0 ? Math.Max(0, available) / (double)total : 1;
+
+            var position = (vertical ? strip.Y : strip.X) + gap;
+            DockGroup? previous = null;
+            foreach (var (group, panel, full) in buttons)
+            {
+                if (previous is not null && previous != group)
+                    position += groupGap;
+                previous = group;
+                var length = scale < 1 ? Math.Max(ToDevice(24), (int)(full * scale)) : full;
+                var bounds = vertical ? new Rectangle(strip.X, position, strip.Width, length) : new Rectangle(position, strip.Y, length, strip.Height);
+                _stripButtons.Add(new StripButton(zone.Side, group, panel, bounds));
+                position += length + gap;
             }
         }
     }

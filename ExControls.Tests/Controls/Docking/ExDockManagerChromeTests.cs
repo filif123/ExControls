@@ -136,6 +136,44 @@ public class ExDockManagerChromeTests
     private static Point Center(Rectangle r) => new(r.X + r.Width / 2, r.Y + r.Height / 2);
 
     [TestMethod]
+    public void Lista_TlacidloMaDlzkuCelehoTextuAkJeMiesto()
+    {
+        using var manager = new ExDockManager { Size = new Size(800, 600) };
+        var analysis = new ExDockPanel("analysis", "Kontrola inštalácie");
+        manager.AddPanel(analysis, ExDockSide.Bottom);
+
+        manager.SetAutoHide(analysis, true);
+
+        var button = manager.StripButtons.Single().Bounds;
+        var padding = manager.LogicalToDeviceUnits(8);
+        // cely text (meranie bez skracovania) sa zmesti do tlacidla aj s priznakmi kreslenia
+        var full = TextRenderer.MeasureText(analysis.Text, manager.Font, Size.Empty, TextFormatFlags.NoPrefix | TextFormatFlags.NoPadding).Width;
+        Assert.AreEqual(full + 2 * padding, button.Width);
+        var drawn = TextRenderer.MeasureText(analysis.Text, manager.Font, new Size(button.Width - 2 * padding, button.Height),
+            DockPainter.StripTextFlags);
+        Assert.AreEqual(full, drawn.Width);
+    }
+
+    [TestMethod]
+    public void Lista_UzkaLista_TlacidlaSaZuziaAZmestia()
+    {
+        using var manager = new ExDockManager { Size = new Size(300, 400) };
+        for (var i = 0; i < 5; i++)
+        {
+            var panel = new ExDockPanel("p" + i, "Kontrola inštalácie " + i);
+            manager.AddPanel(panel, ExDockSide.Bottom);
+            manager.SetAutoHide(panel, true);
+        }
+
+        var strip = manager.LayoutResult.Strips[(int)ExDockSide.Bottom];
+        var buttons = manager.StripButtons.Select(b => b.Bounds).ToList();
+
+        Assert.AreEqual(5, buttons.Count);
+        Assert.IsTrue(buttons.TrueForAll(b => b.Left >= strip.Left && b.Right <= strip.Right), "all buttons fit the strip");
+        Assert.IsTrue(buttons.Zip(buttons.Skip(1), (a, b) => a.Right <= b.Left).All(x => x), "no overlap");
+    }
+
+    [TestMethod]
     public void ApplyHandler_LenZaregistrovanaObsluha()
     {
         var handled = new List<Control>();
