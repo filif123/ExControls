@@ -67,7 +67,8 @@ internal static class DockPainter
         ExButtonRenderer.DrawTriangle(g, color, new Point(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2), size, ArrowDirection.Down);
 
     /// <summary>
-    /// Navadzacia znacka: okno s vyplnenym pasom na strane ukotvenia a sipkou, alebo okno s kartou (vlozenie medzi karty).
+    /// Navadzacia znacka ako vo Visual Studiu: tlacidlo s oknom na strane ukotvenia a trojuholnikom k nemu, v strede okno
+    /// cez cele tlacidlo (vlozenie medzi karty).
     /// </summary>
     /// <param name="g">grafika</param>
     /// <param name="bounds">znacka</param>
@@ -76,43 +77,34 @@ internal static class DockPainter
     /// <param name="hover">znacka je pod mysou</param>
     public static void DrawGuide(Graphics g, Rectangle bounds, ExDockSide? side, DockColors colors, bool hover)
     {
-        var back = hover ? colors.ActiveBack : colors.Box;
         var fore = hover ? colors.ActiveFore : colors.Mark;
-        var band = hover ? colors.ActiveFore : colors.ActiveBack;
-        using (var brush = new SolidBrush(back))
+        using (var brush = new SolidBrush(hover ? colors.ActiveBack : colors.ButtonBack))
             g.FillRectangle(brush, bounds);
         using (var pen = new Pen(colors.Border))
             g.DrawRectangle(pen, bounds.X, bounds.Y, bounds.Width - 1, bounds.Height - 1);
 
-        var inset = bounds.Width * 7 / 32;
-        var window = Rectangle.Inflate(bounds, -inset, -inset);
-        var part = side switch
+        var inset = Math.Max(3, bounds.Width * 6 / 32);
+        var inner = Rectangle.Inflate(bounds, -inset, -inset);
+        var half = side is ExDockSide.Left or ExDockSide.Right ? inner.Width * 9 / 20 : inner.Height * 9 / 20;
+        var window = side switch
         {
-            ExDockSide.Left => new Rectangle(window.X, window.Y, window.Width * 2 / 5, window.Height),
-            ExDockSide.Right => new Rectangle(window.Right - window.Width * 2 / 5, window.Y, window.Width * 2 / 5, window.Height),
-            ExDockSide.Top => new Rectangle(window.X, window.Y, window.Width, window.Height * 2 / 5),
-            ExDockSide.Bottom => new Rectangle(window.X, window.Bottom - window.Height * 2 / 5, window.Width, window.Height * 2 / 5),
-            _ => new Rectangle(window.X, window.Y, window.Width * 2 / 5, Math.Max(2, window.Height / 5))
+            ExDockSide.Left => new Rectangle(inner.X, inner.Y, half, inner.Height),
+            ExDockSide.Right => new Rectangle(inner.Right - half, inner.Y, half, inner.Height),
+            ExDockSide.Top => new Rectangle(inner.X, inner.Y, inner.Width, half),
+            ExDockSide.Bottom => new Rectangle(inner.X, inner.Bottom - half, inner.Width, half),
+            _ => inner
         };
-        using (var brush = new SolidBrush(band))
-            g.FillRectangle(brush, part);
-        using (var pen = new Pen(fore))
-        {
-            g.DrawRectangle(pen, window.X, window.Y, window.Width - 1, window.Height - 1);
-            if (side is null)
-                g.DrawLine(pen, window.X, part.Bottom, window.Right - 1, part.Bottom);
-        }
-
+        DrawWindow(g, window, fore);
         if (side is not { } direction)
             return;
 
-        // sipka v zvysku okna smerom k strane ukotvenia
+        // trojuholnik vo zvysku tlacidla smeruje k oknu
         var rest = direction switch
         {
-            ExDockSide.Left => new Rectangle(part.Right, window.Y, window.Right - part.Right, window.Height),
-            ExDockSide.Right => new Rectangle(window.X, window.Y, part.X - window.X, window.Height),
-            ExDockSide.Top => new Rectangle(window.X, part.Bottom, window.Width, window.Bottom - part.Bottom),
-            _ => new Rectangle(window.X, window.Y, window.Width, part.Y - window.Y)
+            ExDockSide.Left => new Rectangle(window.Right, inner.Y, inner.Right - window.Right, inner.Height),
+            ExDockSide.Right => new Rectangle(inner.X, inner.Y, window.X - inner.X, inner.Height),
+            ExDockSide.Top => new Rectangle(inner.X, window.Bottom, inner.Width, inner.Bottom - window.Bottom),
+            _ => new Rectangle(inner.X, inner.Y, inner.Width, window.Y - inner.Y)
         };
         var arrow = direction switch
         {
@@ -122,7 +114,27 @@ internal static class DockPainter
             _ => ArrowDirection.Down
         };
         ExButtonRenderer.DrawTriangle(g, fore, new Point(rest.X + rest.Width / 2, rest.Y + rest.Height / 2),
-            Math.Max(2, bounds.Width / 8), arrow);
+            Math.Max(2, bounds.Width / 10), arrow);
+    }
+
+    // okno: obrys a hrubsie zahlavie
+    private static void DrawWindow(Graphics g, Rectangle window, Color color)
+    {
+        using var pen = new Pen(color);
+        g.DrawRectangle(pen, window.X, window.Y, window.Width - 1, window.Height - 1);
+        using var brush = new SolidBrush(color);
+        g.FillRectangle(brush, window.X, window.Y, window.Width, Math.Max(2, window.Height / 7));
+    }
+
+    /// <summary>
+    /// Podlozka navadzacich znaciek (kompas alebo stvorec pri okraji).
+    /// </summary>
+    public static void DrawPlate(Graphics g, Point[] plate, DockColors colors)
+    {
+        using (var brush = new SolidBrush(colors.Back))
+            g.FillPolygon(brush, plate);
+        using var pen = new Pen(colors.Border);
+        g.DrawPolygon(pen, plate);
     }
 
     /// <summary>

@@ -12,7 +12,7 @@ internal sealed class DockLayoutInput
     public Rectangle Client { get; set; }
 
     /// <summary>
-    /// Hrubka rozdelovaca medzi zonou a dokumentom aj medzi skupinami.
+    /// Hrubka rozdelovaca medzi zonou a dokumentom aj medzi uzlami.
     /// </summary>
     public int Splitter { get; set; }
 
@@ -37,7 +37,22 @@ internal sealed class DockLayoutInput
     public int[] ZoneSizes { get; } = new int[4];
 
     /// <summary>
-    /// Vahy ukotvenych skupin zony v poradi (prazdne = zona sa nezobrazi).
+    /// Koren stromu zony (<see langword="null" /> = prazdna zona).
     /// </summary>
-    public double[][] Weights { get; } = [[], [], [], []];
+    public DockSplit?[] Roots { get; } = new DockSplit?[4];
+
+    /// <summary>
+    /// Koren stredoveho stromu s dokumentom (<see langword="null" /> = dokument zaberie cele miesto medzi zonami).
+    /// </summary>
+    public DockSplit? Center { get; set; }
+
+    /// <summary>
+    /// Dokument v stredovom strome.
+    /// </summary>
+    public DockDocumentNode? Document { get; set; }
+
+    /// <summary>
+    /// Skupina zabera miesto (predvolene ukotvena so zobrazenym panelom).
+    /// </summary>
+    public Func<DockGroup, bool> Visible { get; set; } = DockZone.IsDocked;
 }

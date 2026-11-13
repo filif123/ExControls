@@ -8,9 +8,10 @@ namespace ExControls;
 
 /// <summary>
 /// Layout of a window into dockable panels like Visual Studio or Rider: the main content in <see cref="Document" /> and
-/// tool panels (<see cref="ExDockPanel" />) docked to the left, right, top or bottom. Panels of a zone are stacked along the
-/// side, several panels in one group are tabs; splitters resize zones and groups. The user can hide a panel, collapse its
-/// group to the strip at the edge (auto-hide), drag it to another place with docking guides or to a floating window.
+/// tool panels (<see cref="ExDockPanel" />) docked to the left, right, top or bottom. A zone splits into nested rows and
+/// columns of groups, several panels in one group are tabs; splitters resize zones and groups. The user can hide a panel,
+/// collapse its group to the strip at the edge (auto-hide), drag it with the docking guides (a compass over a group or the
+/// document like in Visual Studio) to another place or to a floating window.
 /// <see cref="SaveLayout" /> and <see cref="LoadLayout" /> keep the layout in a string for the application settings.
 /// </summary>
 /// <remarks>
@@ -29,6 +30,8 @@ public partial class ExDockManager : Control, IThemeable
         new(ExDockSide.Left, 250), new(ExDockSide.Top, 200), new(ExDockSide.Right, 250), new(ExDockSide.Bottom, 200)
     ];
 
+    // dokument a skupiny ukotvene vedla neho (sipky kompasu nad dokumentom)
+    private readonly DockZone _center = DockZone.CreateCenter();
     private readonly List<ExDockPanel> _panels = [];
     private readonly List<DockGroup> _floating = [];
     private readonly Panel _document;
@@ -136,7 +139,32 @@ public partial class ExDockManager : Control, IThemeable
             group.Panels.Add(panel);
             panel.Group = group;
             group.Active = panel;
-            InsertGroup(zone, group, int.MaxValue);
+            PlaceAtEnd(zone, group);
+        });
+    }
+
+    /// <summary>
+    /// Adds a panel to a new group next to the group of another panel: the target group is split and the new one is on the
+    /// given side of it (nested rows and columns like dragging to an arrow of the compass).
+    /// </summary>
+    /// <param name="panel">panel with a unique non-empty <see cref="ExDockPanel.Key" /></param>
+    /// <param name="target">docked or collapsed panel of this manager</param>
+    /// <param name="side">side of the target group where the new group goes</param>
+    /// <exception cref="ArgumentException">the panel is already in a manager, has no key or its key is used, or
+    /// <paramref name="target" /> is not in this manager</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="target" /> is floating</exception>
+    public void AddPanel(ExDockPanel panel, ExDockPanel target, ExDockSide side)
+    {
+        CheckNew(panel);
+        var targetGroup = CheckBeside(target, side);
+        Change(() =>
+        {
+            Register(panel);
+            var group = new DockGroup();
+            group.Panels.Add(panel);
+            panel.Group = group;
+            group.Active = panel;
+            PlaceBeside(targetGroup, group, side);
         });
     }
 
@@ -253,7 +281,31 @@ public partial class ExDockManager : Control, IThemeable
             panel.IsClosed = false;
             var group = panel.Group!;
             var moved = Take(group, group.Panels.Count == 1 ? null : panel);
-            InsertGroup(zone, moved, int.MaxValue);
+            PlaceAtEnd(zone, moved);
+        });
+    }
+
+    /// <summary>
+    /// Docks a panel (shown or hidden) to a new group next to the group of another panel and shows it: the target group is
+    /// split and the panel is on the given side of it.
+    /// </summary>
+    /// <param name="panel">panel of this manager</param>
+    /// <param name="target">another docked or collapsed panel of this manager (a tab of the same group splits the group)</param>
+    /// <param name="side">side of the target group where the panel goes</param>
+    /// <exception cref="InvalidOperationException"><paramref name="target" /> is floating or the panel itself</exception>
+    public void DockPanel(ExDockPanel panel, ExDockPanel target, ExDockSide side)
+    {
+        CheckPanel(panel, nameof(panel));
+        var targetGroup = CheckBeside(target, side);
+        if (panel == target)
+            throw new InvalidOperationException("The panel cannot be docked next to itself.");
+
+        Change(() =>
+        {
+            panel.IsClosed = false;
+            var group = panel.Group!;
+            var moved = Take(group, group.Panels.Count == 1 ? null : panel);
+            PlaceBeside(targetGroup, moved, side);
         });
     }
 
@@ -319,7 +371,7 @@ public partial class ExDockManager : Control, IThemeable
                 if (!autoHide)
                     return;
                 DetachGroup(group);
-                InsertGroup(Zone(group.HomeSide), group, int.MaxValue);
+                PlaceAtEnd(Zone(group.HomeSide), group);
             }
 
             if (_popup.Group == group)
@@ -422,6 +474,15 @@ public partial class ExDockManager : Control, IThemeable
         ArgumentNullException.ThrowIfNull(panel, name);
         if (panel.Manager != this)
             throw new ArgumentException("The panel is not added to this dock manager.", name);
+    }
+
+    private DockGroup CheckBeside(ExDockPanel target, ExDockSide side)
+    {
+        CheckPanel(target, nameof(target));
+        if ((uint)side > (uint)ExDockSide.Bottom)
+            throw new ArgumentOutOfRangeException(nameof(side), side, "Unknown side.");
+        var group = target.Group!;
+        return group.Zone is not null ? group : throw new InvalidOperationException("The target panel is floating.");
     }
 
     private void Register(ExDockPanel panel)

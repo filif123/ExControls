@@ -5,10 +5,15 @@ namespace ExControls;
 // rozlozenie, listy auto-hide, rozdelovace a kreslenie spravcu
 public partial class ExDockManager
 {
+    // ReSharper disable InconsistentNaming
+    private const int WM_SETCURSOR = 0x0020;
+    private const int HTCLIENT = 1;
+    // ReSharper restore InconsistentNaming
+
     private readonly List<StripButton> _stripButtons = [];
     private DockLayoutResult _layout = new();
     private StripButton? _stripHover;
-    private DockSplitterHit? _split;
+    private DockSplitterInfo? _split;
     private Point _splitStart;
     private int _splitInitial;
     private int _splitPair;
@@ -58,9 +63,12 @@ public partial class ExDockManager
         {
             var index = (int)zone.Side;
             input.ZoneSizes[index] = ToDevice(zone.Size);
-            input.Weights[index] = zone.DockedGroups.Select(g => g.Weight).ToArray();
-            input.Strips[index] = zone.AutoHideGroups.Count > 0 ? StripThickness : 0;
+            input.Roots[index] = zone.Root;
+            input.Strips[index] = AutoHideGroupsOf(zone.Side).Count > 0 ? StripThickness : 0;
         }
+
+        input.Center = _center.Root;
+        input.Document = _center.Document;
 
         return input;
     }
@@ -71,18 +79,13 @@ public partial class ExDockManager
         base.OnLayout(levent);
         _layout = DockLayoutEngine.Compute(BuildInput());
         _document.Bounds = _layout.Document;
-        foreach (var zone in _zones)
+        foreach (var group in AllZones.SelectMany(z => z.DockedGroups))
         {
-            var groups = zone.DockedGroups;
-            var bounds = _layout.Groups[(int)zone.Side];
-            for (var i = 0; i < groups.Count; i++)
-            {
-                if (groups[i].View is not { } view || view.Parent != this)
-                    continue;
-                var rect = i < bounds.Length ? bounds[i] : Rectangle.Empty;
-                view.Bounds = rect;
-                view.Visible = rect.Width > 0 && rect.Height > 0;
-            }
+            if (group.View is not { } view || view.Parent != this)
+                continue;
+            var rect = _layout.BoundsOf(group);
+            view.Bounds = rect;
+            view.Visible = rect.Width > 0 && rect.Height > 0;
         }
 
         LayoutStrips();
@@ -102,7 +105,7 @@ public partial class ExDockManager
 
             var vertical = DockLayoutEngine.IsHorizontalSide(zone.Side);
             var position = (vertical ? strip.Y : strip.X) + gap;
-            foreach (var group in zone.AutoHideGroups)
+            foreach (var group in AutoHideGroupsOf(zone.Side))
             {
                 foreach (var panel in group.VisiblePanels)
                 {
@@ -126,12 +129,14 @@ public partial class ExDockManager
 
     private void LayoutPopup()
     {
-        if (_popup.Group is not { Zone: { } zone } group)
+        if (_popup.Group is not { Zone: not null } group)
             return;
 
+        // skupina pri dokumente sa vysuva zo strany, na ktorej je, v hrubke zony tej strany
+        var side = group.Side;
         var inner = _layout.Inner;
-        var available = DockLayoutEngine.Thickness(inner, zone.Side) - ToDevice(20);
-        var requested = ToDevice(group.AutoHideSize > 0 ? group.AutoHideSize : zone.Size);
+        var available = DockLayoutEngine.Thickness(inner, side) - ToDevice(20);
+        var requested = ToDevice(group.AutoHideSize > 0 ? group.AutoHideSize : Zone(side).Size);
         var thickness = Math.Max(Math.Min(requested, available), Math.Min(MinZoneSize, available));
         if (thickness <= 0)
         {
@@ -140,7 +145,7 @@ public partial class ExDockManager
         }
 
         var area = inner;
-        _popup.Bounds = DockLayoutEngine.Take(ref area, zone.Side, thickness);
+        _popup.Bounds = DockLayoutEngine.Take(ref area, side, thickness);
     }
 
     /// <summary>
@@ -235,9 +240,7 @@ public partial class ExDockManager
             return;
         }
 
-        var hit = _layout.HitSplitter(e.Location);
-        Cursor = hit is { } h ? h.IsVertical ? Cursors.VSplit : Cursors.HSplit : Cursors.Default;
-        SetStripHover(hit is null ? StripButtonAt(e.Location) : null);
+        SetStripHover(_layout.HitSplitter(e.Location) is null ? StripButtonAt(e.Location) : null);
     }
 
     /// <inheritdoc />
@@ -278,25 +281,48 @@ public partial class ExDockManager
         Invalidate();
     }
 
-    private void StartSplit(DockSplitterHit hit, Point location)
+    /// <inheritdoc />
+    protected override void WndProc(ref Message m)
     {
-        _split = hit;
-        _splitStart = location;
-        var side = (int)hit.Side;
-        if (hit.IsZone)
+        // kurzor rozdelovaca len nad plochou spravcu (nie nad panelmi) - vlastnost Cursor by zdedili vsetky vnorene prvky
+        if (m.Msg == WM_SETCURSOR && m.WParam == Handle && ((int)(long)m.LParam & 0xFFFF) == HTCLIENT
+            && SplitterCursor(PointToClient(MousePosition)) is { } cursor)
         {
-            _splitInitial = DockLayoutEngine.Thickness(_layout.Zones[side], hit.Side);
+            Cursor.Current = cursor;
+            m.Result = (IntPtr)1;
             return;
         }
 
-        var groups = _layout.Groups[side];
-        var stacked = DockLayoutEngine.IsHorizontalSide(hit.Side);
-        int Length(Rectangle r) => stacked ? r.Height : r.Width;
-        _splitInitial = Length(groups[hit.Index]);
-        _splitPair = _splitInitial + Length(groups[hit.Index + 1]);
+        base.WndProc(ref m);
     }
 
-    private void DragSplit(DockSplitterHit split, Point location)
+    /// <summary>
+    /// Kurzor nad bodom spravcu: rozdelovac pod mysou alebo prave tahany; inak <see langword="null" /> (predvoleny).
+    /// </summary>
+    internal Cursor? SplitterCursor(Point point) =>
+        (_split ?? _layout.HitSplitter(point)) is { } hit ? hit.IsVertical ? Cursors.VSplit : Cursors.HSplit : null;
+
+    private void StartSplit(DockSplitterInfo hit, Point location)
+    {
+        _split = hit;
+        Cursor.Current = SplitterCursor(location);
+        _splitStart = location;
+        if (hit.IsZone)
+        {
+            _splitInitial = DockLayoutEngine.Thickness(_layout.Zones[(int)hit.Side], hit.Side);
+            return;
+        }
+
+        int Length(DockNode? node)
+        {
+            var bounds = node is null ? Rectangle.Empty : _layout.BoundsOf(node);
+            return hit.IsVertical ? bounds.Width : bounds.Height;
+        }
+        _splitInitial = Length(hit.First);
+        _splitPair = _splitInitial + Length(hit.Second);
+    }
+
+    private void DragSplit(DockSplitterInfo split, Point location)
     {
         var zone = Zone(split.Side);
         if (split.IsZone)
@@ -310,24 +336,24 @@ public partial class ExDockManager
             var actual = DockLayoutEngine.Thickness(_layout.Zones[(int)split.Side], split.Side);
             if (actual > 0 && ToDevice(zone.Size) > actual)
                 zone.Size = ToLogical(actual);
-            Update();
+            if (IsHandleCreated)
+                Update();
             return;
         }
 
-        var groups = zone.DockedGroups;
-        if (split.Index + 1 >= groups.Count)
+        // uzly pred a za rozdelovacom si delia svoj spolocny podiel
+        if (split is not { First: { } a, Second: { } b })
             return;
 
-        var shift = DockLayoutEngine.IsHorizontalSide(split.Side) ? location.Y - _splitStart.Y : location.X - _splitStart.X;
+        var shift = split.IsVertical ? location.X - _splitStart.X : location.Y - _splitStart.Y;
         var minimum = Math.Min(CaptionHeight + ToDevice(20), _splitPair / 2);
         var first = Math.Max(minimum, Math.Min(_splitPair - minimum, _splitInitial + shift));
-        var a = groups[split.Index];
-        var b = groups[split.Index + 1];
         var sum = a.Weight + b.Weight;
         a.Weight = sum * first / Math.Max(1, _splitPair);
         b.Weight = sum - a.Weight;
         PerformLayout();
-        Update();
+        if (IsHandleCreated)
+            Update();
     }
 
     /// <inheritdoc />

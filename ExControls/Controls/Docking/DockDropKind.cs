@@ -6,17 +6,22 @@ namespace ExControls.Docking;
 internal enum DockDropKind
 {
     /// <summary>
-    /// Nova skupina na konci zony strany (vonkajsia znacka pri okraji spravcu).
+    /// Novy stlpec alebo riadok na vonkajsom okraji zony strany (znacka pri okraji spravcu).
     /// </summary>
     Edge,
 
     /// <summary>
-    /// Karty do cielovej skupiny (stred kosostvorca).
+    /// Novy stlpec alebo riadok zony strany hned pri dokumente (sipka kompasu nad dokumentom).
+    /// </summary>
+    Document,
+
+    /// <summary>
+    /// Karty do cielovej skupiny (stred kompasu).
     /// </summary>
     Tab,
 
     /// <summary>
-    /// Nova skupina pred alebo za cielovou skupinou v jej zone (sipka kosostvorca).
+    /// Cielova skupina sa rozdeli a zdroj bude na strane sipky (sipka kompasu nad skupinou).
     /// </summary>
     Split,
 

@@ -1,10 +1,11 @@
 namespace ExControls.Docking;
 
 /// <summary>
-/// Skupina panelov zobrazenych ako karty: je bud v zone (ukotvena alebo zbalena na liste), alebo v plavajucom okne.
-/// Skryte panely ostavaju clenmi skupiny, aby sa po zobrazeni vratili na svoje miesto.
+/// Skupina panelov zobrazenych ako karty: list stromu zony (ukotvena alebo zbalena na liste, zbalena si drzi miesto
+/// v strome) alebo obsah plavajuceho okna. Skryte panely ostavaju clenmi skupiny, aby sa po zobrazeni vratili na svoje
+/// miesto.
 /// </summary>
-internal sealed class DockGroup
+internal sealed class DockGroup : DockNode
 {
     /// <summary>
     /// Clenovia skupiny v poradi kariet vratane skrytych.
@@ -17,11 +18,6 @@ internal sealed class DockGroup
     public ExDockPanel? Active { get; set; }
 
     /// <summary>
-    /// Podiel skupiny na dlzke zony.
-    /// </summary>
-    public double Weight { get; set; } = 1;
-
-    /// <summary>
     /// Skupina je zbalena na liste pri okraji.
     /// </summary>
     public bool AutoHide { get; set; }
@@ -32,7 +28,7 @@ internal sealed class DockGroup
     public int AutoHideSize { get; set; }
 
     /// <summary>
-    /// Zona skupiny; <see langword="null" />, ked je skupina v plavajucom okne.
+    /// Zona, v ktorej strome skupina je; <see langword="null" />, ked je skupina v plavajucom okne.
     /// </summary>
     public DockZone? Zone { get; set; }
 
@@ -48,7 +44,7 @@ internal sealed class DockGroup
     public Rectangle FloatBounds { get; set; }
 
     /// <summary>
-    /// Strana, kam sa skupina vrati pri ukotveni z plavajuceho okna.
+    /// Strana skupiny mimo zony na strane: navrat z plavajuceho okna, lista auto-hide skupiny pri dokumente.
     /// </summary>
     public ExDockSide HomeSide { get; set; } = ExDockSide.Right;
 
@@ -73,9 +69,10 @@ internal sealed class DockGroup
     public bool HasVisiblePanels => Panels.Exists(p => !p.IsClosed);
 
     /// <summary>
-    /// Strana skupiny: strana zony alebo, pre plavajucu skupinu, strana navratu.
+    /// Strana skupiny: strana zony alebo, pre skupinu pri dokumente a plavajucu skupinu, jej vlastna strana (lista auto-hide,
+    /// navrat z plavajuceho okna).
     /// </summary>
-    public ExDockSide Side => Zone?.Side ?? HomeSide;
+    public ExDockSide Side => Zone is { IsCenter: false } zone ? zone.Side : HomeSide;
 
     /// <summary>
     /// Opravi aktivny panel, ak je skryty alebo uz nie je clenom.

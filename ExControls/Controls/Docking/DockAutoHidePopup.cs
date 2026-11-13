@@ -5,6 +5,11 @@ namespace ExControls.Docking;
 /// </summary>
 internal sealed class DockAutoHidePopup : Control
 {
+    // ReSharper disable InconsistentNaming
+    private const int WM_SETCURSOR = 0x0020;
+    private const int HTCLIENT = 1;
+    // ReSharper restore InconsistentNaming
+
     private readonly ExDockManager _manager;
     private bool _resizing;
     private int _resizeStart;
@@ -119,15 +124,32 @@ internal sealed class DockAutoHidePopup : Control
     {
         base.OnMouseMove(e);
         if (!_resizing)
-        {
-            Cursor = Edge.Contains(e.Location) ? Horizontal ? Cursors.VSplit : Cursors.HSplit : Cursors.Default;
             return;
-        }
 
         var delta = (Horizontal ? MousePosition.X : MousePosition.Y) - _resizeStart;
         if (Side is ExDockSide.Right or ExDockSide.Bottom)
             delta = -delta;
         _manager.ResizeAutoHide(_resizeInitial + delta);
+    }
+
+    /// <summary>
+    /// Kurzor nad bodom: okraj meniaci hrubku; inak <see langword="null" /> (predvoleny).
+    /// </summary>
+    internal Cursor? EdgeCursor(Point point) => _resizing || Edge.Contains(point) ? Horizontal ? Cursors.VSplit : Cursors.HSplit : null;
+
+    /// <inheritdoc />
+    protected override void WndProc(ref Message m)
+    {
+        // kurzor len nad okrajom (vlastnost Cursor by zdedil vysunuty panel)
+        if (m.Msg == WM_SETCURSOR && m.WParam == Handle && ((int)(long)m.LParam & 0xFFFF) == HTCLIENT
+            && EdgeCursor(PointToClient(MousePosition)) is { } cursor)
+        {
+            Cursor.Current = cursor;
+            m.Result = (IntPtr)1;
+            return;
+        }
+
+        base.WndProc(ref m);
     }
 
     /// <inheritdoc />

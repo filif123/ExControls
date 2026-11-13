@@ -27,38 +27,29 @@ internal sealed class DockLayoutResult
     public Rectangle[] Zones { get; } = new Rectangle[4];
 
     /// <summary>
-    /// Rozdelovace medzi zonou a dokumentom.
+    /// Viditelne uzly stromov zon (skupiny aj rozdelenia).
     /// </summary>
-    public Rectangle[] ZoneSplitters { get; } = new Rectangle[4];
+    public Dictionary<DockNode, Rectangle> Nodes { get; } = [];
 
     /// <summary>
-    /// Ukotvene skupiny zony v poradi vstupnych vah.
+    /// Rozdelovace zon a uzlov (rozdelovac zony je pred rozdelovacmi jej uzlov).
     /// </summary>
-    public Rectangle[][] Groups { get; } = [[], [], [], []];
+    public List<DockSplitterInfo> Splitters { get; } = [];
 
     /// <summary>
-    /// Rozdelovace medzi skupinami zony (i = medzi skupinou i a i + 1).
+    /// Obdlznik viditelneho uzla; prazdny, ak sa uzol nezobrazuje.
     /// </summary>
-    public Rectangle[][] GroupSplitters { get; } = [[], [], [], []];
+    public Rectangle BoundsOf(DockNode node) => Nodes.TryGetValue(node, out var bounds) ? bounds : Rectangle.Empty;
+
+    /// <summary>
+    /// Rozdelovac zony (medzi zonou a dokumentom); prazdny, ak sa zona nezobrazuje.
+    /// </summary>
+    public Rectangle ZoneSplitter(ExDockSide side) => Splitters.Find(s => s.IsZone && s.Side == side)?.Bounds ?? Rectangle.Empty;
 
     /// <summary>
     /// Najde rozdelovac pod bodom.
     /// </summary>
     /// <param name="point">bod v klientskej oblasti spravcu</param>
     /// <returns>rozdelovac alebo <see langword="null" /></returns>
-    public DockSplitterHit? HitSplitter(Point point)
-    {
-        for (var side = 0; side < 4; side++)
-        {
-            var splitters = GroupSplitters[side];
-            for (var i = 0; i < splitters.Length; i++)
-                if (splitters[i].Contains(point))
-                    return new DockSplitterHit((ExDockSide)side, i);
-
-            if (ZoneSplitters[side].Contains(point))
-                return new DockSplitterHit((ExDockSide)side, -1);
-        }
-
-        return null;
-    }
+    public DockSplitterInfo? HitSplitter(Point point) => Splitters.Find(s => s.Bounds.Contains(point));
 }

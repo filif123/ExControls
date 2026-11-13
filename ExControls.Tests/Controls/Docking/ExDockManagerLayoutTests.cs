@@ -34,6 +34,9 @@ public class ExDockManagerLayoutTests
         source.SetZoneSize(ExDockSide.Left, 320);
         source.DockPanel(a["output"], ExDockSide.Left);
         source.DockPanel(a["analysis"], a["log"]);
+        source.DockPanel(a["props"], a["output"], ExDockSide.Right);
+        source.Drop(a["log"].Group!, null, new ExControls.Docking.DockDropTarget(ExControls.Docking.DockDropKind.Document, ExDockSide.Bottom),
+            Rectangle.Empty);
         source.SetAutoHide(a["props"], true);
         source.HidePanel(a["tree"]);
         source.FloatPanel(a["find"]);

@@ -47,6 +47,11 @@ internal sealed class DockColors
     public Color Box { get; private init; } = SystemColors.Window;
 
     /// <summary>
+    /// Text na pozadi <see cref="Box" /> (ponuka okna).
+    /// </summary>
+    public Color BoxFore { get; private init; } = SystemColors.WindowText;
+
+    /// <summary>
     /// Kresba v navadzacich znackach.
     /// </summary>
     public Color Mark { get; private init; } = SystemColors.ControlText;
@@ -72,6 +77,7 @@ internal sealed class DockColors
                 ButtonBack = theme.ButtonBackColor,
                 ButtonFore = theme.ButtonForeColor,
                 Box = theme.BoxBackColor,
+                BoxFore = theme.BoxForeColor,
                 Mark = theme.MarkColor
             };
 

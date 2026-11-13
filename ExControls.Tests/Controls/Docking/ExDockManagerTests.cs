@@ -245,7 +245,7 @@ public class ExDockManagerTests
     }
 
     [TestMethod]
-    public void Drop_OkrajSpravcu_NovaSkupinaNaKonciZony()
+    public void Drop_OkrajSpravcu_StlpecNaVonkajsejStraneZony()
     {
         using var manager = CreateManager();
         var tree = new ExDockPanel("tree", "Strom");
@@ -258,9 +258,13 @@ public class ExDockManagerTests
         manager.Drop(analysis.Group!, null, new DockDropTarget(DockDropKind.Edge, ExDockSide.Left), Rectangle.Empty);
 
         var groups = manager.Zones[(int)ExDockSide.Left].Groups;
-        CollectionAssert.AreEqual(new[] { tree.Group, search.Group, analysis.Group }, groups);
+        CollectionAssert.AreEqual(new[] { analysis.Group, tree.Group, search.Group }, groups);
         Assert.AreEqual(manager.ClientRectangle.Height, manager.Document.Bounds.Height);
-        Assert.IsTrue(ViewOf(search).Bounds.Bottom < ViewOf(analysis).Bounds.Y);
+        var column = ViewOf(analysis).Bounds;
+        Assert.AreEqual(0, column.X);
+        Assert.AreEqual(600, column.Height, "the new column spans the zone");
+        Assert.IsTrue(column.Right < ViewOf(tree).Bounds.X);
+        Assert.AreEqual(ViewOf(tree).Bounds.X, ViewOf(search).Bounds.X);
     }
 
     [TestMethod]

@@ -33,7 +33,28 @@ public partial class ExDockManager
     /// <summary>
     /// Vsetky skupiny: zony v poradi stran a plavajuce.
     /// </summary>
-    internal IEnumerable<DockGroup> AllGroups => _zones.SelectMany(z => z.Groups).Concat(_floating);
+    internal IEnumerable<DockGroup> AllGroups => AllZones.SelectMany(z => DockTree.Groups(z.Root)).Concat(_floating);
+
+    /// <summary>
+    /// Zony na stranach a stredova zona s dokumentom.
+    /// </summary>
+    internal IEnumerable<DockZone> AllZones => _zones.Append(_center);
+
+    /// <summary>
+    /// Stredova zona s dokumentom.
+    /// </summary>
+    internal DockZone Center => _center;
+
+    /// <summary>
+    /// Podiel miesta dokumentu pre panel ukotveny vedla neho.
+    /// </summary>
+    private const double DocumentShare = 0.3;
+
+    /// <summary>
+    /// Zbalene skupiny so zobrazenymi panelmi na liste strany: zo zony strany a skupiny pri dokumente s touto stranou.
+    /// </summary>
+    internal List<DockGroup> AutoHideGroupsOf(ExDockSide side) =>
+        Zone(side).AutoHideGroups.Concat(_center.AutoHideGroups.Where(g => g.HomeSide == side)).ToList();
 
     /// <summary>
     /// Prevedie logicke body (96 DPI) na body zariadenia podla DPI spravcu.
@@ -112,8 +133,8 @@ public partial class ExDockManager
             HidePopup();
         if (group.Zone is { } zone)
         {
-            group.HomeSide = zone.Side;
-            zone.Groups.Remove(group);
+            group.HomeSide = group.Side;
+            DockTree.Remove(group);
             group.Zone = null;
         }
 
@@ -130,21 +151,46 @@ public partial class ExDockManager
     }
 
     /// <summary>
-    /// Vlozi skupinu do zony (ukotvenu) na poradie; vaha = priemer ukotvenych skupin zony.
+    /// Vlozi skupinu na koniec zony pozdlz jej strany (vlavo a vpravo pod ostatne, hore a dole vpravo od nich).
     /// </summary>
-    private static void InsertGroup(DockZone zone, DockGroup group, int index, bool keepWeight = false)
-    {
-        if (!keepWeight)
-        {
-            var docked = zone.DockedGroups;
-            group.Weight = docked.Count == 0 ? 1 : docked.Average(g => g.Weight);
-        }
+    private static void PlaceAtEnd(DockZone zone, DockGroup group) =>
+        PlaceAtEdge(zone, group, DockLayoutEngine.IsHorizontalSide(zone.Side) ? ExDockSide.Bottom : ExDockSide.Right);
 
+    /// <summary>
+    /// Vlozi skupinu na okraj celej zony: pozdlz strany na zaciatok alebo koniec, napriec stranou ako novy stlpec alebo
+    /// riadok (vonkajsi okraj alebo pri dokumente).
+    /// </summary>
+    private static void PlaceAtEdge(DockZone zone, DockGroup group, ExDockSide direction)
+    {
+        DockTree.InsertAtEdge(zone.Root, group, direction);
+        Placed(zone, group);
+    }
+
+    /// <summary>
+    /// Rozdeli cielovu skupinu a skupinu vlozi na stranu <paramref name="direction" /> od nej.
+    /// </summary>
+    private static void PlaceBeside(DockGroup target, DockGroup group, ExDockSide direction)
+    {
+        DockTree.InsertBeside(target, group, direction);
+        Placed(target.Zone!, group, target.Side);
+    }
+
+    /// <summary>
+    /// Rozdeli dokument a skupinu vlozi na stranu <paramref name="direction" /> od neho (ako Visual Studio).
+    /// </summary>
+    private void PlaceByDocument(DockGroup group, ExDockSide direction)
+    {
+        DockTree.InsertBeside(_center.Document!, group, direction, DocumentShare);
+        Placed(_center, group, direction);
+    }
+
+    // skupina vlozena do stromu zony je ukotvena; pri dokumente si pamata stranu (lista auto-hide, navrat)
+    private static void Placed(DockZone zone, DockGroup group, ExDockSide? side = null)
+    {
         group.Zone = zone;
-        group.HomeSide = zone.Side;
+        group.HomeSide = zone.IsCenter ? side ?? group.HomeSide : zone.Side;
         group.IsFloating = false;
         group.AutoHide = false;
-        zone.Groups.Insert(Math.Max(0, Math.Min(index, zone.Groups.Count)), group);
     }
 
     private void MakeFloating(DockGroup group, Rectangle bounds)
@@ -204,7 +250,7 @@ public partial class ExDockManager
             group.View = null;
         }
 
-        group.Zone?.Groups.Remove(group);
+        DockTree.Remove(group);
         group.Zone = null;
         _floating.Remove(group);
     }
@@ -326,12 +372,12 @@ public partial class ExDockManager
     /// </summary>
     internal void ShowPopup(DockGroup group, ExDockPanel panel, bool focus)
     {
-        if (group.Zone is not { } zone || panel.Group != group || panel.IsClosed)
+        if (group.Zone is null || panel.Group != group || panel.IsClosed)
             return;
 
         group.Active = panel;
         var view = EnsureView(group);
-        _popup.Attach(group, view, zone.Side);
+        _popup.Attach(group, view, group.Side);
         view.SyncPanels();
         LayoutPopup();
         _popup.Visible = true;

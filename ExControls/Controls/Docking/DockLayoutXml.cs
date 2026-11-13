@@ -6,18 +6,22 @@ namespace ExControls.Docking;
 
 /// <summary>
 /// Zapis a citanie rozlozenia <see cref="DockLayoutData" /> ako XML na jednom riadku (program si ho ulozi napr. do svojej
-/// konfiguracie). Nazvy stran a atributov su pevne kluce, nie nazvy z C#.
+/// konfiguracie). Nazvy stran a atributov su pevne kluce, nie nazvy z C#. Verzia 1 nemala vnorene rozdelenia
+/// (<c>split</c>), cita sa rovnako.
 /// </summary>
 internal static class DockLayoutXml
 {
     /// <summary>
     /// Verzia formatu.
     /// </summary>
-    public const int Version = 1;
+    public const int Version = 2;
 
     private const string RootName = "dockLayout";
     private const string ZoneName = "zone";
     private const string GroupName = "group";
+    private const string SplitName = "split";
+    private const string CenterName = "center";
+    private const string DocumentName = "document";
     private const string PanelName = "panel";
     private const string FloatName = "float";
 
@@ -32,9 +36,12 @@ internal static class DockLayoutXml
         foreach (var zone in data.Zones)
         {
             var element = new XElement(ZoneName, new XAttribute("side", SideKey(zone.Side)), new XAttribute("size", Int(zone.Size)));
-            element.Add(zone.Groups.Select(WriteGroup));
+            element.Add(zone.Nodes.Select(WriteNode));
             root.Add(element);
         }
+
+        if (data.Center is { } center)
+            root.Add(new XElement(CenterName, center.Select(WriteNode)));
 
         foreach (var window in data.Floats)
             root.Add(new XElement(FloatName,
@@ -69,7 +76,7 @@ internal static class DockLayoutXml
         if (root.Name.LocalName != RootName)
             throw new FormatException($"The dock layout must have the root element {RootName}.");
         var version = OptionalInt(root, "version", 0);
-        if (version != Version)
+        if (version is < 1 or > Version)
             throw new FormatException($"Unsupported dock layout version {version}.");
 
         var data = new DockLayoutData();
@@ -83,9 +90,15 @@ internal static class DockLayoutXml
                     var zone = new DockLayoutData.ZoneData { Side = ParseSide(element), Size = NonNegative(element, "size") };
                     if (!sides.Add(zone.Side))
                         throw new FormatException($"The dock layout has the zone {SideKey(zone.Side)} twice.");
-                    foreach (var group in element.Elements(GroupName))
-                        zone.Groups.Add(ParseGroup(group, keys));
+                    zone.Nodes.AddRange(ParseNodes(element, keys, false));
                     data.Zones.Add(zone);
+                    break;
+                case CenterName:
+                    if (data.Center is not null)
+                        throw new FormatException("The dock layout has the center twice.");
+                    data.Center = ParseNodes(element, keys, true).ToList();
+                    if (data.Center.Sum(CountDocuments) > 1)
+                        throw new FormatException("The center of the dock layout has more documents.");
                     break;
                 case FloatName:
                     var groupElement = element.Element(GroupName) ?? throw new FormatException("A floating window has no group.");
@@ -103,11 +116,43 @@ internal static class DockLayoutXml
         return data;
     }
 
+    private static int CountDocuments(DockLayoutData.NodeData node) => node switch
+    {
+        DockLayoutData.DocumentData => 1,
+        DockLayoutData.SplitData split => split.Children.Sum(CountDocuments),
+        _ => 0
+    };
+
+    private static XElement WriteNode(DockLayoutData.NodeData node)
+    {
+        if (node is DockLayoutData.DocumentData document)
+        {
+            var documentElement = new XElement(DocumentName);
+            WriteWeight(documentElement, document);
+            return documentElement;
+        }
+
+        if (node is not DockLayoutData.SplitData split)
+            return WriteGroup((DockLayoutData.GroupData)node);
+
+        var element = new XElement(SplitName, new XAttribute("arrange", split.SideBySide ? "columns" : "rows"));
+        WriteWeight(element, split);
+        element.Add(split.Children.Select(WriteNode));
+        return element;
+    }
+
+    private static void WriteWeight(XElement element, DockLayoutData.NodeData node)
+    {
+        if (Math.Abs(node.Weight - 1) > 1e-9)
+            element.Add(new XAttribute("weight", node.Weight.ToString("R", CultureInfo.InvariantCulture)));
+    }
+
     private static XElement WriteGroup(DockLayoutData.GroupData group)
     {
         var element = new XElement(GroupName);
-        if (Math.Abs(group.Weight - 1) > 1e-9)
-            element.Add(new XAttribute("weight", group.Weight.ToString("R", CultureInfo.InvariantCulture)));
+        WriteWeight(element, group);
+        if (group.Side is { } side)
+            element.Add(new XAttribute("side", SideKey(side)));
         if (group.AutoHide)
             element.Add(new XAttribute("autoHide", "true"));
         if (group.AutoHideSize > 0)
@@ -125,6 +170,39 @@ internal static class DockLayoutXml
         return element;
     }
 
+    // uzly zony, stredu alebo rozdelenia; ine prvky sa preskocia, dokument je len v strede
+    private static IEnumerable<DockLayoutData.NodeData> ParseNodes(XElement parent, HashSet<string> keys, bool center)
+    {
+        foreach (var element in parent.Elements())
+        {
+            switch (element.Name.LocalName)
+            {
+                case GroupName:
+                    yield return ParseGroup(element, keys);
+                    break;
+                case DocumentName:
+                    if (!center)
+                        throw new FormatException("The document of the dock layout can only be in the center.");
+                    yield return new DockLayoutData.DocumentData { Weight = OptionalDouble(element, "weight", 1) };
+                    break;
+                case SplitName:
+                    var split = new DockLayoutData.SplitData
+                    {
+                        Weight = OptionalDouble(element, "weight", 1),
+                        SideBySide = element.Attribute("arrange")?.Value switch
+                        {
+                            "columns" => true,
+                            "rows" => false,
+                            var value => throw new FormatException($"Unknown arrangement '{value}' of a split in the dock layout.")
+                        }
+                    };
+                    split.Children.AddRange(ParseNodes(element, keys, center));
+                    yield return split;
+                    break;
+            }
+        }
+    }
+
     private static DockLayoutData.GroupData ParseGroup(XElement element, HashSet<string> keys)
     {
         var group = new DockLayoutData.GroupData
@@ -132,7 +210,8 @@ internal static class DockLayoutXml
             Weight = OptionalDouble(element, "weight", 1),
             AutoHide = OptionalBool(element, "autoHide"),
             AutoHideSize = element.Attribute("autoHideSize") is null ? 0 : NonNegative(element, "autoHideSize"),
-            Active = element.Attribute("active")?.Value
+            Active = element.Attribute("active")?.Value,
+            Side = element.Attribute("side") is null ? null : ParseSide(element)
         };
         foreach (var panel in element.Elements(PanelName))
         {

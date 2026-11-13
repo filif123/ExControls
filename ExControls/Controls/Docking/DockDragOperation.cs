@@ -19,6 +19,7 @@ internal sealed class DockDragOperation : IMessageFilter, IDisposable
     private readonly DockGuideForm _guides;
     private readonly DockPreviewForm _preview;
     private DockDropTarget? _target;
+    private DockGuideSet? _last;
     private bool _done;
 
     /// <param name="manager">spravca</param>
@@ -71,10 +72,11 @@ internal sealed class DockDragOperation : IMessageFilter, IDisposable
 
         if (_moving is not null)
             _moving.Location = new Point(screen.X - _offset.X, screen.Y - _offset.Y);
-        var guides = _manager.GuidesAt(screen, Source, Panel, _moving);
-        var hit = DockGuides.HitTest(guides, screen);
+        var guides = _manager.GuidesAt(screen, Source, Panel, _moving, _last);
+        _last = guides;
+        var hit = DockGuides.HitTest(guides.Guides, screen);
         _target = hit?.Target ?? (_canFloat && _moving is null ? DockDropTarget.Floating : null);
-        _preview.ShowAt(_target is null ? Rectangle.Empty : _manager.PreviewBounds(_target, Source, Panel, FloatBounds(screen)));
+        _preview.ShowAt(_target is null ? Rectangle.Empty : _manager.PreviewBounds(_target, FloatBounds(screen)));
         _guides.SetGuides(guides, hit);
     }
 

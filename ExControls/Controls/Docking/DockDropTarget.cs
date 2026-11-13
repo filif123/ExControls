@@ -4,8 +4,8 @@ namespace ExControls.Docking;
 /// Ciel presunu panela alebo skupiny.
 /// </summary>
 /// <param name="Kind">druh ciela</param>
-/// <param name="Side">strana zony (<see cref="DockDropKind.Edge" />) alebo smer sipky (<see cref="DockDropKind.Split" />:
-/// vlavo a hore = pred skupinou)</param>
+/// <param name="Side">strana zony (<see cref="DockDropKind.Edge" />, <see cref="DockDropKind.Document" />) alebo smer sipky
+/// (<see cref="DockDropKind.Split" />: vlavo a hore = pred skupinou)</param>
 /// <param name="Group">cielova skupina (<see cref="DockDropKind.Tab" />, <see cref="DockDropKind.Split" />)</param>
 internal sealed record DockDropTarget(DockDropKind Kind, ExDockSide Side, DockGroup? Group = null)
 {

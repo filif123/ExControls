@@ -58,6 +58,17 @@ public static class ExThemer
     }
 
     /// <summary>
+    /// Pouzije obsluhu zaregistrovanu pre typ prvku alebo jeho najblizsi predok (nie <see cref="IThemeable" />).
+    /// </summary>
+    /// <returns><see langword="true" />, ak program obsluhu zaregistroval - inak si prvok styl nastavi kniznica sama</returns>
+    internal static bool ApplyHandler(Control control, ExTheme theme)
+    {
+        var handler = FindHandler(control.GetType());
+        handler?.Invoke(control, theme);
+        return handler is not null;
+    }
+
+    /// <summary>
     /// Keeps the properties of an object (a control, its part or a cell style) as they were before the first theme and
     /// restores them for the system style - a control switched from the custom style back to the system one then looks
     /// like a control that never had the custom style. Call it in a handler (or <see cref="IThemeable.ApplyTheme" />) before

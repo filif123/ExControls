@@ -34,12 +34,15 @@ Panel…) are styled by handlers registered with `ExThemer.Register<T>`.
 ## Dock manager
 
 `ExDockManager` lays out a window into the main content (`Document`) and tool panels (`ExDockPanel`) docked to the
-left, right, top or bottom. Left and right zones span the full height, top and bottom ones lie between them; panels of a
-zone are stacked along the side, more panels in one group are tabs. The user resizes zones and groups with splitters,
-hides a panel (×), collapses its group to the strip at the edge (pin, the panel slides out on a click), drags the caption
-(whole group) or a tab (one panel) with docking guides to another zone, group or tab, or out of the guides to a floating
-window (`AllowFloating`). Panels are identified by `Key`; the layout is saved as a single-line XML string with sizes in
-logical pixels:
+left, right, top or bottom. Left and right zones span the full height, top and bottom ones lie between them; a zone
+splits into nested rows and columns of groups, more panels in one group are tabs. The user resizes zones and groups with
+splitters, hides a panel (×), collapses its group to the strip at the edge (pin, the panel slides out on a click) and
+drags the caption (whole group) or a tab (one panel) with docking guides like in Visual Studio: a compass over a group
+adds a tab (center) or splits the group (arrows), a compass over the document splits the document (the panel takes
+only the height or width of the document, not the whole side), the guides at the edges add a column or row at the outer
+edge of the zone; out of the guides it becomes a floating window (`AllowFloating`). The guides at the edges stay
+visible, a compass near an edge moves away from them and stays while the cursor is on it. Panels are identified by
+`Key`; the layout is saved as a single-line XML string with sizes in logical pixels:
 
 ```csharp
 var dock = new ExDockManager { Dock = DockStyle.Fill, Strings = new ExDockStrings { Hide = "Skryť" /* ... */ } };
@@ -51,6 +54,7 @@ dock.BringToFront();                          // Fill after the docked tool stri
 var errors = new ExDockPanel("errors", "Error List");
 errors.Controls.Add(new ErrorListView { Dock = DockStyle.Fill });
 dock.AddPanel(errors, ExDockSide.Bottom);     // AddPanel(panel, tabWith) adds a tab
+dock.AddPanel(output, errors, ExDockSide.Right); // splits the group of errors, output on its right
 dock.SetZoneSize(ExDockSide.Bottom, 180);
 dock.HidePanel(errors);                       // shown later by ShowPanel(errors)
 dock.LoadLayout(settings.DockLayout);         // after adding all panels; empty = keep, invalid = FormatException

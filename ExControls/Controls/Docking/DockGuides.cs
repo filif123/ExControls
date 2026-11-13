@@ -1,11 +1,16 @@
 namespace ExControls.Docking;
 
 /// <summary>
-/// Poloha navadzacich znaciek (bez prvkov, testovatelne): stvorce pri okrajoch oblasti spravcu a kosostvorec nad
-/// skupinou pod kurzorom.
+/// Poloha navadzacich znaciek (bez prvkov, testovatelne): tlacidla pri okrajoch oblasti spravcu a kompas (krizik ako
+/// vo Visual Studiu) nad skupinou alebo dokumentom pod kurzorom; kazde tlacidlo lezi na podlozke.
 /// </summary>
 internal static class DockGuides
 {
+    /// <summary>
+    /// Strany kompasu.
+    /// </summary>
+    public static readonly ExDockSide[] Sides = [ExDockSide.Left, ExDockSide.Top, ExDockSide.Right, ExDockSide.Bottom];
+
     /// <summary>
     /// Vonkajsia znacka strany: stvorec v strede okraja oblasti, odsadeny dovnutra.
     /// </summary>
@@ -18,13 +23,13 @@ internal static class DockGuides
     };
 
     /// <summary>
-    /// Stred kosostvorca nad cielom.
+    /// Stred kompasu nad cielom.
     /// </summary>
     public static Rectangle Center(Rectangle target, int size) =>
         new(target.X + (target.Width - size) / 2, target.Y + (target.Height - size) / 2, size, size);
 
     /// <summary>
-    /// Sipka kosostvorca vedla stredu.
+    /// Sipka kompasu vedla stredu.
     /// </summary>
     public static Rectangle Arrow(Rectangle center, ExDockSide side, int gap) => side switch
     {
@@ -35,14 +40,89 @@ internal static class DockGuides
     };
 
     /// <summary>
-    /// Smery deliacich sipiek nad skupinou zony: skupiny sa radia len pozdlz zony (vlavo a vpravo pod sebou, hore a dole
-    /// vedla seba).
+    /// Podlozka jedneho tlacidla (stvorec okolo neho).
     /// </summary>
-    public static ExDockSide[] SplitDirections(ExDockSide zoneSide) =>
-        DockLayoutEngine.IsHorizontalSide(zoneSide) ? [ExDockSide.Top, ExDockSide.Bottom] : [ExDockSide.Left, ExDockSide.Right];
+    public static Point[] Plate(Rectangle button, int pad)
+    {
+        var r = Rectangle.Inflate(button, pad, pad);
+        return [new Point(r.X, r.Y), new Point(r.Right, r.Y), new Point(r.Right, r.Bottom), new Point(r.X, r.Bottom)];
+    }
 
     /// <summary>
-    /// Znacka pod bodom; neskor pridane (kosostvorec) maju prednost.
+    /// Obdlznik okolo podlozky.
+    /// </summary>
+    public static Rectangle BoundsOf(Point[] plate)
+    {
+        var x = plate.Min(p => p.X);
+        var y = plate.Min(p => p.Y);
+        return new Rectangle(x, y, plate.Max(p => p.X) - x, plate.Max(p => p.Y) - y);
+    }
+
+    /// <summary>
+    /// Podlozka kompasu: krizik okolo stredu a styroch sipok so skosenymi vnutornymi rohmi.
+    /// </summary>
+    /// <param name="center">stred kompasu</param>
+    /// <param name="gap">medzera medzi stredom a sipkou</param>
+    /// <param name="pad">okraj podlozky okolo tlacidiel</param>
+    public static Point[] CompassPlate(Rectangle center, int gap, int pad)
+    {
+        int x0 = center.X - pad, x1 = center.Right + pad, y0 = center.Y - pad, y1 = center.Bottom + pad;
+        var arm = gap + center.Width;
+        int top = y0 - arm, bottom = y1 + arm, left = x0 - arm, right = x1 + arm;
+        var c = Math.Max(1, gap / 2);
+        return
+        [
+            new Point(x0, top), new Point(x1, top), new Point(x1, y0 - c), new Point(x1 + c, y0),
+            new Point(right, y0), new Point(right, y1), new Point(x1 + c, y1), new Point(x1, y1 + c),
+            new Point(x1, bottom), new Point(x0, bottom), new Point(x0, y1 + c), new Point(x0 - c, y1),
+            new Point(left, y1), new Point(left, y0), new Point(x0 - c, y0), new Point(x0, y0 - c)
+        ];
+    }
+
+    /// <summary>
+    /// Znacka pri okraji spravcu a jej podlozka.
+    /// </summary>
+    /// <param name="Side">okraj</param>
+    /// <param name="Plate">obdlznik podlozky</param>
+    internal readonly record struct OuterGuide(ExDockSide Side, Rectangle Plate);
+
+    /// <summary>
+    /// Posun kompasu, aby neprekryl znacky pri okrajoch: od kazdej prekryvajucej sa znacky smerom dovnutra.
+    /// </summary>
+    /// <param name="compass">obdlznik podlozky kompasu</param>
+    /// <param name="outer">znacky pri okrajoch</param>
+    /// <param name="gap">medzera medzi kompasom a znackou</param>
+    public static Point AvoidOuter(Rectangle compass, IReadOnlyList<OuterGuide> outer, int gap)
+    {
+        ArgumentNullException.ThrowIfNull(outer);
+        var bounds = compass;
+        foreach (var guide in outer)
+        {
+            if (!bounds.IntersectsWith(guide.Plate))
+                continue;
+            var plate = guide.Plate;
+            switch (guide.Side)
+            {
+                case ExDockSide.Left:
+                    bounds.X = plate.Right + gap;
+                    break;
+                case ExDockSide.Right:
+                    bounds.X = plate.Left - gap - bounds.Width;
+                    break;
+                case ExDockSide.Top:
+                    bounds.Y = plate.Bottom + gap;
+                    break;
+                default:
+                    bounds.Y = plate.Top - gap - bounds.Height;
+                    break;
+            }
+        }
+
+        return new Point(bounds.X - compass.X, bounds.Y - compass.Y);
+    }
+
+    /// <summary>
+    /// Znacka pod bodom; neskor pridane (kompas) maju prednost.
     /// </summary>
     public static DockGuide? HitTest(IReadOnlyList<DockGuide> guides, Point point)
     {

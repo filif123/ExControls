@@ -12,12 +12,31 @@ internal sealed class DockLayoutData
     public List<ZoneData> Zones { get; } = [];
 
     /// <summary>
+    /// Uzly stredoveho stromu s dokumentom (<see cref="DocumentData" />); <see langword="null" />, ked sa neulozil (pri
+    /// dokumente nie su ziadne skupiny).
+    /// </summary>
+    public List<NodeData>? Center { get; set; }
+
+    /// <summary>
     /// Plavajuce okna.
     /// </summary>
     public List<FloatData> Floats { get; } = [];
 
     /// <summary>
-    /// Zona na strane spravcu.
+    /// Vsetky skupiny rozlozenia (zony do hlbky, stred, potom plavajuce okna).
+    /// </summary>
+    public IEnumerable<GroupData> AllGroups =>
+        Zones.SelectMany(z => z.Nodes).Concat(Center ?? []).SelectMany(GroupsOf).Concat(Floats.Select(f => f.Group));
+
+    private static IEnumerable<GroupData> GroupsOf(NodeData node) => node switch
+    {
+        SplitData split => split.Children.SelectMany(GroupsOf),
+        GroupData group => [group],
+        _ => []
+    };
+
+    /// <summary>
+    /// Zona na strane spravcu: uzly korena (pozdlz strany).
     /// </summary>
     internal sealed class ZoneData
     {
@@ -28,18 +47,44 @@ internal sealed class DockLayoutData
         /// </summary>
         public int Size { get; set; }
 
-        public List<GroupData> Groups { get; } = [];
+        public List<NodeData> Nodes { get; } = [];
     }
+
+    /// <summary>
+    /// Uzol stromu zony.
+    /// </summary>
+    internal abstract class NodeData
+    {
+        /// <summary>
+        /// Podiel uzla na dlzke rodicovskeho rozdelenia.
+        /// </summary>
+        public double Weight { get; set; } = 1;
+    }
+
+    /// <summary>
+    /// Rozdelenie: uzly vedla seba (stlpce) alebo pod sebou (riadky).
+    /// </summary>
+    internal sealed class SplitData : NodeData
+    {
+        public bool SideBySide { get; set; }
+
+        public List<NodeData> Children { get; } = [];
+    }
+
+    /// <summary>
+    /// Dokument v strome stredu.
+    /// </summary>
+    internal sealed class DocumentData : NodeData;
 
     /// <summary>
     /// Skupina panelov (karty).
     /// </summary>
-    internal sealed class GroupData
+    internal sealed class GroupData : NodeData
     {
         /// <summary>
-        /// Podiel skupiny na dlzke zony.
+        /// Strana skupiny pri dokumente (lista auto-hide); <see langword="null" /> v zone na strane.
         /// </summary>
-        public double Weight { get; set; } = 1;
+        public ExDockSide? Side { get; set; }
 
         /// <summary>
         /// Skupina je zbalena na liste pri okraji.

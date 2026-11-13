@@ -3,8 +3,8 @@ using ExControls.Docking;
 namespace ExControls.Tests.Controls.Docking;
 
 /// <summary>
-/// Docking guides: squares in the middle of the edges of the manager, a diamond over the group under the cursor with
-/// split arrows only along the zone, the diamond wins over an outer guide.
+/// Docking guides: squares in the middle of the edges of the manager, a compass (cross like in Visual Studio) over the
+/// group or the document under the cursor, the compass wins over an outer guide.
 /// </summary>
 [TestClass]
 public class DockGuidesTests
@@ -32,10 +32,51 @@ public class DockGuidesTests
     }
 
     [TestMethod]
-    public void SplitDirections_LenPozdlzZony()
+    public void CompassPlate_KrizikOkoloVsetkychTlacidielSoSkosenymiRohmi()
     {
-        CollectionAssert.AreEqual(new[] { ExDockSide.Top, ExDockSide.Bottom }, DockGuides.SplitDirections(ExDockSide.Left));
-        CollectionAssert.AreEqual(new[] { ExDockSide.Left, ExDockSide.Right }, DockGuides.SplitDirections(ExDockSide.Bottom));
+        var center = new Rectangle(100, 100, 32, 32);
+        var plate = DockGuides.CompassPlate(center, 12, 4);
+
+        Assert.AreEqual(16, plate.Length);
+        // krajne body ramien = sipky + okraj 4
+        Assert.AreEqual(100 - 12 - 32 - 4, plate.Min(p => p.X));
+        Assert.AreEqual(132 + 12 + 32 + 4, plate.Max(p => p.X));
+        Assert.AreEqual(100 - 12 - 32 - 4, plate.Min(p => p.Y));
+        Assert.AreEqual(132 + 12 + 32 + 4, plate.Max(p => p.Y));
+        // skosenie vnutorneho rohu medzi hornym a pravym ramenom
+        CollectionAssert.Contains(plate, new Point(136, 90));
+        CollectionAssert.Contains(plate, new Point(142, 96));
+        foreach (var side in DockGuides.Sides)
+            Assert.IsTrue(Contains(plate, Center(DockGuides.Arrow(center, side, 12))), side.ToString());
+        Assert.IsFalse(Contains(plate, new Point(60, 60)), "outside the cross");
+    }
+
+    [TestMethod]
+    public void AvoidOuter_KompasSaOdsunieOdZnaciekPriOkraji()
+    {
+        var bottom = new DockGuides.OuterGuide(ExDockSide.Bottom, new Rectangle(380, 550, 40, 40));
+        var right = new DockGuides.OuterGuide(ExDockSide.Right, new Rectangle(750, 280, 40, 40));
+        var compass = new Rectangle(340, 480, 128, 128);
+
+        Assert.AreEqual(new Point(0, -4 - 58), DockGuides.AvoidOuter(compass, [bottom, right], 4));
+        Assert.AreEqual(new Point(-4 - 68, 0), DockGuides.AvoidOuter(new Rectangle(690, 250, 128, 128), [bottom, right], 4));
+        Assert.AreEqual(Point.Empty, DockGuides.AvoidOuter(new Rectangle(100, 100, 128, 128), [bottom, right], 4));
+    }
+
+    [TestMethod]
+    public void Plate_StvorecOkoloTlacidla()
+    {
+        CollectionAssert.AreEqual(new[] { new Point(6, 6), new Point(46, 6), new Point(46, 46), new Point(6, 46) },
+            DockGuides.Plate(new Rectangle(10, 10, 32, 32), 4));
+    }
+
+    private static Point Center(Rectangle r) => new(r.X + r.Width / 2, r.Y + r.Height / 2);
+
+    private static bool Contains(Point[] polygon, Point point)
+    {
+        using var path = new System.Drawing.Drawing2D.GraphicsPath();
+        path.AddPolygon(polygon);
+        return path.IsVisible(point);
     }
 
     [TestMethod]

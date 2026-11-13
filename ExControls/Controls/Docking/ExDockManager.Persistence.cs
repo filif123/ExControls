@@ -6,7 +6,8 @@ namespace ExControls;
 public partial class ExDockManager
 {
     /// <summary>
-    /// Saves the layout (zones and their sizes, groups, tabs, collapsed and hidden panels, floating windows) to a single-line
+    /// Saves the layout (zones and their sizes, nested rows and columns of groups, tabs, collapsed and hidden panels, floating
+    /// windows) to a single-line
     /// XML string for the application settings. Panels are identified by <see cref="ExDockPanel.Key" />; sizes are in logical
     /// pixels, so the layout survives a DPI change.
     /// </summary>
@@ -18,9 +19,13 @@ public partial class ExDockManager
         {
             var zone = Zone(side);
             var zoneData = new DockLayoutData.ZoneData { Side = side, Size = zone.Size };
-            zoneData.Groups.AddRange(zone.Groups.Select(ToData));
+            zoneData.Nodes.AddRange(zone.Root.Children.Select(ToData));
             data.Zones.Add(zoneData);
         }
+
+        // stred len so skupinami pri dokumente
+        if (DockTree.Groups(_center.Root).Any())
+            data.Center = _center.Root.Children.Select(ToData).ToList();
 
         foreach (var group in _floating)
         {
@@ -51,6 +56,21 @@ public partial class ExDockManager
         Change(() => Apply(data));
     }
 
+    private static DockLayoutData.NodeData ToData(DockNode node)
+    {
+        if (node is DockDocumentNode)
+            return new DockLayoutData.DocumentData { Weight = node.Weight };
+
+        if (node is DockSplit split)
+        {
+            var splitData = new DockLayoutData.SplitData { Weight = split.Weight, SideBySide = split.SideBySide };
+            splitData.Children.AddRange(split.Children.Select(ToData));
+            return splitData;
+        }
+
+        return ToData((DockGroup)node);
+    }
+
     private static DockLayoutData.GroupData ToData(DockGroup group)
     {
         var data = new DockLayoutData.GroupData
@@ -58,7 +78,8 @@ public partial class ExDockManager
             Weight = group.Weight,
             AutoHide = group.AutoHide,
             AutoHideSize = group.AutoHideSize,
-            Active = group.Active?.Key
+            Active = group.Active?.Key,
+            Side = group.Zone is { IsCenter: true } ? group.HomeSide : null
         };
         data.Panels.AddRange(group.Panels.Select(p => new DockLayoutData.PanelData(p.Key, p.IsClosed)));
         return data;
@@ -68,8 +89,7 @@ public partial class ExDockManager
     {
         HidePopup();
         var byKey = _panels.ToDictionary(p => p.Key, StringComparer.Ordinal);
-        var groups = data.Zones.SelectMany(z => z.Groups).Concat(data.Floats.Select(f => f.Group));
-        foreach (var entry in groups.SelectMany(g => g.Panels))
+        foreach (var entry in data.AllGroups.SelectMany(g => g.Panels))
         {
             // spomenute panely sa vyberu zo svojich skupin, ostatne ostanu na mieste
             if (!byKey.TryGetValue(entry.Key, out var panel) || panel.Group is not { } old)
@@ -84,16 +104,22 @@ public partial class ExDockManager
         {
             var zone = Zone(zoneData.Side);
             zone.Size = zoneData.Size;
+            // uzly z rozlozenia pred uzlami panelov, ktore v nom nie su
             var index = 0;
-            foreach (var groupData in zoneData.Groups)
+            foreach (var nodeData in zoneData.Nodes)
+                if (Build(nodeData, byKey) is { } node)
+                    zone.Root.Insert(index++, node);
+            foreach (var group in DockTree.Groups(zone.Root))
             {
-                if (Build(groupData, byKey) is not { } group)
-                    continue;
                 group.Zone = zone;
                 group.HomeSide = zone.Side;
-                zone.Groups.Insert(index++, group);
             }
+
+            DockTree.Normalize(zone.Root);
         }
+
+        if (data.Center is { } centerData)
+            ApplyCenter(centerData, byKey);
 
         foreach (var floatData in data.Floats)
         {
@@ -103,6 +129,51 @@ public partial class ExDockManager
             var bounds = floatData.Bounds;
             MakeFloating(group, new Rectangle(bounds.X, bounds.Y, ToDevice(bounds.Width), ToDevice(bounds.Height)));
         }
+    }
+
+    /// <summary>
+    /// Stred z rozlozenia: dokument na ulozene miesto, skupiny pri nom so svojou stranou.
+    /// </summary>
+    private void ApplyCenter(List<DockLayoutData.NodeData> nodes, Dictionary<string, ExDockPanel> panels)
+    {
+        var document = _center.Document!;
+        DockTree.Remove(document);
+        var index = 0;
+        foreach (var nodeData in nodes)
+            if (Build(nodeData, panels, document) is { } node)
+                _center.Root.Insert(index++, node);
+        if (document.Parent is null)
+            _center.Root.Add(document);
+
+        foreach (var group in DockTree.Groups(_center.Root))
+            group.Zone = _center;
+        DockTree.Normalize(_center.Root);
+    }
+
+    // uzol stromu z rozlozenia; bez pridanych panelov nevznikne, dokument len v strede
+    private static DockNode? Build(DockLayoutData.NodeData data, Dictionary<string, ExDockPanel> panels, DockDocumentNode? document = null)
+    {
+        switch (data)
+        {
+            case DockLayoutData.DocumentData:
+                if (document is null || document.Parent is not null)
+                    return null;
+                document.Weight = data.Weight;
+                return document;
+            case DockLayoutData.GroupData groupData:
+                if (Build(groupData, panels) is not { } group)
+                    return null;
+                if (groupData.Side is { } side)
+                    group.HomeSide = side;
+                return group;
+        }
+
+        var splitData = (DockLayoutData.SplitData)data;
+        var split = new DockSplit(splitData.SideBySide) { Weight = splitData.Weight };
+        foreach (var child in splitData.Children)
+            if (Build(child, panels, document) is { } node)
+                split.Add(node);
+        return split.Children.Count > 0 ? split : null;
     }
 
     private static DockGroup? Build(DockLayoutData.GroupData data, Dictionary<string, ExDockPanel> panels)
