@@ -29,11 +29,14 @@ public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
             BorderColor = theme.BorderColor;
             SquareBackColor = theme.BoxBackColor;
             MarkColor = theme.MarkColor;
-            BorderStyle = BorderStyle.None;
+            // okraj ako ExTextBox, zoznam bez okraja v navrhu ostava bez okraja
+            if (BorderStyle != BorderStyle.None)
+                BorderStyle = BorderStyle.FixedSingle;
             FocusedBackColor = theme.BorderColor;
             HighlightColor = theme.HighlightBackColor;
         }
 
+        this.SetBorderColor(!theme.UseSystemStyle && BorderStyle != BorderStyle.None ? theme.BorderColor : null);
         this.SetDarkScrollBars(theme.DarkScrollBars);
     }
 

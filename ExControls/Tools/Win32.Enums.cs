@@ -198,6 +198,7 @@ internal static partial class Win32
         CTLCOLORLISTBOX = 0x0134,
         LBUTTONDOWN = 0x0201,
         NCMOUSELEAVE = 0x02A2,
+        PRINT = 0x0317,
         PRINTCLIENT = 0x0318,
         THEMECHANGED = 0x031A,
         DWMCOLORIZATIONCOLORCHANGED = 0x0320,

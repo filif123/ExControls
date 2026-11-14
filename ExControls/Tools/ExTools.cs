@@ -307,6 +307,20 @@ public static class ExTools
         return GetFormBorderThickness(form.Handle, out sizeInPoints);
     }
 
+    /// <summary>
+    /// Draws the 1 px border of a control with <see cref="BorderStyle.FixedSingle" /> (ListBox, TreeView, CheckedListBox,
+    /// RichTextBox...) in the given color, like the border of <see cref="ExTextBox" /> in the custom style;
+    /// <see langword="null" /> gives the control its system border back. The color stays after the handle is recreated.
+    /// </summary>
+    /// <param name="control">control whose border is drawn</param>
+    /// <param name="color">color of the border, <see langword="null" /> for the system border</param>
+    public static void SetBorderColor(this Control control, Color? color)
+    {
+        ArgumentNullException.ThrowIfNull(control);
+
+        NonClientBorder.Set(control, color);
+    }
+
     // prvky, ktorym SetDarkScrollBars zapol tmave posuvniky
     private static readonly ConditionalWeakTable<Control, object> DarkScrollBarControls = new();
 
