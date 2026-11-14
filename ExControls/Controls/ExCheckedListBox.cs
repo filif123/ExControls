@@ -247,45 +247,39 @@ public class ExCheckedListBox : CheckedListBox, IExControl, IThemeable
     /// <inheritdoc />
     protected override void OnMouseMove(MouseEventArgs e)
     {
+        // udalost MouseMove aj vo vlastnom style (napr. napoveda polozky v okne)
+        base.OnMouseMove(e);
         if (DefaultStyle)
-        {
-            base.OnMouseMove(e);
             return;
-        }
 
-        for (var i = 0; i < Items.Count; i++)
-            if (GetItemRectangle(i).IntersectsWith(new Rectangle(e.Location, new Size(1, 1))))
-            {
-                if (_hoverIndex != i)
-                {
-                    _hoverIndex = i;
-                    Invalidate();
-                }
+        var index = IndexFromPoint(e.Location);
+        SetHoverIndex(index >= 0 && GetItemRectangle(index).Contains(e.Location) ? index : -1);
+    }
 
-                return;
-            }
+    // zvyraznenie polozky pod mysou: prekresli sa len predtym a teraz zvyraznena polozka - prekreslenie celeho zoznamu
+    // (najma viacstlpcoveho) pri kazdom prechode na inu polozku blikalo
+    private void SetHoverIndex(int index)
+    {
+        if (_hoverIndex == index)
+            return;
+        var previous = _hoverIndex;
+        _hoverIndex = index;
+        InvalidateItem(previous);
+        InvalidateItem(index);
+    }
 
-        if (_hoverIndex != -1)
-        {
-            _hoverIndex = -1;
-            Invalidate();
-        }
+    private void InvalidateItem(int index)
+    {
+        if (index >= 0 && index < Items.Count)
+            Invalidate(GetItemRectangle(index));
     }
 
     /// <inheritdoc />
     protected override void OnMouseLeave(EventArgs e)
     {
-        if (DefaultStyle)
-        {
-            base.OnMouseLeave(e);
-            return;
-        }
-
-        if (_hoverIndex != -1)
-        {
-            _hoverIndex = -1;
-            Invalidate();
-        }
+        base.OnMouseLeave(e);
+        if (!DefaultStyle)
+            SetHoverIndex(-1);
     }
 
     /// <summary>Raises the <see cref="IExControl.DefaultStyleChanged" /> event.</summary>
